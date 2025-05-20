@@ -32,6 +32,7 @@
 
   # `nh` is the preferred way to update the system.
   programs.nh.enable = true;
+
   # FLAKE is used instead of programs.nh.flake because the NixOS module for it
   # seems to force you to make it a path, instead of a string (which a valid
   # flake reference can be...)

@@ -3,13 +3,12 @@
 , coreutils
 , dmenu
 , findutils
+, gawk
 , gnugrep
 , gnused
 , libnotify
 , moreutils
 , systemd
-, uq
-,
 }:
 writeShellApplication {
   name = "dmenu-run";
@@ -18,12 +17,12 @@ writeShellApplication {
     coreutils
     dmenu
     findutils
+    gawk
     gnugrep
     gnused
     libnotify
     moreutils
     systemd
-    uq
   ];
 
   text = builtins.readFile ./dmenu-run.bash;

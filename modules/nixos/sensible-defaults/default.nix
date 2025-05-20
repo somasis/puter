@@ -31,8 +31,12 @@
     ];
 
   config = {
-    i18n.supportedLocales = [
-      "en_US.UTF-8/UTF-8"
+    nixpkgs = {
+      config.allowUnfree = true;
+      overlays = lib.mapAttrsToList (_: x: x) self.overlays;
+    };
+
+    i18n.extraLocales = [
       "de_DE.UTF-8/UTF-8" # German (Germany)
       "es_US.UTF-8/UTF-8" # Spanish (US)
       "tok/UTF-8" # toki pona
@@ -68,11 +72,6 @@
         IOSchedulingPriority = 7;
         IOSchedulingClass = "idle";
       };
-    };
-
-    nixpkgs = {
-      config.allowUnfree = true;
-      overlays = lib.mapAttrsToList (_: x: x) self.overlays;
     };
 
     environment = {

@@ -202,7 +202,7 @@ print_command_list() {
                 print_command_history
             ) \
             - \
-        | uq # 1g. Print concatenated and deduplicated list of history and executables.
+        | awk '!seen[$0]++' # 1g. Print concatenated and deduplicated list of history and executables.
 }
 
 validate_command_history_with_notification() {
@@ -226,7 +226,7 @@ write_command_history() {
     if should_use_command_history; then
         mkdir -p "$(dirname "${DMENU_RUN_HISTORY}")"
         touch "${DMENU_RUN_HISTORY}"
-        uq | ifne sponge "${DMENU_RUN_HISTORY}"
+        awk '!seen[$0]++' | ifne sponge "${DMENU_RUN_HISTORY}"
     fi
 }
 

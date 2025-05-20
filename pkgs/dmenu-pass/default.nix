@@ -9,7 +9,7 @@
 , libnotify
 , moreutils
 , pass ? pass-nodmenu
-, uq
+, gawk
 , xclip
 ,
 }:
@@ -25,7 +25,7 @@ writeShellApplication {
     libnotify
     moreutils
     pass
-    uq
+    gawk
     xclip
   ];
 

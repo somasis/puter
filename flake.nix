@@ -18,13 +18,13 @@
 
     # NOTE Make sure to change on new releases!
     # See <https://nixos.org/manual/nixos/unstable/#sec-upgrading> for details
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05"; # most recent version (potentially beta)
     nixpkgsStable.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgsUnstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     homeManager = {
       # NOTE Make sure to change on new releases!
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -124,11 +124,14 @@
 
   outputs =
     { self
-    , nixpkgs
-    , homeManager
-
     , git-hooks
     , treefmt-nix
+
+    , nixpkgs
+    , nixpkgsStable
+    , nixpkgsUnstable
+    , homeManager
+
     , ...
     }@inputs:
     let

@@ -1,6 +1,4 @@
-{ config
-, inputs
-, pkgs
+{ pkgs
 , lib
 , ...
 }:
@@ -13,13 +11,11 @@
   home.sessionPath = [ "$HOME/bin" ];
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = "bin";
-    }
+    { method = "symlink"; directory = "bin"; }
   ];
 
   home.packages = with pkgs; [
+    # keep-sorted start
     as-tree
     tree
     ncdu
@@ -43,12 +39,18 @@
     strace
     teip
     trurl
-    uq
-    xsv
+    xe
+    xurls
     xz
     zstd
 
-    xe
+    # uq is unmaintained by upstream now and this Awk pretty much
+    # gets you the whole way anyway. <https://unix.stackexchange.com/a/11941>
+    # I would argue that this code is so simple that it cannot really be copyrighted.
+    (pkgs.writeShellScriptBin "uq" ''
+      ${lib.getExe pkgs.gawk} '!seen[$0]++' -- "$@"
+    '')
+
     (pkgs.writeShellScriptBin "pe" ''
       ${lib.getExe pkgs.xe} -LL -j0 "$@" | sort -snk1 | cut -d' ' -f2-
     '')

@@ -22,7 +22,7 @@ list() {
             -e 's/&/\&amp;/' \
             "${DMENU_EMOJI_LIST}" \
             | sort
-    } | uq
+    } | awk '!seen[$0]++'
 }
 
 dmenu_args=()
@@ -70,5 +70,5 @@ list \
 
 head -n 64 "${DMENU_EMOJI_HISTORY}" \
     | grep -v '^$' \
-    | uq \
+    | awk '!seen[$0]++' \
     | ifne sponge "${DMENU_EMOJI_HISTORY}"

@@ -7,7 +7,7 @@
 , gnused
 , moreutils
 , unicode-emoji
-, uq
+, gawk
 , xclip
 , xdotool
 ,
@@ -23,7 +23,7 @@ wrapCommand {
       gnused
       moreutils
       unicode-emoji
-      uq
+      gawk
       xclip
       xdotool
     ];

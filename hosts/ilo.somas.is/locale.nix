@@ -79,10 +79,7 @@
 
   i18n = {
     defaultLocale = "en_US.UTF-8";
-    supportedLocales = [
-      "en_US.UTF-8/UTF-8"
-      "tok/UTF-8"
-    ];
-    extraLocaleSettings.LANGUAGE = "tok:en_US:en";
+    extraLocales = [ "tok/UTF-8" ];
+    # extraLocaleSettings.LANGUAGE = "tok:en_US:en";
   };
 }

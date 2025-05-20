@@ -8,7 +8,7 @@
     with pkgs;
     with kdePackages;
     [
-      pkgs.okular
+      okular
     ];
 
   persist = {

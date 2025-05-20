@@ -50,7 +50,7 @@ case "${2:-}" in
         {
             printf '%s\n' password username
             cmd_show "$1" | tail -n +2 | cut -d: -f1
-        } | uq
+        } | awk '!seen[$0]++'
         ;;
     login | name | user | username)
         username=$(meta "$1" "login|name|user|username")

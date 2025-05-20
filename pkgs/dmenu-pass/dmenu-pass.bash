@@ -78,7 +78,7 @@ choice=$(
             | sort -n \
             | sed 's@^[0-9]* @@; s@^\.//@@; s@\.gpg$@@' \
             | cat ${initial:+"${DMENU_PASS_INITIAL_HISTORY}"} "${DMENU_PASS_HISTORY}" - 2>/dev/null
-    )   | uq \
+    )   | awk '!seen[$0]++' \
         | eval "${DMENU} ${dmenu_args[*]@Q}"
 )
 
@@ -125,7 +125,7 @@ if [[ -n "${initial}" ]]; then
     cat - "${DMENU_PASS_INITIAL_HISTORY}" <<<"${choice}" \
         | head -n 24 \
         | grep -v "^\s*$" \
-        | uq \
+        | awk '!seen[$0]++' \
         | while read -r entry; do
             test -e "${PASSWORD_STORE_DIR}"/"${entry}".gpg && printf '%s\n' "${entry}"
         done \
@@ -135,7 +135,7 @@ fi
 cat - "${DMENU_PASS_HISTORY}" <<<"${choice}" \
     | head -n 24 \
     | grep -v "^\s*$" \
-    | uq \
+    | awk '!seen[$0]++' \
     | while read -r entry; do
         test -e "${PASSWORD_STORE_DIR}"/"${entry}".gpg \
             && ! test -d "${PASSWORD_STORE_DIR}"/"${entry}".gpg \

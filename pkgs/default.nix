@@ -13,7 +13,6 @@ let
     symlinkJoin
     runCommandLocal
 
-    writeShellScript
     writeScript
     writeTextFile
     ;
