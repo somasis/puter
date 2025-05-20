@@ -1,5 +1,8 @@
 # shellcheck shell=bash
 
+# mozilla_api_endpoint=https://location.services.mozilla.com
+mozilla_api_endpoint=https://beacondb.net
+
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
@@ -60,7 +63,7 @@ fetch_location() {
                         curl -Lfs \
                             ${timeout:+--max-time "${timeout}"} \
                             ${max_retries:+--retry "${max_retries}"} \
-                            "https://location.services.mozilla.com/v1/geolocate?key=geoclue"
+                            "${mozilla_api_endpoint}/v1/geolocate?key=geoclue"
                     )
 
                     location=$(

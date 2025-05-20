@@ -1,13 +1,16 @@
 { lib
 , writeShellApplication
-
 , coreutils
 , wine
+,
 }:
 writeShellApplication {
   name = "wineprefix";
 
-  runtimeInputs = [ coreutils wine ];
+  runtimeInputs = [
+    coreutils
+    wine
+  ];
 
   text = builtins.readFile ./wineprefix.bash;
 

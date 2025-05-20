@@ -20,87 +20,100 @@ let
   dmenuEmojiConfig = config.programs.dmenu-emoji;
   dmenuEmojiPackage = config.programs.dmenu-emoji.package;
 
-  mkOverride = default: mkOption {
-    inherit default;
-    type = types.bool;
-    example = !default;
-  };
+  mkOverride =
+    default:
+    mkOption {
+      inherit default;
+      type = types.bool;
+      example = !default;
+    };
 
-  mkSetting = requiredOverrideName: requiredOverride: realType: realDefault: description: mkOption {
-    type = nullOr realType;
-    default = if requiredOverride then realDefault else null;
-    apply = x:
-      if requiredOverride && x != null then
-        x
-      else if !requiredOverride && x != null then
-        throw "programs.dmenu.overrides.${requiredOverrideName} is not enabled"
-      else
-        null
-    ;
-    description = "${description} (requires `programs.dmenu.overrides.${requiredOverrideName} = true;`)";
-  };
+  mkSetting =
+    requiredOverrideName: requiredOverride: realType: realDefault: description:
+    mkOption {
+      type = nullOr realType;
+      default = if requiredOverride then realDefault else null;
+      apply =
+        x:
+        if requiredOverride && x != null then
+          x
+        else if !requiredOverride && x != null then
+          throw "programs.dmenu.overrides.${requiredOverrideName} is not enabled"
+        else
+          null;
+      description = "${description} (requires `programs.dmenu.overrides.${requiredOverrideName} = true;`)";
+    };
 
   color = strMatching "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$";
 
-  mkColorOption = description: mkOption {
-    type = nullOr color;
-    default = null;
-    description = ''
-      Color to be used for ${description}.
-    '';
-  };
+  mkColorOption =
+    description:
+    mkOption {
+      type = nullOr color;
+      default = null;
+      description = ''
+        Color to be used for ${description}.
+      '';
+    };
 
-  mkColorOptionRequiring = requiredOverrideName: requiriedOverride: description: mkOption {
-    type = nullOr color;
-    default = null;
-    description = ''
-      Color to be used for ${description}.
-    '';
-  };
+  mkColorOptionRequiring =
+    requiredOverrideName: requiriedOverride: description:
+    mkOption {
+      type = nullOr color;
+      default = null;
+      description = ''
+        Color to be used for ${description}.
+      '';
+    };
 
-  makeDmenuPackage = prevPackage: pkgs.wrapCommand {
-    package = prevPackage.override dmenuConfig.overrides;
+  makeDmenuPackage =
+    prevPackage:
+    pkgs.wrapCommand {
+      package = prevPackage.override dmenuConfig.overrides;
 
-    wrappers = [{
-      prependFlags = (lib.cli.toGNUCommandLineShell { mkOptionName = k: "-${k}"; } {
-        b = dmenuSettings.bottom;
-        c = dmenuSettings.center;
+      wrappers = [
+        {
+          prependFlags =
+            (lib.cli.toGNUCommandLineShell { mkOptionName = k: "-${k}"; } {
+              b = dmenuSettings.bottom;
+              c = dmenuSettings.center;
 
-        l = dmenuSettings.lines;
-        g = dmenuSettings.columns;
-        h = dmenuSettings.lineHeight;
+              l = dmenuSettings.lines;
+              g = dmenuSettings.columns;
+              h = dmenuSettings.lineHeight;
 
-        X = dmenuSettings.xOffset;
-        Y = dmenuSettings.yOffset;
-        W = dmenuSettings.width;
-        bw = dmenuSettings.borderWidth;
+              X = dmenuSettings.xOffset;
+              Y = dmenuSettings.yOffset;
+              W = dmenuSettings.width;
+              bw = dmenuSettings.borderWidth;
 
-        fn = dmenuSettings.font;
+              fn = dmenuSettings.font;
 
-        o = dmenuSettings.opacity;
+              o = dmenuSettings.opacity;
 
-        nb = dmenuSettings.background;
-        nf = dmenuSettings.foreground;
+              nb = dmenuSettings.background;
+              nf = dmenuSettings.foreground;
 
-        sb = dmenuSettings.backgroundSelected;
-        sf = dmenuSettings.foregroundSelected;
+              sb = dmenuSettings.backgroundSelected;
+              sf = dmenuSettings.foregroundSelected;
 
-        hb = dmenuSettings.backgroundHighPriority;
-        hf = dmenuSettings.foregroundHighPriority;
+              hb = dmenuSettings.backgroundHighPriority;
+              hf = dmenuSettings.foregroundHighPriority;
 
-        nhb = dmenuSettings.backgroundHighlight;
-        nhf = dmenuSettings.foregroundHighlight;
-        shb = dmenuSettings.backgroundHighlightSelected;
-        shf = dmenuSettings.foregroundHighlightSelected;
+              nhb = dmenuSettings.backgroundHighlight;
+              nhf = dmenuSettings.foregroundHighlight;
+              shb = dmenuSettings.backgroundHighlightSelected;
+              shf = dmenuSettings.foregroundHighlightSelected;
 
-        F = dmenuSettings.fuzzyMatching;
-        x = dmenuSettings.prefixMatching;
+              F = dmenuSettings.fuzzyMatching;
+              x = dmenuSettings.prefixMatching;
 
-        cw = dmenuSettings.caretWidth;
-      }) + dmenuConfig.extraArgs
-      ;
-    }];
-  };
+              cw = dmenuSettings.caretWidth;
+            })
+            + dmenuConfig.extraArgs;
+        }
+      ];
+    };
 in
 {
   options.programs = {
@@ -112,7 +125,7 @@ in
         default = pkgs.dmenu;
         description = "The package to use for dmenu. It must provide a /bin/dmenu binary.";
 
-        apply = x: makeDmenuPackage x;
+        apply = makeDmenuPackage;
       };
 
       overrides = {
@@ -135,6 +148,7 @@ in
         enableHighlight = mkOverride true;
         enableIncremental = mkOverride false;
         enableInitialText = mkOverride true;
+        enableInputMethod = mkOverride false;
         enableInstant = mkOverride true;
         enableLineHeight = mkOverride true;
         enableManaged = mkOverride false;
@@ -191,7 +205,7 @@ in
           If 0, items will not be listed in a grid.
         '';
 
-        lineHeight = mkSetting "lineHeight" dmenuConfig.overrides.enableLineHeight numbers.positive 0 ''
+        lineHeight = mkSetting "lineHeight" dmenuConfig.overrides.enableLineHeight numbers.nonnegative 0 ''
           How tall a line should be.
           If 0, the line height will be based on the font height.
         '';
@@ -230,14 +244,26 @@ in
         backgroundSelected = mkColorOption "background of selected items";
         foregroundSelected = mkColorOption "foreground of selected items";
 
-        backgroundHighPriority = mkColorOptionRequiring "highPriority" dmenuConfig.overrides.enableHighPriority "background of high priority items";
-        foregroundHighPriority = mkColorOptionRequiring "highPriority" dmenuConfig.overrides.enableHighPriority "foreground of high priority items";
+        backgroundHighPriority =
+          mkColorOptionRequiring "highPriority" dmenuConfig.overrides.enableHighPriority
+            "background of high priority items";
+        foregroundHighPriority =
+          mkColorOptionRequiring "highPriority" dmenuConfig.overrides.enableHighPriority
+            "foreground of high priority items";
 
-        backgroundHighlight = mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight "background of highlighted items";
-        foregroundHighlight = mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight "foreground of highlighted items";
+        backgroundHighlight =
+          mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight
+            "background of highlighted items";
+        foregroundHighlight =
+          mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight
+            "foreground of highlighted items";
 
-        backgroundHighlightSelected = mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight "background of highlighted selected items";
-        foregroundHighlightSelected = mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight "foreground of highlighted selected items";
+        backgroundHighlightSelected =
+          mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight
+            "background of highlighted selected items";
+        foregroundHighlightSelected =
+          mkColorOptionRequiring "highlight" dmenuConfig.overrides.enableHighlight
+            "foreground of highlighted selected items";
 
         fuzzyMatching = mkSetting "fuzzyMatching" dmenuConfig.overrides.enableFuzzyMatching bool false ''
           Default to using fuzzy matching.
@@ -246,9 +272,11 @@ in
           Default to using prefix matching.
         '';
 
-        caretWidth = mkSetting "enableCaretWidth" dmenuConfig.overrides.enableCaretWidth numbers.nonnegative 2 ''
-          Width of the input box's caret.
-        '';
+        caretWidth =
+          mkSetting "enableCaretWidth" dmenuConfig.overrides.enableCaretWidth numbers.nonnegative 2
+            ''
+              Width of the input box's caret.
+            '';
       };
 
       extraArgs = mkOption {
@@ -267,10 +295,12 @@ in
         default = pkgs.dmenu-run;
         defaultText = literalExpression "pkgs.dmenu-run";
 
-        apply = package: pkgs.wrapCommand {
-          package = package.override { dmenu = dmenuRunConfig.dmenuPackage; };
-          wrappers = [{ setEnvironmentDefault = dmenuRunConfig.settings; }];
-        };
+        apply =
+          package:
+          pkgs.wrapCommand {
+            package = package.override { dmenu = dmenuRunConfig.dmenuPackage; };
+            wrappers = [{ setEnvironmentDefault = dmenuRunConfig.settings; }];
+          };
 
         description = ''
           The package to use for dmenu-run.
@@ -293,7 +323,18 @@ in
       };
 
       settings = mkOption rec {
-        type = with types; attrsOf (coercedTo (nullOr (oneOf [ str int path ])) (lib.generators.mkValueStringDefault { }) str);
+        type =
+          with types;
+          attrsOf (
+            coercedTo
+              (nullOr (oneOf [
+                str
+                int
+                path
+              ]))
+              (lib.generators.mkValueStringDefault { })
+              str
+          );
         apply = lib.mergeAttrs default;
 
         default = {
@@ -328,13 +369,15 @@ in
         default = pkgs.dmenu-pass;
         defaultText = literalExpression "pkgs.dmenu-pass";
 
-        apply = package: pkgs.wrapCommand {
-          package = package.override {
-            dmenu = dmenuPassConfig.dmenuPackage;
-            pass = config.programs.password-store.package;
+        apply =
+          package:
+          pkgs.wrapCommand {
+            package = package.override {
+              dmenu = dmenuPassConfig.dmenuPackage;
+              pass = config.programs.password-store.package;
+            };
+            wrappers = [{ setEnvironmentDefault = dmenuPassConfig.settings; }];
           };
-          wrappers = [{ setEnvironmentDefault = dmenuPassConfig.settings; }];
-        };
 
         description = ''
           The package to use for dmenu-pass.
@@ -358,11 +401,22 @@ in
       };
 
       settings = mkOption rec {
-        type = with types; attrsOf (coercedTo (nullOr (oneOf [ str int path ])) (lib.generators.mkValueStringDefault { }) str);
+        type =
+          with types;
+          attrsOf (
+            coercedTo
+              (nullOr (oneOf [
+                str
+                int
+                path
+              ]))
+              (lib.generators.mkValueStringDefault { })
+              str
+          );
         apply = lib.mergeAttrs default;
 
         default = {
-          PASSWORD_STORE_DIR = config.programs.password-store.settings.PASSWORD_STORE_DIR;
+          inherit (config.programs.password-store.settings) PASSWORD_STORE_DIR;
           PASSWORD_STORE_CLIP_TIME = config.programs.password-store.settings.PASSWORD_STORE_CLIP_TIME or 45;
           DMENU = "dmenu -p 'pass'";
           DMENU_PASS_CACHE = "${config.xdg.cacheHome}/dmenu-pass";
@@ -383,10 +437,12 @@ in
         default = pkgs.dmenu-emoji;
         defaultText = literalExpression "pkgs.dmenu-emoji";
 
-        apply = package: pkgs.wrapCommand {
-          package = package.override { dmenu = dmenuEmojiConfig.dmenuPackage; };
-          wrappers = [{ setEnvironmentDefault = dmenuEmojiConfig.settings; }];
-        };
+        apply =
+          package:
+          pkgs.wrapCommand {
+            package = package.override { dmenu = dmenuEmojiConfig.dmenuPackage; };
+            wrappers = [{ setEnvironmentDefault = dmenuEmojiConfig.settings; }];
+          };
 
         description = ''
           The package to use for dmenu-emoji.
@@ -409,7 +465,18 @@ in
       };
 
       settings = mkOption rec {
-        type = with types; attrsOf (coercedTo (nullOr (oneOf [ str int path ])) (lib.generators.mkValueStringDefault { }) str);
+        type =
+          with types;
+          attrsOf (
+            coercedTo
+              (nullOr (oneOf [
+                str
+                int
+                path
+              ]))
+              (lib.generators.mkValueStringDefault { })
+              str
+          );
         apply = lib.mergeAttrs default;
 
         default = {
@@ -436,7 +503,6 @@ in
       lib.optional dmenuConfig.enable dmenuPackage
       ++ lib.optional dmenuRunConfig.enable dmenuRunPackage
       ++ lib.optional dmenuPassConfig.enable dmenuPassPackage
-      ++ lib.optional dmenuEmojiConfig.enable dmenuEmojiPackage
-    ;
+      ++ lib.optional dmenuEmojiConfig.enable dmenuEmojiPackage;
   };
 }

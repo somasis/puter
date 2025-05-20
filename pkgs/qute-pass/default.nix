@@ -1,6 +1,5 @@
 { lib
 , writeShellApplication
-
 , coreutils
 , dmenu-pass
 , gnused
@@ -9,6 +8,7 @@
 , trurl
 , util-linux
 , xdotool
+,
 }:
 writeShellApplication {
   name = "qute-pass";

@@ -2,7 +2,8 @@
 , lib
 , pkgs
 , ...
-}: {
+}:
+{
   home.packages = [
     # PDF manipulation tools
     (pkgs.mupdf.override {
@@ -25,21 +26,21 @@
   ];
 
   xdg.configFile = {
-    "pdfarranger/config.ini".text = lib.generators.toINI
-      {
-        mkKeyValue = k: v:
-          if builtins.isBool v then
-            lib.generators.mkKeyValueDefault { } "=" k (if v then "True" else "False")
-          else
-            lib.generators.mkKeyValueDefault { } "=" k v
-        ;
-      }
-      {
-        preferences = {
-          content-loss-warning = true;
+    "pdfarranger/config.ini".text =
+      lib.generators.toINI
+        {
+          mkKeyValue =
+            k: v:
+            if builtins.isBool v then
+              lib.generators.mkKeyValueDefault { } "=" k (if v then "True" else "False")
+            else
+              lib.generators.mkKeyValueDefault { } "=" k v;
+        }
+        {
+          preferences = {
+            content-loss-warning = true;
+          };
         };
-      }
-    ;
 
     "scantailor-advanced/scantailor-advanced.ini".text = lib.generators.toINI { } {
       settings = {
@@ -57,9 +58,20 @@
     ocrmypdf = ''ocrmypdf --user-words "$XDG_DATA_HOME"/tesseract/eng.user-words --sidecar "$XDG_CACHE_HOME"/ocrmypdf/sidecar.txt'';
   };
 
-  persist.directories = [{ method = "symlink"; directory = config.lib.somasis.xdgDataDir "tesseract"; }];
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "tesseract";
+    }
+  ];
   cache.directories = [
-    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "pdfgrep"; }
-    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "ocrmypdf"; }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "pdfgrep";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "ocrmypdf";
+    }
   ];
 }

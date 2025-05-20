@@ -7,12 +7,15 @@
 }:
 let
   inherit (config.lib.somasis) flakeModifiedDateToVersion;
-  inherit (osConfig.services) tor;
-
-  study = "${config.home.homeDirectory}/study";
 
   qutebrowser-zotero = pkgs.callPackage
-    ({ lib, fetchurl, fetchFromGitHub, python3Packages }:
+    (
+      { lib
+      , fetchurl
+      , fetchFromGitHub
+      , python3Packages
+      ,
+      }:
       python3Packages.buildPythonApplication rec {
         pname = "qutebrowser-zotero";
         version = flakeModifiedDateToVersion inputs.qutebrowser-zotero;
@@ -41,7 +44,8 @@ let
           license = licenses.gpl3;
           mainProgram = "qute-zotero";
         };
-      })
+      }
+    )
     { };
 
   # Use Appalachian State University's proxy
@@ -137,14 +141,14 @@ in
           style = "http://www.zotero.org/styles/chicago-note-bibliography";
           locale = "en-US";
         in
-        rec
-        {
+        rec {
           # See <https://www.zotero.org/support/preferences/hidden_preferences> also.
           "general.smoothScroll" = false;
           "intl.accept_language" = "en-US, en";
 
           # Use the flake-provided versions of translators and styles.
-          "extensions.zotero.automaticScraperUpdates" = false;
+          # "extensions.zotero.automaticScraperUpdates" = false;
+          "extensions.zotero.automaticScraperUpdates" = true;
 
           # Use Appalachian State University's OpenURL resolver
           "extensions.zotero.openURL.resolver" = "${proxy}?url=https://resolver.ebscohost.com/openurl?";
@@ -193,7 +197,7 @@ in
           "extensions.zotero.useDataDir" = true;
           "extensions.zotero.dataDir" = "${config.xdg.dataHome}/zotero";
           "extensions.zotero.saveRelativeAttachmentPath" = true;
-          "extensions.zotero.baseAttachmentPath" = "${study}/doc";
+          "extensions.zotero.baseAttachmentPath" = "${config.xdg.userDirs.documents}/articles";
 
           # Reading settings
           "extensions.zotero.tabs.title.reader" = "filename"; # Show filename in tab title
@@ -301,33 +305,44 @@ in
         # }
 
         # Configuration options which will only become relevant with Zotero 7.
-        // lib.optionalAttrs ((lib.strings.toInt (lib.versions.major (lib.strings.getVersion config.programs.zotero.package))) >= 7) {
-          "extensions.zotero.reader.ebookFontFamily" = "serif";
+        //
+        lib.optionalAttrs
+          (
+            (lib.strings.toInt (lib.versions.major (lib.strings.getVersion config.programs.zotero.package)))
+            >= 7
+          )
+          {
+            "extensions.zotero.reader.ebookFontFamily" = "serif";
 
-          # "extensions.zotero.openReaderInNewWindow" = true;
+            # "extensions.zotero.openReaderInNewWindow" = true;
 
-          # ouch
-          "extensions.zotero.attachmentRenameTemplate" = ''
-            {{ if {{ creators }} != "" }}{{ if {{ creators max="1" name-part-separator=", " }} == {{ creators max="1" name="family-given" }}, }}{{ creators max="2" name="family-given" join=", " suffix=" - " }}{{ else }}{{ if {{ creators max="1" }} != {{ creators max="2" }} }}{{ creators max="1" name="family-given" name-part-separator=", " join=", " suffix=" et al. - " }}{{ else }}{{ creators max="2" name="family-given" name-part-separator=", " join=", " suffix=" - " }}{{ endif }}{{ endif }}{{ else }}{{ creators max="1" name="family-given" name-part-separator=", " }}{{ endif }}{{ if shortTitle != "" }}{{ shortTitle }}{{ else }}{{ if {{ title truncate="80" }} == {{ title }} }}{{ title }}{{ else }}{{ title truncate="80" suffix="..." }}{{ endif }}{{ endif }}{{ if itemType == "book" }} ({{ year }}{{ publisher truncate="80" prefix=", " }}){{ elseif itemType == "bookSection" }} ({{ year }}{{ bookTitle prefix=", " truncate="80" }}){{ elseif itemType == "blogpost" }} ({{ if year != "" }}{{ year }}{{ blogTitle prefix=", " }}{{ else }}{{ blogTitle }}{{ endif }}){{ elseif itemType == "webpage" }} ({{ year }}{{ websiteTitle prefix=", " }}){{ elseif itemType == "newspaperArticle" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ section truncate="80" prefix=", " }}){{ elseif itemType == "presentation" }} ({{ year }}{{ meetingName truncate="80" prefix=", " }}){{ elseif publicationTitle != "" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ if volume != year }}{{ volume prefix=" "  }}{{ endif }}{{ issue prefix=", no. " }}){{ elseif year != "" }} ({{ year }}){{ endif }}
-          '';
-          "extensions.zotero.autoRenameFiles.linked" = true;
+            # ouch
+            "extensions.zotero.attachmentRenameTemplate" = ''
+              {{ if {{ creators }} != "" }}{{ if {{ creators max="1" name-part-separator=", " }} == {{ creators max="1" name="family-given" }}, }}{{ creators max="2" name="family-given" join=", " suffix=" - " }}{{ else }}{{ if {{ creators max="1" }} != {{ creators max="2" }} }}{{ creators max="1" name="family-given" name-part-separator=", " join=", " suffix=" et al. - " }}{{ else }}{{ creators max="2" name="family-given" name-part-separator=", " join=", " suffix=" - " }}{{ endif }}{{ endif }}{{ else }}{{ creators max="1" name="family-given" name-part-separator=", " }}{{ endif }}{{ if shortTitle != "" }}{{ shortTitle }}{{ else }}{{ if {{ title truncate="80" }} == {{ title }} }}{{ title }}{{ else }}{{ title truncate="80" suffix="..." }}{{ endif }}{{ endif }}{{ if itemType == "book" }} ({{ year }}{{ publisher truncate="80" prefix=", " }}){{ elseif itemType == "bookSection" }} ({{ year }}{{ bookTitle prefix=", " truncate="80" }}){{ elseif itemType == "blogpost" }} ({{ if year != "" }}{{ year }}{{ blogTitle prefix=", " }}{{ else }}{{ blogTitle }}{{ endif }}){{ elseif itemType == "webpage" }} ({{ year }}{{ websiteTitle prefix=", " }}){{ elseif itemType == "newspaperArticle" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ section truncate="80" prefix=", " }}){{ elseif itemType == "presentation" }} ({{ year }}{{ meetingName truncate="80" prefix=", " }}){{ elseif publicationTitle != "" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ if volume != year }}{{ volume prefix=" "  }}{{ endif }}{{ issue prefix=", no. " }}){{ elseif year != "" }} ({{ year }}){{ endif }}
+            '';
+            "extensions.zotero.autoRenameFiles.linked" = true;
 
-          # <https://github.com/wileyyugioh/zotmoov>
-          # "extensions.zotmoov.dst_dir" = "${study}/doc";
-          # "extensions.zotmoov.allowed_fileext" = [ "pdf" "epub" "docx" "odt" ];
-          # "extensions.zotmoov.delete_files" = true;
+            # <https://github.com/wileyyugioh/zotmoov>
+            # "extensions.zotmoov.dst_dir" = "${config.xdg.userDirs.documents}/articles";
+            # "extensions.zotmoov.allowed_fileext" = [ "pdf" "epub" "docx" "odt" ];
+            # "extensions.zotmoov.delete_files" = true;
 
-          # <https://github.com/MuiseDestiny/zotero-attanger>
-          "extensions.zotero.zoteroattanger.sourceDir" = config.xdg.userDirs.download;
-          "extensions.zotero.zoteroattanger.readPDFtitle" = "always";
-          "extensions.zotero.zoteroattanger.attachType" = "linking";
-          "extensions.zotero.zoteroattanger.destDir" = "${study}/doc";
-          "extensions.zotero.zoteroattanger.autoRemoveEmptyFolder" = true;
-          "extensions.zotero.zoteroattanger.fileTypes" = lib.concatStringsSep "," [ "pdf" "epub" "docx" "odt" ];
+            # <https://github.com/MuiseDestiny/zotero-attanger>
+            "extensions.zotero.zoteroattanger.sourceDir" = config.xdg.userDirs.download;
+            "extensions.zotero.zoteroattanger.readPDFtitle" = "always";
+            "extensions.zotero.zoteroattanger.attachType" = "linking";
+            "extensions.zotero.zoteroattanger.destDir" = "${config.xdg.userDirs.documents}/articles";
+            "extensions.zotero.zoteroattanger.autoRemoveEmptyFolder" = true;
+            "extensions.zotero.zoteroattanger.fileTypes" = lib.concatStringsSep "," [
+              "pdf"
+              "epub"
+              "docx"
+              "odt"
+            ];
 
-          # Enable userChrome
-          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        };
+            # Enable userChrome
+            "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+          };
 
       userChrome = ''
         * {
@@ -352,8 +367,8 @@ in
 
         /* Use Arc's style for toolbars */
         #titlebar {
-            background: ${config.theme.colors.background} !important; /* config.theme.colors.background */
-            color: ${config.theme.colors.foreground} !important; /* config.theme.colors.foreground */
+            background: ${config.theme.colors.toolbarBackground} !important; /* config.theme.colors.background */
+            color: ${config.theme.colors.toolbarForeground} !important; /* config.theme.colors.foreground */
         }
       '';
     };
@@ -361,19 +376,29 @@ in
 
   persist = {
     directories = [
-      { method = "bindfs"; directory = ".zotero/zotero/default"; }
+      {
+        method = "bindfs";
+        directory = ".zotero/zotero/default";
+      }
 
-      # { method = "bindfs"; directory = config.lib.somasis.xdgDataDir "zotero/styles"; }
-      # { method = "bindfs"; directory = config.lib.somasis.xdgDataDir "zotero/translators"; }
+      {
+        method = "bindfs";
+        directory = config.lib.somasis.xdgDataDir "zotero/styles";
+      }
+      {
+        method = "bindfs";
+        directory = config.lib.somasis.xdgDataDir "zotero/translators";
+      }
     ];
     files = [ (config.lib.somasis.xdgDataDir "zotero/zotero.sqlite") ];
   };
 
   xdg.dataFile = {
-    "zotero/storage".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/study/zotero";
+    "zotero/storage".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.xdg.userDirs.documents}/zotero";
 
-    "zotero/styles".source = inputs.zotero-styles;
-    "zotero/translators".source = inputs.zotero-translators;
+    # "zotero/styles".source = inputs.zotero-styles;
+    # "zotero/translators".source = inputs.zotero-translators;
 
     "zotero/locate/.keep".source = builtins.toFile "keep" "";
     "zotero/locate/engines.json".text = builtins.toJSON [
@@ -538,52 +563,62 @@ in
     ];
   };
 
-  systemd.user.services.zotero = {
+  systemd.user.services.zotero = lib.mkIf config.xsession.enable {
     Unit = {
       Description = config.programs.zotero.package.meta.description;
-      PartOf = [ "graphical-session-autostart.target" ];
+      PartOf = [ "xdg-desktop-autostart.target" ];
       Conflicts = [ "game.target" ];
       After = [ "game.target" ];
     };
-    Install.WantedBy = [ "graphical-session-autostart.target" ];
+    Install.WantedBy = [ "xdg-desktop-autostart.target" ];
 
     Service =
-      (config.lib.somasis.makeXorgApplicationService
-        (lib.getExe config.programs.zotero.package)
-        zoteroWindow
-      ) // { SyslogIdentifier = "zotero"; }
-    ;
+      (config.lib.somasis.makeXorgApplicationService (lib.getExe config.programs.zotero.package) zoteroWindow)
+      // {
+        SyslogIdentifier = "zotero";
+      };
   };
 
-  xsession.windowManager.bspwm.rules."${zoteroWindow.class}:${zoteroWindow.className}:*".locked = true;
+  xsession.windowManager.bspwm.rules."${zoteroWindow.class}:${zoteroWindow.className}:*".locked =
+    true;
 
   services.sxhkd.keybindings."super + z" = pkgs.writeShellScript "zotero" ''
     ${pkgs.systemd}/bin/systemctl start --user zotero.service
-    bspwm-hide-unhide ${lib.escapeShellArgs [ zoteroWindow.class zoteroWindow.className zoteroWindow.role ]}
+    bspwm-hide-unhide ${
+      lib.escapeShellArgs [
+        zoteroWindow.class
+        zoteroWindow.className
+        zoteroWindow.role
+      ]
+    }
   '';
 
-  xdg.mimeApps.defaultApplications = lib.genAttrs
-    [
-      "application/marc"
-      "application/rdf+xml"
-      "application/x-research-info-systems"
-      "text/x-bibtex"
-    ]
-    (_: [ "zotero.desktop" ])
-  ;
+  xdg.mimeApps.defaultApplications = lib.genAttrs [
+    "application/marc"
+    "application/rdf+xml"
+    "application/x-research-info-systems"
+    "text/x-bibtex"
+  ]
+    (_: [ "zotero.desktop" ]);
 
   programs.qutebrowser = {
     aliases.zotero = "spawn -u ${qutebrowser-zotero}/bin/qute-zotero";
     aliases.Zotero = "hint links userscript ${qutebrowser-zotero}/bin/qute-zotero";
-    keyBindings.normal = let open = x: "open -rt ${x}"; in {
-      "zpz" = "zotero";
-      "zpZ" = "Zotero";
-      "rz" = open "${proxy}?qurl={url}";
-    };
+    keyBindings.normal =
+      let
+        open = x: "open -rt ${x}";
+      in
+      {
+        "zpz" = "zotero";
+        "zpZ" = "Zotero";
+        "rz" = open "${proxy}?qurl={url}";
+      };
 
     searchEngines = {
-      "!library" = "${proxy}?qurl=http%3A%2F%2Fsearch.ebscohost.com%2Flogin.aspx%3Fdirect%3Dtrue%26site%3Deds-live%26scope%3Dsite%26group%3Dmain%26profile%3Deds%26authtime%3Dcookie%2Cip%2Cuid%26bQuery%3D{quoted}";
-      "!scholar" = "${proxy}?qurl=https%3A%2F%2Fscholar.google.com%2Fscholar%3Fhl%3Den%26q%3D{quoted}%26btnG%3DSearch";
+      "!library" =
+        "${proxy}?qurl=http%3A%2F%2Fsearch.ebscohost.com%2Flogin.aspx%3Fdirect%3Dtrue%26site%3Deds-live%26scope%3Dsite%26group%3Dmain%26profile%3Deds%26authtime%3Dcookie%2Cip%2Cuid%26bQuery%3D{quoted}";
+      "!scholar" =
+        "${proxy}?qurl=https%3A%2F%2Fscholar.google.com%2Fscholar%3Fhl%3Den%26q%3D{quoted}%26btnG%3DSearch";
     };
   };
 

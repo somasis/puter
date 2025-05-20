@@ -5,36 +5,66 @@
 , ...
 }:
 let
-  commaPicker = lib.optionalString (config.programs.dmenu.enable or config.programs.skim.enable) (pkgs.writeShellScript "comma-picker" ''
-    items=$(</dev/stdin)
-    case "$(wc -l <<<"$items")" in
-        1)
-            printf '%s\n' "$items"
-            printf '%s%s\n' "''${PS4:-$ }" "$items" >&2
-            exit
-            ;;
-        0) exit 1 ;;
-    esac
+  commaPicker = lib.optionalString (config.programs.dmenu.enable or config.programs.skim.enable) (
+    pkgs.writeShellScript "comma-picker" ''
+      : "''${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
 
-    ${lib.optionalString config.programs.dmenu.enable "if [ -v DISPLAY ]; then exec dmenu -p ',' -S; fi <<<\"$items\""}
-    ${lib.optionalString config.programs.skim.enable "exec sk -p ', ' --no-sort --reverse <<<\"$items\""}
-  '');
+      items=$(</dev/stdin)
+      case "$(wc -l <<<"$items")" in
+          1)
+              printf '%s\n' "$items"
+              printf '%s%s\n' "''${PS4:-$ }" "$items" >&2
+              exit
+              ;;
+          0) exit 1 ;;
+      esac
+
+      hash=$(
+          printf '%s\0' "$(tty)" "$items" "$PPID" \
+              | sha256sum \
+              | cut -d ' ' -f1
+      )
+
+      last_choice_file="$XDG_RUNTIME_DIR"/comma."$hash"
+
+      choice=$(
+          if [ -z "''${COMMA_PICKER_OVERRIDE:-}" ] && [ -s "$last_choice_file" ]; then
+              printf '%s\n' "$last_choice"
+              printf 'using last choice (%s); run again with ,, to override\n' "''${last_choice@Q}" >&2
+          else
+              {
+                  ${lib.optionalString config.programs.dmenu.enable "if [ -v DISPLAY ]; then dmenu -p ',' -S <<<\"$items\"; return $?; fi"}
+                  ${lib.optionalString config.programs.skim.enable "sk -p ', ' --no-sort --reverse; return $?"}
+              } <<<"$items"
+          fi
+      )
+
+      if [ -n "$choice" ]; then
+          printf '%s\n' "$choice" | tee "$last_choice_file"
+      fi
+    ''
+  );
 in
 {
   home.shellAliases = rec {
     # LC_COLLATE=C sorts uppercase before lowercase.
     ls = "LC_COLLATE=C ls --hyperlink=auto --group-directories-first --dereference-command-line-symlink-to-dir --time-style=iso --color -AFlh";
+    chown = "chown -c";
+    chmod = "chmod -c";
 
     vi = "$EDITOR";
 
     ip = "ip --color=auto";
 
-    # Quick ssh aliases
-    "ascii.town" = "ssh play@ascii.town";
-    "2048" = "ssh -t play@ascii.town 2048";
-    "snake" = "ssh -t play@ascii.town snake";
-
     bc = "bc -q";
+    number = "nl -b a -d '' -f n -w 1";
+
+    diff = "diff --color";
+
+    grep = "grep --color";
+    g = "find -L ./ -type f \! -path '*/.*/*' -print0 | xe -0 -N0 grep --color -n";
+
+    f = "bfs -regextype posix-egrep -status";
 
     xz = "xz -T0 -9 -e";
     zstd = "zstd -T0 -19";
@@ -45,7 +75,9 @@ in
 
     journal = "journalctl -e";
     syslog = "journal -b 0";
-    userlog = "syslog --user";
+
+    # --exclude-identifier is included due to kwin_wayland often spamming the log.
+    userlog = "journal --user --exclude-identifier kwin_wayland --exclude-identifier plasmashell --exclude-identifier kded6";
 
     bus = "busctl --verbose -j";
 
@@ -53,33 +85,23 @@ in
 
     since = "datediff -f '%Yy %mm %ww %dd %0Hh %0Mm %0Ss'";
 
+    sudo = lib.mkIf osConfig.security.sudo.enable "sudo "; # trailing space means sudo will use aliases
     doas = lib.mkIf osConfig.security.sudo.enable "sudo";
 
+    watch = "watch -n1 -c ";
+
     which = "{ alias; declare -f; } | which --read-functions --read-alias";
+
+    tar = "tar --exclude '.DS_Store' --exclude '__MACOSX/*'";
+
+    ",," = "COMMA_PICKER_OVERRIDE=true ,";
   };
 
   home.packages = [
+    pkgs.rmlint
+
+    pkgs.spacer
     pkgs.nocolor
-
-    (pkgs.writeShellScriptBin "upward" ''
-      usage() {
-          printf 'usage: %s file...\n' "''${0##*/}" >&2
-          exit 69
-      }
-
-      e=0
-      while [ $# -gt 0 ]; do
-          while [ "$PWD" != / ]; do
-              [ -f "$1" ] && printf "%s\n" "$(readlink -f "$1")" && break
-              e=$((e + 1))
-              cd ../
-          done
-          shift
-      done
-
-      [ "$e" -eq 0 ] && exit
-      exit 1
-    '')
 
     (pkgs.writeShellScriptBin "execurl" ''
       fetch_directory=$(${pkgs.coreutils}/bin/mktemp -d)
@@ -124,30 +146,32 @@ in
       exit "$error_code"
     '')
 
-    (pkgs.writeShellScriptBin "pe" ''
-      ${lib.getExe pkgs.xe} -LL -j0 "$@" | sort -snk1 | cut -d' ' -f2-
-    '')
-
-    (if commaPicker != "" then
-      (pkgs.wrapCommand {
-        package = pkgs.comma;
-        wrappers = [{ command = "/bin/,"; setEnvironmentDefault.COMMA_PICKER = commaPicker; }];
-      })
-    else
-      pkgs.comma
+    (
+      if commaPicker != "" then
+        (pkgs.wrapCommand {
+          package = pkgs.comma;
+          wrappers = [
+            {
+              command = "/bin/,";
+              setEnvironmentDefault.COMMA_PICKER = commaPicker;
+            }
+          ];
+        })
+      else
+        pkgs.comma
     )
 
     (pkgs.writeShellScriptBin "edo" ''
       # <https://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced/14706745#14706745
       _edo_is_sourced=0
-      if [ -n "$ZSH_VERSION" ]; then
+      if [ -n "''${ZSH_VERSION:-}" ]; then
           case "$ZSH_EVAL_CONTEXT" in *':file') _edo_is_sourced=1 ;; esac
-      elif [ -n "$KSH_VERSION" ]; then
+      elif [ -n "''${KSH_VERSION:-}" ]; then
           test \
               "$(cd -- "$(dirname -- "$0")" && pwd -P)/$(basename -- "$0")" \
               != "$(cd -- "$(dirname -- "''${.sh.file}")" && pwd -P)/$(basename -- "''${.sh.file}")" ] \
               && _edo_is_sourced=1
-      elif [ -n "$BASH_VERSION" ]; then
+      elif [ -n "''${BASH_VERSION:-}" ]; then
           ( return 0 2>/dev/null ) && _edo_is_sourced=1
       else
           # All other shells: examine $0 for known shell binary filenames.
@@ -189,72 +213,86 @@ in
     )
 
     man() {
-          local man_args=( "$@" )
+        local man_args=( "$@" )
 
-          local COMMA_NIXPKGS_FLAKE COMMA_PICKER
-          : "''${COMMA_NIXPKGS_FLAKE:=nixpkgs}"
-          ${lib.toShellVar "COMMA_PICKER" commaPicker}
+        local COMMA_NIXPKGS_FLAKE COMMA_PICKER
+        : "''${COMMA_NIXPKGS_FLAKE:=nixpkgs}"
+        : "''${COMMA_PICKER:=${lib.escapeShellArg commaPicker}}"
 
-          local MANPATH="$MANPATH"
-          local old_MANPATH="$MANPATH"
+        local MANPATH="$MANPATH"
+        local old_MANPATH="$MANPATH"
 
-          local man_sections man_section new_man_path
-          mapfile -t man_sections < <(
-              IFS=:
+        local man_sections man_section new_man_path
+        mapfile -t man_sections < <(
+            IFS=:
 
-              if [[ "''${MANPATH:0:1}" == : ]]; then
-                  local MANPATH=( ''${MANPATH:1} )
-              else
-                  local MANPATH=( ''${MANPATH} )
-              fi
-              unset IFS
+            if [[ "''${MANPATH:0:1}" == : ]]; then
+                local MANPATH=( ''${MANPATH:1} )
+            else
+                local MANPATH=( ''${MANPATH} )
+            fi
+            unset IFS
 
-              find -L \
-                  "''${MANPATH[@]}" \
-                  -mindepth 1 \
-                  -type d \
-                  -name 'man*' \
-                  -printf '%f\n' \
-                  2>/dev/null \
-                  | cut -c4- \
-                  | sort -u
-          )
+            find -L \
+                "''${MANPATH[@]}" \
+                -mindepth 1 \
+                -type d \
+                -name 'man*' \
+                -printf '%f\n' \
+                2>/dev/null \
+                | cut -c4- \
+                | sort -u
+        )
 
-          MANPATH="$old_MANPATH"
+        MANPATH="$old_MANPATH"
 
-          if command man -w "''${man_args[@]}" >/dev/null 2>&1; then
-              command man "''${man_args[@]}"
-          else
-              local regex
-              while [[ "$#" -ge 1 ]]; do
-                  for man_section in "''${man_sections[@]}"; do
-                      if [[ "$1" == "$man_section" ]] && [[ "$#" -ge 2 ]]; then
-                          regex='/share/man/man'"$man_section"'/'"$2"'\.'"$man_section"
-                          shift
-                          break
-                      else
-                          regex='/share/man/man.*'/"$1"'\.'
-                          break
-                      fi
-                  done
-                  shift
+        if command man -w "''${man_args[@]}" >/dev/null 2>&1; then
+            command man "''${man_args[@]}"
+        else
+            local regex
+            while [[ "$#" -ge 1 ]]; do
+                for man_section in "''${man_sections[@]}"; do
+                    if [[ "$1" == "$man_section" ]] && [[ "$#" -ge 2 ]]; then
+                        regex='/share/man/man'"$man_section"'/'"$2"'\.'"$man_section"
+                        shift
+                        break
+                    else
+                        regex='/share/man/man.*'/"$1"'\.'
+                        break
+                    fi
+                done
+                shift
 
-                  new_man_path=$(nix-locate --minimal --at-root --regex "$regex" 2>/dev/null | grep -v '^(')
-                  [[ -n "$new_man_path" ]] || continue
+                [[ -t 2 ]] && printf 'searching for packages containing manpage %s...\n' "$1" >&2 || :
+                new_man_path=$(nix-locate --minimal --at-root --regex "$regex" 2>/dev/null | grep -v '^(')
+                [[ -n "$new_man_path" ]] || continue
 
-                  new_man_path=$(eval "$COMMA_PICKER" <<< "$new_man_path")
-                  new_man_path=$(nix build --no-link --print-out-paths "$COMMA_NIXPKGS_FLAKE"#"$new_man_path")
-                  new_man_path="$new_man_path/share/man"
+                new_man_path=$(eval "$COMMA_PICKER" <<< "$new_man_path")
+                new_man_path=$(nix build --no-link --print-out-paths "$COMMA_NIXPKGS_FLAKE"#"$new_man_path")
+                new_man_path="$new_man_path/share/man"
 
-                  case "$MANPATH" in
-                      :*) MANPATH="$new_man_path$MANPATH" ;;
-                      "") MANPATH="$new_man_path:" ;;
-                      *)  MANPATH="$new_man_path:$MANPATH" ;;
-                  esac
-              done
+                case "$MANPATH" in
+                    :*) MANPATH="$new_man_path$MANPATH" ;;
+                    "") MANPATH="$new_man_path:" ;;
+                    *)  MANPATH="$new_man_path:$MANPATH" ;;
+                esac
+            done
 
-              MANPATH="$MANPATH" command man "''${man_args[@]}"
-          fi
+            [[ -t 2 ]] && printf '\033[1K' >&2 || :
+
+            MANPATH="$MANPATH" command man "''${man_args[@]}"
+        fi
     }
+  '';
+
+  xdg.configFile."curlrc".text = ''
+    show-error
+
+    disallow-username-in-url
+
+    compressed
+
+    parallel
+    parallel-max = 4
   '';
 }

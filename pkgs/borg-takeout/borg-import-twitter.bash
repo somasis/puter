@@ -46,7 +46,7 @@ printf '::twitter-%s-%s\n' "${account}" "${date}"
 
 # shellcheck disable=SC2016
 bsdtar -cf - --format=ustar "${files[@]}" \
-    | borg "${borg_args[@}" \
+    | borg "${borg_args[@]}" \
         import-tar \
             --stats -p \
             --comment='imported with `borg import-tar`, via borg-import-twitter' \
@@ -54,7 +54,7 @@ bsdtar -cf - --format=ustar "${files[@]}" \
             "::twitter-${account}-${date}.failed" \
             -
 
-borg "${borg_args[@}" \
+borg "${borg_args[@]}" \
     rename \
         "::twitter-${account}-${date}.failed" \
         "twitter-${account}-${date}"

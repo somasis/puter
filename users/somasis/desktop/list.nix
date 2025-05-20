@@ -6,10 +6,12 @@ let
   list = "${config.home.homeDirectory}/list/todo.txt";
 in
 {
-  persist.directories = [{
-    directory = "list";
-    method = "symlink";
-  }];
+  persist.directories = [
+    {
+      directory = "list";
+      method = "symlink";
+    }
+  ];
 
   home.shellAliases = {
     # Personal todo.txt aliases.

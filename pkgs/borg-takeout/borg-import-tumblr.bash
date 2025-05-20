@@ -47,7 +47,7 @@ printf '::tumblr-%s-%s\n' "${account}" "${date}"
 
 # shellcheck disable=SC2016
 bsdtar -cf - --format=ustar "${files[@]}" \
-    | borg "${borg_args[@}" \
+    | borg "${borg_args[@]}" \
         import-tar \
             --stats -p \
             --comment='imported with `borg import-tar`, via borg-import-tumblr' \
@@ -55,12 +55,12 @@ bsdtar -cf - --format=ustar "${files[@]}" \
             "::tumblr-${account}-${date}.failed" \
             -
 
-borg "${borg_args[@}" \
+borg "${borg_args[@]}" \
     rename \
         "::tumblr-${account}-${date}.failed" \
         "tumblr-${account}-${date}"
 
-borg "${borg_args[@}" \
+borg "${borg_args[@]}" \
     prune \
         --keep-monthly=12 --keep-yearly=4 \
         -a "tumblr-${account}-*"

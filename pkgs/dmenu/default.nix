@@ -1,14 +1,12 @@
 { lib
 , stdenv
-
 , fetchFromGitHub
 , makeWrapper
-
 , xorg
 , zlib
 , pango
 , pkg-config
-
+, runtimeShell
 , enableAlpha ? false
 , enableBarPadding ? false
 , enableBorder ? false
@@ -28,6 +26,7 @@
 , enableHighlight ? true
 , enableIncremental ? false
 , enableInitialText ? true
+, enableInputMethod ? true
 , enableInstant ? true
 , enableLineHeight ? true
 , enableManaged ? false
@@ -57,14 +56,10 @@
 , enableWMType ? true
 , enableXresources ? true
 , enableXyw ? false
+,
 }:
 let
-  optionalCpp = opt: arg:
-    if opt then
-      "#define ${arg} 1"
-    else
-      "#define ${arg} 0"
-  ;
+  optionalCpp = opt: arg: if opt then "#define ${arg} 1" else "#define ${arg} 0";
 in
 stdenv.mkDerivation rec {
   pname = "dmenu";
@@ -79,35 +74,31 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  buildInputs = [
-    xorg.libX11
-    xorg.libXinerama
-    zlib
-    pango
-  ]
-  ++ lib.optional enablePango pango
-  ++ lib.optional enableAlpha xorg.libXrender
-  ;
+  buildInputs =
+    [
+      xorg.libX11
+      xorg.libXinerama
+      zlib
+      pango
+    ]
+    ++ lib.optional enablePango pango
+    ++ lib.optional enableAlpha xorg.libXrender;
 
-  nativeBuildInputs = [ makeWrapper pkg-config ];
-
-  postPatch = ''
-    sed -Ei -e 's!\<(dmenu|dmenu_path|stest)\>!'"$out/bin"'/&!g' dmenu_run
-    sed -Ei -e 's!\<stest\>!'"$out/bin"'/&!g' dmenu_path
-  '';
+  nativeBuildInputs = [
+    makeWrapper
+    pkg-config
+  ];
 
   configurePhase =
     let
-      substituteArgs = lib.concatStringsSep " "
-        ([ ''--replace "PREFIX = /usr/local" "PREFIX = $out"'' ]
-          ++ [
-          (lib.escapeShellArgs (
-            [ ]
-              ++ lib.optionals enablePango [ "--replace" "#PANGO" "PANGO" ]
-              ++ lib.optionals (!enableAlpha) [ "--replace" "#XRENDER" "XRENDER" ]
-          ))
-        ])
-      ;
+      substituteArgs = lib.concatStringsSep " " (
+        [ ''--replace-fail "PREFIX = /usr/local" "PREFIX = $out"'' ]
+        ++ lib.optionals enablePango [
+          ''--replace-fail "#PANGOINC" "PANGOINC"''
+          ''--replace-fail "#PANGOLIB" "PANGOLIB"''
+        ]
+        ++ lib.optional (!enableAlpha) ''--replace-fail "XRENDER = " "#XRENDER = "''
+      );
 
       patches = ''
         ${optionalCpp enableAlpha "ALPHA_PATCH"}
@@ -128,6 +119,7 @@ stdenv.mkDerivation rec {
         ${optionalCpp enableHighPriority "HIGHPRIORITY_PATCH"}
         ${optionalCpp enableIncremental "INCREMENTAL_PATCH"}
         ${optionalCpp enableInitialText "INITIALTEXT_PATCH"}
+        ${optionalCpp enableInputMethod "INPUTMETHOD_PATCH"}
         ${optionalCpp enableInstant "INSTANT_PATCH"}
         ${optionalCpp enableLineHeight "LINE_HEIGHT_PATCH"}
         ${optionalCpp enableManaged "MANAGED_PATCH"}
@@ -168,7 +160,15 @@ stdenv.mkDerivation rec {
       EOF
     '';
 
-  makeFlags = [ "CC:=$(CC)" "PKG_CONFIG:=$(PKG_CONFIG)" ];
+  postFixup = ''
+    makeWrapper "$out/bin/dmenu_run"  "$out/bin/dmenu_run"  --prefix PATH : "$out"
+    makeWrapper "$out/bin/dmenu_path" "$out/bin/dmenu_path" --prefix PATH : "$out"
+  '';
+
+  makeFlags = [
+    "CC:=$(CC)"
+    "PKG_CONFIG:=$(PKG_CONFIG)"
+  ];
 
   meta = with lib; {
     description = "A generic, highly customizable, and efficient menu for the X Window System";

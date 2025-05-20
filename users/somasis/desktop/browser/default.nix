@@ -5,7 +5,16 @@
 , ...
 }:
 let
-  inherit (config.lib.somasis) xdgConfigDir xdgCacheDir xdgDataDir;
+  inherit (config.lib.somasis)
+    relativeToHome
+    xdgConfigDir
+    xdgCacheDir
+    xdgDataDir
+
+    randomPort
+    ;
+
+  dictcli = "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py";
 
   tc = config.theme.colors;
 
@@ -14,7 +23,7 @@ let
 
     : "''${QUTE_FIFO:?}"
     : "''${QUTE_URL:=''${1?no URL was provided}}"
-    PATH=${lib.makeBinPath [ pkgs.translate-shell ] }:"$PATH"
+    PATH=${lib.makeBinPath [ pkgs.translate-shell ]}:"$PATH"
 
     url=$(trans -no-browser -- "$QUTE_URL")
     printf 'open -t -r %s\n' "$url" > "''${QUTE_FIFO}"
@@ -23,7 +32,15 @@ let
   yank-text-anchor = pkgs.writeShellScript "yank-text-anchor" ''
     set -euo pipefail
 
-    PATH=${lib.makeBinPath [ config.programs.jq.package pkgs.coreutils pkgs.gnused pkgs.trurl pkgs.util-linux ]}
+    PATH=${
+      lib.makeBinPath [
+        config.programs.jq.package
+        pkgs.coreutils
+        pkgs.gnused
+        pkgs.trurl
+        pkgs.util-linux
+      ]
+    }
 
     : "''${QUTE_FIFO:?}"
     exec >>"''${QUTE_FIFO}"
@@ -67,30 +84,32 @@ let
     printf 'yank -q inline "%s" ;; message-info "Yanked URL of highlighted text to clipboard: %s"\n' "''${url}" "''${url}"
   '';
 
-  inherit (config.somasis) tunnels;
   inherit (osConfig.services) tor;
 
   proxies =
-    [ ]
-    ++ lib.optional (tor.enable && tor.client.enable)
-      "socks://${tor.client.socksListenAddress.addr}:${toString tor.client.socksListenAddress.port}"
-    ++ lib.optionals tunnels.enable (lib.mapAttrsToList
-      (_: tunnel: "socks://127.0.0.1:${toString tunnel.port}")
-      (lib.filterAttrs (_: tunnel: tunnel.type == "dynamic") tunnels.tunnels)
-    )
-  ;
+    lib.optional
+      (
+        tor.enable && tor.client.enable
+      ) "socks://${tor.client.socksListenAddress.addr}:${toString tor.client.socksListenAddress.port}"
+    ++ lib.optionals config.services.tunnels.enable (
+      lib.mapAttrsToList (_: tunnel: "socks://127.0.0.1:${toString tunnel.port}") (
+        lib.filterAttrs (_: tunnel: tunnel.type == "dynamic") config.services.tunnels.tunnels
+      )
+    );
 in
 {
   imports = [
     ./greasemonkey
     ./blocking.nix
     ./reader.nix
+    ./redirects.nix
     ./search.nix
   ];
 
   persist = {
     directories = [
       (xdgConfigDir "qutebrowser")
+      (xdgConfigDir "google-chrome")
       (xdgConfigDir "chromium")
     ];
 
@@ -106,25 +125,52 @@ in
 
   cache = {
     directories = [
-      (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
-      (xdgDataDir "qutebrowser/sessions")
-      (xdgDataDir "qutebrowser/webengine")
-      (xdgCacheDir "qutebrowser")
       (xdgCacheDir "chromium")
-    ];
+      (xdgCacheDir "google-chrome")
+      (xdgCacheDir "qutebrowser")
+      (xdgDataDir "qutebrowser/greasemonkey/requires")
+      (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
 
+      # WebEngine's Local storage, I think.
+      # I think it also has cookies stored in it.
+      (xdgDataDir "qutebrowser/webengine")
+    ];
+    files = [
+      (xdgDataDir "qutebrowser/adblock-cache.dat")
+      (xdgDataDir "qutebrowser/blocked-hosts")
+    ];
+  };
+
+  log = {
     files = [
       (xdgDataDir "qutebrowser/cmd-history")
-      (xdgDataDir "qutebrowser/cookies")
       (xdgDataDir "qutebrowser/history.sqlite")
       (xdgDataDir "qutebrowser/state")
     ];
   };
 
+  # Some qutebrowser data is synchronized between computers
+  sync = {
+    directories = [
+      (xdgDataDir "qutebrowser/sessions")
+    ];
+    files = [
+      (xdgConfigDir "qutebrowser/bookmarks/urls")
+      (xdgConfigDir "qutebrowser/quickmarks")
+    ];
+  };
+
+  # Ensure the default session exists, if necessary. Prevents a possible write error later on
+  # when rebuilding or starting a session for the first time.
+  systemd.user.tmpfiles.rules = [
+    "f ${config.sync.persistentStoragePath}/${relativeToHome config.xdg.dataHome}/qutebrowser/sessions/${config.programs.qutebrowser.settings.session.default_name}.yml - - - -  "
+    "f ${config.xdg.dataHome}/qutebrowser/sessions/.stignore - - - - _autosave.yml"
+  ];
+
   home.sessionVariables."BROWSER" = lib.mkIf config.programs.qutebrowser.enable "qutebrowser";
   xdg.mimeApps = {
-    defaultApplications = lib.mkIf config.programs.qutebrowser.enable (lib.genAttrs
-      [
+    defaultApplications = lib.mkIf config.programs.qutebrowser.enable (
+      lib.genAttrs [
         "application/xhtml"
         "text/html"
         "text/xml"
@@ -133,7 +179,7 @@ in
         "x-scheme-handler/about"
         "x-scheme-handler/unknown"
       ]
-      (_: "org.qutebrowser.qutebrowser.desktop")
+        (_: "org.qutebrowser.qutebrowser.desktop")
     );
 
     # associations.removed = lib.genAttrs
@@ -154,9 +200,20 @@ in
     qutebrowser = {
       enable = true;
 
-      package = pkgs.qutebrowser.override {
-        withPdfReader = config.programs.qutebrowser.settings.content.pdfjs;
-        enableWideVine = true;
+      package = pkgs.wrapCommand {
+        package = pkgs.qutebrowser.override {
+          withPdfReader = config.programs.qutebrowser.settings.content.pdfjs;
+          enableWideVine = true;
+        };
+
+        # Workaround for poor font rendering with fractional scaling on Wayland/KDE.
+        # <https://www.reddit.com/r/qutebrowser/comments/15xmvaz/how_do_i_get_crisp_text_on_wayland/kpfevjn/>
+        # <https://bugreports.qt.io/browse/QTBUG-113574?focusedId=723760&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-723760>
+        wrappers = [
+          {
+            setEnvironmentDefault.QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
+          }
+        ];
       };
 
       loadAutoconfig = true;
@@ -176,16 +233,16 @@ in
         # Load a restored tab as soon as it takes focus.
         session.lazy_restore = true;
 
+        session.default_name = "${config.home.username}@${osConfig.networking.fqdnOrHostName}";
+
         # Unlimited tab focus switching history.
         tabs = {
           focus_stack_size = -1;
           undo_stack_size = -1;
+
+          # Close when the last tab is closed.
+          last_close = "close";
         };
-
-        completion.cmd_history_max_items = 10000;
-
-        # Close when the last tab is closed.
-        tabs.last_close = "close";
 
         # Open a blank page when :open is given with no arguments.
         url = rec {
@@ -194,6 +251,10 @@ in
         };
 
         completion = {
+          delay = 110; # seems to be about right to make history completion not slow down the input showing up
+
+          cmd_history_max_items = 10000;
+
           # Shrink the completion menu to the amount of items.
           shrink = true;
 
@@ -208,8 +269,14 @@ in
           border = "1px solid ${tc.accent}";
         };
 
-        keyhint.radius = 0;
-        prompt.radius = 0;
+        keyhint = {
+          radius = 10;
+          delay = 0;
+        };
+        prompt = {
+          filebrowser = true;
+          radius = 10;
+        };
 
         content = {
           proxy = "system";
@@ -217,6 +284,9 @@ in
           webrtc_ip_handling_policy = "default-public-interface-only";
 
           tls.certificate_errors = "ask-block-thirdparty";
+
+          cookies.accept = "no-3rdparty";
+          fullscreen.window = true;
 
           javascript = {
             # Allow JavaScript to read from or write to the xos-upclipboard.
@@ -232,7 +302,7 @@ in
 
           # List of user stylesheet filenames to use. These apply globally.
           user_stylesheets = map builtins.toString [
-            (pkgs.writeText "system-fonts.user.css" ''
+            (pkgs.writeText "system.user.css" ''
               @font-face {
                   font-family: ui-sans-serif;
                   src: local(sans-serif);
@@ -276,16 +346,24 @@ in
         };
 
         # Languages preferences.
-        spellcheck.languages = [ "en-US" "en-AU" "en-GB" "es-ES" ];
-        content.headers.accept_language = lib.concatStringsSep "," (lib.reverseList (lib.imap1
-          (i: v: ''${v};q=${lib.substring 0 5 (builtins.toString (i * .001))}'')
-          (lib.reverseList [
-            "en-US"
-            "en"
-            "tok"
-            "es"
-          ])
-        ));
+        spellcheck.languages = [
+          "en-US"
+          "en-AU"
+          "en-GB"
+          "es-ES"
+        ];
+        content.headers.accept_language = lib.concatStringsSep "," (
+          lib.reverseList (
+            lib.imap1 (i: v: ''${v};q=${lib.substring 0 5 (builtins.toString (i * .001))}'') (
+              lib.reverseList [
+                "en-US"
+                "en"
+                "tok"
+                "es"
+              ]
+            )
+          )
+        );
 
         # Use the actual title for notification titles, rather
         # than the site's URL of origin.
@@ -300,7 +378,7 @@ in
         # Fonts.
         fonts = {
           default_family = "sans-serif";
-          default_size = "11pt";
+          default_size = "${toString config.programs.plasma.fonts.general.pointSize}pt";
 
           web = {
             family = rec {
@@ -322,10 +400,7 @@ in
           keyhint = "default_size monospace";
           hints = "default_size monospace";
 
-          contextmenu = "10pt sans-serif";
-          tooltip = "10pt sans-serif";
-
-          downloads = "11pt monospace";
+          downloads = "default_size sans-serif";
 
           messages = {
             error = "default_size monospace";
@@ -360,39 +435,39 @@ in
           webpage.bg = "";
 
           downloads = {
-            start.bg = tc.darkBackground;
-            stop.bg = tc.green;
+            bar.bg = tc.windowBackground;
+            start.bg = tc.windowBackground;
+            stop.bg = tc.brightGreen;
             error.bg = tc.red;
-            bar.bg = tc.darkBackground;
           };
 
           statusbar = {
-            normal.bg = tc.background;
-            normal.fg = tc.foreground;
+            normal.bg = tc.headerBackground;
+            normal.fg = tc.headerForeground;
 
-            command.bg = tc.lightBackground;
-            command.fg = tc.lightForeground;
+            command.bg = tc.terminalBackground;
+            command.fg = tc.terminalForeground;
 
-            insert.bg = tc.green;
-            insert.fg = tc.foreground;
+            insert.bg = tc.dimGreen;
+            insert.fg = tc.headerForeground;
 
-            passthrough.bg = tc.blue;
-            passthrough.fg = tc.foreground;
+            passthrough.bg = tc.brightBrown;
+            passthrough.fg = tc.headerForeground;
 
-            private.bg = tc.magenta;
-            private.fg = tc.foreground;
+            private.bg = tc.dimPurple;
+            private.fg = tc.headerForeground;
 
-            progress.bg = tc.green;
+            progress.bg = tc.accent;
 
             url = {
-              fg = tc.green;
-              hover.fg = tc.yellow;
+              fg = tc.toolbarForeground;
+              hover.fg = tc.blue;
 
               error.fg = tc.brightRed;
-              warn.fg = tc.yellow;
+              warn.fg = tc.orange;
 
-              success.http.fg = tc.yellow;
-              success.https.fg = tc.green;
+              success.http.fg = tc.brightRed;
+              success.https.fg = tc.brightAccent;
             };
           };
 
@@ -400,68 +475,73 @@ in
           tooltip.fg = tc.tooltipForeground;
 
           keyhint = {
-            bg = tc.background;
-            fg = tc.foreground;
+            bg = tc.tooltipBackground;
+            fg = tc.tooltipForeground;
             suffix.fg = tc.red;
           };
 
           hints = {
-            bg = tc.background;
-            fg = tc.foreground;
+            bg = tc.tooltipBackground;
+            fg = tc.tooltipForeground;
             match.fg = tc.red;
           };
 
           prompts = {
-            bg = tc.lightBackground;
-            fg = tc.lightForeground;
-            border = "1px solid ${tc.lightBorder}";
+            bg = tc.windowBackground;
+            fg = tc.windowForeground;
+            border = "2px solid ${tc.accent}";
             selected.bg = tc.accent;
-            selected.fg = tc.foreground;
+            selected.fg = tc.accentText;
           };
 
-          completion = {
+          completion = rec {
+            even.bg = tc.white;
+            odd.bg = tc.white;
+            fg = tc.black;
+
             category = {
-              bg = tc.lightBackground;
-              fg = tc.lightForeground;
-              border.bottom = tc.lightBackground;
-              border.top = tc.lightBackground;
+              inherit (even) bg;
+              inherit fg;
+              border.bottom = even.bg;
+              border.top = even.bg;
             };
 
-            even.bg = tc.lightBackground;
-            odd.bg = tc.lightBackground;
-            fg = tc.lightForeground;
-
-            item.selected = {
+            item.selected = rec {
               bg = tc.accent;
-              border.bottom = tc.accent;
-              border.top = tc.accent;
-              fg = tc.foreground;
-              match.fg = tc.foreground;
+              border.bottom = bg;
+              border.top = bg;
+              fg = tc.white;
+              match.fg = tc.red;
             };
 
-            scrollbar.bg = tc.lightBackground;
-            scrollbar.fg = tc.darkBackground;
+            scrollbar.bg = even.bg;
+            scrollbar.fg = tc.accent;
           };
 
           tabs = {
-            bar.bg = tc.sidebar;
-            odd.bg = tc.sidebar;
-            even.bg = tc.sidebar;
+            bar.bg = tc.windowBackground;
+            odd.bg = tc.toolbarBackground;
+            even.bg = tc.toolbarBackground;
 
-            even.fg = tc.foreground;
-            odd.fg = tc.foreground;
+            even.fg = tc.toolbarForeground;
+            odd.fg = tc.toolbarForeground;
+
             selected = {
-              even.bg = tc.accent;
-              even.fg = tc.foreground;
-              odd.bg = tc.accent;
-              odd.fg = tc.foreground;
+              even.bg = tc.brightAccent;
+              even.fg = tc.accentText;
+              odd.bg = tc.brightAccent;
+              odd.fg = tc.accentText;
             };
 
             pinned = {
-              even.bg = tc.background;
-              odd.bg = tc.background;
-              selected.even.bg = tc.accent;
-              selected.odd.bg = tc.accent;
+              even.bg = tc.dimAccent;
+              even.fg = tc.accentText;
+              odd.bg = tc.dimAccent;
+              odd.fg = tc.accentText;
+              selected.even.bg = tc.brightAccent;
+              selected.even.fg = tc.accentText;
+              selected.odd.bg = tc.brightAccent;
+              selected.odd.fg = tc.accentText;
             };
           };
 
@@ -487,22 +567,29 @@ in
         };
 
         # Tabs.
-        tabs.position = "left";
+        tabs = {
+          position = "left";
 
-        tabs.title.format = "{perc}{audio}{current_title}";
-        tabs.title.format_pinned = "{perc}{current_title}";
+          title = {
+            format = "{perc}{audio}{current_title}";
+            format_pinned = "{audio}{current_title}";
+            elide = "middle";
+          };
 
-        tabs.favicons.scale = 1.25;
-        tabs.indicator.width = 0;
-        tabs.width = "16%";
-        tabs.close_mouse_button = "right";
-        tabs.select_on_remove = "next";
+          favicons.scale = if osConfig.meta.type == "laptop" then 1.0 else 1.25;
+          indicator.width = 0;
+          width = if osConfig.meta.type == "laptop" then "16%" else "20%";
+          close_mouse_button = "middle";
+          select_on_remove = "next";
+        };
 
-        fonts.tabs.unselected = "default_size monospace";
-        fonts.tabs.selected = "bold default_size monospace";
+        fonts.tabs = {
+          unselected = "default_size sans-serif";
+          selected = "600 default_size sans-serif";
+        };
 
         # Window.
-        window.title_format = "qutebrowser{title_sep}{current_title}";
+        window.title_format = "{current_title}{title_sep}qutebrowser{private}";
 
         # Messages.
         messages.timeout = 5000;
@@ -510,10 +597,13 @@ in
         # Interacting with page elements.
         input = {
           insert_mode = {
-            auto_enter = false;
-            auto_leave = false;
-            leave_on_load = false;
+            auto_enter = true;
+            auto_leave = true;
+            leave_on_load = true;
+            plugins = true;
           };
+
+          spatial_navigation = false;
         };
 
         url.open_base_url = true;
@@ -521,97 +611,173 @@ in
         scrolling.bar = "always";
       };
 
-      extraConfig = ''
+      extraConfig = lib.concatStrings [
+        ''
+          c.hints.padding = {"top": 2, "bottom": 2, "left": 2, "right": 2}
+        ''
         # TODO how is this done properly in programs.qutebrowser.settings?
-        c.statusbar.padding = {"top": 7, "bottom": 7, "left": 4, "right": 4}
-        c.tabs.padding = {"top": 7, "bottom": 6, "left": 6, "right": 6}
-      '';
+        (lib.optionalString (osConfig.meta.type == "laptop") ''
+          c.statusbar.padding = {"top": 14, "bottom": 0, "left": 2, "right": 8}
+          c.tabs.padding = {"top": 6, "bottom": 6, "left": 6, "right": 6}
+          c.tabs.padding = {"top": 6, "bottom": 6, "left": 8, "right": 6}
+        '')
+        (lib.optionalString (osConfig.meta.type != "laptop") ''
+          c.statusbar.padding = {"top": 28, "bottom": 0, "left": 4, "right": 11}
+          c.tabs.padding = {"top": 6, "bottom": 6, "left": 8, "right": 6}
+        '')
+      ];
 
       # enableDefaultBindings = false;
       aliases = {
         translate = "spawn -u ${translate}";
+        history-filter = "spawn --output-messages qutebrowser-history-filter";
         yank-text-anchor = "spawn -u ${yank-text-anchor}";
       };
 
       keyBindings = lib.mkMerge [
-        {
-          passthrough."<Shift+Escape>" = "mode-leave";
-          normal = {
-            "<Shift+Escape>" = "mode-enter passthrough";
-
-            "zpt" = "translate {url}";
-            "ya" = "yank-text-anchor";
-
-            "ql" = "cmd-set-text -s :quickmark-load";
-            "qL" = "bookmark-list";
-            "qa" = "cmd-set-text -s :quickmark-add {url} \"{url:host}\"";
-            "qd" = lib.mkMerge [ "cmd-set-text :quickmark-del {url:domain}" "fake-key -g <Tab>" ];
-
-            "bl" = "cmd-set-text -s :bookmark-load";
-            "bL" = "bookmark-list -j";
-            "ba" = "cmd-set-text -s :bookmark-add {url} \"{title}\"";
-            "bd" = lib.mkMerge [ "cmd-set-text :bookmark-del {url:domain}" "fake-key -g <Tab>" ];
-
-            "dd" = "download";
-            "dc" = "download-cancel";
-            "dq" = "download-clear";
-            "dD" = "download-delete";
-            "do" = "download-open";
-            "dr" = "download-remove";
-            "dR" = "download-retry";
-
-            "!" = "cmd-set-text :open !";
-            "gss" = "cmd-set-text -s :open site:{url:domain}";
-
-            "cnp" = lib.mkIf (proxies != [ ]) ''config-cycle -p content.proxy ${lib.concatStringsSep " " ([ "system" ] ++ proxies)}'';
-
-            ";;" = "hint all";
-
-            # Akin to catgirl(1).
-            "<Alt+Shift+Left>" = "navigate prev";
-            "<Alt+Shift+Right>" = "navigate next";
-            "<Alt+Shift+Up>" = "navigate strip";
+        # Keys that should bind on all modes
+        (lib.genAttrs
+          [
+            "normal"
+            "insert"
+            "passthrough"
+            "caret"
+            "yesno"
+            "caret"
+          ]
+          (mode: {
+            # Firefox-ish navigation controls...
+            "<Alt+Escape>" = "stop";
             "<Alt+Left>" = "back --quiet";
             "<Alt+Right>" = "forward --quiet";
             "<Alt+Up>" = "navigate up";
+
+            "<Alt+Shift+Left>" = "navigate prev";
+            "<Alt+Shift+Right>" = "navigate next";
+            "<Alt+Shift+Up>" = "navigate strip";
+
             "<Alt+Shift+a>" = "tab-prev";
             "<Alt+a>" = "tab-next";
 
-            # Firefox-ish.
+            "<Ctrl+Shift+Up>" = "tab-move -";
+            "<Ctrl+Shift+Down>" = "tab-move +";
+
             "<Ctrl+r>" = "reload";
+            "<F5>" = "reload";
             "<Ctrl+Shift+r>" = "reload -f";
+            "<Ctrl+F5>" = "reload -f";
+
             "<Ctrl+t>" = "open -t";
+
+            "<Ctrl+w>" = "tab-close";
+            "<Ctrl+Shift+w>" = "tab-close -o";
+
+            "<Alt+`>" = "cmd-set-text :";
             "<Ctrl+l>" = "cmd-set-text :open {url}";
-            "<Ctrl+f>" = "cmd-set-text /";
-            "<Ctrl+Shift+f>" = "cmd-set-text ?";
-            "<Ctrl+Shift+i>" = "devtools window";
+          })
+        )
+        {
+          passthrough."<Shift+Escape>" = "mode-leave";
 
-            # Emulate Tree Style Tabs keyboard shortcuts.
-            "<F1>" = lib.mkMerge [
-              "config-cycle tabs.show never always"
-              "config-cycle statusbar.show in-mode always"
-            ];
+          normal."<Shift+Escape>" = "mode-enter passthrough";
 
-            # Provide some Kakoune-style keyboard shortcuts.
-            "gg" = "scroll-to-perc 0";
-            "ge" = "scroll-to-perc 100";
+          normal."zpt" = "translate {url}";
+          normal."ya" = "yank-text-anchor";
 
-            "zsm" = "open -rt https://mastodon.social/authorize_interaction?uri={url}";
-            "zst" = "open -rt https://twitter.com/share?url={url}";
+          normal."ql" = "cmd-set-text -s :quickmark-load";
+          normal."qL" = "bookmark-list";
+          normal."qa" = "cmd-set-text -s :quickmark-add {url} \"{url:host}\"";
+          normal."qd" = lib.mkMerge [
+            "cmd-set-text :quickmark-del {url:domain}"
+            "fake-key -g <Tab>"
+          ];
 
-            "cnt" =
-              lib.mkIf
-                (tor.enable
-                  && tor.client.enable
-                  && tor.settings.ControlPort != [ ]
-                  && tor.settings.ControlPort != null)
-                "spawn --userscript tor_identity"
-            ;
-          };
+          normal."bl" = "cmd-set-text -s :bookmark-load";
+          normal."bL" = "bookmark-list -j";
+          # normal."ba" =
+          #   let
+          #     escape-command =
+          #       pkgs.writeShellScript "escape-command" ''
+          #         command="''${1?no command given}"
+          #         shift
 
-          prompt = {
-            "<Alt+Up>" = "rl-filename-rubout";
-          };
+          #         escape() {
+          #             local escape="$1"
+          #             local unescaped="$2"
+          #             local escaped="$unescaped"
+          #             local final
+          #             escaped=''${escaped//$escape/\\$escape}
+          #             final="$escaped"
+          #             [[ "$escaped" == "$unescaped" ]] || final="\"$unescaped\""
+          #             printf '%s' "$final"
+          #         }
+
+          #         : "''${QUTE_FIFO:?}"
+          #         : "''${QUTE_URL:?}"
+
+          #         args=( "$@" )
+          #         escaped_args=()
+          #         for arg in "''${args[@]}"; do
+          #             arg=$(escape '"' "$arg")
+          #             escaped_args+=( "$arg" )
+          #         done
+
+          #         printf "$command\n" "''${escaped_args[@]}" > "$QUTE_FIFO"
+          #       '';
+          #   in
+          #   "spawn -u ${escape-command} 'cmd-set-text -s :bookmark-add %s %s' {url} {title}"
+          # ;
+          normal."ba" = "cmd-set-text -s :bookmark-add {url} \"{title}\"";
+          normal."bd" = lib.mkMerge [
+            "cmd-set-text :bookmark-del {url:domain}"
+            "fake-key -g <Tab>"
+          ];
+
+          normal."dd" = "download";
+          normal."dc" = "download-cancel";
+          normal."dq" = "download-clear";
+          normal."dD" = "download-delete";
+          normal."do" = "download-open";
+          normal."dr" = "download-remove";
+          normal."dR" = "download-retry";
+
+          normal."!" = "cmd-set-text :open !";
+          normal."gss" = "cmd-set-text -s :open site:{url:domain}";
+
+          normal."cnp" =
+            if proxies != [ ] then
+              ''config-cycle -p content.proxy ${lib.concatStringsSep " " ([ "system" ] ++ proxies)}''
+            else
+              "nop";
+
+          normal.";;" = "hint all";
+
+          normal."<Ctrl+f>" = "cmd-set-text /";
+          normal."<Ctrl+Shift+f>" = "cmd-set-text ?";
+          normal."<Ctrl+Shift+i>" = "devtools window";
+
+          # Emulate Tree Style Tabs keyboard shortcuts.
+          normal."<F1>" = lib.mkMerge [
+            "config-cycle tabs.show never always"
+            "config-cycle statusbar.show in-mode always"
+          ];
+
+          # Provide some Kakoune-style keyboard shortcuts.
+          normal."gg" = "scroll-to-perc 0";
+          normal."ge" = "scroll-to-perc 100";
+
+          normal."zsm" = "open -rt https://mastodon.social/authorize_interaction?uri={url}";
+          normal."zst" = "open -rt https://twitter.com/share?url={url}";
+
+          normal."cnt" =
+            if
+              (with tor; enable && client.enable && settings.ControlPort != [ ] && settings.ControlPort != null)
+            then
+              "spawn --userscript tor_identity"
+            else
+              "nop";
+
+          prompt."<Alt+Up>" = "rl-filename-rubout";
         }
         {
           prompt = lib.genAttrs [
@@ -619,8 +785,7 @@ in
             "<Alt+e>"
             "<Ctrl+Shift+w>"
           ]
-            (key: null)
-          ;
+            (key: null);
 
           normal = lib.genAttrs [
             "G"
@@ -642,23 +807,27 @@ in
             "<Ctrl+q>"
             "<F11>"
           ]
-            (key: null)
-          ;
+            (key: null);
         }
       ];
     };
 
     chromium = {
-      enable = true;
-      package = pkgs.ungoogled-chromium;
+      enable = false;
+      package =
+        if (osConfig.nixpkgs.config.allowUnfree or config.nixpkgs.config.allowUnfree) then
+          pkgs.google-chrome
+        else
+          pkgs.ungoogled-chromium.override { enableWideVine = true; };
 
-      dictionaries = [
-        pkgs.hunspellDictsChromium.en-us
-        pkgs.hunspellDictsChromium.en-gb
+      dictionaries = with pkgs.hunspellDictsChromium; [
+        en-us
+        en-gb
       ];
 
       extensions = [
-        { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
+        # { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
+        # { id = "naepdomgkenhinolocfifgehidddafch"; } # Browserpass
       ];
 
       commandLineArgs = [
@@ -666,152 +835,138 @@ in
       ];
     };
 
-    # browserpass = lib.mkIf config.programs.chromium.enable {
-    #   enable = true;
-    #   browsers = [ "chromium" ];
-    # };
+    browserpass = {
+      inherit (config.programs.chromium) enable;
+      browsers = [
+        (if config.programs.chromium.package == pkgs.google-chrome then "chrome" else "chromium")
+      ];
+    };
   };
 
-  systemd.user = rec {
-    services.qutebrowser-vacuum = {
-      Unit.Description = "Vacuum the qutebrowser database";
+  systemd.user = {
+    services.qutebrowser-dictionaries = {
+      Unit.Description = "Install/update qutebrowser's spell checking dictionaries";
 
       Service = {
         Type = "oneshot";
 
-        # Use an ExecCondition to prevent from doing maintenance while
-        # qutebrowser is running.
-        #
-        # systemd.service(5):
-        # > The behavior is like an ExecStartPre= and condition check hybrid:
-        # > when an ExecCondition= command exits with exit code 1 through 254
-        # > (inclusive), the remaining commands are skipped and the unit is not
-        # > marked as failed. However, if an ExecCondition= command exits with
-        # > 255 or abnormally (e.g. timeout, killed by a signal, etc.), the
-        # > unit will be considered failed (and remaining commands will be
-        # > skipped). Exit code of 0 or those matching SuccessExitStatus= will
-        # > continue execution to the next command(s).
-        ExecCondition = pkgs.writeShellScript "wait-for-qutebrowser" ''
-          set -euo pipefail
-          test "$(${pkgs.procps}/bin/pgrep -c -u "$USER" "qutebrowser")" -eq 0
-        '';
+        ExecCondition = pkgs.writeShellScript "if-qutebrowser-dictionaries" ''
+          ${lib.toShellVar "PATH" (
+            lib.makeBinPath [
+              pkgs.coreutils
+              pkgs.gnugrep
+            ]
+          )}
+          ${lib.toShellVar "spellcheck_languages" config.programs.qutebrowser.settings.spellcheck.languages}
 
-        ExecStart = pkgs.writeShellScript "qutebrowser-vacuum" ''
-          set -euo pipefail
+          dictionaries=()
+          installed_dictionaries=()
 
-          : "''${XDG_DATA_HOME:=$HOME/.local/share}"
+          list=$(${dictcli} list)
+          mapfile -s 1 -t dictionaries < <(<<<"$list" cut -d' ' -f1 | sort)
+          mapfile -s 1 -t dictionaries_to_update < <(<<<"''${list}" grep -i 'update' | cut -d' ' -f1 | sort)
+          mapfile -s 1 -t installed_dictionaries < <(<<<"$list" grep -Ev ' +- +$' | cut -d' ' -f1 | sort)
 
-          PATH=${lib.makeBinPath [ pkgs.sqlite.bin ]}":$PATH"
-
-          for db in "$XDG_DATA_HOME/qutebrowser/history.sqlite"; do
-              [ -e "$db" ] || continue
-
-              sqlite3 "$db" '
-                  .timeout ${builtins.toString (60 * 1000)}
-                  VACUUM;
-              '
+          for dict in "''${dictionaries[@]}"; do
+              for lang in "''${spellcheck_languages[@]}"; do
+                  case "''${dict,,}" in
+                      "''${lang,,}"*)
+                          case " ''${installed_dictionaries[*]} " in
+                              *" ''${dict} "*) : ;;
+                              *) dictionaries_to_install+=( "''${dict}" ) ;;
+                          esac
+                          ;;
+                  esac
+              done
           done
+
+          if [[ -n "''${dictionaries_to_install[*]}''${dictionaries_to_update[*]}" ]]; then
+              exit 0
+          else
+              exit 1 # nothing to do
+          fi
         '';
 
-        Nice = 19;
-        CPUSchedulingPolicy = "idle";
-        IOSchedulingClass = "idle";
-        IOSchedulingPriority = 7;
+        ExecStart = pkgs.writeShellScript "install-or-install-qutebrowser-dictionaries" ''
+          ${lib.toShellVar "PATH" (
+            lib.makeBinPath [
+              pkgs.coreutils
+              pkgs.gnugrep
+            ]
+          )}
+          ${lib.toShellVar "spellcheck_languages" config.programs.qutebrowser.settings.spellcheck.languages}
+
+          dictionaries=()
+          dictionaries_to_update=()
+          installed_dictionaries=()
+          needed_dictionaries=()
+
+          list=$(${dictcli} list)
+          mapfile -s 1 -t dictionaries < <(<<<"''${list}" cut -d' ' -f1 | sort)
+          mapfile -s 1 -t dictionaries_to_update < <(<<<"''${list}" grep -i 'update' | cut -d' ' -f1 | sort)
+          mapfile -s 1 -t installed_dictionaries < <(<<<"''${list}" grep -Ev ' +- +$' | cut -d' ' -f1 | sort)
+
+          for dict in "''${dictionaries[@]}"; do
+              for lang in "''${spellcheck_languages[@]}"; do
+                  case "''${dict,,}" in
+                      "''${lang,,}"*)
+                          case " ''${installed_dictionaries[*]} " in
+                              *" ''${dict} "*) : ;;
+                              *) dictionaries_to_install+=( "''${dict}" ) ;;
+                          esac
+                          ;;
+                  esac
+              done
+          done
+
+          ${dictcli} install "''${dictionaries_to_install[@]}" || exit 1
+
+          if [[ -n "''${dictionaries_to_update[*]}" ]]; then
+              ${dictcli} update || exit 1
+          fi
+        '';
+        RemainAfterExit = false;
       };
     };
 
-    timers.qutebrowser-vacuum = {
-      Unit = {
-        Description = "${services.qutebrowser-vacuum.Unit.Description} every week";
-        PartOf = [ "timers.target" ];
-      };
+    timers.qutebrowser-dictionaries = {
+      Unit.Description = "Install/update qutebrowser's spell checking dictionaries every week";
       Install.WantedBy = [ "timers.target" ];
 
       Timer = {
         OnCalendar = "weekly";
         Persistent = true;
-        AccuracySec = "15m";
-        RandomizedDelaySec = "5m";
       };
     };
   };
 
-  somasis.tunnels.tunnels = {
-    kodi-remote = {
-      port = 45780;
-      remote = "somasis@spinoza.7596ff.com";
-      remotePort = 8080;
-    };
-
-    kodi-websockets = {
-      port = 9090;
-      remote = "somasis@spinoza.7596ff.com";
-      remotePort = 9090;
-    };
-
-    proxy-spinoza = {
-      type = "dynamic";
-      port = 9099;
-      remote = "somasis@spinoza.7596ff.com";
-    };
-
-    proxy-lacan = {
-      type = "dynamic";
-      port = 9098;
-      remote = "somasis@lacan.somas.is";
-    };
+  services.tunnels.tunnels.proxy-esther = rec {
+    type = "dynamic";
+    port = randomPort "${remote}:proxy";
+    remote = "somasis@esther.7596ff.com";
   };
 
-  # services.xsuspender.rules =
-  #   let
-  #     execSuspend = builtins.toString (pkgs.writeShellScript "xsuspender-exec-suspend" ''
-  #       ${lib.toShellVar "PATH" (lib.makeBinPath [ pkgs.pulseaudio pkgs.gnugrep ])}
-  #       set -x
-  #       # sound currently playing
-  #       if pacmd list-sink-inputs | grep -q 'state: RUNNING'; then
-  #           exit 1
-  #       fi
-  #       exit
-  #     '');
-  #     # [ "$(bspc query -D -n "$XID")" = "$(bspc query -D -d focused)" ]; then
-  #     # window to suspend is on focused desktop, don't suspend
-  #   in
-  #   {
-  #     qutebrowser = {
-  #       matchWmClassGroupContains = "qutebrowser";
-  #       suspendSubtreePattern = "QtWebEngineProcess";
+  home.packages =
+    with pkgs;
+    with kdePackages;
+    (
+      (lib.optional config.programs.qutebrowser.enable somasis-qutebrowser-tools)
+      ++ (lib.optional config.programs.chromium.enable plasma-browser-integration)
+    );
 
-  #       onlyOnBattery = true;
-  #       downclockOnBattery = 0;
-
-  #       suspendDelay = 15;
-  #       resumeFor = 5;
-  #       resumeEvery = 60;
-
-  #       # inherit execSuspend;
-  #     };
-
-  #     chromium = {
-  #       matchWmClassGroupContains = "chromium";
-  #       suspendSubtreePattern = "chromium";
-
-  #       onlyOnBattery = true;
-  #       downclockOnBattery = 0;
-
-  #       suspendDelay = 15;
-  #       resumeFor = 5;
-  #       resumeEvery = 60;
-
-  #       inherit execSuspend;
-  #     };
-  #   };
-
-  # home.packages = [
-  #   pkgs.qutebrowser-sync
-  #   pkgs.ffsclient
-  # ];
-
-  # services.dunst.settings.zz-qutebrowser = {
-  #   desktop_entry = "org.qutebrowser.qutebrowser";
-  # };
+  services.darkman =
+    let
+      qutebrowser-change-color = color: ''
+        ${lib.toShellVar "color" color}
+        autoconfig="''${XDG_CONFIG_HOME:-$HOME/.config}/qutebrowser/autoconfig.yml"
+        if ${pkgs.procps}/bin/pgrep -u "$USER" -laf '(python)?.*/bin/\.?qutebrowser(-wrapped)?' >/dev/null 2>&1; then
+            ${config.programs.qutebrowser.package}/bin/qutebrowser ":set colors.tabs.bar.bg $color"
+        fi
+        ${pkgs.yq-go}/bin/yq --inplace --expression '.settings."colors.tabs.bar.bg".global = "'"$color"'"' "$autoconfig"
+      '';
+    in
+    {
+      lightModeScripts.qutebrowser = qutebrowser-change-color config.theme.colors.lightWindowBackground;
+      darkModeScripts.qutebrowser = qutebrowser-change-color config.theme.colors.darkWindowBackground;
+    };
 }

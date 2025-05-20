@@ -30,7 +30,6 @@ let
     mkPackageOption
     ;
 
-  # escapeSystemd = x: escape [ "\"" ] (replaceStrings [ "%" ] [ "%%" ] (toString x));
   escapeSystemd = x: escape [ "\"" ] (replaceStrings [ "%" ] [ "%%" ] (toString x));
 in
 {
@@ -54,7 +53,18 @@ in
     };
 
     successCommand = mkOption {
-      type = with types; nullOr (coercedTo (oneOf [ nonEmptyStr path ]) toString str);
+      type =
+        with types;
+        nullOr (
+          coercedTo
+            (oneOf [
+              nonEmptyStr
+              path
+            ])
+            toString
+            str
+        );
+
       default = null;
       example = literalExpression "\${pkgs.systemd}/systemctl --user start idle.target";
       description = ''
@@ -66,7 +76,18 @@ in
     };
 
     settings = mkOption rec {
-      type = with types; attrsOf (coercedTo (nullOr (oneOf [ str number path ])) (mkValueStringDefault { }) str);
+      type =
+        with types;
+        attrsOf (
+          coercedTo
+            (nullOr (oneOf [
+              str
+              number
+              path
+            ]))
+            (mkValueStringDefault { })
+            str
+        );
       apply = mergeAttrs default;
 
       default = {
@@ -89,8 +110,19 @@ in
     };
 
     keyBindings = mkOption rec {
-      type = with types; attrsOf (coercedTo (nullOr (oneOf [ str path ])) (mkValueStringDefault { }) str);
+      type =
+        with types;
+        attrsOf (
+          coercedTo
+            (nullOr (oneOf [
+              path
+              str
+            ]))
+            (mkValueStringDefault { })
+            str
+        );
       apply = mergeAttrs default;
+
       default = { };
       example = {
         p = literalExpression "\${pkgs.playerctl}/bin/playerctl play-pause";
@@ -105,45 +137,64 @@ in
   };
 
   config = mkIf cfg.enable {
-    systemd.user.services.xsecurelock = {
-      Unit.Description = pkg.meta.description;
+    assertions = [
+      ''
+        ${pkgs.findutils}/bin/find "${pkgs.xorg.xorgproto}" -type f -name '*.h' -exec cat {} + | nix shell nixpkgs#clang -c cpp -pipe -E -dM -P -w -o - - 2>/dev/null | grep -i audio
+      ''
+    ];
 
-      # services.systemd-lock-handler integration
-      Unit.PartOf = [ "lock.target" ];
-      Unit.After = [ "lock.target" ];
-      Unit.OnSuccess = [ "unlock.target" ];
-      Install.WantedBy = [ "lock.target" ];
+    systemd.user.services = {
+      xsecurelock = {
+        Unit = {
+          Description = pkg.meta.description;
 
-      Service = {
-        # Type = "notify";
-        # NotifyAccess = "all";
-        # ExecStart = "${getExe xsecurelockPkg} -- systemd-notify --ready --status='Locked successfully'";
-        # PassEnvironment = [ "NOTIFY_SOCKET" ];
+          # services.systemd-lock-handler integration
+          PartOf = [ "lock.target" ];
+          After = [ "lock.target" ];
+          OnSuccess = [ "unlock.target" ];
+          # OnFailure = [ "xsecurelock-failure.service" ];
+        };
 
-        ProtectHome = mkIf cfg.harden "read-only";
-        ProtectSystem = mkIf cfg.harden "strict";
-        PassEnvironment = mkIf cfg.harden (
-          [ "DISPLAY" "XAUTHORITY" "HOME" "USER" ]
-          ++ builtins.attrNames cfg.settings
-          ++ builtins.attrNames cfg.keyBindings
-        );
+        Install.WantedBy = [ "lock.target" ];
 
-        Type =
-          if cfg.successCommand == null then
-            "forking"
-          else
-            "exec"
-        ;
+        Service = {
+          ProtectHome = mkIf cfg.harden "read-only";
+          ProtectSystem = mkIf cfg.harden "strict";
+          PassEnvironment = mkIf cfg.harden (
+            [
+              "DISPLAY"
+              "XAUTHORITY"
+              "HOME"
+              "USER"
+            ]
+            ++ builtins.attrNames cfg.settings
+            ++ builtins.attrNames cfg.keyBindings
+          );
 
-        Environment =
-          mapAttrsToList (n: v: ''"${n}=${escapeSystemd v}"'') cfg.settings
-          ++ mapAttrsToList (key: command: ''"XSECURELOCK_KEY_${key}=${escapeSystemd command}"'') cfg.keyBindings
-        ;
+          Type =
+            if cfg.successCommand == null then
+            # TODO use Type=notify instead; couldn't figure out how to get it working.
+            # Type = "notify";
+            # NotifyAccess = "all";
+            # ExecStart = "${getExe xsecurelockPkg} -- systemd-notify --ready --status='Locked successfully'";
+            # PassEnvironment = [ "NOTIFY_SOCKET" ];
+              "simple"
+            else
+              "forking";
 
-        ExecStart = getExe pkg + optionalString (cfg.successCommand != null) "-- ${cfg.successCommand}";
+          Environment =
+            mapAttrsToList (n: v: "${n}=${escapeSystemd v}") cfg.settings
+            ++ mapAttrsToList
+              (
+                k: command: "XSECURELOCK_KEY_${k}_COMMAND=${escapeSystemd command}"
+              )
+              cfg.keyBindings;
 
-        Restart = "on-failure";
-        RestartSec = 0;
+          ExecStart = getExe pkg + optionalString (cfg.successCommand != null) "-- ${cfg.successCommand}";
+
+          Restart = "on-failure";
+          RestartSec = 0;
+        };
       };
     };
   };

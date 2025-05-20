@@ -100,11 +100,11 @@ case "${mode}" in
         fi
         ;;
     fields)
-        field=$(pass meta "${choice}" | ${DMENU:-dmenu} -p "pass [${choice}]" "$@")
+        field=$(notify='' pass meta "${choice}" | grep -xvF password | ${DMENU:-dmenu} -p "pass [${choice}]" "$@")
 
         [[ -n "${field}" ]] || exit 0
 
-        exec "$0" ${clip:+"-c"} ${notify:+"-n"} ${initial:+-i "${initial}"} -m "${field}" "$@"
+        exec "$0" ${clip:+"-c"} ${notify:+"-n"} -i "${choice}" -m "${field}" "$@"
         ;;
     print | '') printf '%s\n' "${choice}" ;;
     *)

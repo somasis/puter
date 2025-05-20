@@ -4,46 +4,41 @@
 , ...
 }:
 let
-  formatPrettierWith = extraArgs: pkgs.writeShellScript "format-prettier" ''
-    PATH=${lib.makeBinPath [ pkgs.nodePackages.prettier ]}
+  formatPrettier =
+    prettierArgs:
+    pkgs.writeShellScript "format-prettier" ''
+      PATH=${lib.makeBinPath [ pkgs.nodePackages.prettier ]}
 
-    stdin=$(</dev/stdin)
+      stdin=$(</dev/stdin)
 
-    original_args=("$@")
-    set -- ${extraArgs}
+      original_args=("$@")
 
-    if \
-        stdout=$(
-            prettier \
-                --stdin-filepath "$kak_buffile" \
-                --config-precedence prefer-file \
-                ''${kak_opt_indentwidth:+--tab-width "$kak_opt_indentwidth"} \
-                ''${kak_opt_autowrap_column:+--print-width "$kak_opt_autowrap_column"} \
-                "''${original_args[@]}" \
-                <<<"$stdin"
-        ) \
-        && [[ "$?" -eq 0 ]] \
-        && [[ -n "$stdout" ]]; then
-        :
-    else
-        stdout="$stdin"
-    fi
+      if \
+          stdout=$(
+              prettier \
+                  --stdin-filepath "$kak_buffile" \
+                  --config-precedence prefer-file \
+                  ${lib.cli.toGNUCommandLineShell { } prettierArgs} \
+                  ''${kak_opt_indentwidth:+--tab-width "$kak_opt_indentwidth"} \
+                  ''${kak_opt_autowrap_column:+--print-width "$kak_opt_autowrap_column"} \
+                  "''${original_args[@]}" \
+                  <<<"$stdin"
+          ) \
+          && [[ "$?" -eq 0 ]] \
+          && [[ -n "$stdout" ]]; then
+          :
+      else
+          stdout="$stdin"
+      fi
 
-    printf '%s' "$stdout"
-  '';
-
-  formatPrettier = formatPrettierWith "";
+      printf '%s' "$stdout"
+    '';
 
   # CSS
-  formatCSS = formatPrettierWith "--parser css";
-  # TODO Need a new CSS linting tool; stylelint is broken with recent NixOS updates, it seems, due to
-  #      not having a default configuration loaded
-  # lintCSS = pkgs.writeShellScript "lint-css" ''
-  #   ${pkgs.nodePackages.stylelint}/bin/stylelint --formatter unix --stdin-filename="$kak_buffile" < "$1"
-  # '';
+  formatCSS = formatPrettier { parser = "css"; };
 
   # HTML
-  formatHTML = formatPrettier;
+  formatHTML = formatPrettier { parser = "html"; };
   lintHTML = pkgs.writeShellScript "lint-html" ''
     : "''${kak_buffile:=}"
     ${pkgs.html-tidy}/bin/tidy \
@@ -62,11 +57,16 @@ let
   # '';
 
   # JavaScript
-  formatJavascript = formatPrettier;
+  formatJavascript = formatPrettier { };
   lintJavascript = pkgs.writeShellScript "lint-javascript" ''
     : "''${kak_buffile:=}"
 
-    PATH=${lib.makeBinPath [ pkgs.quick-lint-js pkgs.coreutils ]}
+    PATH=${
+      lib.makeBinPath [
+        pkgs.quick-lint-js
+        pkgs.coreutils
+      ]
+    }
 
     quick-lint-js \
         --stdin \
@@ -78,9 +78,14 @@ let
 
   # JSON
   # formatJSON = "${config.programs.jq.package}/bin/jq --indent %opt{tabstop} -S .";
-  formatJSON = formatPrettierWith "--parser json";
+  formatJSON = formatPrettier { parser = "json"; };
   lintJSON = pkgs.writeShellScript "lint-json" ''
-    PATH=${lib.makeBinPath [ config.programs.jq.package pkgs.gawk ]}
+    PATH=${
+      lib.makeBinPath [
+        config.programs.jq.package
+        pkgs.gawk
+      ]
+    }
 
     LC_ALL=C jq 'halt' "$1" 2>&1 \
         | awk -v filename="$1" '
@@ -96,16 +101,37 @@ let
   # YAML
   # (a "web"-related language is not really how I would mentally categorize
   # YAML, but I don't want to put the prettier function at a higher scope.)
-  formatYAML = formatPrettierWith "--parser yaml";
-  lintYAML = pkgs.writeShellScript "lint-yaml" ''
-    PATH=${lib.makeBinPath [ pkgs.gnused pkgs.yamllint ]}
+  formatYAML = formatPrettier { parser = "yaml"; };
+  lintYAML =
+    let
+      yamllintConfig = (pkgs.formats.yaml { }).generate "config.yaml" {
+        extends = "default";
+        rules = {
+          document-start = "disable";
+        };
+      };
+    in
+    pkgs.writeShellScript "lint-yaml" ''
+      PATH=${
+        lib.makeBinPath [
+          pkgs.gnused
+          pkgs.yamllint
+        ]
+      }
 
-    yamllint -f parsable -s "$1" \
-        | sed -E "s/ \[\(.*\)\] / \1: /"
-  '';
+      yamllint -c ${lib.escapeShellArg yamllintConfig} -f parsable -s "$1" | sed -E 's/ \[([^\s]+)\] / \1: /'
+    '';
+
+  # Jq
+  formatJq = "${pkgs.jqfmt}/bin/jqfmt";
 in
 {
-  home.packages = [ pkgs.nodePackages.prettier pkgs.quick-lint-js pkgs.yamllint ];
+  home.packages = [
+    pkgs.nodePackages.prettier
+    pkgs.quick-lint-js
+    pkgs.yamllint
+    pkgs.jqfmt
+  ];
 
   programs.kakoune.config.hooks = [
     # Format: CSS
@@ -118,15 +144,58 @@ in
       # set-option window lintcmd ${lintCSS}
     }
 
+    # Format, lint: HTML
+    {
+      name = "WinSetOption";
+      option = "filetype=html";
+      commands = ''
+        set-option window formatcmd "run() { ${formatHTML}; } && run"
+        set-option window lintcmd ${lintHTML}
+      '';
+    }
+
     # Format, lint: JavaScript
     {
       name = "WinSetOption";
       option = "filetype=javascript";
       commands = ''
-        set-option window tabstop 2
-        set-option window indentwidth 2
+        # set-option window tabstop 2
+        # set-option window indentwidth 2
         set-option window formatcmd "run() { ${formatJavascript}; } && run"
         set-option window lintcmd ${lintJavascript}
+      '';
+    }
+
+    # Format, lint: JSON
+    {
+      name = "WinSetOption";
+      option = "filetype=json";
+      commands = ''
+        # set-option window tabstop 2
+        # set-option window indentwidth 2
+        set-option window formatcmd "run() { ${formatJSON}; } && run"
+        set-option window lintcmd ${lintJSON}
+      '';
+    }
+
+    # Format, lint: jq
+    {
+      name = "WinSetOption";
+      option = "filetype=jq";
+      commands = ''
+        # set-option window tabstop 2
+        # set-option window indentwidth 2
+        set-option window formatcmd "run() { ${formatJq}; } && run"
+      '';
+      # set-option window lintcmd ${lintJq}
+    }
+
+    # Format: XML
+    {
+      name = "WinSetOption";
+      option = "filetype=xml";
+      commands = ''
+        set-option window formatcmd "run() { ${formatXML}; } && run"
       '';
     }
 
@@ -139,36 +208,20 @@ in
         set-option window lintcmd ${lintYAML}
       '';
     }
-
-    # Format, lint: HTML
-    {
-      name = "WinSetOption";
-      option = "filetype=html";
-      commands = ''
-        set-option window formatcmd "run() { ${formatHTML}; } && run"
-        set-option window lintcmd ${lintHTML}
-      '';
-    }
-
-    # Format: XML
-    {
-      name = "WinSetOption";
-      option = "filetype=xml";
-      commands = ''
-        set-option window formatcmd "run() { ${formatXML}; } && run"
-      '';
-    }
-
-    # Format, lint: JSON
-    {
-      name = "WinSetOption";
-      option = "filetype=json";
-      commands = ''
-        set-option window tabstop 2
-        set-option window indentwidth 2
-        set-option window formatcmd "run() { ${formatJSON}; } && run"
-        set-option window lintcmd ${lintJSON}
-      '';
-    }
   ];
+
+  editorconfig.settings =
+    lib.genAttrs
+      [
+        "{*.yaml,*.yml}"
+        "{*.html,*.htm}"
+        "{*.css,*.scss}"
+        "*.xml"
+        "*.json"
+        "*.js"
+      ]
+      (_: {
+        indent_style = "space";
+        indent_size = 2;
+      });
 }

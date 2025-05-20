@@ -1,11 +1,9 @@
 { lib
 , stdenvNoCC
 , fetchurl
+,
 }:
 
-let
-  rev = "8436d31ba84bb9c7198f7df2ec07d5b8b56ffdf7";
-in
 stdenvNoCC.mkDerivation rec {
   pname = "linja-namako";
   version = "1.0.0";
@@ -35,4 +33,3 @@ stdenvNoCC.mkDerivation rec {
     maintainers = with maintainers; [ somasis ];
   };
 }
-

@@ -3,7 +3,8 @@
 , ...
 }:
 let
-  wine = pkgs.wineWow64Packages.stableFull;
+  # wine = pkgs.wineWow64Packages.unstableFull;
+  wine = pkgs.wineWow64Packages.waylandFull;
 in
 {
   boot.binfmt.registrations.wine = {

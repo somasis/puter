@@ -9,24 +9,24 @@
       name = "zoom-us";
 
       package = pkgs.zoom-us;
-      wrappers = [{
-        command = "/bin/zoom";
-        setEnvironment.XDG_SESSION_TYPE = "X11";
-      }];
+      wrappers = [
+        {
+          command = "/bin/zoom";
+          setEnvironment.XDG_SESSION_TYPE = "X11";
+        }
+      ];
     })
   ];
 
   persist = {
     directories = [ ".zoom" ];
-    files = [ "etc/zoomus.conf" ];
+    files = [ (config.lib.somasis.xdgConfigDir "zoomus.conf") ];
   };
-  cache.files = [ "etc/zoom.conf" ];
+  cache.files = [ (config.lib.somasis.xdgConfigDir "zoom.conf") ];
 
-  xsession.windowManager.bspwm.rules = {
-    "zoom:*:zoom_linux_float_message_reminder" = {
-      layer = "above";
-      sticky = true;
-    };
+  xsession.windowManager.bspwm.rules."zoom:*:zoom_linux_float_message_reminder" = {
+    layer = "above";
+    sticky = true;
   };
 
   # systemd.user.services.zoom = {
@@ -37,7 +37,6 @@
   #     Requires = [ "tray.target" ];
   #   };
   #   Install.WantedBy = [ "graphical-session.target" ];
-
 
   #   Service = {
   #     Type = "simple";
@@ -70,7 +69,7 @@
   #   };
   # };
 
-  # xdg.configHome."etc/zoomus.conf".source = pkgs.generators.toINI {} {
+  # xdg.configHome."zoomus.conf".source = pkgs.generators.toINI {} {
   #   General = {
   #     ScaleFactor = 1.5;
   #     autoPlayGif = false;

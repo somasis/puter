@@ -1,6 +1,7 @@
 { lib
 , fetchFromGitHub
 , kakouneUtils
+,
 }:
 kakouneUtils.buildKakounePluginFrom2Nix rec {
   pname = "csv-kak";

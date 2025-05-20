@@ -1,9 +1,8 @@
 { lib
-
 , stdenv
 , fetchurl
-
 , wine
+,
 }:
 stdenv.mkDerivation rec {
   pname = "flstudio";
@@ -15,14 +14,17 @@ stdenv.mkDerivation rec {
     hash = "sha256-CvLr5Pbv+Ps166jj7iP93RAgXxHdLOeVNQNQREb8vhQ=";
   };
 
-  installPhase = ''
-  ''
-  + ''
-    # install offlinehelp
-    # https://support.image-line.com/redirect/download_flofflinehelp_win
-  '';
+  installPhase =
+    ''''
+    + ''
+      # install offlinehelp
+      # https://support.image-line.com/redirect/download_flofflinehelp_win
+    '';
 
-  outputs = [ "out" "dev" ];
+  outputs = [
+    "out"
+    "dev"
+  ];
 
   meta = with lib; {
     description = "A legendary digital audio workstation for Windows and macOS";
@@ -30,7 +32,8 @@ stdenv.mkDerivation rec {
     maintainers = with maintainers; [ somasis ];
     homepage = "https://www.image-line.com/fl-studio/";
     changelog = "https://www.image-line.com/fl-studio-learning/fl-studio-online-manual/html/WhatsNew.htm";
-    platforms = wine.meta.platforms;  };
+    inherit (wine.meta) platforms;
+  };
 
   passthru.updateScript = writeScript "update-flstudio" ''
     #!/usr/bin/env nix-shell

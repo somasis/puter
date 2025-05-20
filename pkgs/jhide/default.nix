@@ -3,6 +3,7 @@
 , writeText
 , sbcl
 , asdf
+,
 }:
 sbcl.buildASDFSystem rec {
   pname = "jhide";

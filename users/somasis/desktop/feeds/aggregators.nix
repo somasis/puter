@@ -4,7 +4,7 @@
 , ...
 }:
 let
-  inherit (lib) getBin makeBinPath;
+  inherit (lib) makeBinPath;
   inherit (config.lib.somasis) feeds;
   inherit (pkgs) writeJqScript writeShellScript;
 
@@ -83,7 +83,15 @@ let
   '';
 
   generateReddit = writeShellScript "generate-reddit" ''
-    PATH=${makeBinPath [ config.programs.jq.package pkgs.curl pkgs.yq-go pkgs.coreutils pkgs.moreutils ] }:$PATH
+    PATH=${
+      makeBinPath [
+        config.programs.jq.package
+        pkgs.autocurl
+        pkgs.yq-go
+        pkgs.coreutils
+        pkgs.moreutils
+      ]
+    }:$PATH
 
     [[ -t 0 ]] || cat > /dev/null
 
@@ -102,7 +110,7 @@ let
 
     cd "$runtime"
 
-    curl -Lf -o subreddit.json "https://www.reddit.com/r/$subreddit/.json"
+    autocurl -Lf -o subreddit.json "https://www.reddit.com/r/$subreddit/.json"
     [[ -s subreddit.json ]] || exit 1
 
     ${filterSubredditJson} "''${jq_args[@]}" subreddit.json > filtered.json
@@ -119,10 +127,14 @@ let
   reddit =
     { subreddit
     , title ? "Reddit: /r/${subreddit}"
-    , tags ? [ "aggregator" "reddit" ]
+    , tags ? [
+        "aggregator"
+        "reddit"
+      ]
     , extraTags ? [ ]
     , filter ? ""
     , pointsInTitle ? true
+    ,
     }:
       assert (lib.isString subreddit);
       assert (lib.isString title);
@@ -137,28 +149,31 @@ let
               .data.children |= map_values(${filter})
             ''
           else
-            ""
-        ;
+            "";
         tags' = tags ++ lib.optionals (extraTags != null) tags;
       in
       {
         # urls.filter is used so as to benefit from caching
-        url = feeds.urls.filter "https://www.reddit.com/r/${subreddit}.rss"
-          (pkgs.writeShellScript "generate-reddit-with-filter" ''
+        url = feeds.urls.filter "https://www.reddit.com/r/${subreddit}.rss" (
+          pkgs.writeShellScript "generate-reddit-with-filter" ''
             exec ${generateReddit} ${lib.escapeShellArg subreddit} ${lib.escapeShellArg filter'} --arg points_in_title ${lib.boolToString pointsInTitle}
-          '');
+          ''
+        );
         inherit title;
         tags = tags';
-      }
-  ;
+      };
 
   lemmy =
     { community
     , sort ? "Active"
     , title ? "Lemmy: ${community}"
-    , tags ? [ "aggregator" "lemmy" ]
+    , tags ? [
+        "aggregator"
+        "lemmy"
+      ]
     , extraTags ? [ ]
     , instance ? "https://lemmy.ml"
+    ,
     }:
       assert (builtins.isString community);
       assert (builtins.isString sort);
@@ -184,14 +199,22 @@ in
   };
 
   programs.newsboat.urls = [
-    { tags = [ "aggregator" "hacker news" ]; url = "https://hnrss.org/frontpage?points=25&comments=5"; title = "Hacker News"; }
-    { tags = [ "aggregator" "hacker news" ]; url = "https://hnrss.org/show?points=25&comments=5"; title = "Hacker News: show"; }
+    {
+      tags = [ "aggregator" ];
+      url = "https://hnrss.org/frontpage";
+      title = "Hacker News";
+    }
+    {
+      tags = [ "aggregator" ];
+      url = "https://hnrss.org/show";
+      title = "Hacker News: show";
+    }
 
-    # {
-    #   url = feeds.urls.secret "https://lobste.rs/rss?token=%s" "www/lobste.rs/somasis.rss";
-    #   title = "Lobsters";
-    #   tags = [ "aggregator" ];
-    # }
+    {
+      url = feeds.urls.secret "https://lobste.rs/rss?token=%s" "www/lobste.rs/somasis.rss";
+      title = "Lobsters";
+      tags = [ "aggregator" ];
+    }
 
     {
       url = "https://tilde.news/rss";
@@ -201,7 +224,10 @@ in
     {
       url = "https://discourse.nixos.org/c/links/12.rss";
       title = "NixOS Discourse: links";
-      tags = [ "aggregator" "nixos" ];
+      tags = [
+        "aggregator"
+        "NixOS"
+      ];
     }
 
     # (reddit { subreddit = "Spanish"; extraTags = [ "es" ]; })
@@ -253,12 +279,18 @@ in
         select(.data.author == "oilshell") | select(.data.domain == "oilshell.org")
       '';
       title = "Oil Shell";
-      tags = [ "blog" "computer" ];
+      tags = [
+        "blog"
+        "computer"
+      ];
       pointsInTitle = false;
     })
 
-    # (lemmy { community = "technology"; })
-    # (lemmy { community = "worldnews"; })
-    # (lemmy { community = "usa"; title = "Lemmy: USA"; })
+    (lemmy { community = "technology"; })
+    (lemmy { community = "worldnews"; })
+    (lemmy {
+      community = "usa";
+      title = "Lemmy: USA";
+    })
   ];
 }

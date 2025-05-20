@@ -6,12 +6,11 @@
 let
   inherit (config.lib.somasis) mkColorOption;
 in
-import ../theme-common.nix {
+import ../theme.nix {
   inherit lib config;
 
   mkThemeColorOption =
-    name:
-    fallback:
+    name: fallback:
     mkColorOption {
       format = "hex";
       default = osConfig.theme.colors."${name}" or fallback;

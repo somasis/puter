@@ -4,86 +4,106 @@
 , ...
 }:
 let
-  inherit (config.lib.somasis) relativeToHome xdgCacheDir xdgConfigDir;
+  inherit (config.lib.somasis)
+    xdgCacheDir
+    xdgConfigDir
+    xdgDataDir
+    ;
 in
 {
-  xdg.userDirs.pictures = "${config.home.homeDirectory}/pictures";
+  home.packages =
+    with pkgs;
+    with libsForQt5;
+    with kdePackages;
+    [
+      optimize
 
-  home.packages = [
-    pkgs.image-optimize
+      (gimp-with-plugins.override {
+        plugins = with gimpPlugins; [
+          gmic
+          lqrPlugin
+          texturize
+          waveletSharpen
+        ];
+      })
 
-    pkgs.nsxiv
+      krita
 
-    (pkgs.gimp-with-plugins.override {
-      plugins = [
-        pkgs.gimpPlugins.gmic
-        pkgs.gimpPlugins.lqrPlugin
-        pkgs.gimpPlugins.texturize
-        pkgs.gimpPlugins.waveletSharpen
-      ];
-    })
+      darktable
+      inkscape
+    ];
 
-    pkgs.darktable
-    pkgs.inkscape
-  ];
+  sync = {
+    directories = [
+      {
+        method = "symlink";
+        directory = xdgConfigDir "GIMP";
+      }
 
-  persist.directories = [
-    { method = "symlink"; directory = relativeToHome config.xdg.userDirs.pictures; }
+      # NOTE G'MIC seems to recreate the directory if it is a symlink?
+      {
+        method = "bindfs";
+        directory = xdgConfigDir "gmic";
+      }
 
-    { method = "symlink"; directory = xdgConfigDir "GIMP"; }
+      {
+        method = "symlink";
+        directory = xdgConfigDir "darktable";
+      }
+      {
+        method = "symlink";
+        directory = xdgConfigDir "inkscape";
+      }
 
-    # NOTE G'MIC seems to recreate the directory if it is a symlink?
-    { method = "bindfs"; directory = xdgConfigDir "gmic"; }
+      {
+        method = "symlink";
+        directory = xdgDataDir "krita";
+      }
+    ];
 
-    { method = "symlink"; directory = xdgConfigDir "darktable"; }
-    { method = "symlink"; directory = xdgConfigDir "inkscape"; }
-  ];
+    files = [
+      (xdgConfigDir "kritarc")
+      (xdgConfigDir "kritadisplayrc")
+      (xdgConfigDir "kritashortcutsrc")
+    ];
+  };
 
-  cache.directories = [
-    { method = "symlink"; directory = xdgCacheDir "nsxiv"; }
+  cache = {
+    directories = [
+      {
+        method = "symlink";
+        directory = xdgCacheDir "gimp";
+      }
+      {
+        method = "symlink";
+        directory = xdgCacheDir "gmic";
+      }
 
-    { method = "symlink"; directory = xdgCacheDir "gimp"; }
-    { method = "symlink"; directory = xdgCacheDir "gmic"; }
-
-    { method = "symlink"; directory = xdgCacheDir "darktable"; }
-    { method = "symlink"; directory = xdgCacheDir "gallery-dl"; }
-  ];
+      {
+        method = "symlink";
+        directory = xdgCacheDir "darktable";
+      }
+      {
+        method = "symlink";
+        directory = xdgCacheDir "gallery-dl";
+      }
+    ];
+    files = [
+      (xdgDataDir "krita.log")
+      (xdgDataDir "krita-sysinfo.log")
+    ];
+  };
 
   xdg.mimeApps = {
     defaultApplications = {
       "image/x-dcraw" = "darktable.desktop";
       "image/tiff" = "darktable.desktop";
-      "image/svg+xml" = [ "inkscape.desktop" "nsxiv.desktop" "gimp.desktop" ];
-    } // (
-      lib.genAttrs [
-        "image/avif"
-        "image/bmp"
-        "image/gif"
-        "image/heif"
-        "image/jp2"
-        "image/jpeg"
-        "image/jxl"
-        "image/png"
-        "image/webp"
-        "image/x-portable-anymap"
-        "image/x-portable-bitmap"
-        "image/x-portable-graymap"
-        "image/x-tga"
-        "image/x-xpixmap"
-      ]
-        (_: [ "nsxiv.desktop" ])
+    };
+
+    associations.added = lib.genAttrs [ "inkscape.desktop" "gimp.desktop" ] (_: "image/svg+xml");
+    associations.removed = lib.genAttrs [ "image/jpeg" "image/png" "image/tiff" ] (
+      _: "darktable.desktop"
     );
-
-    associations.removed = lib.genAttrs [ "image/jpeg" "image/png" "image/tiff" ] (_: "darktable.desktop");
-  };
-
-  xresources.properties = {
-    "Nsxiv.window.background" = config.theme.colors.darkBackground;
-    "Nsxiv.window.foreground" = config.theme.colors.darkForeground;
-    "Nsxiv.mark.foreground" = config.theme.colors.accent;
-    "Nsxiv.bar.background" = config.theme.colors.darkBackground;
-    "Nsxiv.bar.foreground" = config.theme.colors.darkForeground;
-    "Nsxiv.bar.font" = "monospace-11";
   };
 
   programs.gallery-dl = {
@@ -100,19 +120,22 @@ in
             "{author[name]|user[name]|uploader}"
             "{tweet_id|id}"
             "{filename}"
-          ]) + ".{extension}"
-        ;
+          ])
+          + ".{extension}";
 
         # Use cookies from qutebrowser if available
-        cookies = lib.mkIf config.programs.qutebrowser.enable
-          [ "chromium" "${config.xdg.dataHome}/qutebrowser/webengine" ]
-        ;
+        cookies = lib.mkIf config.programs.qutebrowser.enable [
+          "chromium"
+          "${config.xdg.dataHome}/qutebrowser/webengine"
+        ];
 
-        postprocessors = [{
-          name = "exec";
-          command = "${lib.getExe pkgs.image-optimize} -q {}";
-          async = true;
-        }];
+        postprocessors = [
+          {
+            name = "exec";
+            command = "${lib.getExe pkgs.optimize} -q {}";
+            async = true;
+          }
+        ];
 
         ytdl = lib.mkIf config.programs.yt-dlp.enable {
           enabled = true;
@@ -140,7 +163,10 @@ in
     in
     {
       aliases.gallery-dl = "spawn -m ${gallery-dl}";
-      keyBindings.normal.dG = "gallery-dl -D ${config.xdg.userDirs.download} {url}";
-      keyBindings.normal.dg = "gallery-dl -D ~/sync/gallery {url}";
+      keyBindings.normal = {
+        dgd = "gallery-dl -D ${config.xdg.userDirs.download} {url}";
+        dgn = "gallery-dl -D ${config.xdg.userDirs.pictures}/nsfw {url}";
+        dgw = "gallery-dl -D ${config.xdg.userDirs.pictures}/wallpapers {url}";
+      };
     };
 }

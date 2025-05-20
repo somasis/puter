@@ -1,7 +1,6 @@
 { lib
 , wrapCommand
 , writeShellApplication
-
 , coreutils
 , dmenu
 , gnugrep
@@ -11,6 +10,7 @@
 , uq
 , xclip
 , xdotool
+,
 }:
 wrapCommand {
   package = writeShellApplication {
@@ -37,8 +37,10 @@ wrapCommand {
     };
   };
 
-  wrappers = [{
-    command = "/bin/dmenu-emoji";
-    setEnvironmentDefault.DMENU_EMOJI_LIST = "${unicode-emoji}/share/unicode/emoji/emoji-test.txt";
-  }];
+  wrappers = [
+    {
+      command = "/bin/dmenu-emoji";
+      setEnvironmentDefault.DMENU_EMOJI_LIST = "${unicode-emoji}/share/unicode/emoji/emoji-test.txt";
+    }
+  ];
 }

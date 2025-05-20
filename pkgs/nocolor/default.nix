@@ -1,8 +1,8 @@
 { lib
 , writeShellApplication
-
 , coreutils
 , gnused
+,
 }:
 writeShellApplication {
   name = "nocolor";

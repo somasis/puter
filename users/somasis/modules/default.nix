@@ -6,21 +6,22 @@
 with lib;
 {
   imports = [
-    ./panel
-
     ./dmenu.nix
-    ./rclone.nix
-    ./stw.nix
-    ./tunnels.nix
-    ./zotero.nix
   ];
 
   config = mkIf config.services.stw.enable {
     systemd.user.targets.graphical-session-post = {
       Unit = {
         Description = "All non-applications to be run after the graphical session is initialized";
-        Requires = [ "graphical-session.target" "window-manager.target" ];
-        After = [ "graphical-session-pre.target" "graphical-session.target" "window-manager.target" ];
+        Requires = [
+          "graphical-session.target"
+          "window-manager.target"
+        ];
+        After = [
+          "graphical-session-pre.target"
+          "graphical-session.target"
+          "window-manager.target"
+        ];
       };
 
       # HACK(?): graphical-session-post.target is triggered by bspwm's configuration

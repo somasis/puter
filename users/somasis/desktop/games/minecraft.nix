@@ -1,13 +1,20 @@
-{ pkgs, config, ... }: {
+{ config
+, osConfig
+, pkgs
+, ...
+}:
+{
   home.packages = [
     pkgs.prismlauncher
-    pkgs.jdk
+    (config.osConfig.programs.java.package or pkgs.jre)
   ];
 
-  persist.directories = [{
-    method = "symlink";
-    directory = config.lib.somasis.xdgDataDir "PrismLauncher";
-  }];
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "PrismLauncher";
+    }
+  ];
 
   # TODO use NixMinecraft?
   # programs.minecraft = {

@@ -3,6 +3,7 @@
 , fetchurl
 , jre_headless
 , makeWrapper
+,
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "bandcamp-collection-downloader";
@@ -27,7 +28,7 @@ stdenvNoCC.mkDerivation rec {
   meta = with lib; {
     description = "Tool for automatically downloading releases purchased with a Bandcamp account";
     homepage = "https://framagit.org/Ezwen/bandcamp-collection-downloader";
-    license = licenses.agpl3;
+    license = licenses.agpl3Only;
     sourceProvenance = with sourceTypes; [ binaryBytecode ];
     maintainers = with maintainers; [ somasis ];
     inherit (jre_headless.meta) platforms;

@@ -2,7 +2,8 @@
 , writeShellApplication
 , nix
 , coreutils
-, nixfmt
+, nixfmt-rfc-style
+,
 }:
 writeShellApplication {
   name = "json2nix";
@@ -10,7 +11,7 @@ writeShellApplication {
   runtimeInputs = [
     coreutils
     nix
-    nixfmt
+    nixfmt-rfc-style
   ];
 
   text = builtins.readFile ./json2nix.bash;

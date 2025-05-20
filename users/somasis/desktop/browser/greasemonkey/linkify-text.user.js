@@ -12,26 +12,26 @@
 const { UrlMatcher, Linkifier } = linkifyPlusPlusCore;
 
 (function () {
-    "use strict";
+  "use strict";
 
-    // Use defaults from <https://github.com/eight04/linkify-plus-plus/blob/v11.0.0/src/lib/pref-default.js>.
-    const matcher = new UrlMatcher({
-        boundaryLeft: "{[(\"'<",
-        boundaryRight: ">'\")]},.;?!",
-    });
+  // Use defaults from <https://github.com/eight04/linkify-plus-plus/blob/v11.0.0/src/lib/pref-default.js>.
+  const matcher = new UrlMatcher({
+    boundaryLeft: "{[(\"'<",
+    boundaryRight: ">'\")]},.;?!",
+  });
 
-    const linkifier = new Linkifier(document.body, {
-        matcher: matcher,
+  const linkifier = new Linkifier(document.body, {
+    matcher: matcher,
 
-        // Don't embed image URLs
-        embedImage: false,
-    });
+    // Don't embed image URLs
+    embedImage: false,
+  });
 
-    linkifier.on("complete", (elapse) => {
-        console.info("linkify-text: finished in %fms", elapse);
-    });
-    linkifier.on("error", (err) => {
-        console.error("linkify-text: failed with error %o", err);
-    });
-    linkifier.start();
+  linkifier.on("complete", (elapse) => {
+    console.info("linkify-text: finished in %fms", elapse);
+  });
+  linkifier.on("error", (err) => {
+    console.error("linkify-text: failed with error %o", err);
+  });
+  linkifier.start();
 });

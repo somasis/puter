@@ -1,6 +1,7 @@
 { pkgs
 , ...
-}: {
+}:
+{
   programs.jq.enable = true;
 
   # not using writeJqScript, as it produces a shell script
@@ -30,34 +31,31 @@
       | .[1];  # answer
   '';
 
-  home.shellAliases = {
-    diff = "diff --color";
-    g = "find -L ./ -type f \! -path '*/.*/*' -print0 | xe -0 -N0 grep -n";
-    number = "nl -b a -d '' -f n -w 1";
-  };
+  home.packages = with pkgs; [
+    pastel
 
-  home.packages = [
-    pkgs.ellipsis
-    pkgs.sqlite-interactive.bin
-    pkgs.frangipanni
-    pkgs.fx
-    pkgs.ijq
-    pkgs.json2nix
-    pkgs.patchutils
+    ellipsis
+    sqlite-interactive.bin
+    frangipanni
+    fx
+    ijq
+    json2nix
+    patchutils
 
-    pkgs.lowdown
+    lowdown
 
-    pkgs.html-tidy
-    pkgs.pup
-    pkgs.xmlstarlet
+    html-tidy
+    jqfmt
+    pup
+    xmlstarlet
 
-    pkgs.table
-    pkgs.ugrep
+    table
+    ugrep
 
-    pkgs.ini2nix
-    pkgs.json2nix
+    ini2nix
+    json2nix
 
-    pkgs.yq-go
-    pkgs.jc
+    yq-go
+    jc
   ];
 }

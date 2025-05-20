@@ -1,5 +1,12 @@
+set -euo pipefail
+shopt -s nullglob
+
 : "${XDG_CONFIG_HOME:=${HOME}/.config}"
 : "${XDG_DATA_HOME:=${HOME}/.local/share}"
+
+mkdir -p \
+    "$(readlink -f "${XDG_CONFIG_HOME}/wineprefixes")" \
+    "$(readlink -f "${XDG_DATA_HOME}/wineprefixes")"
 
 usage() {
     # shellcheck disable=SC2059
@@ -119,7 +126,8 @@ list_prefix_applications() (
     local d
 
     for d in "${directories[@]}"; do
-        [[ -d "${d}" ]] && cd "${d}" || continue
+        [[ -d "${d}" ]] || continue
+        cd "${d}" || exit 1
         find .// -type f -iname '*.lnk'
     done \
         | sed 's|^\.//||; s|\.lnk$||' \

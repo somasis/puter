@@ -1,18 +1,18 @@
 { config
 , ...
-}: {
+}:
+{
   imports = [
-    ../../music/manage
-
-    ./cantata.nix
-    ./daemon.nix
+    ./manage
     ./player.nix
-    # ./random.nix
-    ./scrobble.nix
-
     ./production.nix
   ];
 
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = "audio";
+    }
+  ];
   xdg.userDirs.music = "${config.home.homeDirectory}/audio/library";
-  persist.directories = [{ method = "bindfs"; directory = "audio"; }];
 }

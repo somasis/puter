@@ -2,6 +2,7 @@
 , fetchFromGitHub
 , fcitx5
 , kakouneUtils
+,
 }:
 kakouneUtils.buildKakounePluginFrom2Nix rec {
   pname = "kakoune-fcitx";

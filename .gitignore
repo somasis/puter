@@ -1,1 +1,6 @@
-.*.kak.*
+*~
+*.bak
+*.old
+*.kate-swp
+.pre-commit-config.yaml
+.direnv

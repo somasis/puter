@@ -2,6 +2,7 @@
 , go
 , buildGoModule
 , fetchFromGitHub
+,
 }:
 buildGoModule rec {
   pname = "firefox-sync-client";

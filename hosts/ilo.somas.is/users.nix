@@ -1,7 +1,8 @@
 { config
 , lib
 , ...
-}: {
+}:
+{
   users = {
     mutableUsers = false;
 
@@ -16,19 +17,28 @@
 
         extraGroups =
           [ "systemd-journal" ]
-          ++ lib.optional config.hardware.uinput.enable "input"
-          ++ lib.optional config.security.sudo.enable "wheel"
           ++ lib.optional config.hardware.brillo.enable "video"
-          ++ lib.optionals config.networking.networkmanager.enable [ "network" "networkmanager" ]
           ++ lib.optional config.hardware.sane.enable "scanner"
-          ++ lib.optional config.services.printing.enable "lp"
+          ++ lib.optional config.hardware.uinput.enable "input"
           ++ lib.optional config.programs.adb.enable "adbusers"
-        ;
+          ++ lib.optional config.security.sudo.enable "wheel"
+          ++ lib.optional config.services.printing.enable "lp"
+          ++ lib.optional config.services.timesyncd.enable "systemd-timesync"
+          ++ lib.optionals config.networking.networkmanager.enable [
+            "network"
+            "networkmanager"
+          ];
 
-        hashedPassword = "$y$j9T$TBHE4K4AUdpPQS6tXfWJJ.$bi.vigEvgXkq0G.gKZeKVvFX1m4hsiWNzI.SAZ2ConC";
+        # $ mkpasswd -m sha-512 -s
+        # and don't forget...
+        # $ pass edit ilo.somas.is/users/somasis
+        # $ sudo zfs change-key ilo.somas.is/nixos
+        # $ pass edit ilo.somas.is/zfs/nixos
+        hashedPassword = "$6$1vjLB9lSU6Xw8J.L$8zmUO3J9dXUQfAIqIkCBroOpQ3KXUjBJsmu5NZrnO3IB1GyIqXpkUUgZP3XXCJ1./x9TK./06M4bnvYX/PYzs/";
 
         openssh.authorizedKeys.keys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPkmjWLpicEaQOkM7FAv5bctmZjV5GjISYW7re0oknLU somasis@ilo.somas.is_20220603"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILwx+D9HPPjg0H6rSLUaXiEOQzF9W4LlX3HRgyD+4eis somasis@esther.7596ff.com_20250221"
         ];
       };
     };
@@ -48,9 +58,4 @@
   #     # chpasswd -e
   #   '';
   # };
-
-  persist.directories = [
-    # Used for keeping declared users' UIDs and GIDs consistent across boots.
-    { directory = "/var/lib/nixos"; user = "root"; group = "root"; mode = "0755"; }
-  ];
 }

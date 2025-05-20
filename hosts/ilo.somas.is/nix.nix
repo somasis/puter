@@ -6,127 +6,63 @@
 , nixpkgs
 , ...
 }:
-# let
-#   inherit (config.services.tor.client) socksListenAddress;
-#   proxy = "socks5h://${socksListenAddress.addr}:${toString socksListenAddress.port}";
-# in
 {
-  # systemd.services.nix-daemon.environment = lib.mkIf config.services.tor.client.enable {
-  #   all_proxy = proxy;
-  #   ftp_proxy = proxy;
-  #   http_proxy = proxy;
-  #   https_proxy = proxy;
-  #   rsync_proxy = proxy;
-  #   no_proxy = "127.0.0.1,localhost,.localdomain,192.168.0.0/16";
-  # };
+  nix.settings = {
+    extra-experimental-features = [
+      "ca-derivations"
+      "auto-allocate-uids"
+    ];
 
-  nix = {
-    daemonCPUSchedPolicy = "idle";
-    daemonIOSchedClass = "idle";
+    max-jobs = 4;
+    log-lines = 1000;
 
-    settings = {
-      extra-experimental-features = [
-        "flakes"
-        "nix-command"
+    auto-optimise-store = true;
+    min-free = 1024000000; # 512 MB
+    max-free = 1024000000; # 1 GB
 
-        "ca-derivations"
+    # Allow building from source if binary substitution fails
+    fallback = true;
 
-        "auto-allocate-uids"
-      ];
+    # Quiet the dirty messages when using `nixos-dev`.
+    warn-dirty = false;
 
-      trusted-users = [ "@wheel" ];
+    connect-timeout = 5;
+    stalled-download-timeout = 15;
 
-      max-jobs = 4;
-      log-lines = 1000;
+    http-connections = 64;
+    max-substitution-jobs = 64;
+    extra-substituters = lib.mkBefore [
+      # Prefer HTTP nix-serve via an SSH tunnel to esther.
+      # Faster for multiple missing-path queries.
+      "http://localhost:5000"
 
-      auto-optimise-store = true;
-      min-free = 1024000000; # 512 MB
-      max-free = 1024000000; # 1 GB
+      # Use ca-derivations cache
+      # <https://discourse.nixos.org/t/content-addressed-nix-call-for-testers/12881#:~:text=Level%203%20%E2%80%94%20Raider%20of%20the%20unknown>
+      "https://cache.ngi0.nixos.org"
+    ];
 
-      # Allow building from source if binary substitution fails
-      fallback = true;
-
-      # Quiet the dirty messages when using `nixos-dev`.
-      warn-dirty = false;
-
-      builders-use-substitutes = true;
-
-      use-xdg-base-directories = true;
-
-      connect-timeout = 5;
-      http-connections = 64;
-      max-substitution-jobs = 64;
-      extra-substituters = [
-        # Prefer HTTP nix-serve over the SSH tunnel to the server.
-        # Faster for multiple missing-path queries.
-        "http://localhost:5000"
-        # "ssh-ng://nix-ssh@spinoza.7596ff.com"
-
-        # Use binary cache for nonfree packages
-        # <https://github.com/numtide/nixpkgs-unfree>
-        "https://numtide.cachix.org"
-
-        "https://nix-community.cachix.org"
-
-        # Use ca-derivations cache
-        # <https://discourse.nixos.org/t/content-addressed-nix-call-for-testers/12881#:~:text=Level%203%20%E2%80%94%20Raider%20of%20the%20unknown>
-        "https://cache.ngi0.nixos.org"
-      ];
-
-      extra-trusted-public-keys = [
-        "spinoza.7596ff.com-1:3evmjxB2owiKU1RcWMaVW7al/xdOG3QVqEEYwILPK1w="
-        "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        "cache.ngi0.nixos.org-1:KqH5CBLNSyX184S9BKZJo1LxrxJ9ltnY2uAs5c/f1MA="
-      ];
-    };
-
-    distributedBuilds = true;
-    buildMachines = [{
-      hostName = "spinoza.7596ff.com";
-
-      system = "x86_64-linux";
-      maxJobs = 4;
-
-      protocol = "ssh";
-      sshUser = "nix-ssh";
-      sshKey = "${config.users.users.root.home}/.ssh/id_ed25519";
-
-      publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSU5rSWRPNDVQeVozMDAydlRHbHN0cDJPMTV2cHo4akU2bXdjV1M2ZjZRUE4gcm9vdEBzcGlub3phCg==";
-
-      supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
-    }];
-
-    gc = {
-      automatic = true;
-      dates = "Sun 08:00:00";
-      randomizedDelaySec = "1h";
-      options = "--delete-older-than 7d";
-    };
+    extra-trusted-public-keys = [
+      "cache.ngi0.nixos.org-1:KqH5CBLNSyX184S9BKZJo1LxrxJ9ltnY2uAs5c/f1MA="
+    ];
   };
 
-  # Only do garbage collection if not on battery.
-  systemd.services.nix-gc = {
-    unitConfig.ConditionACPower = true;
-    serviceConfig = {
-      Nice = 19;
-      IOSchedulingPriority = 7;
-    };
-  };
-
-  environment.systemPackages =
-    lib.optional config.programs.bash.enableCompletion pkgs.nix-bash-completions;
+  environment.systemPackages = lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions;
 
   programs.ssh = {
     extraConfig = ''
-      Host spinoza.7596ff.com
+      Host esther.7596ff.com
         ServerAliveInterval 15
         Compression yes
     '';
 
-    knownHosts.spinoza = {
-      hostNames = [ "spinoza.7596ff.com" ];
-      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINkIdO45PyZ3002vTGlstp2O15vpz8jE6mwcWS6f6QPN";
+    knownHosts.esther = {
+      hostNames = [
+        "esther.7596ff.com"
+        "esther.7596ff.com.lan"
+        "esther.lan"
+        "esther"
+      ];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMXvOGvDJoSXkL0l5xueeHmYo1FjUdS1Ti77d4KteSyE";
     };
   };
 }

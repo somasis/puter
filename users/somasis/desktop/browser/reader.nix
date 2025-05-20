@@ -22,7 +22,14 @@ let
 
     umask 0077
 
-    PATH=${lib.makeBinPath [ pkgs.html-tidy pkgs.rdrview pkgs.trurl pkgs.coreutils ]}"''${PATH:+:$PATH}"
+    PATH=${
+      lib.makeBinPath [
+        pkgs.html-tidy
+        pkgs.rdrview
+        pkgs.trurl
+        pkgs.coreutils
+      ]
+    }"''${PATH:+:$PATH}"
 
     case "$QUTE_URL" in
         file://*) QUTE_URL=''${QUTE_URL#file://} ;;
@@ -72,49 +79,6 @@ let
     printf 'open -r %s\n' "$tmp" > "$QUTE_FIFO"
   '';
 
-  print-clean = pkgs.writeShellApplication {
-    name = "print-clean";
-
-    runtimeInputs = [
-      config.programs.jq.package
-      pkgs.coreutils
-      pkgs.curl
-      pkgs.dateutils
-      pkgs.gnugrep
-      pkgs.gnused
-      pkgs.moreutils
-      pkgs.pup
-      pkgs.rdrview
-      pkgs.runtimeShell
-      pkgs.trurl
-      pkgs.ugrep
-    ];
-
-    text = pkgs.substituteAll {
-      src = ./userscripts/print-clean.sh;
-      modern-normalize = pkgs.buildNpmPackage rec {
-        pname = "modern-normalize";
-        version = "2.0.0";
-
-        src = pkgs.fetchFromGitHub {
-          owner = "sindresorhus";
-          repo = pname;
-          rev = "v${version}";
-          hash = "sha256-8u3HJ0t6DRR5+vg3/1IezXv9VSmqDCldFN6g+bjVAaY=";
-        };
-
-        npmDepsHash = lib.fakeHash;
-
-        meta = with lib; {
-          description = "CSS style to normalize browsers' default styles";
-          inherit (src.meta) homepage;
-          licenses = with licenses; [ mit ];
-          maintainers = with maintainers; [ somasis ];
-        };
-      };
-    };
-  };
-
   render = pkgs.writeShellScript "render" ''
     set -euo pipefail
 
@@ -125,7 +89,12 @@ let
 
     umask 0077
 
-    PATH=${lib.makeBinPath [ pkgs.asciidoctor-with-extensions pkgs.pandoc ]}:"$PATH"
+    PATH=${
+      lib.makeBinPath [
+        pkgs.asciidoctor-with-extensions
+        pkgs.pandoc
+      ]
+    }:"$PATH"
 
     case "$QUTE_URL" in
         file://*)      url=''${QUTE_URL#file://} ;;

@@ -10,6 +10,8 @@ let
   inherit (lib)
     types
 
+    mkIf
+
     getExe
     concatStringsSep
     ;
@@ -43,7 +45,7 @@ in
     };
   };
 
-  config = {
+  config = mkIf cfg.enable {
     systemd.user.services.xssproxy = {
       Unit = {
         Description = pkg.meta.description;

@@ -24,7 +24,7 @@ let
       rewindondesync = true;
       rewindthreshold = 4.0;
       slowdownthreshold = 1.5;
-      slowondesync = true;
+      slowondesync = false;
 
       # playback
       pauseonleave = true;
@@ -42,16 +42,17 @@ let
       loopatendofplaylist = false;
       loopsinglefiles = false;
 
-      onlyswitchtotrusteddomains = true;
-      trusteddomains = mkList [
-        "drive.google.com"
-        "instagram.com"
-        "vimeo.com"
-        "tumblr.com"
-        "twitter.com"
-        "youtube.com"
-        "youtu.be"
-      ];
+      onlyswitchtotrusteddomains = false;
+      # trusteddomains = mkList [
+      #   "drive.google.com"
+      #   "instagram.com"
+      #   "vimeo.com"
+      #   "tumblr.com"
+      #   "twitter.com"
+      #   "youtube.com"
+      #   "youtu.be"
+      #   "x.com"
+      # ];
 
       mediasearchdirectories = mkList [
         config.xdg.userDirs.download
@@ -59,14 +60,18 @@ let
         "${config.xdg.userDirs.videos}/anime"
         "${config.xdg.userDirs.videos}/film"
         "${config.xdg.userDirs.videos}/tv"
-        "${config.home.homeDirectory}/mnt/sftp/genesis.whatbox.ca/files/video/anime"
-        "${config.home.homeDirectory}/mnt/sftp/genesis.whatbox.ca/files/video/film"
-        "${config.home.homeDirectory}/mnt/sftp/genesis.whatbox.ca/files/video/tv"
+        "${config.home.homeDirectory}/mnt/seedbox/files/video/anime"
+        "${config.home.homeDirectory}/mnt/seedbox/files/video/film"
+        "${config.home.homeDirectory}/mnt/seedbox/files/video/tv"
+        "${config.home.homeDirectory}/shared/kylie"
+        "${config.home.homeDirectory}/shared/cassie"
+        "${config.home.homeDirectory}/shared/violet"
       ];
 
       room = "anime";
       roomlist = mkList [
         "anime"
+        "jonesing"
         "pones"
         "wifes"
       ];
@@ -140,42 +145,51 @@ let
   };
 in
 {
-  systemd.user.services.secret-syncplay = {
-    Unit = {
-      Description = "Authenticate `syncplay` using `pass`";
-      PartOf = [ "graphical-session.target" ];
+  home.packages = [
+    syncplay
+    secret-syncplay
+  ];
 
-      After = [ "gpg-agent.service" ];
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
-
-    Service = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-
-      ExecStart = [ "${secret-syncplay}/bin/secret-syncplay journcy.net 8999" ];
-      ExecStop = [ "${pkgs.coreutils}/bin/rm -rf %t/secret-syncplay" ];
-    };
+  persist = {
+    directories = [ (config.lib.somasis.xdgConfigDir "Syncplay") ];
+    files = [ (config.lib.somasis.xdgConfigDir "syncplay.ini") ];
   };
 
-  home.packages = [ secret-syncplay syncplay ];
+  # xdg.configFile = {
+  #   "syncplay.ini".force = true;
+  #   "Syncplay/MainWindow.conf".text = lib.generators.toINI { } {
+  #     MainWindow = {
+  #       autoplayChecked = false;
+  #       autoplayMinUsers = 3;
+  #       showAutoPlayButton = true;
+  #       showPlaybackButtons = false;
+  #     };
+  #   };
 
-  xdg.configFile = {
-    "Syncplay/MainWindow.conf".text = lib.generators.toINI { } {
-      MainWindow = {
-        autoplayChecked = false;
-        autoplayMinUsers = 3;
-        showAutoPlayButton = true;
-        showPlaybackButtons = false;
-      };
-    };
+  #   "Syncplay/MoreSettings.conf".text = lib.generators.toINI { } {
+  #     MoreSettings.ShowMoreSettings = true;
+  #   };
 
-    "Syncplay/MoreSettings.conf".text = lib.generators.toINI { } {
-      MoreSettings.ShowMoreSettings = true;
-    };
+  #   "Syncplay/PlayerList.conf".text = lib.generators.toINI { } {
+  #     PlayerList.PlayerList = mpv;
+  #   };
+  # };
 
-    "Syncplay/PlayerList.conf".text = lib.generators.toINI { } {
-      PlayerList.PlayerList = mpv;
-    };
-  };
+  # systemd.user.services.secret-syncplay = {
+  #   Unit = {
+  #     Description = "Authenticate `syncplay` using `pass`";
+  #     PartOf = [ "graphical-session.target" ];
+
+  #     After = [ "gpg-agent.service" ];
+  #   };
+  #   Install.WantedBy = [ "graphical-session.target" ];
+
+  #   Service = {
+  #     Type = "oneshot";
+  #     RemainAfterExit = true;
+
+  #     ExecStart = [ "${secret-syncplay}/bin/secret-syncplay journcy.net 8999" ];
+  #     ExecStop = [ "${pkgs.coreutils}/bin/rm -rf %t/secret-syncplay" ];
+  #   };
+  # };
 }

@@ -38,32 +38,36 @@ in
         "${config.networking.fqdnOrHostName}" = {
           fingerprint."eDP-1" = monitor.internal.fingerprint;
 
-          config = {
-            "eDP-1" = {
-              enable = true;
-              crtc = 0;
-              primary = true;
-              inherit (monitor.internal) dpi mode rate;
-            };
-          }
-          // lib.genAttrs [ "DP-1" "DP-2" "DP-3" "DP-4" ] (_: { enable = false; })
-          ;
+          config =
+            {
+              "eDP-1" = {
+                enable = true;
+                crtc = 0;
+                primary = true;
+                inherit (monitor.internal) dpi mode rate;
+              };
+            }
+            // lib.genAttrs [ "DP-1" "DP-2" "DP-3" "DP-4" ] (_: {
+              enable = false;
+            });
         };
 
         "${config.networking.fqdnOrHostName}:tv" = {
           fingerprint."eDP-1" = monitor.internal.fingerprint;
           fingerprint."DP-3" = monitor.tv.fingerprint;
 
-          config = {
-            "DP-3" = {
-              enable = true;
-              crtc = 0;
-              primary = true;
-              inherit (monitor.tv) dpi mode;
-            };
-          }
-          // lib.genAttrs [ "eDP-1" "DP-1" "DP-2" "DP-4" ] (_: { enable = false; })
-          ;
+          config =
+            {
+              "DP-3" = {
+                enable = true;
+                crtc = 0;
+                primary = true;
+                inherit (monitor.tv) dpi mode;
+              };
+            }
+            // lib.genAttrs [ "eDP-1" "DP-1" "DP-2" "DP-4" ] (_: {
+              enable = false;
+            });
         };
       };
 
@@ -106,7 +110,12 @@ in
         '';
 
         postswitch.dpi = ''
-          ${lib.toShellVar "PATH" (lib.makeBinPath [ pkgs.xorg.xrdb pkgs.gnused ])}
+          ${lib.toShellVar "PATH" (
+            lib.makeBinPath [
+              pkgs.xorg.xrdb
+              pkgs.gnused
+            ]
+          )}
 
           dpi=$(sed '/^dpi/!d; s/^dpi *//; q' "$AUTORANDR_PROFILE_FOLDER/config" 2>/dev/null)
           [[ -n "$dpi" ]] || dpi=96
@@ -160,7 +169,10 @@ in
         notebookcheckICC = pkgs.fetchurl {
           url = "https://www.notebookcheck.net/uploads/tx_nbc2/BOE_CQ_______NE135FBM_N41.icm";
           hash = "sha256-Sul8UxNABeK8pmJcjUuIbr24OLoM6E/mHi/qf+wJETY=";
-          curlOptsList = [ "--user-agent" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.6.3 Chrome/112.0.5615.213 Safari/537.36" ];
+          curlOptsList = [
+            "--user-agent"
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/6.6.3 Chrome/112.0.5615.213 Safari/537.36"
+          ];
         };
 
         # <https://community.frame.work/t/display-accuracy-and-calibration/22381>
@@ -169,7 +181,10 @@ in
           hash = "sha256-n77S2avYTPXlmaQd+FA2trjfoXeNQqxW0+P5ehw+jGc=";
         };
 
-        profiles = [ notebookcheckICC uweICC ];
+        profiles = [
+          notebookcheckICC
+          uweICC
+        ];
 
         installedProfilesDir = "/var/lib/colord/icc";
       in
@@ -185,9 +200,14 @@ in
                 ln -vsf "$profile" "$installed_profiles_dir"/"$profile_name"
             fi
         done
-      ''
-    ;
+      '';
   };
 
-  persist.directories = [{ user = "colord"; group = "colord"; directory = "/var/lib/colord"; }];
+  persist.directories = [
+    {
+      user = "colord";
+      group = "colord";
+      directory = "/var/lib/colord";
+    }
+  ];
 }

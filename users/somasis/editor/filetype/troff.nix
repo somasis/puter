@@ -5,7 +5,12 @@
 }:
 let
   lint = pkgs.writeShellScript "lint-troff" ''
-    PATH=${lib.makeBinPath [ pkgs.coreutils pkgs.mandoc ]}
+    PATH=${
+      lib.makeBinPath [
+        pkgs.coreutils
+        pkgs.mandoc
+      ]
+    }
     mandoc -T lint -W warning "$1" | cut -d ' ' -f1-
   '';
 in

@@ -1,7 +1,9 @@
 { lib
+, stdenv
 , fetchFromGitHub
 , skalibs
 , execline
+,
 }:
 stdenv.mkDerivation rec {
   pname = "execshell";
@@ -15,7 +17,10 @@ stdenv.mkDerivation rec {
     fetchSubmodules = true;
   };
 
-  buildInputs = [ skalibs execline ];
+  buildInputs = [
+    skalibs
+    execline
+  ];
 
   installPhase = ''
     install -m0755 -D execshell $out/bin/execshell
@@ -26,7 +31,10 @@ stdenv.mkDerivation rec {
   meta = with lib; {
     inherit (src.meta) homepage;
     description = "Proof of concept execline interactive REPL";
-    license = with licenses; [ isc bsd2 ];
+    license = with licenses; [
+      isc
+      bsd2
+    ];
     maintainers = with maintainers; [ somasis ];
     platforms = platforms.unix;
   };

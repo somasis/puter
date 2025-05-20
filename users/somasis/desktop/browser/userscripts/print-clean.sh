@@ -84,7 +84,7 @@ if article_title_stem=$(
         -e "${article_sitename_escaped}[[:blank:]]+[[:punct:]]+[[:blank:]]+" \
         -e "${article_sitename_escaped}[[:punct:]]+[[:blank:]]+" \
         <<<"${article_title}"
-); then
+    ); then
     article_title=${article_title/"${article_title_stem}"/}
     :
 fi

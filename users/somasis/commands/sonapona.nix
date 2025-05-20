@@ -1,16 +1,19 @@
 { config
 , pkgs
 , ...
-}: {
+}:
+{
   home.packages = [
     pkgs.comic-mono
     pkgs.sonapona
   ];
 
-  persist.directories = [{
-    method = "symlink";
-    directory = config.lib.somasis.xdgDataDir "sonapona";
-  }];
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "sonapona";
+    }
+  ];
 
   services.stw.widgets.sonapona = {
     text = {

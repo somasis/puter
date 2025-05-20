@@ -1,0 +1,140 @@
+# shellcheck shell=bash
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+Filter the qutebrowser history database by constructing an SQL query
+from the arguments given.
+
+usage: ${0##*/} [-ad] <criteria>...
+
+options:
+    -a          Filter history entries against ANY condition specified,
+                rather than requiring that ALL conditions match.
+    -d          Dry run; don't apply any changes, only show what
+                entries would be removed.
+    <criteria>  A criteria to match history entries against.
+
+<criteria>:
+    after:<datetime>    Match entries added after <datetime>.
+                        <datetime> will be turned into a Unix epoch
+                        before it is made into SQL syntax.
+    before:<datetime>   Match entries added before <datetime>.
+                        <datetime> will be turned into a Unix epoch
+                        before it is made into SQL syntax.
+    title:<regex>       Match entries whose title matches <regex>.
+    url:<regex>         Match entries whose URL matches <regex>.
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+# qutebrowser=false
+# [[ -v QUTE_FIFO ]] && qutebrowser=true
+
+: "${XDG_DATA_HOME:=${HOME}/.local/share}"
+history="${XDG_DATA_HOME}"/qutebrowser/history.sqlite
+
+if ! [[ -e "${history}" ]]; then
+    printf 'error: qutebrowser history not found at expected location (%q)\n' "${history}" >&2
+    exit 1
+fi
+
+if [[ -L "${history}" ]]; then
+    history=$(readlink -f "${history}")
+fi
+
+criterion=()
+match_mode=all
+dry_run=false
+while getopts :ad opt; do
+    case "${opt}" in
+        a) match_mode=any ;;
+        d) dry_run=true ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+criterion+=("$@")
+[[ "${#criterion[@]}" -gt 0 ]] || usage 'error: no criterion specified\n'
+
+criteria=
+criteria_type=
+conjunct=
+criteria_processed=0
+sql_criterion_History=
+sql_criterion_CompletionHistory=
+for criteria in "${criterion[@]}"; do
+    case "${criteria}" in
+        *:*) : ;;
+        *) usage 'error: no criteria type specified: %s\n' "${criteria@Q}" ;;
+    esac
+
+    criteria_type=${criteria%%:*}
+    criteria=${criteria#"${criteria_type}:"}
+
+    conjunct=WHERE
+    if [[ "${criteria_processed}" -gt 0 ]]; then
+        case "${match_mode}" in
+            all) conjunct=AND ;;
+            any) conjunct=OR ;;
+        esac
+    fi
+
+    case "${criteria_type}" in
+        url)
+            sql_criterion_History+="${conjunct} url REGEXP ${criteria@Q} "
+            sql_criterion_CompletionHistory+=" ${conjunct} url REGEXP ${criteria@Q} "
+            ;;
+        title)
+            sql_criterion_History+="${conjunct} title REGEXP ${criteria@Q} "
+            sql_criterion_CompletionHistory+="${conjunct} title REGEXP ${criteria@Q} "
+            ;;
+        after)
+            criteria=$(dateconv -f '%s' -- "${criteria}")
+            sql_criterion_History+="${conjunct} atime > ${criteria@Q} "
+            sql_criterion_CompletionHistory+="${conjunct} last_atime > ${criteria@Q} "
+            ;;
+        before)
+            criteria=$(dateconv -f '%s' -- "${criteria}")
+            sql_criterion_History+="${conjunct} atime < ${criteria@Q} "
+            sql_criterion_CompletionHistory+="${conjunct} last_atime < ${criteria@Q} "
+            ;;
+        *) usage 'error: invalid criteria type: %s\n' "${criteria_type@Q}" ;;
+    esac
+
+    criteria_processed=$((criteria_processed + 1))
+done
+
+# printf 'SELECT * FROM History %s\n' "${sql_criterion_History}" >&2
+# printf 'SELECT * FROM CompletionHistory %s\n' "${sql_criterion_CompletionHistory}" >&2
+# exit
+
+if [[ "${dry_run}" == true ]]; then
+    sql="
+        SELECT datetime(atime, 'unixepoch'), url
+            FROM (
+                SELECT atime, url
+                    FROM History
+                    ${sql_criterion_History}
+                UNION ALL
+                SELECT last_atime AS atime, url
+                    FROM CompletionHistory
+                    ${sql_criterion_CompletionHistory}
+            )
+            ORDER BY atime;
+    "
+    sqlite3 -batch -tabs -- "${history}" <<<"$(printf '%s\n' "${sql[@]}")"
+else
+    sql="
+DELETE FROM History ${sql_criterion_History};
+DELETE FROM CompletionHistory ${sql_criterion_CompletionHistory};
+SELECT CONCAT('deleted ', changes(), ' entries from history') AS '';
+"
+    sqlite3 -batch -tabs -- "${history}" <<<"$(printf '%s\n' "${sql[@]}")" >&2
+fi

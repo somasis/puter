@@ -38,9 +38,11 @@ let
 in
 {
   programs.git = {
-    includes = [{
-      path = "/run/user/${toString osConfig.users.users.somasis.uid}/secret-spr/gitconfig";
-    }];
+    includes = [
+      {
+        path = "/run/user/${toString osConfig.users.users.somasis.uid}/secret-spr/gitconfig";
+      }
+    ];
 
     extraConfig.spr = {
       requireTestPlan = false;

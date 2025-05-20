@@ -1,6 +1,5 @@
 { lib
 , writeShellApplication
-
 , coreutils
 , dmenu
 , findutils
@@ -10,6 +9,7 @@
 , moreutils
 , systemd
 , uq
+,
 }:
 writeShellApplication {
   name = "dmenu-run";

@@ -1,10 +1,10 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   hardware.sane = {
     enable = true;
     openFirewall = true;
 
     extraBackends = [
-      pkgs.hplipWithPlugin
       pkgs.sane-airscan
     ];
   };

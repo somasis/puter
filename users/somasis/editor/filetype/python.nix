@@ -8,7 +8,12 @@ let
   format = "${pkgs.black-macchiato}/bin/black-macchiato";
 
   lint = pkgs.writeShellScript "lint-python" ''
-    PATH=${lib.makeBinPath [ pkgs.python3Packages.pylint pkgs.gawk ]}
+    PATH=${
+      lib.makeBinPath [
+        pkgs.python3Packages.pylint
+        pkgs.gawk
+      ]
+    }
 
     pylint \
         --msg-template='{path}:{line}:{column}: {category}: {msg_id}: {msg} ({symbol})' "$@" \
@@ -16,14 +21,19 @@ let
   '';
 in
 {
-  home.packages = [ pkgs.python3Packages.pylint pkgs.black-macchiato ];
+  home.packages = [
+    pkgs.python3Packages.pylint
+    pkgs.black-macchiato
+  ];
 
-  programs.kakoune.config.hooks = [{
-    name = "WinSetOption";
-    option = "filetype=python";
-    commands = ''
-      set-option window formatcmd "${format}"
-      set-option window lintcmd "${lint}"
-    '';
-  }];
+  programs.kakoune.config.hooks = [
+    {
+      name = "WinSetOption";
+      option = "filetype=python";
+      commands = ''
+        set-option window formatcmd "${format}"
+        set-option window lintcmd "${lint}"
+      '';
+    }
+  ];
 }

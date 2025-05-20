@@ -14,28 +14,48 @@ let
     bufext="''${kak_buffile##*.}"
 
     has_formatter() {
-        nix-instantiate \
-            --eval \
-            --readonly-mode \
-            --argstr flake "$1" \
-            --expr '{ flake }: (builtins.getFlake flake).formatter.''${builtins.currentSystem}' \
-            >/dev/null 2>&1
+        local cache_file="''${XDG_RUNTIME_DIR:-''${TMPDIR:-/tmp}}/kakoune/user-nix-format/$flakehash"
+        local has_formatter=$(<"$cache_file") || :
+        has_formatter=''${has_formatter:-0}
+        if ! { case "$has_formatter" in 0|1) return 0 ;; esac; return 1; }; then
+            if nix-instantiate \
+                --eval \
+                --readonly-mode \
+                --argstr flake "$1" \
+                --expr '{ flake }: (builtins.getFlake flake).formatter.''${builtins.currentSystem}.name' \
+                >/dev/null 2>&1
+                then
+                echo 0 > "$cache_file"
+                has_formatter=0
+            else
+                echo 1 > "$cache_file"
+                has_formatter=1
+            fi
+        fi
+        return "$has_formatter"
     }
 
     cd "''${bufdir}"
-    flake=$(upward "flake.nix") && flake="''${flake%/flake.nix}" || flake=
-    has_formatter=$([ -n "$flake" ] && has_formatter "$flake" && echo true || echo false)
+    flake=$(upward "flake.nix")
+    flake="''${flake%/flake.nix}"
+    if [[ -z "$flake" ]]; then
+        nixfmt -f "$buffile" - < "$format_in" > "$format_out"
+        exit $?
+    fi
 
-    # `nix fmt` wants to edit in place and there's no way around it!
-    cat > "$format_out"
+    flakehash=$(<<<"$flake" sha256sum)
+    flakehash=''${flakehash%%[[:blank:]]*}
 
     e=0
-    if "$has_formatter"; then
+    if [ -n "$flake" ] && has_formatter "$flake"; then
+        # `nix fmt` wants to edit in place and there's no way around it!
+        cat > "$format_out"
+
+        e=0
         mv "$format_out" "$bufdir/.''${format_out##*/}.nix"
-        nix fmt "$bufdir/.''${format_out##*/}.nix" >/dev/null || e=$?
-        mv "$bufdir/.''${format_out##*/}.nix" "$format_out"
-    else
-        nixpkgs-fmt "$format_out" >/dev/null || e=$?
+        if nix fmt "$bufdir/.''${format_out##*/}.nix" >/dev/null; then
+            mv "$bufdir/.''${format_out##*/}.nix" "$format_out"
+        fi
     fi
 
     return "$e"
@@ -59,17 +79,22 @@ let
   '';
 in
 {
-  home.packages = [ pkgs.nixpkgs-fmt pkgs.statix ];
+  home.packages = [
+    pkgs.nixfmt-rfc-style
+    pkgs.statix
+  ];
 
-  programs.kakoune.config.hooks = [{
-    name = "WinSetOption";
-    option = "filetype=nix";
-    commands = ''
-      set-option window tabstop 2
-      set-option window indentwidth 2
+  programs.kakoune.config.hooks = [
+    {
+      name = "WinSetOption";
+      option = "filetype=nix";
+      commands = ''
+        set-option window tabstop 2
+        set-option window indentwidth 2
 
-      set-option window formatcmd "run() { . ${format}; } && run"
-      set-option window lintcmd ${lint}
-    '';
-  }];
+        set-option window formatcmd "run() { . ${format}; } && run"
+        set-option window lintcmd ${lint}
+      '';
+    }
+  ];
 }

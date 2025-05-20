@@ -41,10 +41,12 @@ in
 {
   home.packages = [ mess ];
 
-  persist.directories = [{
-    method = "symlink";
-    directory = "mess";
-  }];
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = "mess";
+    }
+  ];
 
   xdg.userDirs = {
     desktop = "${messDir}/current";

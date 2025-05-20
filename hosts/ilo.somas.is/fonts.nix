@@ -1,41 +1,38 @@
 { pkgs
 , lib
 , ...
-}: {
+}:
+{
   fonts = {
     enableDefaultPackages = false;
 
-    packages = [
-      pkgs.noto-fonts
-      pkgs.noto-fonts-cjk-sans
-      pkgs.noto-fonts-cjk-serif
+    packages = with pkgs; [
+      inter
+      paratype-pt-sans
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      twitter-color-emoji
 
-      pkgs.iosevka-bin
-      (pkgs.iosevka-bin.override { variant = "Aile"; })
-      (pkgs.iosevka-bin.override { variant = "Etoile"; })
-      (pkgs.iosevka-bin.override { variant = "Slab"; })
-      (pkgs.iosevka-bin.override { variant = "Curly"; })
-      (pkgs.iosevka-bin.override { variant = "CurlySlab"; })
-      (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+      iosevka-bin
+      (iosevka-bin.override { variant = "Aile"; })
+      (iosevka-bin.override { variant = "Etoile"; })
+      (iosevka-bin.override { variant = "Slab"; })
+      sarasa-gothic # CJK in a style similar to Iosevka
+      spleen
 
-      pkgs.sarasa-gothic # CJK in a style similar to Iosevka
+      lmodern
 
-      pkgs.lmodern
-
-      pkgs.linja-luka
-      pkgs.linja-namako
-      pkgs.linja-pi-pu-lukin
-      pkgs.linja-pi-tomo-lipu
-      pkgs.linja-pimeja-pona
-      pkgs.linja-pona
-      pkgs.linja-sike
-      pkgs.linja-suwi
-      pkgs.nasin-nanpa
-      pkgs.sitelen-seli-kiwen
-
-      pkgs.spleen
-
-      pkgs.twitter-color-emoji
+      linja-luka
+      linja-namako
+      linja-pi-pu-lukin
+      linja-pi-tomo-lipu
+      linja-pimeja-pona
+      linja-pona
+      linja-sike
+      linja-suwi
+      nasin-nanpa
+      sitelen-seli-kiwen
     ];
 
     fontconfig = {
@@ -54,6 +51,7 @@
 
       defaultFonts = {
         sansSerif = lib.mkForce [
+          "Inter"
           "Noto Sans"
           "nasin-nanpa"
           "emoji"
@@ -75,7 +73,11 @@
   };
 
   console = {
-    packages = [ pkgs.spleen pkgs.uw-ttyp0 pkgs.uni-vga ];
+    packages = [
+      pkgs.spleen
+      pkgs.uw-ttyp0
+      pkgs.uni-vga
+    ];
     font = "${pkgs.spleen}/share/consolefonts/spleen-12x24.psfu";
   };
 }

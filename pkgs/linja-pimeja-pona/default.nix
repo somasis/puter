@@ -1,6 +1,7 @@
 { lib
 , stdenvNoCC
 , fetchurl
+,
 }:
 let
   rev = "c9e403246491f600633daebb85734aa3cb9e3f36";
@@ -21,10 +22,8 @@ stdenvNoCC.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description =
-      "a heavy sitelen pona font originally based on linja pimeja, by jan Ke Tami";
-    homepage =
-      "https://www.reddit.com/r/tokipona/comments/qn96f7/linja_pimeja_pona/";
+    description = "a heavy sitelen pona font originally based on linja pimeja, by jan Ke Tami";
+    homepage = "https://www.reddit.com/r/tokipona/comments/qn96f7/linja_pimeja_pona/";
     downloadPage = "http://antetokipona.infinityfreeapp.com/font/";
     license = licenses.ofl;
     platforms = platforms.all;

@@ -1,21 +1,39 @@
 { config
 , pkgs
 , ...
-}: {
+}:
+{
   services.udisks2.enable = true;
 
-  boot.supportedFilesystems = [ "vfat" "zfs" ];
+  boot = {
+    supportedFilesystems = [
+      "vfat"
+      "zfs"
+    ];
 
-  boot.swraid.enable = false;
+    swraid.enable = false;
 
-  # Fix there not being enough space for some Nix builds
-  boot.tmp.useTmpfs = true;
+    # Fix there not being enough space for some Nix builds
+    tmp.useTmpfs = true;
+
+    zfs.requestEncryptionCredentials = [ "${config.networking.fqdnOrHostName}/nixos" ];
+    # Restrict the ZFS ARC cache to 8GB.
+    extraModprobeConfig = ''
+      options zfs zfs_arc_max=${toString (1024000000 * 8)}
+    '';
+  };
 
   fileSystems = {
     "/" = {
       device = "none";
       fsType = "tmpfs";
       options = [ "mode=755" ];
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-id/nvme-WDS100T1X0E-00AFY0_2045A0800564-part1";
+      fsType = "vfat";
+      neededForBoot = true;
     };
 
     "/home" = {
@@ -41,33 +59,26 @@
       device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
       fsType = "zfs";
       neededForBoot = true;
-      options = [ "x-gvfs-hide" ];
     };
 
     "/cache" = {
       device = "${config.networking.fqdnOrHostName}/nixos/root/cache";
       fsType = "zfs";
       neededForBoot = true;
-      options = [ "x-gvfs-hide" ];
     };
 
     "/log" = {
       device = "${config.networking.fqdnOrHostName}/nixos/root/log";
       fsType = "zfs";
       neededForBoot = true;
-      options = [ "x-gvfs-hide" ];
     };
   };
 
-  boot.zfs.requestEncryptionCredentials = [ "${config.networking.fqdnOrHostName}/nixos" ];
-
-  # Restrict the ZFS ARC cache to 8GB.
-  boot.extraModprobeConfig = ''
-    options zfs zfs_arc_max=${toString (1024000000 * 8)}
-  '';
-
-  # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
-  cache.files = [ "/etc/zfs/zpool.cache" ];
+  cache = {
+    # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
+    files = [ "/etc/zfs/zpool.cache" ];
+    directories = [ "/var/lib/udisks2" ];
+  };
 
   programs.fuse.userAllowOther = true;
 
@@ -97,5 +108,17 @@
   # Only scrub when on AC power.
   systemd.timers.zfs-scrub.unitConfig.ConditionACPower = true;
 
-  zramSwap.enable = true;
+  zramSwap = {
+    enable = true;
+    algorithm = "lz4";
+  };
+
+  # Use Pop_OS! values for swap configuration
+  # <https://wiki.archlinux.org/title/Zram#Optimizing_swap_on_zram>
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 180;
+    "vm.watermark_boost_factor" = 0;
+    "vm.watermark_scale_factor" = 125;
+    "vm.page-cluster" = 0;
+  };
 }

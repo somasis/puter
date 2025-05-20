@@ -1,6 +1,7 @@
 { lib
 , stdenvNoCC
 , fetchurl
+,
 }:
 
 let
@@ -11,8 +12,7 @@ stdenvNoCC.mkDerivation rec {
   version = "4.9";
 
   src = fetchurl {
-    url =
-      "https://github.com/janSame/${pname}/raw/${rev}/${pname}-${version}.otf";
+    url = "https://github.com/janSame/${pname}/raw/${rev}/${pname}-${version}.otf";
     hash = "sha256-wQfTK4b/S+N+YLdK83UCie2LquTQO44FhE45TEuXJcs=";
   };
 

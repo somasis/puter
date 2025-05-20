@@ -4,11 +4,9 @@
 , ...
 }:
 let
-  kittyClipboard = "${config.programs.kitty.package}/bin/kitty +kitten clipboard";
-
   clipb-kak =
     # Integrate yank with system clipboard.
-    (pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
       pname = "clipb-kak";
       version = "unstable-2022-03-22";
       src = pkgs.fetchFromGitHub {
@@ -17,14 +15,14 @@ let
         rev = "b640b2324ef21630753c4b42ddf31207233a98d2";
         hash = "sha256-KxoiZSGvhpNESwcIo/hxga8d7iyOSYpqBvcOej+NSec=";
       };
-    })
-  ;
+    };
 in
 {
   programs.kakoune = {
     plugins = lib.mkMerge [
       (lib.optional config.xsession.enable pkgs.xclip)
       (lib.optional config.programs.kitty.enable config.programs.kitty.package)
+      (lib.optional (!config.xsession.enable) pkgs.wl-clipboard)
     ];
 
     extraConfig = ''
@@ -48,12 +46,23 @@ in
 
       {
         name = "ModuleLoaded";
-        option = "x11|kitty";
+        option = "x11";
 
         commands = ''
           require-module clipb
-          set-option global clipb_get_command "${pkgs.xclip}/bin/xclip -out -selection clipboard"
-          set-option global clipb_set_command "${pkgs.xclip}/bin/xclip -in -selection clipboard"
+          set-option global clipb_get_command "xclip -out -selection clipboard"
+          set-option global clipb_set_command "xclip -in -selection clipboard"
+        '';
+      }
+
+      {
+        name = "ModuleLoaded";
+        option = "wayland";
+
+        commands = ''
+          require-module clipb
+          set-option global clipb_get_command "wl-paste --no-newline"
+          set-option global clipb_set_command "wl-copy --foreground --paste-once"
         '';
       }
 
@@ -63,8 +72,8 @@ in
 
       #   commands = ''
       #     require-module clipb
-      #     set-option global clipb_get_command "${kittyClipboard} -g"
-      #     set-option global clipb_set_command "${kittyClipboard} /dev/stdin"
+      #     set-option global clipb_get_command "kitty +kitten clipboard --get-clipboard /dev/stdout"
+      #     set-option global clipb_set_command "kitty +kitten clipboard /dev/stdin"
       #   '';
       # }
     ];

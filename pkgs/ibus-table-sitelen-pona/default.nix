@@ -3,6 +3,7 @@
 , fetchurl
 , ibus
 , ibus-engines
+,
 }:
 stdenvNoCC.mkDerivation {
   pname = "ibus-table-sitelen-pona";
@@ -16,7 +17,10 @@ stdenvNoCC.mkDerivation {
 
   dontUnpack = true;
 
-  buildInputs = [ ibus ibus-engines.table ];
+  buildInputs = [
+    ibus
+    ibus-engines.table
+  ];
 
   buildPhase = ''
     export HOME=$TMPDIR

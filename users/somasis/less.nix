@@ -1,7 +1,8 @@
 { config
 , pkgs
 , ...
-}: {
+}:
+{
   home.sessionVariables = {
     # Colors for man pages
     # See terminfo(5) and <https://unix.stackexchange.com/a/108840> for tips
@@ -19,7 +20,12 @@
     LESSHISTSIZE = "10000";
   };
 
-  cache.directories = [{ method = "symlink"; directory = config.lib.somasis.xdgCacheDir "less"; }];
+  cache.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "less";
+    }
+  ];
 
   programs.less = {
     enable = true;

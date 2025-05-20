@@ -10,27 +10,26 @@ let
 
   # Get Wine used by system (or specified by user)
   wine =
-    let default = pkgs.wine; in
+    let
+      default = pkgs.wine;
+    in
     lib.lists.findFirst
-      (pkg:
+      (
+        pkg:
         (lib.hasPrefix "wine" (lib.getName pkg))
         # && (lib.hasPrefix "wine" (lib.getExe pkg))
         && (lib.hasAttr "homepage" pkg.meta)
         && (pkg.meta.homepage == (default.meta.homepage or null))
       )
       default
-      (config.home.packages ++ (osConfig.environment.systemPackages or [ ]))
-  ;
+      (config.home.packages ++ (osConfig.environment.systemPackages or [ ]));
 in
 {
   home = {
-    packages = [
-      # pkgs.winetricks
-      # pkgs.wineWowPackages.stableFull
-      # pkgs.wineWow64Packages.stableFull
-      # pkgs.wineasio
-
-      (pkgs.wineprefix.override { inherit wine; })
+    packages = with pkgs; [
+      winetricks
+      wineWow64Packages.stableFull
+      (wineprefix.override { inherit wine; })
     ];
 
     # Disable all of Wine's fixme messages.
@@ -115,12 +114,14 @@ in
 
           PATH=${lib.makeBinPath [ pkgs.xorg.xrdb ]}"''${PATH:+:$PATH}"
 
-          dpi=$(xrdb -get Xft.dpi 2>/dev/null || echo 96)
-          dpi=$(printf '0x%X' "$dpi")
+          if [[ -v DISPLAY ]] && ! [[ -v WAYLAND_DISPLAY ]]; then
+              dpi=$(xrdb -get Xft.dpi 2>/dev/null || echo 96)
+              dpi=$(printf '0x%X' "$dpi")
 
-          reg_sync \
-              'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Hardware Profiles\Current\Software\Fonts' \
-              /v 'LogPixels' /t REG_DWORD /d "$dpi"
+              reg_sync \
+                  'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Hardware Profiles\Current\Software\Fonts' \
+                  /v 'LogPixels' /t REG_DWORD /d "$dpi"
+          fi
       }
 
       {
@@ -175,6 +176,21 @@ in
   persist.directories = [
     # { method = "symlink"; directory = xdgConfigDir "wineprefixes"; }
     (xdgConfigDir "wineprefixes")
-    { method = "symlink"; directory = xdgDataDir "wineprefixes"; }
+    {
+      method = "symlink";
+      directory = xdgDataDir "wineprefixes";
+    }
   ];
+
+  services.darkman = {
+    lightModeScripts.wine-color-scheme = ''
+      set -x
+      ~/bin/wine-apply-kde-accent
+    '';
+
+    darkModeScripts.wine-color-scheme = ''
+      set -x
+      ~/bin/wine-apply-kde-accent
+    '';
+  };
 }

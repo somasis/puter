@@ -12,46 +12,50 @@ let
     { subfeed
     , title ? "Redacted: ${subfeed}"
     , tags ? [ ]
+    ,
     }:
     let
-      generate =
-        writeShellScript "generate-redacted" ''
-          PATH=${makeBinPath [ pkgs.curl config.programs.password-store.package ]}:"$PATH"
+      generate = writeShellScript "generate-redacted" ''
+        PATH=${
+          makeBinPath [
+            pkgs.curl
+            config.programs.password-store.package
+          ]
+        }:"$PATH"
 
-          unset http_proxy HTTPS_PROXY ALL_PROXY
+        unset http_proxy HTTPS_PROXY ALL_PROXY
 
-          entry=www/redacted.ch
+        entry=www/redacted.ch
 
-          url="$1"
-          url+="&user=$(pass meta "$entry" uid)"
-          url+="&auth=$(pass meta "$entry" auth)"
-          url+="&passkey=$(pass meta "$entry" passkey)"
-          url+="&authkey=$(pass meta "$entry" authkey)"
+        url="$1"
+        url+="&user=$(pass meta "$entry" uid)"
+        url+="&auth=$(pass meta "$entry" auth)"
+        url+="&passkey=$(pass meta "$entry" passkey)"
+        url+="&authkey=$(pass meta "$entry" authkey)"
 
-          curl \
-              --disable \
-              --silent \
-              --show-error \
-              --fail \
-              --globoff \
-              --disallow-username-in-url \
-              --connect-timeout 60 \
-              --max-time 60 \
-              --retry 10 \
-              --limit-rate 512K \
-              --parallel \
-              --parallel-max 4 \
-              --noproxy '*' \
-              -K - \
-              <<< "url = $url"
-        '';
+        curl \
+            --disable \
+            --silent \
+            --show-error \
+            --fail \
+            --globoff \
+            --disallow-username-in-url \
+            --connect-timeout 60 \
+            --max-time 60 \
+            --retry 10 \
+            --limit-rate 512K \
+            --parallel \
+            --parallel-max 4 \
+            --noproxy '*' \
+            -K - \
+            <<< "url = $url"
+      '';
     in
     {
       url = urls.exec "${generate} https://redacted.ch/feeds.php?feed=feed_${subfeed}";
       inherit title;
       tags = [ "redacted" ] ++ tags;
-    }
-  ;
+    };
 in
 {
   lib.somasis.feeds.feeds.redacted = redacted;
@@ -59,11 +63,17 @@ in
   programs.newsboat.urls = [
     (redacted {
       subfeed = "news";
-      tags = [ "music" "redacted" ];
+      tags = [
+        "music"
+        "redacted"
+      ];
     })
     (redacted {
       subfeed = "blog";
-      tags = [ "music" "redacted" ];
+      tags = [
+        "music"
+        "redacted"
+      ];
     })
   ];
 }

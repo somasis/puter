@@ -1,28 +1,46 @@
-{ pkgs, ... }: {
-  security = {
-    sudo = {
-      enable = true;
-      execWheelOnly = true;
-      wheelNeedsPassword = false;
-    };
+{ config
+, pkgs
+, modulesPath
+, lib
+, nixpkgs
+, inputs
+, ...
+}:
+{
+  imports = with inputs; [
+    "${modulesPath}/profiles/hardened.nix"
+    lanzaboote.nixosModules.lanzaboote
+  ];
+  persist.directories = [ "/etc/secureboot" ];
 
-    # Bring polkit's rules into harmony with sudo.
-    polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-          if (subject.isInGroup("wheel")) {
-              return polkit.Result.YES;
-          }
-      });
-    '';
+  environment.systemPackages = [ pkgs.sbctl ];
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.lanzaboote = {
+    enable = true;
+    # pkiBundle = "/persist/var/lib/sbctl";
+    pkiBundle = "/etc/secureboot";
+  };
+
+  # Runs into an error due to hardened profile?
+  services.ananicy.enable = lib.mkForce false;
+
+  security = {
+    # Previously disabled by hardened profile:
+    # Needed to fix builds, allegedly?
+    # <https://nixos.org/manual/nixos/unstable/#sec-profile-hardened>
+    allowUserNamespaces = true;
+    unprivilegedUsernsClone = true;
+
+    # Needed because the hardened profile affects it.
+    chromiumSuidSandbox.enable = true;
+
+    # Needed for bluetooth and wifi connectivity.
+    lockKernelModules = false;
   };
 
   # Always automatically recover from kernel panics by rebooting in 60 seconds
   boot.kernelParams = [ "panic=60" ];
 
-  # programs.bash.interactiveShellInit = ''
-  #   . ${pkgs.fetchurl {
-  #     url = "https://raw.githubusercontent.com/Duncaen/OpenDoas/51f126a9a56cda5a291d5652b0685967133d7b90/doas.completion";
-  #     hash = "sha256-SiByFXX4DOA1FKn7M7r/+3REsf7lfs1oJm/h0a2pdFI=";
-  #   }}
-  # '';
+  # Remove when Chrome stops crashing
+  environment.memoryAllocator.provider = "libc";
 }

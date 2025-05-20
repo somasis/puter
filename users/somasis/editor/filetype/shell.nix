@@ -120,7 +120,7 @@ let
                   ) &
                   ;;
           esac
-          export SHELLCHECK_OPTS="--shell $shell''${SHELLCHECK_OPTS:+ $SHELLCHECK_OPTS}}"
+          export SHELLCHECK_OPTS="--shell $shell''${SHELLCHECK_OPTS:+ $SHELLCHECK_OPTS}"
       fi
 
       shellcheck -f gcc -x "$@" &
@@ -189,15 +189,16 @@ in
     # Don't use `enable = "all"`; it enables warnings about using Bashisms
     # in bash scripts, which is annoying and unhelpful.
     ''
-      enable=${commaList [
-        "avoid-nullary-conditions"
-        "check-extra-masked-returns"
-        "check-set-e-suppressed"
-        "deprecate-which"
-        "quote-safe-variables"
-        "require-double-brackets"
-        "require-variable-braces"
-      ]}
-    ''
-  ;
+      enable=${
+        commaList [
+          "avoid-nullary-conditions"
+          "check-extra-masked-returns"
+          "check-set-e-suppressed"
+          "deprecate-which"
+          "quote-safe-variables"
+          "require-double-brackets"
+          "require-variable-braces"
+        ]
+      }
+    '';
 }

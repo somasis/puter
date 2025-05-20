@@ -1,6 +1,8 @@
-{ pkgs ? import <nixpkgs> { } }:
+{ pkgs ? import <nixpkgs> { }
+,
+}:
 let
-  inherit (pkgs) lib callPackage makeOverridable;
+  inherit (pkgs) lib makeOverridable;
 
   buildZoteroXpiAddon = makeOverridable (
     { stdenv ? pkgs.stdenv

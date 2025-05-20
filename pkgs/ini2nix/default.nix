@@ -1,12 +1,10 @@
 { lib
 , writeShellApplication
-
 , json2nix
 , jc
-, nixfmt
-
+, nixfmt-rfc-style
 , coreutils
-  # , diffutils
+, # , diffutils
 }:
 writeShellApplication {
   name = "ini2nix";
@@ -15,7 +13,7 @@ writeShellApplication {
     coreutils
     json2nix
     jc
-    nixfmt
+    nixfmt-rfc-style
   ];
 
   # checkINI = ''

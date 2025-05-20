@@ -4,214 +4,116 @@
 , ...
 }:
 let
-  inherit (lib)
-    pipe
-    replaceStrings
-    ;
+  jsonFormat = pkgs.formats.json { };
+  radiotrayConfig = {
+    bookmarks = "${config.xdg.dataHome}/radiotray-ng/bookmarks.json";
 
-  inherit (config.lib.somasis)
-    colors
-    removeComments
-    ;
+    notifications = true;
+    notifications-verbose = false;
 
-  accent = pipe config.theme.colors.accent [
-    colors.rgb
-    (replaceStrings [ "rgb" ", " ] [ "Rgb" "," ])
-  ];
-in
-{
-  # <https://github.com/figsoda/mmtc/blob/main/Configuration.md#Condition>
-  xdg.configFile = {
-    "mmtc/mmtc.ron".text = removeComments ''
-      Config(
-        jump_lines: 10,
+    split-title = true;
+    track-info-copy = true;
 
-        layout:
-          Rows([
-            Fixed(1,
-              Columns([
-                Ratio(2,
-                  TextboxL(
-                    Parts([
-                      If(Searching,
-                        Parts([
-                          Styled([Bold, Fg(LightRed)], Text("/ ")),
-                          Styled([Fg(Reset)], Query)
-                        ])
-                      ),
-
-                      Parts([
-                        If(Repeat, Styled([Fg(White)], Text("↻ ")), Styled([Dim], Text("↻ "))),
-                        If(Single, Styled([Fg(White)], Text("❶ ")), Styled([Dim], Text("❶ "))),
-                        If(Random, Styled([Fg(White)], Text("⁑ ")), Styled([Dim], Text("⁑ "))),
-                        If(Consume, Styled([Fg(White)], Text("␡ ")), Styled([Dim], Text("␡ ")))
-                      ])
-                    ])
-                  )
-                ),
-
-                Ratio(4,
-                  TextboxR(
-                    Styled([],
-                      If(Not(Stopped),
-                        Parts([
-                          Styled(
-                            [Fg(Green)],
-                            Parts([
-                              If(Playing, Text("▶ "), Text("⏸ ")),
-                              CurrentElapsed,
-                              Text("/"),
-                              CurrentDuration,
-                              Text(" "),
-                            ])
-                          ),
-
-                          If(TitleExist,
-                            Styled(
-                              [Italic],
-                              Parts([
-                                Styled([Italic, Bold], CurrentTitle),
-                                If(ArtistExist, Parts([
-                                  Text(" - "),
-                                  Styled([Italic, Fg(LightMagenta)], CurrentArtist)
-                                ])),
-                                If(AlbumExist, Parts([
-                                  Text(" - "),
-                                  Styled([Italic, Fg(LightMagenta)], CurrentAlbum)
-                                ]))
-                              ])
-                            ),
-
-                            Styled([Fg(Reset)], CurrentFile)
-                          ),
-                        ])
-                      ),
-                    )
-                  )
-                ),
-              ])
-            ),
-
-            Min(0,
-              Queue([
-                Column(
-                  item:
-                    Ratio(10,
-                      If(QueueCurrent,
-                        Styled([Italic, Bold],
-                          If(QueueTitleExist, QueueTitle, QueueFile)
-                        ),
-                        If(QueueTitleExist, QueueTitle, QueueFile)
-                      )
-                    ),
-                  style: [Fg(Reset)],
-                  selected_style: [Fg(Reset), Bg(${accent})]
-                ),
-                Column(
-                  item:
-                    Ratio(8,
-                      If(QueueCurrent,
-                        Styled([Italic, Bold], QueueArtist),
-                        QueueArtist,
-                      )
-                    ),
-                  style: [Fg(Magenta)],
-                  selected_style: [Fg(Reset), Bg(${accent})]
-                ),
-                Column(
-                  item:
-                    Ratio(8,
-                      If(QueueCurrent,
-                        Styled([Italic, Bold], QueueAlbum),
-                        QueueAlbum,
-                      )
-                    ),
-                  style: [Fg(Magenta)],
-                  selected_style: [Fg(Reset), Bg(${accent})]
-                ),
-                Column(
-                  item:
-                    Ratio(2,
-                      If(QueueCurrent,
-                        Styled([Italic, Bold], QueueDuration),
-                        QueueDuration,
-                      )
-                    ),
-                  style: [Fg(Magenta)],
-                  selected_style: [Fg(Reset), Bg(${accent})]
-                )
-              ])
-            )
-          ])
-      )
-    '';
-
-    "tmux/mmtc.conf".text = ''
-      # tmux -L mmtc -f ~/etc/tmux/mmtc.conf attach-session
-      new-session -t mmtc
-
-      source "$XDG_CONFIG_HOME/tmux/unobtrusive.conf"
-
-      # Disable scrollback, no need for it
-      set-option -g history-limit     0
-
-      set-option -g status           off
-      set-option -g status-left      ""
-      set-option -g status-right     ""
-
-      # Ignore bells, only check for activity.
-      set-option -g monitor-activity  on
-      set-option -g monitor-bell      on
-      set-option -g visual-activity   off
-      set-option -g visual-bell       off
-
-      set-option -g set-titles        on
-      set-option -g set-titles-string "mmtc#{?,: #T,}"
-
-      # Set window title rules.
-      set-option -g automatic-rename  off
-      set-option -g allow-rename      off
-      set-option -g renumber-windows  on
-
-      # Respawn mmtc if it exits.
-      set-option -g remain-on-exit    on
-      set-hook -g   pane-died         kill-server
-
-      # Keybinds.
-
-      ## Disable menus.
-      unbind-key -T root MouseDown3Pane
-      unbind-key -T root M-MouseDown3Pane
-
-      unbind-key -T root F1
-
-      new-window -n mmtc -- mmtc
-
-      # Delete the default shell window that is spawned by tmux.
-      kill-window -t 0
-      select-window -t 0
-    '';
+    volume-level = 50;
   };
 
-  home.packages = [ pkgs.mmtc ];
+  libraries = "${config.home.homeDirectory}/audio/libraries";
+in
+{
+  home.packages =
+    with pkgs;
+    with libsForQt5;
+    with kdePackages;
+    [
+      config.services.playerctld.package
+      radiotray-ng
+      mpris-scrobbler
+    ];
 
-  services.sxhkd.keybindings =
-    let
-      mpc-toggle = pkgs.writeShellScript "mpc-toggle" ''
-        c=$(${pkgs.mpc-cli}/bin/mpc playlist | wc -l)
-        [ "$c" -gt 0 ] || ${pkgs.mpc-cli}/bin/mpc add /
-        ${pkgs.mpc-cli}/bin/mpc "$@" toggle
-      '';
-    in
+  programs.elisa = {
+    enable = true;
+    appearance = {
+      showNowPlayingBackground = false;
+      showProgressOnTaskBar = true;
+      embeddedView = "genres";
+      defaultView = "recentlyPlayed";
+      defaultFilesViewPath = libraries;
+    };
+    indexer = {
+      paths = [ libraries ];
+      scanAtStartup = true;
+      ratingsStyle = "favourites";
+    };
+    player = {
+      playAtStartup = false;
+      # minimiseToSystemTray = true;
+      useAbsolutePlaylistPaths = false;
+    };
+  };
+
+  services.playerctld.enable = true;
+  services.mpris-proxy.enable = true;
+
+  sync.directories = [
     {
-      "XF86AudioPlay" = "${mpc-toggle} -q";
-      "shift + XF86AudioPlay" = "${pkgs.mpc-cli}/bin/mpc -q stop";
-
-      "XF86AudioPrev" = "${pkgs.mpc-cli}/bin/mpc -q cdprev";
-      "XF86AudioNext" = "${pkgs.mpc-cli}/bin/mpc -q next";
-
-      "shift + XF86AudioPrev" = "${pkgs.mpc-cli}/bin/mpc -q consume";
-      "shift + XF86AudioNext" = "${pkgs.mpc-cli}/bin/mpc -q random";
+      method = "symlink";
+      directory = config.lib.somasis.xdgConfigDir "fooyin";
     }
-  ;
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "fooyin";
+    }
+
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgConfigDir "audacious";
+    }
+
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "radiotray-ng";
+    }
+  ];
+
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "elisa";
+    }
+    (config.lib.somasis.xdgConfigDir "radiotray-ng")
+
+    (config.lib.somasis.xdgConfigDir "mpris-scrobbler")
+    (config.lib.somasis.xdgDataDir "mpris-scrobbler")
+  ];
+
+  systemd.user.targets.graphical-session.Unit.Wants = [ "mpris-scrobbler.service" ];
+
+  home.activation.merge-radiotray-config = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if ! [[ -v DRY_RUN ]]; then
+        config_path=${lib.escapeShellArg config.xdg.configHome}/radiotray-ng/radiotray-ng.json
+        default_config=${lib.escapeShellArg (jsonFormat.generate "radiotray-ng.json" radiotrayConfig)}
+
+        if ! [[ -s "$config_path" ]]; then
+            touch "$config_path"
+            printf '{}' > "$config_path"
+        fi
+
+        merged_config=$(${pkgs.jq}/bin/jq -s '.[0] // .[1]' "$default_config" "$config_path")
+
+        printf '%s' "$merged_config" > "$config_path"
+    fi
+  '';
+
+  xdg.configFile."mpris-scrobbler/config".text =
+    lib.generators.toINIWithGlobalSection { listsAsDuplicateKeys = true; }
+      {
+        globalSection.ignore = [
+          "playerctld"
+          "kdeconnect"
+          "mpv"
+          "chromium"
+          "qutebrowser"
+          "firefox"
+        ];
+      };
 }

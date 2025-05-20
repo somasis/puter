@@ -1,8 +1,6 @@
 { lib
 , writeShellApplication
-
 , pass-nodmenu
-
 , coreutils
 , dmenu
 , findutils
@@ -13,6 +11,7 @@
 , pass ? pass-nodmenu
 , uq
 , xclip
+,
 }:
 writeShellApplication {
   name = "dmenu-pass";

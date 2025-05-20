@@ -1,7 +1,8 @@
 { config
 , pkgs
 , ...
-}: {
+}:
+{
   programs.pidgin = {
     enable = true;
     plugins = [
@@ -23,7 +24,13 @@
   };
 
   persist.directories = [
-    { method = "symlink"; directory = ".purple"; }
-    { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "pidgin"; }
+    {
+      method = "symlink";
+      directory = ".purple";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgConfigDir "pidgin";
+    }
   ];
 }

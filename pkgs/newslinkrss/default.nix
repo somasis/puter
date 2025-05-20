@@ -7,6 +7,7 @@
 , pyrss2gen
 , python-dateutil
 , requests
+,
 }:
 buildPythonApplication rec {
   pname = "newslinkrss";

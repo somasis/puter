@@ -2,13 +2,10 @@
 , pkgs
 , lib
 , ...
-}: {
+}:
+{
   imports = [
     ./gh.nix
-
-    # TODO: Not included in home-manager 22.05
-    # ./spr.nix
-
     ./signing.nix
   ];
 
@@ -44,6 +41,11 @@
       cha = "cherry-pick --abort";
     };
 
+    difftastic = {
+      enable = true;
+      display = "inline";
+    };
+
     extraConfig = {
       sendemail = {
         annotate = true;
@@ -57,20 +59,24 @@
       push = {
         default = "simple";
         rebase = true;
+
+        autoSetupRemote = true;
       };
 
       fetch = {
         output = "compact";
 
-        prune = true;
-        pruneTags = true;
+        writeCommitGraph = true; # can help with performance
+
+        # prune = true;
+        # pruneTags = true;
       };
 
       log.abbrevCommit = false;
 
       branch = {
+        autoSetupMerge = "simple";
         autoSetupRebase = "always";
-        autoSetupMerge = "true";
       };
 
       # Sort branch and tag lists by the date they were modified/created.
@@ -115,47 +121,54 @@
       safe.directory = "*";
 
       url = {
-        "gh:".insteadOf = "ssh://git@github.com:";
-        "https://github.com".insteadOf = "ssh://git@github.com:";
+        "github:".insteadOf = "ssh://git@github.com:";
+        "git://github.com/".insteadOf = "ssh://git@github.com:";
+        "https://github.com/".insteadOf = "ssh://git@github.com:";
 
-        "gl:".insteadOf = "ssh://git@gitlab.com:";
-        "https://gitlab.com".insteadOf = "ssh://git@gitlab.com:";
+        "gitlab:".insteadOf = "ssh://git@gitlab.com:";
+        "git://gitlab.com/".insteadOf = "ssh://git@gitlab.com:";
+        "https://gitlab.com/".insteadOf = "ssh://git@gitlab.com:";
 
-        "srht:".insteadOf = "ssh://git@git.sr.ht:";
+        "sourcehut:".insteadOf = "ssh://git@git.sr.ht:";
+        "git://git.sr.ht/".insteadOf = "ssh://git@git.sr.ht:";
+        "https://git.sr.ht/".insteadOf = "ssh://git@git.sr.ht:";
       };
     };
   };
 
-  home.shellAliases = {
-    am = "git am";
-    add = "git add -v";
+  home.shellAliases =
+    {
+      am = "git am";
+      add = "git add -v";
 
-    checkout = "git checkout";
-    restore = "git restore";
-    reset = "git reset";
+      checkout = "git checkout";
+      restore = "git restore";
+      reset = "git reset";
 
-    com = "git commit";
-    amend = "git commit -v --amend";
+      com = "git commit";
+      amend = "git commit -v --amend";
 
-    clone = "git clone -vv";
-    push = "git push -vv";
-    pull = "git pull -vv";
+      clone = "git clone -vv";
+      push = "git push -vv";
+      pull = "git pull -vv";
 
-    log = "git log --patch-with-stat --summary";
-    status = "git status";
-    merge = "git merge";
+      log = "git log --patch-with-stat --summary";
+      status = "git status";
 
-    stash = "git stash";
+      stash = "git stash";
 
-    rebase = "git rebase";
+      rebase = "git rebase";
 
-    switch = "git switch";
-    branch = "git branch -vv";
-    branchoff = "git branchoff";
-  }
-  # Add git aliases to the shell
-  // lib.mapAttrs (_: v: if lib.hasPrefix "!" v then lib.removePrefix "!" v else "git ${v}") config.programs.git.aliases
-  ;
+      switch = "git switch";
+      branch = "git branch -vv";
+      branchoff = "git branchoff";
+    }
+    # Add git aliases to the shell
+    // lib.mapAttrs
+      (
+        _: v: if lib.hasPrefix "!" v then lib.removePrefix "!" v else "git ${v}"
+      )
+      config.programs.git.aliases;
 
   programs.bash.initExtra = ''
     _git_prompt() {
@@ -229,11 +242,6 @@
     #   '';
     # }
   ];
-
-  persist.directories = [{
-    method = "symlink";
-    directory = "src";
-  }];
 
   home.packages = [
     pkgs.pre-commit

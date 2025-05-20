@@ -1,14 +1,14 @@
 { lib
 , stdenvNoCC
 , fetchurl
+,
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "linja-pi-tomo-lipu";
   version = "0.7";
 
   src = fetchurl {
-    url =
-      "https://github.com/pguimier/linjapitomolipu/releases/download/v${version}/linjapitomolipu.${version}.ttf";
+    url = "https://github.com/pguimier/linjapitomolipu/releases/download/v${version}/linjapitomolipu.${version}.ttf";
     hash = "sha256-Enr2HLTj4ayC1WyeRaHvY7ZLo+q0CEiM7/lzc/d4Oxs=";
   };
 

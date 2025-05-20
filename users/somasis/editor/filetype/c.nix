@@ -12,15 +12,17 @@ in
 {
   home.packages = [ pkgs.clang-tools ];
 
-  programs.kakoune.config.hooks = [{
-    name = "WinSetOption";
-    option = "filetype=(c|cc|cpp|h)";
-    commands = ''
-      clang-enable-autocomplete
-      clang-enable-diagnostics
+  programs.kakoune.config.hooks = [
+    {
+      name = "WinSetOption";
+      option = "filetype=(c|cc|cpp|h)";
+      commands = ''
+        clang-enable-autocomplete
+        clang-enable-diagnostics
 
-      set-option window formatcmd ${format}
-      set-option window lintcmd ${lint}
-    '';
-  }];
+        set-option window formatcmd ${format}
+        set-option window lintcmd ${lint}
+      '';
+    }
+  ];
 }

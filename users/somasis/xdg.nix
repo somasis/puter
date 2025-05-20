@@ -2,7 +2,11 @@
 , pkgs
 , lib
 , ...
-}: {
+}:
+let
+  inherit (config.lib.somasis) relativeToHome;
+in
+{
   xdg = {
     enable = true;
 
@@ -19,15 +23,13 @@
 
       templates = "/var/empty";
 
-      # Leave these disabled by default; they'll be enabled by their
-      # corresponding files if necessary.
-      desktop = lib.mkDefault "/var/empty";
-      documents = lib.mkDefault "/var/empty";
-      download = lib.mkDefault "/var/empty";
+      desktop = lib.mkDefault "${config.home.homeDirectory}/desktop";
+      documents = lib.mkDefault "${config.home.homeDirectory}/doc";
+      download = lib.mkDefault "${config.home.homeDirectory}/downloads";
       music = lib.mkDefault "/var/empty";
-      pictures = lib.mkDefault "/var/empty";
+      pictures = lib.mkDefault "${config.home.homeDirectory}/pictures";
       publicShare = lib.mkDefault "/var/empty";
-      videos = lib.mkDefault "/var/empty";
+      videos = lib.mkDefault "${config.home.homeDirectory}/videos";
     };
   };
 
@@ -37,26 +39,38 @@
   xdg.configFile."mimeapps.list".force = true;
 
   home = {
+    # Necessary so dconf and rclone things don't mess activation up...
+    activation.setXdgDirs =
+      lib.hm.dag.entryBefore [ "writeBoundary" "installPackages" "dconfSettings" ]
+        ''
+          if ! [ -L ~/.config ] && [ -d ~/.config ]; then run mv ~/.config ~/.config.bak; fi
+          run ln -Tsf ${lib.escapeShellArg config.xdg.configHome} ~/.config
+          if ! [ -L ~/.cache ] && [ -d ~/.cache ]; then run mv ~/.cache ~/.cache.bak; fi
+          run ln -Tsf ${lib.escapeShellArg config.xdg.cacheHome} ~/.cache
+          run mkdir -p ~/.local
+          if ! [ -L ~/.local/share ] && [ -d ~/.local/share ]; then run mv ~/.local/share ~/.local/share.bak; fi
+          run ln -Tsf ${lib.escapeShellArg config.xdg.dataHome} ~/.local/share
+          if ! [ -L ~/.local/state ] && [ -d ~/.local/state ]; then run mv ~/.local/state ~/.local/state.bak; fi
+          run ln -Tsf ${lib.escapeShellArg config.xdg.stateHome} ~/.local/state
+        '';
+
+    preferXdgDirectories = true;
+
     packages = [
       (pkgs.writeShellScriptBin "open" ''
         exec xdg-open "$@"
       '')
     ];
-
-    # HACK this shouldn't be needed!
-    file = {
-      ".cache".source = config.lib.file.mkOutOfStoreSymlink config.xdg.cacheHome;
-      ".config".source = config.lib.file.mkOutOfStoreSymlink config.xdg.configHome;
-      ".local/bin".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/local/bin";
-      ".local/share".source = config.lib.file.mkOutOfStoreSymlink config.xdg.dataHome;
-      ".local/state".source = config.lib.file.mkOutOfStoreSymlink config.xdg.stateHome;
-    };
-
-    sessionVariables."W3M_DIR" = "${config.xdg.stateHome}/w3m";
   };
 
-  cache.directories = [{
-    directory = config.lib.somasis.xdgStateDir "w3m";
-    method = "symlink";
-  }];
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = relativeToHome config.xdg.userDirs.pictures;
+    }
+    {
+      method = "symlink";
+      directory = relativeToHome config.xdg.userDirs.videos;
+    }
+  ];
 }

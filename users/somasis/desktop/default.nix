@@ -4,121 +4,144 @@
 , config
 , osConfig
 , ...
-}: {
+}:
+{
   imports = [
-    # ./cinnamon.nix
-    # ./gnome.nix
-    # ./kde.nix
-    # ./wayland.nix
-    # ./xterm.nix
+    ./plasma.nix
 
     ./browser
-    ./chat
-    ./feeds
     ./games
-    ./mail
-    ./music
-    ./panel
-    ./pim
     ./study
-    ./stw
 
-    ./anki.nix
-    ./audio.nix
-    ./automount.nix
-    ./clipboard.nix
-    ./dates.nix
+    ./activity.nix
     ./diary.nix
-    ./didyouknow.nix
-    ./display.nix
-    ./dmenu.nix
-    ./file-manager.nix
-    ./ledger.nix
-    ./list.nix
     ./mess.nix
-    ./mounts.nix
-    ./mouse.nix
-    ./notifications.nix
     ./phone.nix
     ./photo.nix
-    ./power.nix
-    ./screen-brightness.nix
-    ./screen-locker.nix
-    ./screen-temperature.nix
-    ./sxhkd.nix
     ./syncplay.nix
     ./syncthing.nix
-    ./terminal.nix
-    ./theme.nix
-    ./torrent.nix
     ./video.nix
-    ./wallpaper.nix
-    ./window-manager.nix
     ./wine.nix
     ./www.nix
+
+    ./terminal.nix
+
+    # ./pim
+    # ./anki.nix
+    ./chat
+    # ./didyouknow.nix
+    # ./feeds
+    ./ledger.nix
+    # ./list.nix
+    ./mounts.nix
+    ./music
+    ./torrent.nix
+
+    ./audio.nix
+    # ./automount.nix
+    # ./clipboard.nix
+    # ./display.nix
+    ./file-manager.nix
+    # ./mouse.nix
+    ./notifications.nix
+    # ./panel
+    # ./power.nix
+    # ./screen-brightness.nix
+    # ./screen-locker.nix
+    # ./screen-temperature.nix
+    # ./stw
+    # ./wallpaper.nix
+    # ./xsession.nix
+
+    # ./dmenu.nix
   ];
 
-  home.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
-
-  log.directories = [{ method = "symlink"; directory = "logs"; }];
-
-  home.packages = [
-    pkgs.bc
-    pkgs.bmake
-    pkgs.ffmpeg-full
-    pkgs.gnome.zenity
-    pkgs.hyperfine
-    pkgs.xcolor
-    pkgs.xorg.xinput
-    pkgs.xzoom
+  home.extraOutputsToInstall = [
+    "doc"
+    "devdoc"
+    "man"
   ];
+
+  home.packages =
+    with pkgs;
+    with kdePackages;
+    [
+      bc
+      bmake
+      ffmpeg-full
+      hyperfine
+      zenity
+    ];
 
   home.file = {
     ".face".source = inputs.avatarSomasis;
     ".face.png".source = inputs.avatarSomasis;
+    ".face.icon".source = inputs.avatarSomasis;
   };
 
-  xsession = {
+  services.tunnels.enable = true;
+
+  programs.direnv = {
     enable = true;
-    importedVariables = lib.mkBefore [ "PATH" ];
+    nix-direnv.enable = true;
 
-    # Necessary so that `startx` runs home-manager's managed xsession
-    scriptPath = ".xinitrc";
-
-    profilePath = "etc/xorg/xprofile";
+    # Improve default caching settings instead of making a
+    # .devenv directory in every Git repository using it.
+    # See also the relevant config.(cache|sync).directories entries.
+    stdlib = ''
+      : "''${XDG_CACHE_HOME:=$HOME/.cache}"
+      declare -A direnv_layout_dirs
+      direnv_layout_dir() {
+          echo "''${direnv_layout_dirs[$PWD]:=$(
+              echo -n "$XDG_CACHE_HOME"/direnv/layouts/
+              echo -n "$PWD" | sha1sum | cut -d ' ' -f 1
+          )}"
+      }
+    '';
   };
 
-  xresources.path = "${config.xdg.configHome}/xorg/xresources";
+  cache.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "borg";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "direnv";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "mesa_shader_cache";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "mesa_shader_cache_db";
+    }
+  ];
 
-  xdg.portal = {
-    enable = true;
-    config.bspwm.default = "gtk";
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    configPackages = [ pkgs.xdg-desktop-portal-gtk ];
-  };
+  log.directories = [
+    {
+      method = "symlink";
+      directory = "logs";
+    }
+  ];
 
-  services.xsuspender = {
-    # Basically disable xsuspender by default; only enable for certain programs.
-    enable = config.services.xsuspender.rules != { };
-    defaults = {
-      resumeEvery = 0;
-      suspendDelay = 0;
-      onlyOnBattery = false;
-      autoSuspendOnBattery = false;
-    };
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.relativeToHome config.xdg.userDirs.documents;
+    }
+    {
+      method = "bindfs";
+      directory = config.lib.somasis.xdgDataDir "applications";
+    }
+  ];
 
-    debug = true;
-  };
-
-  somasis.tunnels.enable = true;
-
-  systemd.user.targets.graphical-session-autostart.Unit = {
-    Description = "Applications to be run after the graphical session is initialized";
-    Wants = [ "graphical-session.target" "graphical-session-post.target" "window-manager.target" ];
-    After = [ "graphical-session.target" "graphical-session-post.target" "window-manager.target" ];
-  };
-
-  xsession.windowManager.bspwm.startupPrograms = lib.mkAfter [
-    "${pkgs.systemd}/bin/systemctl --user start graphical-session-autostart.target"
+  # ~/share/direnv contains the allowlist of repositories.
+  sync.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "direnv";
+    }
   ];
 }

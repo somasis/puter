@@ -1,4 +1,8 @@
-{ pkgs, ... }: {
+{ config
+, pkgs
+, ...
+}:
+{
   home.packages = [
     pkgs.ponymix
 
@@ -15,18 +19,5 @@
     '')
   ];
 
-  services.sxhkd.keybindings = {
-    "XF86AudioMute" = "ponymix -t sink toggle >/dev/null";
-    # "super + XF86AudioMute" = "ponymix -t source toggle >/dev/null";
-    "shift + XF86AudioMute" = "ponymix-cycle-default sink";
-    "shift + super + XF86AudioMute" = "ponymix-cycle-default source";
-
-    "XF86AudioLowerVolume" = "ponymix-snap -t sink decrease 5 >/dev/null";
-    "XF86AudioRaiseVolume" = "ponymix-snap -t sink increase 5 >/dev/null";
-
-    "shift + XF86AudioLowerVolume" = "ponymix-snap -t source decrease 5 >/dev/null";
-    "shift + XF86AudioRaiseVolume" = "ponymix-snap -t source increase 5 >/dev/null";
-  };
-
-  cache.directories = [ "etc/pulse" ];
+  cache.directories = [ (config.lib.somasis.xdgConfigDir "pulse") ];
 }

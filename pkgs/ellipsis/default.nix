@@ -1,7 +1,7 @@
 { lib
 , writeShellApplication
-
 , coreutils
+,
 }:
 writeShellApplication {
   name = "ellipsis";

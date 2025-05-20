@@ -6,68 +6,8 @@
 let
   inherit (config.lib.somasis) xdgConfigDir xdgCacheDir xdgDataDir;
 
-  anosci-vst =
-    { lib
-    , runCommandLocal
-    , stdenvNoCC
-    , curl
-    , gnused
-    , nix
-    , pup
-    , python3
-    , unzip
-    }:
-    let inherit (python3.packages) mediafire-dl; in
-    stdenvNoCC.mkDerivation rec {
-      pname = "anosci-vst";
-      version = "1504RC2";
-
-      src = runCommandLocal "${pname}.zip"
-        {
-          url = "http://anosci.net/dbounce.php?al=anovst";
-          hash = "sha256-Dur5f7MfuE2e7OqY+1tvMB/rxrwQWM4wotK/BLbX8kA=";
-        } ''
-        downloadPage=$(
-            curl -Lfs "$url" \
-                | pup 'body script text{}' \
-                | sed -e '/:\/\// !d' -e 's|.*://|https://|' -e 's/\.zip.*/.zip/'
-        )
-        mediafire-dl "$downloadPage" || exit 1
-        file=./*.zip
-        actualHash=$(nix hash file "$file")
-
-        if [[ "$actualHash" == "$expectedHash" ]]; then
-            mv "$file" "$out"
-        else
-            exit 1
-        fi
-      '';
-
-      nativeBuildInputs = [
-        curl
-        gnused
-        nix
-        pup
-        mediafire-dl
-        unzip
-      ];
-
-      phases = "installPhase";
-
-      installPhase = ''
-        cd $out
-        unzip -qq $src
-      '';
-
-      meta = with lib; {
-        homepage = "https://soundsfromsci.bandcamp.com/album/4-vsts-from-anosci";
-        sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
-        license = licenses.unfree;
-      };
-    }
-  ;
-
-  # $ curl -Lfs \
+in
+# $ curl -Lfs \
   #       -I -o /dev/null \
   #       -w '%{url_effective}' \
   #       'https://support.image-line.com/redirect/flstudio_win_installer'
@@ -106,26 +46,28 @@ let
   # - https://zynaddsubfx.sourceforge.io/download.html
   # - https://github.com/wolf-plugins/wolf-shaper
   # - https://soundsfromsci.bandcamp.com/album/4-vsts-from-anosci
-in
 {
   home.packages = [
     pkgs.audacity
     # pkgs.plugdata
   ];
 
-  xsession.windowManager.bspwm.rules = {
-    "fl.exe".state = "tiled";
-    "fl64.exe".state = "tiled";
-  };
-
   persist.directories = [
-    { method = "symlink"; directory = xdgConfigDir "audacity"; }
-    { method = "symlink"; directory = xdgDataDir "flstudio"; }
+    {
+      method = "symlink";
+      directory = xdgConfigDir "audacity";
+    }
   ];
 
   cache.directories = [
-    { method = "symlink"; directory = xdgCacheDir "audacity"; }
-    { method = "symlink"; directory = xdgDataDir "audacity"; }
+    {
+      method = "symlink";
+      directory = xdgCacheDir "audacity";
+    }
+    {
+      method = "symlink";
+      directory = xdgDataDir "audacity";
+    }
   ];
 
   # xdg.dataFile = {

@@ -3,6 +3,7 @@
 , fetchFromGitHub
 , cmake
 , fcitx5
+,
 }:
 stdenv.mkDerivation rec {
   pname = "fcitx5-ilo-sitelen";

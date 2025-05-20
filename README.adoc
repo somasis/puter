@@ -1,0 +1,102 @@
+= puter
+// vim: sw=2 tw=72
+
+NixOS and home-manager configurations.
+
+== Usage
+
+Before creating any commits, run
+
+  $ direnv allow
+
+which will allow you to use the Git hooks and secrets infrastructure
+provided by the flake in `flake.nix`.
+
+== Machines
+
+https://pcpartpicker.com/user/7596ff/saved/k8YCrH[esther.7596ff.com]::
+* Etymology: Phish - Esther
+* Built 2024-07-02, first used as a server then TV appliance, then turned into
+  a multi-user workstation.
+* History
+    ** 2024-07-02: original specifications
+        *** AMD Ryzen 9 5900X 3.7 GHz 12-core processor
+        *** be quiet! Pure Loop 240 liquid CPU cooler
+        *** MSI PRO B550M-VC WIFI Micro ATX AM4 motherboard
+        *** Corsair Vengeance LPX 64 GB (2 × 32 GB) DDR4-3200 CL16 memory
+        *** Samsung 980 Pro 1TB M.2-2280 PCIe 4.0 NVMe solid state drive
+        *** Panasonic UJ267 9.5mm SATA slot-in optical drive
+        *** MSI NVIDIA GeForce RTX 3060 Ventus 12GB GPU
+        *** EVGA SuperNOVA 650 G7 650 W 80+ Fully Modular ATX power supply
+        *** Fractal Design Node 804 MicroATX Mid Tower case
+        *** RAID
+            **** Seagate IronWolf NAS 12 TB 3.5" 7200 RPM internal hard drive
+            **** Seagate IronWolf NAS 12 TB 3.5" 7200 RPM internal hard drive
+            **** Western Digital Red Plus 12 TB 3.5" 7200 RPM internal hard drive
+            **** Western Digital Red Plus 12 TB 3.5" 7200 RPM internal hard drive
+    ** TODO what did we do about the drive replacements?
+
+ilo.somas.is::
+* Etymology: toki pona, meaning tool, machine, device
+* Framework Laptop 13, originally purchased 2022-05-06 for $1,549
+* History of repair
+    ** 2022-05-06: original specifications ($1,049)
+        *** 11th generation Intel i7-1165G7 (12M Cache, up to 4.70 GHz) mainboard
+        *** WD_BLACK SN850 NVMe M.2 2230, 1TB ($199)
+        *** Intel Wi-Fi 6E AX210 (without vPro) ($18)
+        *** Corsair DDR4-3200, 32GB (1 × 32GB) ($160)
+        *** 2 × HDMI expansion card (1st gen) (2 × $19.00)
+        *** 2 × USB-C expansion card (aluminum) (2 × $18.00)
+        *** 2 × USB-A expansion card (2 × $18.00)
+        *** 60W Framework power adapter ($49.00)
+        *** Clear (transparent) ANSI keyboard ($49.00)
+        *** US English keyboard included (but unused in favor of Clear ANSI keyboard)
+        *** Black bezel included
+        *** Framework screwdriver included
+        *** Total: $1,705.89 ($107.39 tax)
+    ** 2022-05-13: Blank (unlabeled) ANSI keyboard ($49.00)
+    ** 2022-07-29: sent to Framework for repair service after severe water damage
+       during flight to Seattle; same specs but basically refurbished. ($959.00)
+    ** 2022-08-05: expansion cards to replace water damaged originals
+        *** 2 × USB-C expansion card (aluminum) (2 × $18.00)
+        *** USB-A expansion card ($9.00)
+        *** HDMI expansion card (1st gen) (19.00)
+    ** 2023-01-07: fixing a broken fan module
+        *** Heatsink and fan kit (for Framework Laptop 13, 11th gen Intel) ($39.00)
+    ** 2023-11-25: fixing issues related to mainboard
+        *** RTC battery - ML1220
+    ** 2024-03-25: Mainboard replacement due to ongoing issues with 11th gen Intel
+        *** 12th generation Intel i7-1260P mainboard ($549.00)
+        *** 2024-07-10: Mainboard replacement (again) due to possible lemon
+    ** 2024-11-13: International English - Linux input cover kit (incl. keyboard and touchpad) ($99.00)
+
+== Devices
+
+https://openwrt.org/toh/linksys/ea8300[Linksys EA3800]::
+* bobonet router. Runs OpenWrt.
+
+== Implementation details
+
+=== Secrets (`./secrets`)
+
+We use <https://github.com/ryantm/agenix> for actually managing the secrets.
+
+==== Creating and using a secret
+
+```nix
+{
+  "my-new-apikey.age".publicKeys = [ alice bob computer ];
+}
+```
+
+```
+~/src/nixos $ nix develop
+~/src/nixos $ cd secrets/
+~/src/nixos/secrets $ agenix -e my-new-apikey.age
+```
+
+```nix
+{ self, ...}: {
+  age.secrets.my-new-apikey.file = "${self}/secrets/my-new-apikey.age";
+}
+```

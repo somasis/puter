@@ -5,52 +5,59 @@
 }:
 let
   runas_user = "somasis";
-  runas = ''
-    export PATH=${config.security.wrapperDir}:"$PATH"
+  runas =
+    ''
+      export PATH=${config.security.wrapperDir}:"$PATH"
 
-    runas() {
-        local runas_user
-        ${lib.toShellVar "runas_user" runas_user}
-        if test "$(id -un)" = "$runas_user"; then
-            "$@"; return $?
-        else
-            su -l - "$runas_user" sh -c '"$@"' -- "$@"; return $?
-        fi
-    }
+      runas() {
+          local runas_user
+          ${lib.toShellVar "runas_user" runas_user}
+          if test "$(id -un)" = "$runas_user"; then
+              "$@"; return $?
+          else
+              su -l - "$runas_user" sh -c '"$@"' -- "$@"; return $?
+          fi
+      }
 
-  '' + "runas"
-  ;
+    ''
+    + "runas";
 
-  repoSpinoza = "somasis@spinoza.7596ff.com:/mnt/raid/somasis/backup/borg";
+  repoEsther = "somasis@esther.7596ff.com:/mnt/raid/somasis/backup/borg";
 
   defaults = {
+    repo = repoEsther;
+
     archiveBaseName = config.networking.fqdnOrHostName;
     dateFormat = "-u +%Y-%m-%dT%H:%M:%SZ";
     doInit = false;
 
     encryption = {
       mode = "repokey";
-      passCommand = builtins.toString (pkgs.writeShellScript "borg-pass" ''
-        : "''${BORG_REPO:?}"
-        ${runas} pass "borg/''${BORG_REPO%%:*}" | head -n1
-      '');
+      passCommand = builtins.toString (
+        pkgs.writeShellScript "borg-pass" ''
+          : "''${BORG_REPO:?}"
+          ${runas} pass "borg/passphrase" | head -n1
+        ''
+      );
     };
 
     environment = {
       BORG_HOST_ID = config.networking.fqdnOrHostName;
 
-      BORG_RSH = builtins.toString (pkgs.writeShellScript "borg-ssh" ''
-        : "''${BORG_REPO:?}"
-        case "$BORG_REPO" in
-          *@*:*|*@*) ssh_user=''${BORG_REPO%%@*} ;;
-        esac
+      BORG_RSH = builtins.toString (
+        pkgs.writeShellScript "borg-ssh" ''
+          : "''${BORG_REPO:?}"
+          case "$BORG_REPO" in
+            *@*:*|*@*) ssh_user=''${BORG_REPO%%@*} ;;
+          esac
 
-        ${lib.optionalString config.networking.networkmanager.enable "${pkgs.networkmanager}/bin/nm-online -q || exit 255"}
-        ${runas} ssh \
+          ${lib.optionalString config.networking.networkmanager.enable "${pkgs.networkmanager}/bin/nm-online -q || exit 255"}
+          ${runas} ssh \
             -o ExitOnForwardFailure=no \
             -o BatchMode=yes \
             -Takx ''${ssh_user:+-l "$ssh_user"} "$@"
-      '');
+        ''
+      );
     };
 
     exclude = [
@@ -74,7 +81,7 @@ let
       }
     '';
 
-    paths = [ "/persist" "/log" ];
+    paths = [ "/persist" ];
     persistentTimer = true;
 
     prune.keep = {
@@ -89,30 +96,13 @@ let
   };
 in
 {
-  services.borgbackup.jobs.spinoza = let inherit defaults; in {
-    inherit (defaults)
-      archiveBaseName
-      dateFormat
-      doInit
-      encryption
-      environment
-      exclude
-      extraArgs
-      extraCreateArgs
-      inhibitsSleep
-      preHook
-      paths
-      persistentTimer
-      prune
-      startAt
-      ;
-
-    repo = repoSpinoza;
+  services.borgbackup.jobs.persist = defaults // {
+    repo = repoEsther;
   };
 
   systemd = {
-    timers."borgbackup-job-spinoza".wants = [ "network-online.target" ];
-    services."borgbackup-job-spinoza" = {
+    timers."borgbackup-job-esther".wants = [ "network-online.target" ];
+    services."borgbackup-job-esther" = {
       unitConfig.ConditionACPower = true;
       serviceConfig.Nice = 19;
     };
@@ -129,15 +119,21 @@ in
     in
     [
       (pkgs.borg-takeout.override {
-        borgConfig = config.services.borgbackup.jobs.spinoza;
+        borgConfig = config.services.borgbackup.jobs.persist;
       })
     ]
     ++ (lib.optional (builtins.length borgJobs == 1) (
       pkgs.writeShellScriptBin "borg" ''
         exec borg-job-${lib.escapeShellArg (builtins.elemAt borgJobs 0)} ${defaultArgs} "$@"
       ''
-    ))
-  ;
+    ));
 
-  cache.directories = [{ directory = "/root/.cache/borg"; mode = "0770"; }];
+  cache.directories = [
+    {
+      directory = "/root/.cache/borg";
+      mode = "0770";
+    }
+  ];
+
+  # $ BORG_PASSCOMMAND=$(pass borg/passphrase | head -n1) borg init --encryption repokey
 }

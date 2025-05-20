@@ -1,10 +1,10 @@
 { lib
 , writeShellApplication
-
 , coreutils
 , findutils
 , gnugrep
 , gnused
+,
 }:
 writeShellApplication {
   name = "sonapona";

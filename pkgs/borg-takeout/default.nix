@@ -1,7 +1,6 @@
 { lib
 , symlinkJoin
 , writeShellApplication
-
 , coreutils
 , dateutils
 , gnugrep
@@ -9,32 +8,23 @@
 , htmlq
 , jq
 , libarchive
-
 , borgConfig ? { }
+,
 }:
 let
-  extraArgs =
-    if borgConfig.extraArgs ? false then
-      borgConfig.extraArgs
-    else
-      ""
-  ;
+  extraArgs = borgConfig.extraArgs or "";
 
-  preHook =
-    if borgConfig.preHook ? false then
-      borgConfig.preHook
-    else
-      ""
-  ;
+  preHook = borgConfig.preHook or "";
 
-  make = name: runtimeInputs:
+  make =
+    name: runtimeInputs:
     writeShellApplication {
       inherit name;
       inherit runtimeInputs;
 
       text =
         ''
-          # shellcheck disable=SC2034,SC2090
+          # shellcheck disable=SC2034,SC2090,SC2317
           ${preHook}
 
           type=$(type -t borg)
@@ -60,21 +50,50 @@ let
                   ;;
           esac
         ''
-        + builtins.readFile (./. + "/${name}.bash")
-      ;
-    }
-  ;
+        + builtins.readFile (./. + "/${name}.bash");
+    };
 in
 symlinkJoin {
   name = "borg-takeout";
 
   paths = [
-    (make "borg-import-google" [ coreutils dateutils gnugrep htmlq libarchive ])
-    (make "borg-import-facebook" [ coreutils dateutils gnugrep libarchive ])
-    (make "borg-import-instagram" [ coreutils dateutils gnugrep libarchive ])
-    (make "borg-import-letterboxd" [ coreutils jq libarchive ])
-    (make "borg-import-tumblr" [ coreutils dateutils jq libarchive ])
-    (make "borg-import-twitter" [ coreutils dateutils gnused jq libarchive ])
+    (make "borg-import-google" [
+      coreutils
+      dateutils
+      gnugrep
+      htmlq
+      libarchive
+    ])
+    (make "borg-import-facebook" [
+      coreutils
+      dateutils
+      gnugrep
+      libarchive
+    ])
+    (make "borg-import-instagram" [
+      coreutils
+      dateutils
+      gnugrep
+      libarchive
+    ])
+    (make "borg-import-letterboxd" [
+      coreutils
+      jq
+      libarchive
+    ])
+    (make "borg-import-tumblr" [
+      coreutils
+      dateutils
+      jq
+      libarchive
+    ])
+    (make "borg-import-twitter" [
+      coreutils
+      dateutils
+      gnused
+      jq
+      libarchive
+    ])
   ];
 
   meta = with lib; {

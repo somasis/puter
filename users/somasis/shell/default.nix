@@ -1,4 +1,5 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, ... }:
+{
   imports = [
     ./cd.nix
     ./commands.nix
@@ -39,10 +40,12 @@
     ''
     # s6/s6-rc bash completion.
     + ''
-      . ${pkgs.fetchurl {
-        url = "https://gist.githubusercontent.com/capezotte/45d9d5ebad50aa7419f632a43dad604e/raw/ad60df4d5bcb704a9b90ed9ed23a146d385c2b35/s6-comp.bash";
-        hash = "sha256-DQySJr2Ci28RGFBH5VHSk1go7MCP/IhS8yHWOdTB4sI=";
-      }}
+      . ${
+        pkgs.fetchurl {
+          url = "https://gist.githubusercontent.com/capezotte/45d9d5ebad50aa7419f632a43dad604e/raw/ad60df4d5bcb704a9b90ed9ed23a146d385c2b35/s6-comp.bash";
+          hash = "sha256-DQySJr2Ci28RGFBH5VHSk1go7MCP/IhS8yHWOdTB4sI=";
+        }
+      }
     ''
   );
 

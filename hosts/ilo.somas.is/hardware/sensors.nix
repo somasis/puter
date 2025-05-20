@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   boot.kernelModules = [
     "coretemp" # Used for reading CPU temperature
 

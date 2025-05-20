@@ -1,7 +1,10 @@
 {
   imports = [
+    ../lib.nix
+
     ./impermanence.nix
-    ./theme.nix
+    ./programs
     ./services
+    ./theme.nix
   ];
 }

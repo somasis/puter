@@ -1,6 +1,7 @@
 { lib
 , stdenvNoCC
 , fetchurl
+,
 }:
 
 let
@@ -11,8 +12,7 @@ stdenvNoCC.mkDerivation rec {
   version = "1.21";
 
   src = fetchurl {
-    url =
-      "https://github.com/janMelon/linjawawa/raw/${rev}/font-files/linjawawa${version}.otf";
+    url = "https://github.com/janMelon/linjawawa/raw/${rev}/font-files/linjawawa${version}.otf";
     hash = "sha256-0HVRqHS8Ikzp32VclQJEb6nwpmW6b8nFrtHxh1v2OfM=";
   };
 
@@ -21,8 +21,7 @@ stdenvNoCC.mkDerivation rec {
   '';
 
   meta = with lib; {
-    description =
-      "a very bold font for the Toki Pona writing system, sitelen pona";
+    description = "a very bold font for the Toki Pona writing system, sitelen pona";
     homepage = "https://github.com/janMelon/linjawawa";
     license = licenses.ofl;
     platforms = platforms.all;
