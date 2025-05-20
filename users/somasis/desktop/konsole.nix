@@ -1,7 +1,6 @@
 { config
 , osConfig
 , lib
-, pkgs
 , ...
 }: {
   sync = with config.lib.somasis; {
@@ -22,9 +21,10 @@
     konsole = {
       enable = true;
       defaultProfile = "somasis";
+      customColorSchemes.somasis = ./konsole.colorscheme;
       profiles = with lib; rec {
+        colorScheme = "somasis";
         somasis = {
-          colorScheme = "somasis";
           font = {
             name = "monospace";
             size = if osConfig.meta.type == "laptop" then 10 else 12;
@@ -43,7 +43,7 @@
               SemanticUpDown = true;
               TerminalCenter = true;
               TerminalMargin = 3;
-              TerminalColumns=90;
+              TerminalColumns = 90;
             };
 
             "Interaction Options" = {
@@ -75,37 +75,37 @@
         };
 
         application = somasis // {
-            extraConfig = {
-              Appearance.BoldIntense=false;
+          extraConfig = {
+            Appearance.BoldIntense = false;
 
-              General = {
-                Environment =
-                  concatStringsSep "," (mapAttrsToList (n: v: assert isValidPosixName n; "${n}=${v}") {
-                    TERM = "xterm-256color";
-                    COLORTERM = "truecolor";
-                    EDITOR = "kate -b";
-                  });
+            General = {
+              Environment =
+                concatStringsSep "," (mapAttrsToList (n: v: assert isValidPosixName n; "${n}=${v}") {
+                  TERM = "xterm-256color";
+                  COLORTERM = "truecolor";
+                  EDITOR = "kate -b";
+                });
 
-                Icon="window";
+              Icon = "window";
 
-                LocalTabTitleFormat="%n";
-              };
-
-              "Interaction Options" = {
-                ColorFilterEnabled=false;
-                CtrlRequiredForDrag=false;
-                MiddleClickPasteMode=1;
-                OpenLinksByDirectClickEnabled=false;
-                UnderlineFilesEnabled=true;
-              };
-
-              # Disable all scrolling related enhancements
-              Scrolling = {
-                HighlightScrolledLines = false;
-                HistoryMode = 1; # Limited history
-                ScrollBarPosition = 2; # Disable scrollbar
-              };
+              LocalTabTitleFormat = "%n";
             };
+
+            "Interaction Options" = {
+              ColorFilterEnabled = false;
+              CtrlRequiredForDrag = false;
+              MiddleClickPasteMode = 1;
+              OpenLinksByDirectClickEnabled = false;
+              UnderlineFilesEnabled = true;
+            };
+
+            # Disable all scrolling related enhancements
+            Scrolling = {
+              HighlightScrolledLines = false;
+              HistoryMode = 1; # Limited history
+              ScrollBarPosition = 2; # Disable scrollbar
+            };
+          };
         };
       };
     };

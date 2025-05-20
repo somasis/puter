@@ -24,7 +24,7 @@
     ./wine.nix
     ./www.nix
 
-    ./terminal.nix
+    ./konsole.nix
 
     # ./pim
     # ./anki.nix
