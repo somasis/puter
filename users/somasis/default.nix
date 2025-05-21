@@ -1,8 +1,7 @@
 { self
-, inputs
 , config
+, inputs
 , lib
-, pkgs
 , osConfig
 , ...
 }:
@@ -12,6 +11,7 @@
     with inputs;
     with self.homeManagerModules;
     [
+      agenix.homeManagerModules.age
       plasma-manager.homeManagerModules.plasma-manager
 
       ./commands
@@ -26,6 +26,7 @@
       ./man.nix
       ./monitor.nix
       ./pass.nix
+      ./rclone.nix
       ./skim.nix
       ./ssh.nix
       ./syncthing.nix
@@ -33,6 +34,8 @@
       ./tmux.nix
       ./xdg.nix
     ];
+
+  age.identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
 
   cache = {
     # defaultDirectoryMethod = "symlink";

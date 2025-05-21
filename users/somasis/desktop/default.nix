@@ -33,7 +33,6 @@
     # ./feeds
     ./ledger.nix
     # ./list.nix
-    ./mounts.nix
     ./music
     ./torrent.nix
 
