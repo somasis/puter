@@ -7,7 +7,6 @@
     files = [
       (xdgConfigDir "konsolerc")
       (xdgConfigDir "konsolesshconfig")
-      (xdgDataDir "konsole/somasis.colorscheme")
     ];
   };
 
@@ -23,15 +22,18 @@
       defaultProfile = "somasis";
       customColorSchemes.somasis = ./konsole.colorscheme;
       profiles = with lib; rec {
-        colorScheme = "somasis";
         somasis = {
+          colorScheme = "somasis";
           font = {
-            name = "monospace";
-            size = if osConfig.meta.type == "laptop" then 10 else 12;
+            name = config.programs.plasma.fonts.fixedWidth.family;
+            size = config.programs.plasma.fonts.fixedWidth.pointSize;
           };
 
           extraConfig = {
-            Appearance.LineSpacing = 0;
+            Appearance = {
+              LineSpacing = 0;
+              BoldIntense = false;
+            };
 
             "Cursor Options".CursorShape = 1; # I-Beam
 
@@ -65,6 +67,7 @@
             Scrolling = {
               HistoryMode = 2; # Unlimited history
               MarkerColor = config.lib.somasis.colors.kde config.theme.colors.orange;
+              ScrollBarPosition = 2; # Disable scrollbar
             };
 
             "Terminal Features" = {
@@ -74,37 +77,33 @@
           };
         };
 
-        application = somasis // {
-          extraConfig = {
-            Appearance.BoldIntense = false;
+        application.extraConfig = somasis.extraConfig // {
+          General = {
+            Environment =
+              concatStringsSep "," (mapAttrsToList (n: v: assert isValidPosixName n; "${n}=${v}") {
+                TERM = "xterm-256color";
+                COLORTERM = "truecolor";
+                EDITOR = "kate -b";
+              });
 
-            General = {
-              Environment =
-                concatStringsSep "," (mapAttrsToList (n: v: assert isValidPosixName n; "${n}=${v}") {
-                  TERM = "xterm-256color";
-                  COLORTERM = "truecolor";
-                  EDITOR = "kate -b";
-                });
+            Icon = "window";
 
-              Icon = "window";
+            LocalTabTitleFormat = "%n";
+          };
 
-              LocalTabTitleFormat = "%n";
-            };
+          "Interaction Options" = {
+            ColorFilterEnabled = false;
+            CtrlRequiredForDrag = false;
+            MiddleClickPasteMode = 1;
+            OpenLinksByDirectClickEnabled = false;
+            UnderlineFilesEnabled = true;
+          };
 
-            "Interaction Options" = {
-              ColorFilterEnabled = false;
-              CtrlRequiredForDrag = false;
-              MiddleClickPasteMode = 1;
-              OpenLinksByDirectClickEnabled = false;
-              UnderlineFilesEnabled = true;
-            };
-
-            # Disable all scrolling related enhancements
-            Scrolling = {
-              HighlightScrolledLines = false;
-              HistoryMode = 1; # Limited history
-              ScrollBarPosition = 2; # Disable scrollbar
-            };
+          # Disable all scrolling related enhancements
+          Scrolling = {
+            HighlightScrolledLines = false;
+            HistoryMode = 1; # Limited history
+            ScrollBarPosition = 2; # Disable scrollbar
           };
         };
       };
