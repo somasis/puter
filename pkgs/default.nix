@@ -235,7 +235,6 @@ rec {
   sonapona = callPackage ./sonapona { };
   table = callPackage ./table { };
   ubase = callPackage ./ubase { };
-  ubuntu-wallpapers = callPackage ./ubuntu-wallpapers { };
   wcal = callPackage ./wcal { };
   wineprefix = callPackage ./wineprefix { };
 

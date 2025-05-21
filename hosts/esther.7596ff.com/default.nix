@@ -110,8 +110,6 @@
     pkgs.tmux
     pkgs.kakoune
     pkgs.neovim
-
-    pkgs.ubuntu-wallpapers
   ]
   ++ lib.unique (lib.mapAttrsToList (_: x: x) (lib.filterAttrs (_: lib.isDerivation) pkgs.nixos-artwork.wallpapers))
   ;
