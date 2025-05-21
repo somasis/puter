@@ -197,9 +197,13 @@ rec {
 
   wrapCommand = callPackage ./wrapCommand;
 
+  # keep-sorted start
   aw-watcher-media-player = callPackage ./aw-watcher-media-player { };
   aw-watcher-netstatus = callPackage ./aw-watcher-netstatus { };
   bandcamp-collection-downloader = callPackage ./bandcamp-collection-downloader { };
+  beets-fetchartist = callPackage ./beets-fetchartist { };
+  beets-noimport = callPackage ./beets-noimport { };
+  beets-originquery = callPackage ./beets-originquery { };
   borg-takeout = callPackage ./borg-takeout { };
   dates = callPackage ./dates { inherit table; };
   dmenu = callPackage ./dmenu { };
@@ -207,6 +211,7 @@ rec {
   dmenu-pass = callPackage ./dmenu-pass { };
   dmenu-run = callPackage ./dmenu-run { };
   ellipsis = callPackage ./ellipsis { };
+  emojirunner = callPackage ./emojirunner { };
   execshell = callPackage ./execshell { };
   fcitx5-ilo-sitelen = callPackage ./fcitx5-ilo-sitelen { };
   ffsclient = callPackage ./ffsclient { };
@@ -232,6 +237,7 @@ rec {
   qute-pass = callPackage ./qute-pass { inherit dmenu-pass; };
   sbase = callPackage ./sbase { };
   scooper = callPackage ./scooper { };
+  signal-desktop-patched = callPackage ./signal-desktop-patched { };
   sol = callPackage ./sol { };
   somasis-qutebrowser-tools = callPackage ./somasis-qutebrowser-tools { };
   sonapona = callPackage ./sonapona { };
@@ -239,17 +245,13 @@ rec {
   ubase = callPackage ./ubase { };
   wcal = callPackage ./wcal { };
   wineprefix = callPackage ./wineprefix { };
+  # keep-sorted end
 
-  emojirunner = callPackage ./emojirunner { };
-  signal-desktop-patched = callPackage ./signal-desktop-patched { };
-
-  beets-fetchartist = callPackage ./beets-fetchartist { };
-  beets-noimport = callPackage ./beets-noimport { };
-  beets-originquery = callPackage ./beets-originquery { };
-
+  # keep-sorted start
+  kakounePlugins = import ./kakoune-plugins args;
   nodePackages.stylelint-config-standard = nodePackages.callPackage ./stylelint-config-standard { };
   passExtensions = import ./pass-extensions args;
-  kakounePlugins = import ./kakoune-plugins args;
   tmuxPlugins = import ./tmux-plugins args;
   zotero-addons = import ./zotero-addons args;
+  # keep-sorted end
 }

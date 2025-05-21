@@ -17,13 +17,13 @@
   home.packages = with pkgs; [
     # keep-sorted start
     as-tree
-    tree
-    ncdu
-    xurls
+    dateutils
     execline
     file
     ltrace
+    ncdu
     nq
+    patchutils
     pigz
     pv
     rlwrap
@@ -38,11 +38,13 @@
     snooze
     strace
     teip
+    tree
     trurl
     xe
     xurls
     xz
     zstd
+    # keep-sorted end
 
     # uq is unmaintained by upstream now and this Awk pretty much
     # gets you the whole way anyway. <https://unix.stackexchange.com/a/11941>
@@ -82,9 +84,6 @@
 
       [ "$e" -gt 0 ] && exit 1
     '')
-
-    dateutils
-    patchutils
 
     # moreutils's /bin/ts conflicts with outils.
     (symlinkJoin {
