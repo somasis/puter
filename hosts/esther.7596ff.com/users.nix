@@ -31,7 +31,6 @@
         extraGroups = [
           "users"
           "wheel"
-          "tv"
         ];
 
         createHome = true;
@@ -57,7 +56,6 @@
         extraGroups = [
           "users"
           "wheel"
-          "tv"
         ];
 
         createHome = true;

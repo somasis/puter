@@ -104,12 +104,6 @@
         "public" = "yes";
         "read only" = "yes";
       };
-      "Kodi Screenshots" = {
-        "browseable" = "yes";
-        "path" = "/mnt/raid/tv/screenshots";
-        "public" = "yes";
-        "read only" = "yes";
-      };
     };
   };
 

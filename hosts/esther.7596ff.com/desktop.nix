@@ -25,25 +25,9 @@
   # Show the system journal on tty12.
   services.journald.console = "/dev/tty12";
 
-  # Gaming-use optimized kernel
-  # boot.kernelPackages = pkgs.linuxPackages_zen;
-
-  # services.xserver = {
-  #   enable = true;
-  #   videoDrivers = [ "nvidia" ];
-  # };
-
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
-    # theme = "sddm-astronaut-theme";
-    # extraPackages = with pkgs; with kdePackages; [ sddm-astronaut ];
-
-    # settings = {
-    #   Users = {
-    #     MaximumUid = 1100;
-    #   };
-    # };
   };
 
   services.xserver.videoDrivers = [ "nvidia" ];
@@ -61,21 +45,6 @@
   services.desktopManager.plasma6 = {
     enable = true;
     enableQt5Integration = true;
-  };
-
-  programs.steam = {
-    enable = true;
-
-    # Allow for using Steam Input on Wayland?
-    # That's what the docs say, but doesn't it already work with Wayland?
-    # extest.enable = true;
-
-    protontricks.enable = true;
-    remotePlay.openFirewall = true;
-
-    extraCompatPackages = [
-      pkgs.proton-ge-bin
-    ];
   };
 
   # Necessary so that machine can provide location facilities
@@ -209,37 +178,4 @@
     enable = true;
     xdgOpenUsePortal = true;
   };
-
-  # i18n.inputMethod = {
-  #   enable = true;
-  #   type = "fcitx5";
-  #   fcitx5 = {
-  #     addons = with pkgs; with libsForQt5; with kdePackages; [
-  #       fcitx5-material-color
-  #       fcitx5-table-extra
-  #       fcitx5-table-other
-  #       fcitx5-tokyonight
-  #       fcitx5-rose-pine
-  #       fcitx5-mozc
-  #       fcitx5-fluent
-  #       fcitx5-anthy
-  #       fcitx5-nord
-  #       fcitx5-skk
-  #     ];
-  #
-  #     plasma6Support = true;
-  #     waylandFrontend = true;
-  #   };
-  #
-  #   ibus = {
-  #     engines = with pkgs.ibus-engines; with pkgs.kdePackages; [
-  #       anthy
-  #       mozc
-  #       table
-  #       table-others
-  #       typing-booster
-  #       uniemoji
-  #     ];
-  #   };
-  # };
 }

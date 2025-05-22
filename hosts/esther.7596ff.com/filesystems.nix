@@ -50,46 +50,6 @@
       fsType = "zfs";
       neededForBoot = true;
     };
-
-    # "/mnt/raid/cassie" = {
-    #   fsType = "zfs";
-    #   device = "${config.networking.fqdnOrHostName}_raid/cassie";
-    #   options = [ "X-mount.mode=0775" "X-mount.owner=cassie" "X-mount.group=cassie" ];
-    # };
-
-    # "/mnt/raid/cassie/timemachine" = {
-    #   fsType = "zfs";
-    #   device = "${config.networking.fqdnOrHostName}_raid/cassie/timemachine";
-    #   options = [ "X-mount.mode=0755" "X-mount.owner=cassie" "X-mount.group=cassie" ];
-    # };
-
-    # "/mnt/raid/somasis" = {
-    #   fsType = "zfs";
-    #   device = "${config.networking.fqdnOrHostName}_raid/somasis";
-    #   # options = [ "X-mount.mode=0775" "X-mount.owner=somasis" "X-mount.group=somasis" ];
-    # };
-
-    # "/mnt/raid/tv" = {
-    #   fsType = "zfs";
-    #   device = "${config.networking.fqdnOrHostName}_raid/tv";
-    #   options = [ "X-mount.mode=0775" "X-mount.owner=tv" "X-mount.group=tv" ];
-    # };
-
-    # "/mnt/portia" = {
-    #   device = "cassie@portia.whatbox.ca:/home/cassie/files/music";
-    #   fsType = "sshfs";
-    #   options = [
-    #     "nodev"
-    #     "noatime"
-    #     "allow_other"
-    #     "_netdev"
-    #     "x-systemd.automount"
-    #     "reconnect"
-    #     "dir_cache=yes"
-    #     "ServerAliveInterval=15"
-    #     "IdentityFile=/home/cassie/.ssh/id_ed25519"
-    #   ];
-    # };
   };
 
   services.zfs = {

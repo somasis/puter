@@ -10,22 +10,18 @@
     (modulesPath + "/installer/scan/not-detected.nix")
     nixosModules.sensible-defaults
 
-    ./git.nix
-
-    ./users.nix
-    ./somasis.nix
-    ./cassie.nix
-
     ./audio.nix
     ./backups.nix
+    ./cassie.nix
     ./desktop.nix
-    ./gaming.nix
     ./filesystems.nix
+    ./gaming.nix
+    ./git.nix
     ./networking.nix
     ./nix.nix
-    ./retroarch.nix
     ./samba.nix
-    ./tv.nix
+    ./somasis.nix
+    ./users.nix
   ];
 
   meta.type = "workstation";

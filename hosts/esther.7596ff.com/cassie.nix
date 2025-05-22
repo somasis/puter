@@ -109,14 +109,16 @@ in
   services.sonarr = {
     enable = true;
 
-    group = "tv";
+    user = "cassie";
+    group = "cassie";
     openFirewall = true;
   };
 
   services.radarr = {
     enable = true;
 
-    group = "tv";
+    user = "cassie";
+    group = "cassie";
     openFirewall = true;
   };
 
