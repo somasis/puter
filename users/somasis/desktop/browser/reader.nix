@@ -129,12 +129,10 @@ in
     aliases = {
       rdrview = "spawn -u ${rdrview}";
       render = "spawn -u ${render}";
-      # print-clean = "spawn -u ${lib.getExe print-clean}";
     };
 
     keyBindings.normal = {
       # pp = "print --pdf ${config.xdg.userDirs.download}/{title}.pdf";
-      # pP = "print-clean";
       pr = "rdrview";
 
       zpr = "rdrview";
