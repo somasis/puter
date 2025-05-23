@@ -245,7 +245,7 @@ in
 
   home.packages = [
     pkgs.discordchatexporter-cli
-    pkgs.unstable.equibop
+    pkgs.equibop
   ];
 
   cache = {
