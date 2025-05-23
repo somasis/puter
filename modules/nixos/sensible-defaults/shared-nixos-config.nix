@@ -55,36 +55,41 @@
     registry = lib.mapAttrs (_: flake: { inherit flake; }) inputs;
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") inputs;
 
-    settings = {
-      use-xdg-base-directories = true;
+    settings = lib.mkMerge [
+      (self.nixConfig or { })
+      {
+        use-xdg-base-directories = true;
 
-      trusted-users = [ "@wheel" ];
+        trusted-users = [ "@wheel" ];
 
-      # Enable flakes by default.
-      extra-experimental-features = [
-        "flakes"
-        "nix-command"
-      ];
-
-      extra-substituters =
-        # Add each build machine as a substituter
-        map (m: "${m.protocol}://${m.sshUser}@${m.hostName}") config.nix.buildMachines ++ [
-          # Use binary cache for nonfree packages
-          "https://nixpkgs-unfree.cachix.org"
-          "https://numtide.cachix.org"
-          "https://nix-community.cachix.org"
+        # Enable flakes by default.
+        extra-experimental-features = [
+          "flakes"
+          "nix-command"
         ];
 
-      extra-trusted-public-keys = [
-        "esther.7596ff.com-2024-07-06:o2RYdGw81MDdCKd21cgW2mA7sE2o8YaYvVwMHISRFnw="
-        "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
-        "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
+        extra-substituters =
+          # Add each build machine as a substituter
+          map (m: "${m.protocol}://${m.sshUser}@${m.hostName}") config.nix.buildMachines ++ [
+            # Use binary cache for nonfree packages
+            "https://nixpkgs-unfree.cachix.org"
+            "https://nix-community.cachix.org"
+            "https://numtide.cachix.org"
+            "https://lanzaboote.cachix.org"
+          ];
 
-      # Potentially reduce build times being constrained by internet speed
-      # by having remote builders get dependencies themselves where possible.
-      builders-use-substitutes = true;
-    };
+        extra-trusted-public-keys = [
+          "esther.7596ff.com-2024-07-06:o2RYdGw81MDdCKd21cgW2mA7sE2o8YaYvVwMHISRFnw="
+          "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
+          "lanzaboote.cachix.org-1:Nt9//zGmqkg1k5iu+B3bkj3OmHKjSw9pvf3faffLLNk="
+        ];
+
+        # Potentially reduce build times being constrained by internet speed
+        # by having remote builders get dependencies themselves where possible.
+        builders-use-substitutes = true;
+      }
+    ];
   };
 }

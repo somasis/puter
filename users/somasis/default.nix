@@ -52,10 +52,10 @@
     allowOther = true;
 
     directories = [
-      {
-        method = "bindfs"; # NOTE (FIXME?) bindfs has to be used because Nix doesn't want to access it if it's a symlink...
-        directory = "src";
-      }
+      # NOTE (FIXME?) bindfs has to be used because Nix doesn't want to access it if it's a symlink...
+      { method = "bindfs"; directory = "src"; }
+
+      { method = "symlink"; directory = config.lib.somasis.xdgDataDir "nix"; }
     ];
   };
 
