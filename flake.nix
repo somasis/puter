@@ -338,10 +338,17 @@
             with inputs;
             self.checks.${system}.git-hooks.enabledPackages
             ++ [
+              # Add treefmt to path
               self.formatter.${system}
+
+              # `agenix`, used for secrets management (see also: `./secrets/secrets.nix`)
               agenix.packages.${system}.default
-              apacheHttpd # Used for `htpasswd`.
+
+              # Used for `htpasswd`.
+              apacheHttpd
               replace-secret
+
+              nix-update
             ];
         };
       });
