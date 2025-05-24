@@ -16,7 +16,7 @@
 
 buildPythonPackage rec {
   pname = "mail-deduplicate";
-  version = "unstable-2022-01-04";
+  version = "7.6.2";
 
   src = fetchFromGitHub rec {
     repo = pname;
