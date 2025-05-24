@@ -172,7 +172,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
     cameractrls-gtk3
     gwenview
     isoimagewriter
-    jamesdsp
     kara
     kclock
     kde-gtk-config

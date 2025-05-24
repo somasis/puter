@@ -3,21 +3,41 @@
 , ...
 }:
 {
-  home.packages = [
-    pkgs.ponymix
+  home.packages = with pkgs; [
+    jamesdsp
 
-    (pkgs.writeShellScriptBin "ponymix-snap" ''
+    ponymix
+    (writeShellScriptBin "ponymix-snap" ''
       snap=5
       [ "$FLOCKER" != "$0" ] \
           && export FLOCKER="$0" \
           && exec flock -n "$0" "$0" "$@"
 
-      ${pkgs.ponymix}/bin/ponymix "$@"
-      b=$(${pkgs.ponymix}/bin/ponymix --short get-volume)
+      ${ponymix}/bin/ponymix "$@"
+      b=$(${ponymix}/bin/ponymix --short get-volume)
       c=$((b - $((b % snap))))
-      ${pkgs.ponymix}/bin/ponymix --short set-volume "$c" >/dev/null
+      ${ponymix}/bin/ponymix --short set-volume "$c" >/dev/null
     '')
   ];
 
-  cache.directories = [ (config.lib.somasis.xdgConfigDir "pulse") ];
+  cache.directories = [
+    (config.lib.somasis.xdgConfigDir "pulse")
+    (config.lib.somasis.xdgCacheDir "jamesdsp")
+  ];
+
+  persist.directories = [
+    { method = "bindfs"; directory = config.lib.somasis.xdgConfigDir "jamesdsp"; }
+  ];
+
+  sync = {
+    directories = [
+      { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "jamesdsp/irs"; }
+      { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "jamesdsp/liveprog"; }
+      { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "jamesdsp/presets"; }
+    ];
+
+    files = [
+      (config.lib.somasis.xdgConfigDir "jamesdsp/application.conf")
+    ];
+  };
 }
