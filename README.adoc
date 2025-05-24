@@ -10,7 +10,23 @@ Before creating any commits, run
   $ direnv allow
 
 which will allow you to use the Git hooks and secrets infrastructure
-provided by the flake in `flake.nix`.
+provided by the flake in `flake.nix`. This will also add some commands
+to the environment; consult the list in `devShells.default.
+
+.Updating the flake inputs (i.e., NixOS version used to build system)
+
+  $ nix flake update --commit-lock-file
+
+Make sure to ensure things work and build after doing so and before
+committing a lock update, if you can.
+
+.Updating packages somewhat automatically
+
+  $ nix-update <package name> -F --commit
+
+.Updating packages somewhat automatically, but from their Git versions
+
+  $ nix-update <package name> -F --commit --version=branch=master
 
 == Machines
 
