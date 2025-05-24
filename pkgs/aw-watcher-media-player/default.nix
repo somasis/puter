@@ -11,13 +11,13 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "aw-watcher-media-player";
-  version = "1.1.0";
+  version = "1.1.1";
 
   src = fetchFromGitHub {
     owner = "2e3s";
     repo = "aw-watcher-media-player";
     rev = "v${version}";
-    hash = "sha256-xJbJGzFmwrlTKCvQHkPouc+lkuHeajATi7qMUkasKV4=";
+    hash = "sha256-6lVW2hd1nrPEV3uRJbG4ySWDVuFUi/JSZ1HYJFz0KdQ=";
   };
 
   cargoLock = {
