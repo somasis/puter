@@ -11,7 +11,7 @@
     with inputs;
     with self.homeManagerModules;
     [
-      agenix.homeManagerModules.age
+      agenix.homeManagerModules.default
       plasma-manager.homeManagerModules.plasma-manager
 
       ./commands
