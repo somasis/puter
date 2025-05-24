@@ -13,18 +13,9 @@
   };
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "syncthing";
-    }
-    {
-      method = "symlink";
-      directory = "shared";
-    }
-    {
-      method = "symlink";
-      directory = "sync";
-    }
+    { method = "symlink"; directory = config.lib.somasis.xdgStateDir "syncthing"; }
+    { method = "symlink"; directory = "shared"; }
+    { method = "symlink"; directory = "sync"; }
   ];
 
   systemd.user.services.syncthing = {
