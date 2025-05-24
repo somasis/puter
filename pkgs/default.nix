@@ -211,7 +211,6 @@ rec {
   fcitx5-ilo-sitelen = callPackage ./fcitx5-ilo-sitelen { };
   ffsclient = callPackage ./ffsclient { };
   hledger-fmt = callPackage ./hledger-fmt { };
-  optimize = callPackage ./optimize { };
   ini2nix = callPackage ./ini2nix { inherit json2nix; };
   jhide = callPackage ./jhide { };
   jqfmt = callPackage ./jqfmt { };
@@ -228,6 +227,8 @@ rec {
   mimetest = callPackage ./mimetest { };
   newslinkrss = python3Packages.callPackage ./newslinkrss { };
   nocolor = callPackage ./nocolor { };
+  optimize = callPackage ./optimize { };
+  plasma-pass-unstable = callPackage ./plasma-pass-unstable { };
   qute-pass = callPackage ./qute-pass { inherit dmenu-pass; };
   sbase = callPackage ./sbase { };
   scooper = callPackage ./scooper { };
@@ -240,7 +241,6 @@ rec {
   wineprefix = callPackage ./wineprefix { };
 
   emojirunner = callPackage ./emojirunner { };
-  plasma-pass-unstable = callPackage ./plasma-pass { };
   signal-desktop-patched = callPackage ./signal-desktop-patched { };
 
   beets-fetchartist = callPackage ./beets-fetchartist { };

@@ -4,19 +4,18 @@
 , cmake
 , oath-toolkit
 , kdePackages
-,
 }:
 
 stdenv.mkDerivation rec {
-  pname = "plasma-pass";
-  version = "unstable-2025-02-08";
+  pname = "plasma-pass-unstable";
+  version = "1.2.2-unstable-2025-03-26";
 
   src = fetchFromGitLab {
     domain = "invent.kde.org";
     owner = "plasma";
     repo = "plasma-pass";
-    rev = "394ef5e06c21a706cab9a2c34b6d81460aa74d07";
-    hash = "sha256-5JTo+jr9flsZcj3K3Biht/uZq8CUEqhIoJ+ucSBiEDM=";
+    rev = "d5ab4f68cd1f0ea722122617453ab953e26d4e11";
+    hash = "sha256-1dG5TAAcQzDxtKvkASGYxtxsP6zPX7cLrQSDOgXgj8g=";
   };
 
   buildInputs = with kdePackages; [
@@ -41,7 +40,7 @@ stdenv.mkDerivation rec {
     description = "Plasma applet to access passwords from pass, the standard UNIX password manager";
     homepage = "https://invent.kde.org/plasma/plasma-pass";
     license = licenses.lgpl21Plus;
-    maintainers = with maintainers; [ matthiasbeyer ];
+    maintainers = with maintainers; [ somasis ];
     platforms = platforms.unix;
   };
 }
