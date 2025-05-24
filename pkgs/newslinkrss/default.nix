@@ -11,14 +11,14 @@
 }:
 buildPythonApplication rec {
   pname = "newslinkrss";
-  version = "0.11.0";
+  version = "0.12.0";
   pyproject = true;
 
   src = fetchFromSourcehut {
     owner = "~ittner";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-b8amC3x7qxSK9t18/VuD1sSg0LjzfV61XQwr0XdsS3E=";
+    hash = "sha256-cIGWnX5rSWu/BKxJTYz+e4P56AnI0RqApAb8CWSXsvg=";
   };
 
   propagatedBuildInputs = [
