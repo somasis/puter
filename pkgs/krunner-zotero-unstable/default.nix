@@ -7,8 +7,8 @@
 ,
 }:
 kdePackages.mkKdeDerivation rec {
-  pname = "krunner-zotero";
-  version = "unstable-2024-10-28";
+  pname = "krunner-zotero-unstable";
+  version = "0.1.0-unstable-2024-10-28";
 
   src = fetchFromGitHub {
     owner = "tran-khoa";

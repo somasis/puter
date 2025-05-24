@@ -216,6 +216,7 @@ rec {
   jhide = callPackage ./jhide { };
   jqfmt = callPackage ./jqfmt { };
   json2nix = callPackage ./json2nix { };
+  krunner-zotero-unstable = callPackage ./krunner-zotero-unstable { };
   linja-luka = callPackage ./linja-luka { };
   linja-namako = callPackage ./linja-namako { };
   linja-pi-tomo-lipu = callPackage ./linja-pi-tomo-lipu { };
@@ -239,7 +240,6 @@ rec {
   wineprefix = callPackage ./wineprefix { };
 
   emojirunner = callPackage ./emojirunner { };
-  krunner-zotero = callPackage ./krunner-zotero { };
   plasma-pass-unstable = callPackage ./plasma-pass { };
   signal-desktop-patched = callPackage ./signal-desktop-patched { };
 
