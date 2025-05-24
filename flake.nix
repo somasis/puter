@@ -41,6 +41,11 @@
 
     nixosHardware.url = "github:nixos/nixos-hardware";
 
+    # We can use the nix-community version only when
+    # <https://github.com/nix-community/flake-compat/issues/1>
+    # is taken care of. We rely on the file input types for reading
+    # GitHub keys in ./secrets.nix (used by agenix).
+    # flake-compat.url = "github:nix-community/flake-compat";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-compat.flake = false;
 
