@@ -14,8 +14,8 @@ let
     camelCaseToKebabCase
     ;
 
-  inherit (config.lib.somasis) colors;
-  c = config.theme.colors;
+  # inherit (config.lib.somasis) colors;
+  # c = config.theme.colors;
 
   # signal = pkgs.signal-desktop-patched.override {
   #   iconThemeName = config.gtk.iconTheme.name;
