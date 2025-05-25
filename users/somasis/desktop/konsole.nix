@@ -39,7 +39,6 @@
 
             General = {
               DimWhenInactive = false;
-              Icon = "starred";
               InvertSelectionColors = false;
               SemanticInputClick = true;
               SemanticUpDown = true;
