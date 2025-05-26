@@ -12,10 +12,10 @@
     Unit = {
       Description = "Automatically generate a user's SSH key if it doesn't exist";
       After = [ "ssh-agent.service" ];
+      ConditionPathExists = "!~/.ssh";
     };
     Service = {
       Type = "oneshot";
-      ConditionPathExists = "!~/.ssh";
       ExecStart = pkgs.writeShellScript "auto-ssh-keygen" ''
         ${pkgs.openssh}/bin/ssh-keygen -C "$USER@$(hostname -f)_$(date -I)" -N ""
       '';
