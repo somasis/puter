@@ -7,6 +7,7 @@
       "https://nix-community.cachix.org"
       "https://numtide.cachix.org"
       "https://lanzaboote.cachix.org"
+      "https://pre-commit-hooks.cachix.org"
     ];
 
     extra-trusted-public-keys = [
@@ -14,6 +15,7 @@
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
       "lanzaboote.cachix.org-1:Nt9//zGmqkg1k5iu+B3bkj3OmHKjSw9pvf3faffLLNk="
+      "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
     ];
   };
 
@@ -280,20 +282,13 @@
         git-hooks = git-hooks.lib.${system}.run {
           src = ./.;
 
-          default_stages = [
-            "pre-commit"
-            "post-merge"
-            "post-rewrite"
-            "post-checkout"
-          ];
-
           hooks = {
             # Git style
             gitlint.enable = true;
             check-merge-conflicts.enable = true;
 
             # Nix-related hooks
-            # statix.enable = true; # Lint Nix code.
+            statix.enable = true; # Lint Nix code.
 
             # NOTE(somasis):
             # Ensure code is formatted according to Nix RFC 166.
@@ -309,6 +304,8 @@
 
             # Ensure we don't have commit anything bad
             check-added-large-files.enable = true; # avoid committing binaries when possible
+            check-executables-have-shebangs.enable = true;
+            check-shebang-scripts-are-executable.enable = true;
             check-vcs-permalinks.enable = true; # don't use version control links that could rot
             check-symlinks.enable = true; # dead symlinks specifically
             detect-private-keys.enable = true;
@@ -317,15 +314,10 @@
             eclint.enable = true;
             editorconfig-checker.enable = true;
 
-            # hunspell.enable = true;
             # Ensure we don't have dead links in comments or whatever.
             lychee.enable = true;
 
-            # Enforce formatting on shell scripts.
-            shellcheck.enable = true;
-
-            # FIXME shfmt has some bugs still
-            # shfmt.enable = true;
+            treefmt.enable = true;
           };
         };
 
