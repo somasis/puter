@@ -12,6 +12,11 @@
       forceImportRoot = false;
       devNodes = "/dev/disk/by-id";
     };
+
+    # Restrict the ZFS ARC cache to at most 16GB.
+    extraModprobeConfig = ''
+      options zfs zfs_arc_max=${toString (1024000000 * 16)}
+    '';
   };
 
   cache.files = [ "/etc/zfs/zpool.cache" ];
