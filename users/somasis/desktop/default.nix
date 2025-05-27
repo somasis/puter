@@ -70,6 +70,8 @@
       ffmpeg-full
       hyperfine
       zenity
+
+      gucharmap
     ];
 
   home.file = {
