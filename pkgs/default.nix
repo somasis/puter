@@ -201,6 +201,7 @@ rec {
   aw-watcher-media-player = callPackage ./aw-watcher-media-player { };
   aw-watcher-netstatus = callPackage ./aw-watcher-netstatus { };
   bandcamp-collection-downloader = callPackage ./bandcamp-collection-downloader { };
+  beets-alias = callPackage ./beets-alias { };
   beets-fetchartist = callPackage ./beets-fetchartist { };
   beets-noimport = callPackage ./beets-noimport { };
   beets-originquery = callPackage ./beets-originquery { };
