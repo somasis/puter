@@ -13,8 +13,6 @@
     with pkgs;
     with kdePackages;
     [
-      # makel
-
       # Used by spell.kak; see spell.nix for dictionaries
       aspell
 
@@ -23,63 +21,54 @@
 
       meld
 
-      kate
-      nixd
-      # autotools-language-server
+      vscode-langservers-extracted # CSS, HTML, JSON
+      marksman # Markdown
+      nixd # Nix
       bash-language-server
-      # cmake-language-server
+      taplo # TOML
       yaml-language-server
       jq-lsp
-      # markdown-oxide
-      # marksman
-      # typos-lsp
     ];
 
   xdg = {
-    # TODO: can remove on next Kakoune release, maybe
+    # TODO: Unnecessary when this pull request gets merged
     #       <https://github.com/mawww/kakoune/pull/4699>
-    desktopEntries.kakoune =
-      {
-        name = "Kakoune";
-        icon = "kakoune";
+    desktopEntries.kakoune = {
+      name = "Kakoune";
+      icon = "kakoune";
 
-        genericName = "Text editor";
-        comment = "Edit text files modally";
-        categories = [
-          "Utility"
-          "Development"
-          "TextTools"
-          "TextEditor"
-          "ConsoleOnly"
-        ];
+      genericName = "Text editor";
+      comment = "Edit text files modally";
+      categories = [
+        "Utility"
+        "Development"
+        "TextTools"
+        "TextEditor"
+        "ConsoleOnly"
+      ];
 
-        exec = "kak -- %F";
-        terminal = true;
-        mimeType = [
-          "text/*"
-          "text/plain"
-        ];
-      }
-      // lib.optionalAttrs config.programs.kitty.enable {
-        settings = rec {
-          StartupWMClass = "kakoune";
-          TerminalOptions = "--class ${StartupWMClass} --instance-group ${StartupWMClass} --config ${config.xdg.configHome}/kitty/application.conf --single-instance --wait-for-single-instance-window-close";
-        };
+      exec = "kak -- %F";
+      terminal = true;
+      mimeType = [
+        "text/*"
+        "text/plain"
+      ];
+    }
+    // lib.optionalAttrs config.programs.kitty.enable {
+      settings = rec {
+        StartupWMClass = "kakoune";
+        TerminalOptions = "--class ${StartupWMClass} --instance-group ${StartupWMClass} --config ${config.xdg.configHome}/kitty/application.conf --single-instance --wait-for-single-instance-window-close";
       };
+    };
 
-    mimeApps.defaultApplications = lib.genAttrs [ "text/*" "text/plain" "application/x-zerosize" ] (
-      _: "kakoune.desktop"
-    );
+    mimeApps.defaultApplications = lib.genAttrs [ "text/*" "text/plain" "application/x-zerosize" ] (_: "kakoune.desktop");
   };
-
-  programs.kitty.settings.url_excluded_characters = lib.mkIf config.programs.kakoune.config.showWhitespace.enable "¬";
 
   programs.kakoune = {
     enable = true;
     defaultEditor = true;
 
     config = {
-      # Highlighters
       numberLines = {
         enable = true;
         highlightCursor = true;
@@ -89,316 +78,79 @@
       showWhitespace = {
         enable = true;
         space = " ";
-        tab = ">";
-        # indent = " ";
-      };
-
-      # Wrap text in editor view
-      wrapLines = {
-        enable = false;
-
-        # Keep indentation when wrapping and wrap at word breaks
-        indent = true;
-        word = true;
-
-        marker = "]";
-
-        # Wrap to 80 even when the window is bigger.
-        # maxWidth = "%opt{autowrap_column}";
+        tab = "␉";
       };
 
       keyMappings = [
-        {
-          docstring = "comment out the line(s) selected";
-          mode = "normal";
-          key = "<a-c>";
-          effect = ": comment-line<ret>";
-        }
-        {
-          docstring = "comment out the line(s) selected";
-          mode = "insert";
-          key = "<a-c>";
-          effect = "<esc>: comment-line<ret>i";
-        }
-        {
-          docstring = "comment out the string(s) selected";
-          mode = "normal";
-          key = "<a-C>";
-          effect = ": comment-block<ret>";
-        }
-        {
-          docstring = "comment out the string(s) selected";
-          mode = "insert";
-          key = "<a-C>";
-          effect = "<esc>: comment-block<ret>i";
-        }
+        { docstring = "comment out the line(s) selected"; mode = "normal"; key = "<a-c>"; effect = ": comment-line<ret>"; }
+        { docstring = "comment out the line(s) selected"; mode = "insert"; key = "<a-c>"; effect = "<esc>: comment-line<ret>i"; }
+        { docstring = "comment out the string(s) selected"; mode = "normal"; key = "<a-C>"; effect = ": comment-block<ret>"; }
+        { docstring = "comment out the string(s) selected"; mode = "insert"; key = "<a-C>"; effect = "<esc>: comment-block<ret>i"; }
 
-        {
-          docstring = "unindent line";
-          mode = "insert";
-          key = "<s-tab>";
-          effect = "<esc><i";
-        }
+        { docstring = "unindent line"; mode = "insert"; key = "<s-tab>"; effect = "<esc><i"; }
 
-        {
-          docstring = "jump to the word left of the cursor";
-          mode = "prompt";
-          key = "<c-left>";
-          effect = "<a-B>";
-        }
-        {
-          docstring = "jump to the word right of the cursor";
-          mode = "prompt";
-          key = "<c-right>";
-          effect = "<a-E>";
-        }
+        { docstring = "jump to the word left of the cursor"; mode = "prompt"; key = "<c-left>"; effect = "<a-B>"; }
+        { docstring = "jump to the word right of the cursor"; mode = "prompt"; key = "<c-right>"; effect = "<a-E>"; }
 
-        {
-          docstring = "create a new window";
-          mode = "normal";
-          key = "<c-n>";
-          effect = ": new<ret>";
-        }
-        {
-          docstring = "create a new window";
-          mode = "insert";
-          key = "<c-n>";
-          effect = ": new<ret>i";
-        }
-        {
-          docstring = "open a file";
-          mode = "normal";
-          key = "<c-o>";
-          effect = ":edit ";
-        }
-        {
-          docstring = "open a file";
-          mode = "insert";
-          key = "<c-o>";
-          effect = "<esc>:edit ";
-        }
-        {
-          docstring = "write the current buffer";
-          mode = "normal";
-          key = "<c-s>";
-          effect = ": write<ret>;";
-        }
-        {
-          docstring = "write the current buffer";
-          mode = "insert";
-          key = "<c-s>";
-          effect = "<esc>: write<ret>i";
-        }
-        {
-          docstring = "close the current buffer";
-          mode = "normal";
-          key = "<c-w>";
-          effect = ": delete-buffer<ret>";
-        }
-        {
-          docstring = "close the current buffer";
-          mode = "insert";
-          key = "<c-w>";
-          effect = "<esc>: delete-buffer<ret>i";
-        }
-        {
-          docstring = "quit Kakoune";
-          mode = "normal";
-          key = "<c-q>";
-          effect = ": quit<ret>";
-        }
-        {
-          docstring = "quit Kakoune";
-          mode = "insert";
-          key = "<c-q>";
-          effect = "<esc>: quit<ret>";
-        }
+        { docstring = "create a new window"; mode = "normal"; key = "<c-n>"; effect = ": new<ret>"; }
+        { docstring = "create a new window"; mode = "insert"; key = "<c-n>"; effect = ": new<ret>i"; }
+        { docstring = "open a file"; mode = "normal"; key = "<c-o>"; effect = ":edit "; }
+        { docstring = "open a file"; mode = "insert"; key = "<c-o>"; effect = "<esc>:edit "; }
+        { docstring = "write the current buffer"; mode = "normal"; key = "<c-s>"; effect = ": write<ret>;"; }
+        { docstring = "write the current buffer"; mode = "insert"; key = "<c-s>"; effect = "<esc>: write<ret>i"; }
+        { docstring = "close the current buffer"; mode = "normal"; key = "<c-w>"; effect = ": delete-buffer<ret>"; }
+        { docstring = "close the current buffer"; mode = "insert"; key = "<c-w>"; effect = "<esc>: delete-buffer<ret>i"; }
+        { docstring = "quit Kakoune"; mode = "normal"; key = "<c-q>"; effect = ": quit<ret>"; }
+        { docstring = "quit Kakoune"; mode = "insert"; key = "<c-q>"; effect = "<esc>: quit<ret>"; }
 
-        {
-          docstring = "find";
-          mode = "normal";
-          key = "<c-f>";
-          effect = "/";
-        }
-        {
-          docstring = "find";
-          mode = "insert";
-          key = "<c-f>";
-          effect = "<esc>/";
-        }
+        { docstring = "find"; mode = "normal"; key = "<c-f>"; effect = "/"; }
+        { docstring = "find"; mode = "insert"; key = "<c-f>"; effect = "<esc>/"; }
 
-        {
-          docstring = "copy selection to clipboard";
-          mode = "normal";
-          key = "<c-c>";
-          effect = "y";
-        }
-        {
-          docstring = "copy selection to clipboard";
-          mode = "insert";
-          key = "<c-c>";
-          effect = "<esc>yi";
-        }
-        {
-          docstring = "cut selection to clipboard";
-          mode = "normal";
-          key = "<c-x>";
-          effect = "d";
-        }
-        {
-          docstring = "cut selection to clipboard";
-          mode = "insert";
-          key = "<c-x>";
-          effect = "<esc>cc";
-        } # yank and delete and re-enter insert mode
-        {
-          docstring = "paste selection from clipboard";
-          mode = "normal";
-          key = "<c-v>";
-          effect = "R";
-        }
-        {
-          docstring = "paste selection from clipboard";
-          mode = "insert";
-          key = "<c-v>";
-          effect = "<esc>Ri";
-        }
+        { docstring = "copy selection to clipboard"; mode = "normal"; key = "<c-c>"; effect = "y"; }
+        { docstring = "copy selection to clipboard"; mode = "insert"; key = "<c-c>"; effect = "<esc>yi"; }
+        { docstring = "cut selection to clipboard"; mode = "normal"; key = "<c-x>"; effect = "d"; }
+        { docstring = "cut selection to clipboard"; mode = "insert"; key = "<c-x>"; effect = "<esc>cc"; } # yank and delete and re-enter insert mode
+        { docstring = "paste selection from clipboard"; mode = "normal"; key = "<c-v>"; effect = "R"; }
+        { docstring = "paste selection from clipboard"; mode = "insert"; key = "<c-v>"; effect = "<esc>Ri"; }
 
-        {
-          docstring = "switch to the next buffer";
-          mode = "normal";
-          key = "<a-A>";
-          effect = ": buffer-next<ret>";
-        }
-        {
-          docstring = "switch to the next buffer";
-          mode = "insert";
-          key = "<a-A>";
-          effect = "<esc>: buffer-next<ret>i";
-        }
-        {
-          docstring = "select buffer contents";
-          mode = "normal";
-          key = "<c-a>";
-          effect = "%";
-        }
-        {
-          docstring = "select buffer contents";
-          mode = "insert";
-          key = "<c-a>";
-          effect = "<esc>%i";
-        }
-        {
-          docstring = "switch to the previous buffer";
-          mode = "normal";
-          key = "<a-a>";
-          effect = ": buffer-previous<ret>";
-        }
-        {
-          docstring = "switch to the previous buffer";
-          mode = "insert";
-          key = "<a-a>";
-          effect = "<esc>: buffer-previous<ret>i";
-        }
-        {
-          docstring = "switch to the debug buffer";
-          mode = "normal";
-          key = "<a-d>";
-          effect = ": buffer *debug*<ret>";
-        }
-        {
-          docstring = "switch to the debug buffer";
-          mode = "insert";
-          key = "<a-d>";
-          effect = "<esc>: buffer *debug*<ret>i";
-        }
-        {
-          docstring = "jump to the word left of the cursor";
-          mode = "normal";
-          key = "<c-left>";
-          effect = "b;";
-        }
-        {
-          docstring = "jump to the word left of the cursor";
-          mode = "insert";
-          key = "<c-left>";
-          effect = "<esc>b;i";
-        }
-        {
-          docstring = "jump to the word right of the cursor";
-          mode = "normal";
-          key = "<c-right>";
-          effect = "w;";
-        }
-        {
-          docstring = "jump to the word right of the cursor";
-          mode = "insert";
-          key = "<c-right>";
-          effect = "<esc>w;i";
-        }
-        {
-          docstring = "select the word left of the cursor";
-          mode = "normal";
-          key = "<c-s-left>";
-          effect = "b";
-        }
-        {
-          docstring = "select the word left of the cursor";
-          mode = "insert";
-          key = "<c-s-left>";
-          effect = "<esc>bi";
-        }
-        {
-          docstring = "expand selection to the word left of the cursor";
-          mode = "normal";
-          key = "<c-s-left>";
-          effect = "B";
-        }
-        {
-          docstring = "expand selection to the word left of the cursor";
-          mode = "insert";
-          key = "<c-s-left>";
-          effect = "<esc>Bi";
-        }
-        {
-          docstring = "expand selection to the word right of the cursor";
-          mode = "normal";
-          key = "<c-s-right>";
-          effect = "W";
-        }
-        {
-          docstring = "expand selection to the word right of the cursor";
-          mode = "insert";
-          key = "<c-s-right>";
-          effect = "<esc>Wi";
-        }
-        {
-          docstring = "delete the word left of the cursor";
-          mode = "normal";
-          key = "<a-backspace>";
-          effect = "bd";
-        }
-        {
-          docstring = "delete the word left of the cursor";
-          mode = "insert";
-          key = "<a-backspace>";
-          effect = "<esc>bdi";
-        }
-        {
-          docstring = "delete the word left of the cursor";
-          mode = "normal";
-          key = "<c-backspace>";
-          effect = "bd";
-        }
-        {
-          docstring = "delete the word left of the cursor";
-          mode = "insert";
-          key = "<c-backspace>";
-          effect = "<esc>bdi";
-        }
+        { docstring = "switch to the next buffer"; mode = "normal"; key = "<a-A>"; effect = ": buffer-next<ret>"; }
+        { docstring = "switch to the next buffer"; mode = "insert"; key = "<a-A>"; effect = "<esc>: buffer-next<ret>i"; }
+        { docstring = "select buffer contents"; mode = "normal"; key = "<c-a>"; effect = "%"; }
+        { docstring = "select buffer contents"; mode = "insert"; key = "<c-a>"; effect = "<esc>%i"; }
+        { docstring = "switch to the previous buffer"; mode = "normal"; key = "<a-a>"; effect = ": buffer-previous<ret>"; }
+        { docstring = "switch to the previous buffer"; mode = "insert"; key = "<a-a>"; effect = "<esc>: buffer-previous<ret>i"; }
+        { docstring = "switch to the debug buffer"; mode = "normal"; key = "<a-d>"; effect = ": buffer *debug*<ret>"; }
+        { docstring = "switch to the debug buffer"; mode = "insert"; key = "<a-d>"; effect = "<esc>: buffer *debug*<ret>i"; }
+        { docstring = "jump to the word left of the cursor"; mode = "normal"; key = "<c-left>"; effect = "b;"; }
+        { docstring = "jump to the word left of the cursor"; mode = "insert"; key = "<c-left>"; effect = "<esc>b;i"; }
+        { docstring = "jump to the word right of the cursor"; mode = "normal"; key = "<c-right>"; effect = "w;"; }
+        { docstring = "jump to the word right of the cursor"; mode = "insert"; key = "<c-right>"; effect = "<esc>w;i"; }
+        { docstring = "select the word left of the cursor"; mode = "normal"; key = "<c-s-left>"; effect = "b"; }
+        { docstring = "select the word left of the cursor"; mode = "insert"; key = "<c-s-left>"; effect = "<esc>bi"; }
+        { docstring = "expand selection to the word left of the cursor"; mode = "normal"; key = "<c-s-left>"; effect = "B"; }
+        { docstring = "expand selection to the word left of the cursor"; mode = "insert"; key = "<c-s-left>"; effect = "<esc>Bi"; }
+        { docstring = "expand selection to the word right of the cursor"; mode = "normal"; key = "<c-s-right>"; effect = "W"; }
+        { docstring = "expand selection to the word right of the cursor"; mode = "insert"; key = "<c-s-right>"; effect = "<esc>Wi"; }
+        { docstring = "delete the word left of the cursor"; mode = "normal"; key = "<a-backspace>"; effect = "bd"; }
+        { docstring = "delete the word left of the cursor"; mode = "insert"; key = "<a-backspace>"; effect = "<esc>bdi"; }
+        { docstring = "delete the word left of the cursor"; mode = "normal"; key = "<c-backspace>"; effect = "bd"; }
+        { docstring = "delete the word left of the cursor"; mode = "insert"; key = "<c-backspace>"; effect = "<esc>bdi"; }
       ];
 
       hooks = [
+        # autolint/autoformat
+        {
+          name = "BufWritePre";
+          option = ".*";
+          commands = ''evaluate-commands %sh{ [ -n "$kak_opt_lintcmd" ] && echo lint || echo nop }'';
+        }
+
+        {
+          name = "BufWritePre";
+          option = ".*";
+          commands = ''evaluate-commands %sh{ [ -n "$kak_opt_formatcmd" ] && echo format || echo nop }'';
+        }
+
         # Load any plugins I have in ~/src/*.kak
         {
           name = "KakBegin";
@@ -473,37 +225,6 @@
           '';
         }
 
-        # autolint/autoformat
-        {
-          name = "BufWritePre";
-          option = ".*";
-          commands = ''evaluate-commands %sh{ [ -n "$kak_opt_lintcmd" ] && echo lint || echo nop }'';
-        }
-
-        {
-          name = "BufWritePre";
-          option = ".*";
-          commands = ''evaluate-commands %sh{ [ -n "$kak_opt_formatcmd" ] && echo format || echo nop }'';
-        }
-
-        # # Makefile(7).
-        # {
-        #   name = "WinSetOption";
-        #   option = "filetype=makefile";
-        #   commands = ''
-        #     set-option window lintcmd "${makel}"
-        #   '';
-        # }
-
-        # Mail.
-        {
-          name = "WinSetOption";
-          option = "filetype=mail";
-          commands = ''
-            set-option window autowrap_column 72
-          '';
-        }
-
         # Use tab/alt-tab for completion
         {
           name = "InsertCompletionShow";
@@ -538,6 +259,61 @@
       in
       with config.theme.colors;
       ''
+        # Configure Kakoune language server protocols.
+        eval %sh{kak-lsp}
+        lsp-enable
+
+        map global user l ':enter-user-mode lsp<ret>' -docstring 'LSP mode'
+
+        map global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <lt>tab> }<ret>' -docstring 'Select next snippet placeholder'
+
+        map global object a '<a-semicolon>lsp-object<ret>' -docstring 'LSP any symbol'
+        map global object <a-a> '<a-semicolon>lsp-object<ret>' -docstring 'LSP any symbol'
+        map global object f '<a-semicolon>lsp-object Function Method<ret>' -docstring 'LSP function or method'
+        map global object t '<a-semicolon>lsp-object Class Interface Struct<ret>' -docstring 'LSP class interface or struct'
+        map global object d '<a-semicolon>lsp-diagnostic-object --include-warnings<ret>' -docstring 'LSP errors and warnings'
+        map global object D '<a-semicolon>lsp-diagnostic-object<ret>' -docstring 'LSP errors'
+
+        lsp-inlay-hints-enable global
+
+        hook global BufSetOption filetype=(.+) %{
+            hook buffer BufWritePre .* lsp-formatting-sync
+        }
+
+        hook -group lsp-filetype-nix global BufSetOption filetype=nix %{
+            set-option buffer lsp_servers %{
+                [nixd]
+                root_globs = ["flake.nix", "shell.nix"]
+                [nixd.formatting]
+                command = [ "nix", "fmt" ]
+                [nixd.options]
+                home-manager.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.<name>.options.home-manager.users.type.getSubOptions []"
+            }
+        }
+
+        hook global WinSetOption filetype=nix %{
+            hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
+            hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
+            hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
+            hook -once -always window WinSetOption filetype=.* %{
+                remove-hooks window semantic-tokens
+            }
+        }
+
+        face global InfoDefault               Information
+        face global InfoBlock                 Information
+        face global InfoBlockQuote            Information
+        face global InfoBullet                Information
+        face global InfoHeader                Information
+        face global InfoLink                  Information
+        face global InfoLinkMono              Information
+        face global InfoMono                  Information
+        face global InfoRule                  Information
+        face global InfoDiagnosticError       Information
+        face global InfoDiagnosticHint        Information
+        face global InfoDiagnosticInformation Information
+        face global InfoDiagnosticWarning     Information
+
         # Highlight issues, nasty code, and notes, in descending order of goodness.
         add-highlighter global/user-fixme regex \b(BUG|FIXME|REMOVE)\b  1:red+bf
         add-highlighter global/user-note  regex \b(NOTE|HACK|XXX)\b     1:yellow+bf
