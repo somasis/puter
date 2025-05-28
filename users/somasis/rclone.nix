@@ -15,10 +15,8 @@ let
 in
 {
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "rclone";
-    }
+    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "vfs"; }
+    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "vfsMeta"; }
   ];
 
   home.shellAliases.rclone = "rclone --fast-list --use-mmap --human-readable";
