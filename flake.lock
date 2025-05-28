@@ -3,11 +3,11 @@
     "adblockEasyList": {
       "flake": false,
       "locked": {
-        "lastModified": 1748383284,
-        "narHash": "sha256-IVlmgfTm0DmRrikvGXrxB+eqOfhV+l6HlZgvPNsjirQ=",
+        "lastModified": 1748468325,
+        "narHash": "sha256-f/P/mlUzZcn+0Z3mOZKAXRrfxOQ95kEM/rj9TaKRiOY=",
         "owner": "thedoggybrad",
         "repo": "easylist-mirror",
-        "rev": "aa02106e59032521dab8b7daadbbd499926c142a",
+        "rev": "b674db3512ce68e380ecb55ae96144b12ecdbb3a",
         "type": "github"
       },
       "original": {
@@ -19,11 +19,11 @@
     "adblockHosts": {
       "flake": false,
       "locked": {
-        "lastModified": 1747792192,
-        "narHash": "sha256-HeWotX8CVc3vDlvAGq99FaeAT9JRSWtx4N/NhtjPwtg=",
+        "lastModified": 1748393754,
+        "narHash": "sha256-KS+bKVQk0S7pCiz1ftHPr/bTgCU+4Lv9YvUVLXAbuJU=",
         "owner": "StevenBlack",
         "repo": "hosts",
-        "rev": "dbdcb032706dfe548745266218501afa93c14ad5",
+        "rev": "4f663aa0f0b247f3a455577b096e121e2976215d",
         "type": "github"
       },
       "original": {
@@ -135,43 +135,14 @@
         "type": "github"
       }
     },
-    "discordThemeCustom": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1748139158,
-        "narHash": "sha256-iC/Go6ykfmBvsPQn8iycN1Oo4OdFLBXoO6KHOW970wg=",
-        "path": "/home/somasis/src/discord-theme-custom",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/somasis/src/discord-theme-custom",
-        "type": "path"
-      }
-    },
-    "discordThemeIrc": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1667835392,
-        "narHash": "sha256-x0OjnntzC71UydZHG4jcNItM/1py/t+PkIiVcx9L8Vw=",
-        "owner": "somasis",
-        "repo": "discord-theme-irc",
-        "rev": "e3405891337de2abc72a21e2be0003f03509a923",
-        "type": "github"
-      },
-      "original": {
-        "owner": "somasis",
-        "repo": "discord-theme-irc",
-        "type": "github"
-      }
-    },
     "dmenu-flexipatch": {
       "flake": false,
       "locked": {
-        "lastModified": 1747639418,
-        "narHash": "sha256-4zXYiEDpzS0haNFvfxcfTyOAhZigGSGAorRoc7vAN3c=",
+        "lastModified": 1748466653,
+        "narHash": "sha256-MP/FtJnLJyEiYfS8er5NLQTEp6+M7YlKiwrPq5SbBmI=",
         "owner": "bakkeby",
         "repo": "dmenu-flexipatch",
-        "rev": "45c22eaa042822f60a7eb08c4c40909a78910038",
+        "rev": "5948fe898e95ec521c9666d9dafb487da597c3a9",
         "type": "github"
       },
       "original": {
@@ -389,11 +360,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1748226808,
-        "narHash": "sha256-GaBRgxjWO1bAQa8P2+FDxG4ANBVhjnSjBms096qQdxo=",
+        "lastModified": 1748455876,
+        "narHash": "sha256-4n9uDN54LSgN7WVEzj2r0nBthV5m0uFi9BgiD0dfS54=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "83665c39fa688bd6a1f7c43cf7997a70f6a109f9",
+        "rev": "529d2aac542a42c57d4b765501ace564b07e3d99",
         "type": "github"
       },
       "original": {
@@ -431,11 +402,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1748227609,
-        "narHash": "sha256-SaSdslyo6UGDpPUlmrPA4dWOEuxCy2ihRN9K6BnqYsA=",
+        "lastModified": 1748455938,
+        "narHash": "sha256-mQ/iNzPra2WtDQ+x2r5IadcWNr0m3uHvLMzJkXKAG/8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "d23d20f55d49d8818ac1f1b2783671e8a6725022",
+        "rev": "02077149e2921014511dac2729ae6dadb4ec50e2",
         "type": "github"
       },
       "original": {
@@ -574,11 +545,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1748367899,
-        "narHash": "sha256-wcCIIHHRMytxHkdxOIit0Yez7Hz5OZ0RljBleTdMjc8=",
+        "lastModified": 1748457463,
+        "narHash": "sha256-y8PPlVQOcWpMBYP7YOM69ua163hjiABJY+QynKIjTXs=",
         "owner": "kaylorben",
         "repo": "nixcord",
-        "rev": "6a367227b00a2b9463391ca76be1649b3f52be5b",
+        "rev": "b3e71cd6aa3534017f46e3cd2dba700be688ddb4",
         "type": "github"
       },
       "original": {
@@ -652,11 +623,11 @@
     },
     "nixpkgsUnstable": {
       "locked": {
-        "lastModified": 1748190013,
-        "narHash": "sha256-R5HJFflOfsP5FBtk+zE8FpL8uqE7n62jqOsADvVshhE=",
+        "lastModified": 1748370509,
+        "narHash": "sha256-QlL8slIgc16W5UaI3w7xHQEP+Qmv/6vSNTpoZrrSlbk=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "62b852f6c6742134ade1abdd2a21685fd617a291",
+        "rev": "4faa5f5321320e49a78ae7848582f684d64783e9",
         "type": "github"
       },
       "original": {
@@ -684,11 +655,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1748162331,
-        "narHash": "sha256-rqc2RKYTxP3tbjA+PB3VMRQNnjesrT0pEofXQTrMsS8=",
+        "lastModified": 1748302896,
+        "narHash": "sha256-ixMT0a8mM091vSswlTORZj93WQAJsRNmEvqLL+qwTFM=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "7c43f080a7f28b2774f3b3f43234ca11661bf334",
+        "rev": "7848cd8c982f7740edf76ddb3b43d234cb80fc4d",
         "type": "github"
       },
       "original": {
@@ -804,8 +775,6 @@
         "avatarSomasis": "avatarSomasis",
         "catgirl": "catgirl",
         "control-panel-for-twitter": "control-panel-for-twitter",
-        "discordThemeCustom": "discordThemeCustom",
-        "discordThemeIrc": "discordThemeIrc",
         "dmenu-flexipatch": "dmenu-flexipatch",
         "flake-compat": "flake-compat",
         "git-hooks": "git-hooks",
@@ -923,11 +892,11 @@
     "uAssets": {
       "flake": false,
       "locked": {
-        "lastModified": 1748377848,
-        "narHash": "sha256-vPv8+tQ2wcH/KvLNmrySD0BViY+un0jgKcOBZP2JpHc=",
+        "lastModified": 1748467585,
+        "narHash": "sha256-VC+m1QlMl0zrXAlTYXl7eSweogJ7zlf40gXNTj7z9FM=",
         "owner": "uBlockOrigin",
         "repo": "uAssetsCDN",
-        "rev": "bf7c3f2153cab30c62bf239c2d136ca6a24db0a3",
+        "rev": "050a047c2828ce42a5577a71c74c64f53689e5aa",
         "type": "github"
       },
       "original": {
