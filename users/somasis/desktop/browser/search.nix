@@ -135,27 +135,27 @@ in
     greasemonkey = map config.lib.somasis.drvOrPath [
       # Google
       (pkgs.fetchurl {
-        hash = "sha256-azHAQKmNxAcnyc7l08oW9X6DuMqAblFGPwD8T9DsrSs=";
+        hash = "sha256-azHAQKmNxAcnyc7l08oW9X6DuMqAblFGPwD8T9DsrSs="; # 1.1.16
         url = "https://greasyfork.org/scripts/32635-disable-google-search-result-url-redirector/code/Disable%20Google%20Search%20Result%20URL%20Redirector.user.js";
       })
       (pkgs.fetchurl {
-        hash = "sha256-Bb1QsU6R9xU718hRskGbuwNO7rrhuV7S1gvKtC9SlL0=";
+        hash = "sha256-IPRNStKVH9rtzCn3JJ/yvXROsdX8WPAomPTudeqXjyc="; # 1.1.21
         url = "https://greasyfork.org/scripts/37166-add-site-search-links-to-google-search-result/code/Add%20Site%20Search%20Links%20To%20Google%20Search%20Result.user.js";
       })
       (pkgs.fetchurl {
-        hash = "sha256-r4UF6jr3jhVP7JxJNPBzEpK1fkx5t97YWPwf37XLHHE=";
+        hash = "sha256-r4UF6jr3jhVP7JxJNPBzEpK1fkx5t97YWPwf37XLHHE="; # 1.1.0
         url = "https://greasyfork.org/scripts/383166-google-images-search-by-paste/code/Google%20Images%20-%20search%20by%20paste.user.js";
       })
       (pkgs.fetchurl {
-        hash = "sha256-O3u5XsGhgv63f49PwHaybekGjL718Biucb0T6wGGws8=";
+        hash = "sha256-O3u5XsGhgv63f49PwHaybekGjL718Biucb0T6wGGws8="; # 4.1.1
         url = "https://gist.githubusercontent.com/bijij/58cc8cfc859331e4cf80210528a7b255/raw/viewimage.user.js";
       })
       (pkgs.fetchurl {
-        hash = "sha256-O+CuezLYKcK2Qh4jq4XxrtEEIPKOaruHnUGQNwkkCF8=";
+        hash = "sha256-O+CuezLYKcK2Qh4jq4XxrtEEIPKOaruHnUGQNwkkCF8="; # 1.3.4
         url = "https://greasyfork.org/scripts/381497-reddit-search-on-google/code/Reddit%20search%20on%20Google.user.js";
       })
       (pkgs.fetchurl {
-        hash = "sha256-kvcifMx/0CVmTxUe2Md58RJShOV6Ht2YjJiwgz/qYI8=";
+        hash = "sha256-kvcifMx/0CVmTxUe2Md58RJShOV6Ht2YjJiwgz/qYI8="; # 2024-05-26
         url = "https://update.greasyfork.org/scripts/495638/Fix%20Google%20Web%20Search.user.js";
       })
       # (pkgs.fetchurl { hash = "sha256-WCgJGlz+FOPCSo+dPDxXB6mdzXBa81mlZ7km+11dBhY="; url = "https://update.greasyfork.org/scripts/495275/Open%20Google%27s%20New%20%22Web%22%20Search%20by%20Default.user.js"; })
