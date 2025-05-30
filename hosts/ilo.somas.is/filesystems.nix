@@ -3,6 +3,10 @@
 , ...
 }:
 {
+  imports = [
+    ./disko-config.nix
+  ];
+
   services.udisks2.enable = true;
 
   boot = {
@@ -16,7 +20,9 @@
     # Fix there not being enough space for some Nix builds
     tmp.useTmpfs = true;
 
-    zfs.requestEncryptionCredentials = [ "${config.networking.fqdnOrHostName}/nixos" ];
+    zfs.requestEncryptionCredentials = true;
+    zfs.extraPools = [ config.networking.fqdnOrHostName ];
+
     # Restrict the ZFS ARC cache to 8GB.
     extraModprobeConfig = ''
       options zfs zfs_arc_max=${toString (1024000000 * 8)}

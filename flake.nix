@@ -75,6 +75,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+    };
+
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -145,6 +149,7 @@
     , nixpkgsStable
     , nixpkgsUnstable
     , homeManager
+    , disko
 
     , ...
     }@inputs:
@@ -251,7 +256,7 @@
         };
 
         ilo = lib.nixosSystem {
-          specialArgs = { inherit self inputs nixpkgs; };
+          specialArgs = { inherit self inputs nixpkgs disko; };
           modules = [ ./hosts/ilo.somas.is ];
         };
       };
