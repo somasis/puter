@@ -8,7 +8,7 @@
   programs.qutebrowser.greasemonkey = map config.lib.somasis.drvOrPath [
     # Reddit
     (pkgs.fetchurl {
-      hash = "sha256-R53piHtc6P0EKmR51PUgHimdfN9UgnIY65El9XKxJiI=";
+      hash = "sha256-JKOu+pG8rjUTCriwMxn8fNVYtMDGiSeA97oA2iKIfp0="; # 1.2.0
       url = "https://greasyfork.org/scripts/39312-reddit-highlighter/code/Reddit%20Highlighter.user.js";
     })
 
@@ -18,19 +18,19 @@
       url = "https://greasyfork.org/scripts/40906-lobsters-highlighter/code/Lobsters%20Highlighter.user.js";
     })
     (pkgs.fetchurl {
-      hash = "sha256-JuF4HlaN5udaDKAwCEJKdKKCggJloGAZkCptMXI0xys="; # 0.0.1.20191112103250
+      hash = "sha256-VyqfdSVRNPEaT8MmEq9+zaDBke+71jkecgoDD3oPGus="; # 0.0.1.20191112103250
       url = "https://greasyfork.org/scripts/392307-lobste-rs-open-in-new-tab/code/Lobsters%20Open%20in%20New%20Tab.user.js";
     })
 
     # Tumblr
     (pkgs.fetchurl {
-      hash = "sha256-ArfFzIPFoLIoFVpxKVu5JWOhgmVE58L47ljbcI4yksM=";
+      hash = "sha256-0Z9mFpXazMO+qaPHObkJCHBL13A9i4BI+8Mncn6rUUw="; # 2.5
       url = "https://greasyfork.org/scripts/31593-tumblr-images-to-hd-redirector/code/Tumblr%20Images%20to%20HD%20Redirector.user.js";
     })
 
     # Facebook
     (pkgs.fetchurl {
-      hash = "sha256-AZQQZdkBoJZ95BrY21Fn/bJ7zOKOOOqQGbjA3QIj390=";
+      hash = "sha256-Oag98n8SIxK0rbGW6JXd0K9d5piWMtq52KpjCzqletw="; # 5.0.2
       url = "https://greasyfork.org/scripts/431970-fb-clean-my-feeds/code/FB%20-%20Clean%20my%20feeds.user.js";
     })
 

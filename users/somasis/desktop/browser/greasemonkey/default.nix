@@ -17,7 +17,7 @@
     ./rewrite-smolweb.user.js
 
     (pkgs.fetchurl {
-      hash = "sha256-5C7No5dYcYfWMY+DwciMeBmkdE/wnplu5fxk4q7OFZc=";
+      hash = "sha256-qpkjGmoW/2MHW2vEVhTToyZ8y7WPO38R9Ig+wv7KG+4="; # 1.0.1
       url = "https://greasyfork.org/scripts/382039-speed-up-google-captcha/code/Speed%20up%20Google%20Captcha.user.js";
     })
 
@@ -44,7 +44,7 @@
     )
 
     (pkgs.fetchurl {
-      hash = "sha256-R+1ZM05ZJgNUskjnmo0mtYMH3gPEldTNfBaMc5t5t3Y=";
+      hash = "sha256-R+1ZM05ZJgNUskjnmo0mtYMH3gPEldTNfBaMc5t5t3Y="; # 0.1
       url = "https://gist.githubusercontent.com/oxguy3/ebd9fe692518c7f7a1e9/raw/234f5667d97e6a14fe47ef39ae45b6e5d5ebaf46/RoughScroll.js";
       name = "RoughScroll.user.js";
     })
