@@ -14,11 +14,11 @@
 
     # Lobsters
     (pkgs.fetchurl {
-      hash = "sha256-CJyDG74QVsw5n4U1lztzymorZ96/P20ifQF+/PtJKMs=";
+      hash = "sha256-CJyDG74QVsw5n4U1lztzymorZ96/P20ifQF+/PtJKMs="; # 1.0.1
       url = "https://greasyfork.org/scripts/40906-lobsters-highlighter/code/Lobsters%20Highlighter.user.js";
     })
     (pkgs.fetchurl {
-      hash = "sha256-JuF4HlaN5udaDKAwCEJKdKKCggJloGAZkCptMXI0xys=";
+      hash = "sha256-JuF4HlaN5udaDKAwCEJKdKKCggJloGAZkCptMXI0xys="; # 0.0.1.20191112103250
       url = "https://greasyfork.org/scripts/392307-lobste-rs-open-in-new-tab/code/Lobsters%20Open%20in%20New%20Tab.user.js";
     })
 
@@ -29,7 +29,6 @@
     })
 
     # Facebook
-    # (pkgs.fetchurl { hash = "sha256-2v6wiC5yvxvbTDwHrmdnNZjrYKbUXxMXp0qMyMp5EDk="; url = "https://greasyfork.org/scripts/375911-facebook-show-most-recent-posts-by-default/code/Facebook%20-%20Show%20Most%20Recent%20Posts%20by%20Default.user.js"; })
     (pkgs.fetchurl {
       hash = "sha256-AZQQZdkBoJZ95BrY21Fn/bJ7zOKOOOqQGbjA3QIj390=";
       url = "https://greasyfork.org/scripts/431970-fb-clean-my-feeds/code/FB%20-%20Clean%20my%20feeds.user.js";
@@ -37,12 +36,8 @@
 
     # Instagram
     (pkgs.fetchurl {
-      hash = "sha256-XsWwuXYS5zp40N2ljn/QtxcaSwo1LnpUrqr463uBtRg=";
+      hash = "sha256-HKWz05MP6g2US7TYzmAjwgXcWzRv6nU6nAROXi5Xhos="; # 1.0.3
       url = "https://greasyfork.org/scripts/451541-instagram-video-controls/code/Instagram%20Video%20Controls.user.js";
-    })
-    (pkgs.fetchurl {
-      hash = "sha256-/5Dub8dgql6z1p4PzK20Y9Yzb55Scjc6X97QaXIATTY=";
-      url = "https://greasyfork.org/scripts/398189-google-image-direct-view/code/Google%20Image%20Direct%20View.user.js";
     })
 
     # Twitter
@@ -55,14 +50,10 @@
       })
       + "/vqfft.user.js"
     )
-    # (pkgs.fetchurl { hash = "sha256-lyh/E3QfdLVDppPxVlPGKUBMR58ekojQ46v+J8A+DK4="; url = "https://gist.githubusercontent.com/angeld23/b01dd2ef14cd53fc3735fa88f68b7aef/raw/ee9c8df88b32e48249f3852011f2915bfa123f11/remove_twitter_blue_promo.user.js"; })
     (pkgs.fetchurl {
-      hash = "sha256-3WED6Kodom4j27CDr7CBtdPFXBdRUf41iQk/O/Lkaz4=";
+      hash = "sha256-gCGVnulgirTWUkhkmM0MrATztvA352oifkQnDUp1Z0o="; # 3.1.2
       url = "https://greasyfork.org/scripts/404632-twitter-direct/code/Twitter%20Direct.user.js";
     })
-    # (pkgs.fetchurl { hash = "sha256-/bkWrnzxoG9fHnj1t7Nbr0nFLoyovQAEXkgd/ZuBu1M="; url = "https://greasyfork.org/scripts/405103-twitter-linkify-trends/code/Twitter%20Linkify%20Trends.user.js"; })
-    # (pkgs.fetchurl { hash = "sha256-tNWUn4LQZxn3ehfSzJ6KFs7H41+I7V8o9773Ua5uQJE="; url = "https://greasyfork.org/scripts/413963-twitter-zoom-cursor/code/Twitter%20Zoom%20Cursor.user.js"; })
-    # (pkgs.fetchurl { hash = "sha256-vVd6iKMCV1V5MazeKn8ksfsp7zVt55KOULgkIXt3lms="; url = "https://greasyfork.org/scripts/464506-twitter-advertiser-blocker/code/Twitter%20Advertiser%20Blocker.user.js"; })
 
     # qutebrowser's greasemonkey support doesn't support setting configuration variables,
     # so we just patch in our configuration into the script before installing it.

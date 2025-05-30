@@ -135,8 +135,12 @@ in
     greasemonkey = map config.lib.somasis.drvOrPath [
       # Google
       (pkgs.fetchurl {
-        hash = "sha256-azHAQKmNxAcnyc7l08oW9X6DuMqAblFGPwD8T9DsrSs="; # 1.1.16
+        hash = "sha256-4A4vzwBcBLuyr0Ua+a6/HaoEFbe5JbQNdBi01lFnRwg="; # 1.1.16
         url = "https://greasyfork.org/scripts/32635-disable-google-search-result-url-redirector/code/Disable%20Google%20Search%20Result%20URL%20Redirector.user.js";
+      })
+      (pkgs.fetchurl {
+        hash = "sha256-44IE62+Cx8owoTMZEgD/OjPnopVMD7PVrF/1hzbk120="; # 3.6
+        url = "https://greasyfork.org/scripts/398189-google-image-direct-view/code/Google%20Image%20Direct%20View.user.js";
       })
       (pkgs.fetchurl {
         hash = "sha256-IPRNStKVH9rtzCn3JJ/yvXROsdX8WPAomPTudeqXjyc="; # 1.1.21
