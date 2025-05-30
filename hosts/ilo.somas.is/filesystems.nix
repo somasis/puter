@@ -1,9 +1,11 @@
 { config
 , pkgs
+, disko
 , ...
 }:
 {
   imports = [
+    disko.nixosModules.disko
     ./disko-config.nix
   ];
 
@@ -34,12 +36,6 @@
       device = "none";
       fsType = "tmpfs";
       options = [ "mode=755" ];
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-id/nvme-WDS100T1X0E-00AFY0_2045A0800564-part1";
-      fsType = "vfat";
-      neededForBoot = true;
     };
 
     "/home" = {
