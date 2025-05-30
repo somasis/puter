@@ -154,51 +154,6 @@ in
     }
   ];
 
-  services.languagetool = {
-    enable = true;
-
-    settings = {
-      cacheSize = 1000;
-
-      # Disable spelling suggestions since they're slow,
-      # and completely unnecessary for grammar checking
-      # maxSpellingSuggestions = 0;
-
-      # Only check with eight threads at most.
-      maxCheckThreads = 8;
-      maxCheckTimeMillis = 10000;
-
-      # Improve and speed up language detection
-      fasttextBinary = "${pkgs.fasttext}/bin/fasttext";
-      # <https://fasttext.cc/docs/en/language-identification.html>
-      fasttextModel = pkgs.fetchurl {
-        url = "https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin";
-        hash = "sha256-fmnsVFG8JhzHhE5J5HkqhdfwnAZ4nsgA/EpErsNidk4=";
-      };
-
-      pipelineCaching = true;
-      pipelinePrewarming = true;
-
-      premiumAlways = true;
-
-      # NOTE(somasis)
-      # Activate the "confusion rule" for some languages, which can detect usage
-      # of incorrect but similar words that can be confused sometimes...
-      # Unfortunately, the ngram models are fucking huge and Nix tries to load
-      # the entire archive into memory and the English one is like 8 gigabytes.
-      languageModel = pkgs.symlinkJoin {
-        name = "languagetool-ngram-sets";
-
-        paths = [
-          (pkgs.fetchzip {
-            url = "https://languagetool.org/download/ngram-data/ngrams-en-20150817.zip";
-            hash = "sha256-b+dPqDhXZQpVOGwDJOO4bFTQ15hhOSG6WPCx8RApfNg=";
-          })
-        ];
-      };
-    };
-  };
-
   users = {
     users.irc = {
       isNormalUser = false;
