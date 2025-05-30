@@ -126,15 +126,6 @@
 
     control-panel-for-twitter.flake = false;
     control-panel-for-twitter.url = "github:insin/control-panel-for-twitter";
-    # zotero-styles.flake = false;
-    # zotero-styles.url = "github:citation-style-language/styles";
-    # zotero-translators.flake = false;
-    # zotero-translators.url = "github:zotero/translators";
-
-    discordThemeCustom.flake = false;
-    discordThemeCustom.url = "path:/home/somasis/src/discord-theme-custom";
-    discordThemeIrc.flake = false;
-    discordThemeIrc.url = "github:somasis/discord-theme-irc";
 
     # Ad blocking lists
     adblockEasyList.flake = false;
