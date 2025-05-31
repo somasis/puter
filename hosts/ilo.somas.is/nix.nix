@@ -25,7 +25,6 @@
     # Quiet the dirty messages when using `nixos-dev`.
     warn-dirty = false;
 
-    connect-timeout = 5;
     stalled-download-timeout = 15;
 
     http-connections = 64;
