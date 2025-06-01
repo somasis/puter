@@ -14,7 +14,7 @@
 
     # Lobsters
     (pkgs.fetchurl {
-      hash = "sha256-CJyDG74QVsw5n4U1lztzymorZ96/P20ifQF+/PtJKMs="; # 1.0.1
+      hash = "sha256-MUno65ouPgiOnMvZ0NW3sTxePRPC+vBHNhukwjnvExc="; # 1.0.1
       url = "https://greasyfork.org/scripts/40906-lobsters-highlighter/code/Lobsters%20Highlighter.user.js";
     })
     (pkgs.fetchurl {
