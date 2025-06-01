@@ -99,7 +99,7 @@ let
 in
 {
   imports = [
-    ./greasemonkey
+    # ./greasemonkey
     ./blocking.nix
     ./reader.nix
     ./redirects.nix
