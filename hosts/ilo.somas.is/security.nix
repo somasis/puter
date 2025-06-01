@@ -9,17 +9,17 @@
 {
   imports = with inputs; [
     "${modulesPath}/profiles/hardened.nix"
-    # lanzaboote.nixosModules.lanzaboote
+    lanzaboote.nixosModules.lanzaboote
   ];
   persist.directories = [ "/etc/secureboot" ];
 
   environment.systemPackages = [ pkgs.sbctl ];
-  # boot.loader.systemd-boot.enable = lib.mkForce false;
-  # boot.lanzaboote = {
-  #   enable = true;
-  #   # pkiBundle = "/persist/var/lib/sbctl";
-  #   pkiBundle = "/etc/secureboot";
-  # };
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.lanzaboote = {
+    enable = true;
+    # pkiBundle = "/persist/var/lib/sbctl";
+    pkiBundle = "/etc/secureboot";
+  };
 
   # Runs into an error due to hardened profile?
   services.ananicy.enable = lib.mkForce false;
