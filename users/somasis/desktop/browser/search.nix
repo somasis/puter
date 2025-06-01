@@ -155,10 +155,6 @@ in
         url = "https://gist.githubusercontent.com/bijij/58cc8cfc859331e4cf80210528a7b255/raw/viewimage.user.js";
       })
       (pkgs.fetchurl {
-        hash = "sha256-O+CuezLYKcK2Qh4jq4XxrtEEIPKOaruHnUGQNwkkCF8="; # 1.3.4
-        url = "https://greasyfork.org/scripts/381497-reddit-search-on-google/code/Reddit%20search%20on%20Google.user.js";
-      })
-      (pkgs.fetchurl {
         hash = "sha256-kvcifMx/0CVmTxUe2Md58RJShOV6Ht2YjJiwgz/qYI8="; # 2024-05-26
         url = "https://update.greasyfork.org/scripts/495638/Fix%20Google%20Web%20Search.user.js";
       })
