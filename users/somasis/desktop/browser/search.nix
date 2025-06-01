@@ -147,7 +147,7 @@ in
         url = "https://greasyfork.org/scripts/37166-add-site-search-links-to-google-search-result/code/Add%20Site%20Search%20Links%20To%20Google%20Search%20Result.user.js";
       })
       (pkgs.fetchurl {
-        hash = "sha256-r4UF6jr3jhVP7JxJNPBzEpK1fkx5t97YWPwf37XLHHE="; # 1.1.0
+        hash = "sha256-bZqylxLoceNXBgmQ3uYD8rpQTpjCo9OXs9eeOESb9To="; # 1.1.0
         url = "https://greasyfork.org/scripts/383166-google-images-search-by-paste/code/Google%20Images%20-%20search%20by%20paste.user.js";
       })
       (pkgs.fetchurl {
