@@ -5,11 +5,6 @@
 , ...
 }:
 {
-  services.tunnels.tunnels.nix-serve-http = {
-    port = 5000;
-    remote = "somasis@esther.7596ff.com";
-  };
-
   nix.settings.show-trace = true;
 
   cache.directories = [

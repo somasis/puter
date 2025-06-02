@@ -30,10 +30,6 @@
     http-connections = 64;
     max-substitution-jobs = 64;
     extra-substituters = lib.mkBefore [
-      # Prefer HTTP nix-serve via an SSH tunnel to esther.
-      # Faster for multiple missing-path queries.
-      "http://localhost:5000"
-
       # Use ca-derivations cache
       # <https://discourse.nixos.org/t/content-addressed-nix-call-for-testers/12881#:~:text=Level%203%20%E2%80%94%20Raider%20of%20the%20unknown>
       "https://cache.ngi0.nixos.org"
