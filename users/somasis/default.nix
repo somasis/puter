@@ -54,6 +54,9 @@
     ];
   };
 
+  # Needed to prevent persistence from conflicting.
+  xdg.stateFile.".keep".enable = false;
+
   persist = {
     # defaultDirectoryMethod = "symlink";
     allowOther = true;
