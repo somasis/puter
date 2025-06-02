@@ -78,17 +78,6 @@
     };
   };
 
-  services.fail2ban = {
-    enable = true;
-    ignoreIP = [ "192.168.0.0/16" ]; # disallow banning local network IPs
-    bantime-increment = {
-      # enable progressively extending ban length for repeated offenders
-      enable = true;
-      rndtime = "10m";
-      maxtime = "24h"; # at most one can be banned for a day
-    };
-  };
-
   # Allow for users in @wheel to use Nix.
   nix.settings.trusted-users = [ "@wheel" ];
 

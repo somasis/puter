@@ -189,6 +189,8 @@
   };
 
   services.fail2ban = {
+    enable = true;
+
     bantime = "5m";
     bantime-increment = {
       # For repeat bans, increment ban time (default is to double the bantime
@@ -200,6 +202,9 @@
 
       # Randomize ban time slightly.
       rndtime = "2m";
+
+      # Maximum ban time is a day.
+      maxtime = "24h";
     };
 
     ignoreIP = [
