@@ -87,7 +87,7 @@
       forceSSL = true;
 
       locations."/media" = {
-        root = "/mnt/raid/cassie/";
+        root = "/mnt/raid/cassie";
 
         basicAuthFile = config.age.secrets.cassie-htpasswd-media.path;
 
