@@ -45,6 +45,13 @@
   log = {
     # defaultDirectoryMethod = "symlink";
     allowOther = true;
+    directories = [
+      # > $XDG_STATE_HOME contains state data that should persist between (application) restarts,
+      # > but that is not important or portable enough to the user that it should be stored in
+      # > $XDG_DATA_HOME.
+      # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
+      { method = "symlink"; directory = config.xdg.stateHome; }
+    ];
   };
 
   persist = {
@@ -54,7 +61,6 @@
     directories = [
       # NOTE (FIXME?) bindfs has to be used because Nix doesn't want to access it if it's a symlink...
       { method = "symlink"; directory = "src"; }
-
       { method = "symlink"; directory = config.lib.somasis.xdgDataDir "nix"; }
     ];
   };

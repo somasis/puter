@@ -125,20 +125,11 @@ assert osConfig.services.desktopManager.plasma6.enable;
         "systemsettings"
         "thumbnails"
         "xwaylandvideobridge"
-      ]
-      ++ [
-        { directory = config.lib.somasis.xdgStateDir "wireplumber"; method = "bindfs"; }
       ];
 
-    files =
-      map config.lib.somasis.xdgStateDir [
-        "dolphinstaterc"
-        "plasmashellstaterc"
-        "systemsettingsstaterc"
-      ]
-      ++ map config.lib.somasis.xdgDataDir [
-        "krunnerstaterc"
-      ];
+    files = map config.lib.somasis.xdgDataDir [
+      "krunnerstaterc"
+    ];
   };
 
   log = {

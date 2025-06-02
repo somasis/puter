@@ -13,9 +13,6 @@
   nix.settings.show-trace = true;
 
   cache.directories = [
-    # Using `method = "symlink"` will cause issues while switching generations.
-    (config.lib.somasis.xdgStateDir "nix")
-
     {
       method = "symlink";
       directory = config.lib.somasis.xdgCacheDir "nix";
