@@ -11,7 +11,7 @@ Before creating any commits, run
 
 which will allow you to use the Git hooks and secrets infrastructure
 provided by the flake in `flake.nix`. This will also add some commands
-to the environment; consult the list in `devShells.default.
+to the environment; consult the package list in `devShells.default`.
 
 .Updating the flake inputs (i.e., NixOS version used to build system)
 
