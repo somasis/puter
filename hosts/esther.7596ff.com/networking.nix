@@ -187,4 +187,24 @@
       };
     };
   };
+
+  services.fail2ban = {
+    bantime = "5m";
+    bantime-increment = {
+      # For repeat bans, increment ban time (default is to double the bantime
+      # for repeat offenses).
+      enable = true;
+
+      # Search all jails for determining how many bans an IP has accrued.
+      overalljails = true;
+
+      # Randomize ban time slightly.
+      rndtime = "2m";
+    };
+
+    ignoreIP = [
+      # Don't ban any IPs on the local network
+      "192.168.0.0/16"
+    ];
+  };
 }
