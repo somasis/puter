@@ -60,10 +60,6 @@
     settings.General.Name = config.networking.fqdnOrHostName;
   };
 
-  # Allow for creating tunnel devices, which can be then used by
-  # NetworkManager's SSH VPN functionality
-  services.openssh.settings.PermitTunnel = true;
-
   persist.directories = [
     "/var/lib/bluetooth"
 
