@@ -27,4 +27,8 @@
     after = [ "gamemoded.service" ];
     wants = [ "gamemoded.service" ];
   };
+
+  # RetroArch joysticks and stuff
+  services.udev.packages = [ pkgs.game-devices-udev-rules ];
+  hardware.uinput.enable = true;
 }

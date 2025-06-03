@@ -37,14 +37,20 @@
     };
 
     i18n.extraLocales = [
-      "de_DE.UTF-8/UTF-8" # German (Germany)
-      "es_US.UTF-8/UTF-8" # Spanish (US)
       "tok/UTF-8" # toki pona
-      "eo/UTF-8" # esperanto
-      "zh_CN.UTF-8/UTF-8" # Chinese (Mainland)
-      "ja_JP.UTF-8/UTF-8" # Japanese
-      "ga_IE.UTF-8/UTF-8" # Irish
     ];
+
+    # Keep system firmware up to date.
+    # TODO: Framework still doesn't have their updates in LVFS properly,
+    #       <https://knowledgebase.frame.work/en_us/framework-laptop-bios-releases-S1dMQt6F#:~:text=Updating%20via%20LVFS%20is%20available%20in%20the%20testing%20channel>
+    services.fwupd = {
+      enable = true;
+      extraRemotes = [ "lvfs-testing" ];
+      uefiCapsuleSettings.DisableCapsuleUpdateOnDisk = true;
+    };
+
+    persist.directories = [ "/var/lib/fwupd" ];
+    cache.directories = [ "/var/cache/fwupd" ];
 
     # Use a deterministic host ID, generated from the FQDN of the machine.
     networking.hostId = builtins.substring 0 8 (
@@ -58,19 +64,25 @@
       options = lib.mkDefault "--delete-older-than 7d";
     };
 
-    # Only do garbage collection if not on battery,
-    # and limit resource usage priorities.
-    systemd.services.nix-gc = {
-      unitConfig.ConditionACPower = true;
-      serviceConfig = {
-        Nice = 19;
+    systemd = {
+      # Fix watchdog delaying reboot
+      # https://wiki.archlinux.org/title/Framework_Laptop#ACPI
+      watchdog.rebootTime = "0";
 
-        CPUWeight = "idle";
-        # CPUSchedulingPolicy = "idle";
-        # CPUSchedulingPriority = 1;
+      # Only do garbage collection if not on battery,
+      # and limit resource usage priorities.
+      services.nix-gc = {
+        unitConfig.ConditionACPower = true;
+        serviceConfig = {
+          Nice = 19;
 
-        IOSchedulingPriority = 7;
-        IOSchedulingClass = "idle";
+          CPUWeight = "idle";
+          # CPUSchedulingPolicy = "idle";
+          # CPUSchedulingPriority = 1;
+
+          IOSchedulingPriority = 7;
+          IOSchedulingClass = "idle";
+        };
       };
     };
 

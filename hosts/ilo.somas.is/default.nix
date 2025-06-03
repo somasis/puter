@@ -8,22 +8,32 @@
 {
   imports = with self; with inputs; [
     nixosModules.sensible-defaults
-
     nixosHardware.nixosModules.framework-12th-gen-intel
-    ./hardware
 
+    ./audio.nix
     ./backup.nix
+    ./bluetooth.nix
     ./boot.nix
+    ./brightness.nix
     ./console.nix
     ./desktop.nix
+    ./disko-config.nix
+    ./display.nix
     ./documentation.nix
     ./filesystems.nix
+    ./fingerprint.nix
     ./fonts.nix
     ./games.nix
     ./locale.nix
+    ./networking.nix
     ./nix.nix
+    ./phone.nix
     ./power.nix
+    ./print.nix
+    ./scan.nix
     ./security.nix
+    ./sensors.nix
+    ./touchpad.nix
     ./users.nix
     ./wine.nix
   ];
@@ -66,14 +76,27 @@
     ];
   };
 
-  programs.command-not-found.enable = false;
-  programs.nano.enable = false;
-  programs.partition-manager.enable = true;
+  programs = {
+    command-not-found.enable = false;
+    nano.enable = false;
+  };
 
   environment.systemPackages = with pkgs; [
     extrace
+    framework-tool
     git
   ];
+
+  # VDPAU, VAAPI, etc. is handled by <nixos-hardware/common/gpu/intel>,
+  # which is imported by <nixos-hardware/framework>.
+  hardware.graphics = {
+    enable32Bit = true;
+
+    extraPackages = [
+      # Enable OpenCL functionality for the Intel integrated graphics.
+      pkgs.intel-compute-runtime
+    ];
+  };
 
   security.wrappers.extrace = {
     source = "${pkgs.extrace}/bin/extrace";
