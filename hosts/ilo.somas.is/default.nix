@@ -24,6 +24,7 @@
     ./fingerprint.nix
     ./fonts.nix
     ./games.nix
+    ./hardware-configuration.nix
     ./locale.nix
     ./networking.nix
     ./nix.nix
