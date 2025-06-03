@@ -11,14 +11,13 @@
     "${modulesPath}/profiles/hardened.nix"
     lanzaboote.nixosModules.lanzaboote
   ];
-  persist.directories = [ "/etc/secureboot" ];
+  persist.directories = [ "/var/lib/sbctl" ];
 
   environment.systemPackages = [ pkgs.sbctl ];
   boot.loader.systemd-boot.enable = lib.mkForce false;
   boot.lanzaboote = {
     enable = true;
-    # pkiBundle = "/persist/var/lib/sbctl";
-    pkiBundle = "/etc/secureboot";
+    pkiBundle = "/var/lib/sbctl";
   };
 
   # Runs into an error due to hardened profile?
