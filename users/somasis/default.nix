@@ -50,12 +50,9 @@
       # > but that is not important or portable enough to the user that it should be stored in
       # > $XDG_DATA_HOME.
       # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
-      { method = "symlink"; directory = config.xdg.stateHome; }
+      (config.lib.somasis.relativeToHome config.xdg.stateHome)
     ];
   };
-
-  # Needed to prevent persistence from conflicting.
-  xdg.stateFile.".keep".enable = false;
 
   persist = {
     # defaultDirectoryMethod = "symlink";
