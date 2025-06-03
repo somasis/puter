@@ -386,6 +386,7 @@
       # kakoune-extra-filetypes
       kakoune-filetree
       kakoune-find
+      kakoune-lsp
       kakoune-state-save
       smarttab-kak
       tug
