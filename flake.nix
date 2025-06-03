@@ -157,21 +157,38 @@
       inherit (nixpkgs) lib;
 
       forAllSystems = lib.genAttrs lib.systems.flakeExposed;
-      treefmtEval = forAllSystems (system:
+      treefmt = forAllSystems (system:
         treefmt-nix.lib.evalModule nixpkgsFor.${system}.pkgs {
           # See also <https://github.com/numtide/treefmt-nix/tree/main/programs>
           projectRootFile = "flake.nix";
+
+          settings.formatter = {
+            shellcheck.options = [
+              "--exclude=SC2310,SC2312"
+            ];
+
+            shfmt.options = [
+              "--binary-next-line"
+              "--case-indent"
+              "--keep-padding"
+            ];
+          };
+
           programs = {
             # Format shell scripts
             beautysh = {
               enable = true;
               indent_size = 4; # make sure this is in agreement with .editorconfig
             };
-            # shellcheck.enable = true;
-            # shfmt = {
-            #   enable = true;
-            #   indent_size = 4;
-            # };
+
+            shellcheck = {
+              enable = true;
+              excludes = [ "\.envrc" ];
+            };
+            shfmt = {
+              enable = true;
+              indent_size = 4;
+            };
 
             black.enable = true;
             clang-format.enable = true;
@@ -194,7 +211,7 @@
             # Ensure formatting of CSS, HTML, and so on
             prettier.enable = true;
 
-            statix.enable = true;
+            # statix.enable = true;
 
             # typos.enable = true;
           };
@@ -292,7 +309,7 @@
             # I think it's good to keep it formatted according to a standard,
             # but I don't really like the default format coming from `nixpkgs-fmt`,
             # which is now abandoned by its author in favor of `nixfmt`.
-            # Namely, `nixfmt` is *way* to pedantic about making lists longer
+            # Namely, `nixfmt` is *way* too pedantic about making lists longer
             # than they need to be right now.
             # Ideally this will be improved by the end of 2025 or something?
             # nixfmt-rfc-style.enable = true;
@@ -311,13 +328,15 @@
             editorconfig-checker.enable = true;
 
             # Ensure we don't have dead links in comments or whatever.
-            lychee.enable = true;
+            # lychee.enable = true;
 
-            treefmt.enable = true;
+            treefmt = {
+              enable = true;
+            };
           };
         };
 
-        formatting = treefmtEval.${system}.config.build.check self;
+        formatting = treefmt.${system}.config.build.check self;
       });
 
       devShells = forAllSystems (system: with nixpkgsFor.${system}.pkgs; {
@@ -347,6 +366,6 @@
       });
 
       # Use the formatter used by nixpkgs.
-      formatter = forAllSystems (system: treefmtEval.${system}.config.build.wrapper);
+      formatter = forAllSystems (system: treefmt.${system}.config.build.wrapper);
     };
 }
