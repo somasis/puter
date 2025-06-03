@@ -8,17 +8,19 @@
     # Tweak allowed sysrq key actions. For breaking out of a dying system.
     # <https://docs.kernel.org/admin-guide/sysrq.html>
     # kernel.sysrq expects a bitmask, so we can construct one like so.
-    kernel = {
-      sysctl."kernel.sysrq" = lib.foldl' (x: y: x + y) 0 [
-        4 # enable keyboard controls
-        16 # enable filesystem syncing
-        32 # enable remounting filesystems read-only
-        64 # enable signalling processes
-        128 # enable reboot/poweroff
-        256 # enable renicing all realtime tasks
-      ];
+    kernel.sysctl."kernel.sysrq" = lib.foldl' (x: y: x + y) 0 [
+      4 # enable keyboard controls
+      16 # enable filesystem syncing
+      32 # enable remounting filesystems read-only
+      64 # enable signalling processes
+      128 # enable reboot/poweroff
+      256 # enable renicing all realtime tasks
+    ];
 
-    };
+    # Reduce likelihood of screen blanking during boot.
+    # This means the boot screen will only show on the
+    # primary monitor though.
+    kernelParams = [ "plymouth.use-simpledrm" ];
 
     # Provide a nice splash screen. (<Esc> will show boot log anyway)
     plymouth = {
@@ -124,5 +126,4 @@
     waypipe
     usbguard-notifier
   ];
-
 }
