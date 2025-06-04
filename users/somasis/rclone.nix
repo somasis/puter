@@ -11,6 +11,7 @@ let
     vfs-read-ahead = "128Mi";
     buffer-size = "8Mi";
     vfs-fast-fingerprint = true;
+    vfs-cache-poll-interval = "10m";
   };
 in
 {
@@ -89,6 +90,7 @@ in
           mounts."" = {
             enable = true;
             mountPoint = mountPoint "raid";
+            options = bigCacheOptions;
           };
         };
 
