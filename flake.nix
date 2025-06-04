@@ -341,10 +341,13 @@
 
       devShells = forAllSystems (system: with nixpkgsFor.${system}.pkgs; {
         default = mkShell {
-          shellHook = ''
-            # Used by the default `nixos` alias provided by sensible-defaults.
-            export FLAKE="$PWD"
-          '';
+          shellHook =
+            self.checks.${system}.git-hooks.shellHook
+            + ''
+              # Used by the default `nixos` alias provided by sensible-defaults.
+              export FLAKE="$PWD"
+            ''
+          ;
 
           buildInputs =
             with inputs;
