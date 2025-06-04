@@ -5,7 +5,7 @@
 , ...
 }:
 let
-  commaPicker = lib.optionalString (config.programs.dmenu.enable or config.programs.skim.enable) (
+  commaPicker = lib.optionalString config.programs.skim.enable (
     pkgs.writeShellScript "comma-picker" ''
       : "''${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
 
@@ -32,10 +32,8 @@ let
               printf '%s\n' "$last_choice"
               printf 'using last choice (%s); run again with ,, to override\n' "''${last_choice@Q}" >&2
           else
-              {
-                  ${lib.optionalString config.programs.dmenu.enable "if [ -v DISPLAY ]; then dmenu -p ',' -S <<<\"$items\"; return $?; fi"}
-                  ${lib.optionalString config.programs.skim.enable "sk -p ', ' --no-sort --reverse; return $?"}
-              } <<<"$items"
+              sk -p ', ' --no-sort --reverse <<< "$items"
+              return $?
           fi
       )
 
