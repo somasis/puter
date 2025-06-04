@@ -332,6 +332,7 @@
 
             treefmt = {
               enable = true;
+              package = treefmt.${system}.config.build.wrapper;
             };
           };
         };
