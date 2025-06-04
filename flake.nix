@@ -165,22 +165,25 @@
           settings.formatter = {
             shellcheck.options = [
               "--exclude=SC2310,SC2312"
+
+              ''--enable=${lib.concatStringsSep "," [
+                "avoid-nullary-conditions"
+                "check-unassigned-uppercase"
+                "deprecate-which"
+                "quote-safe-variables"
+                "require-double-brackets"
+                "require-variable-braces"
+              ]}''
             ];
 
             shfmt.options = [
               "--binary-next-line"
               "--case-indent"
-              "--keep-padding"
             ];
           };
 
           programs = {
             # Format shell scripts
-            beautysh = {
-              enable = true;
-              indent_size = 4; # make sure this is in agreement with .editorconfig
-            };
-
             shellcheck = {
               enable = true;
               excludes = [ "\.envrc" ];
@@ -190,7 +193,7 @@
               indent_size = 4;
             };
 
-            black.enable = true;
+            # black.enable = true;
             clang-format.enable = true;
 
             deadnix = {
@@ -205,8 +208,8 @@
 
             # nixfmt-rfc-style.enable = true;
             nixpkgs-fmt.enable = true;
-            oxipng.enable = true;
-            perltidy.enable = true;
+            # oxipng.enable = true;
+            # perltidy.enable = true;
 
             # Ensure formatting of CSS, HTML, and so on
             prettier.enable = true;
@@ -255,14 +258,13 @@
         # pkgs.flakePackages.<input name>.package
         flakePackages = final: prev: {
           flakePackages =
-            lib.mapAttrs' (inputName: input: lib.nameValuePair inputName input.packages.${system})
-              (
-                lib.filterAttrs
-                  (
-                    _: inputValue: (inputValue ? packages.${system}) && (inputValue.packages.${system} != { })
-                  )
-                  inputs
-              );
+            lib.mapAttrs' (inputName: input: lib.nameValuePair inputName input.packages.${system}) (
+              lib.filterAttrs
+                (_: inputValue:
+                  (inputValue ? packages.${system}) && (inputValue.packages.${system} != { })
+                )
+                inputs
+            );
         };
       };
 

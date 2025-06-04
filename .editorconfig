@@ -5,14 +5,11 @@ max_line_length=100
 indent_size=2
 indent_style=space
 
-[{*.sh,*.bash}]
+[{*.sh,*.bash,[[shell]]}]
 indent_size=4
-insert_final_newline=true
-case_indent=true
+simplify=false
 binary_next_line=true
-space_redirects=false
 switch_case_indent=true
-trim_trailing_whitespace=true
 
 [*.json]
 max_line_length=0

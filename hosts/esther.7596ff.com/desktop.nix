@@ -5,7 +5,6 @@
 {
   persist.directories = [
     "/var/lib/cups"
-    "/var/lib/fwupd"
     "/var/lib/power-profiles-daemon"
     "/var/lib/udisks2"
     "/var/lib/upower"
@@ -13,7 +12,6 @@
 
   cache.directories = [
     "/var/cache/cups"
-    "/var/cache/fwupd"
   ];
 
   log.directories = [
@@ -62,8 +60,6 @@
   # being far too quick, especially with keyboards and mice. Giant pain
   # to figure this one out.
   # powerManagement.powertop.enable = false;
-
-  services.fwupd.enable = true;
 
   services.printing.enable = true;
 

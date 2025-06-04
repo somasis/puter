@@ -17,7 +17,6 @@
       ./commands
       ./editor
       ./git
-      ./modules
       ./shell
       ./theme
 

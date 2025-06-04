@@ -5,6 +5,8 @@ set -euo pipefail
 me="${0##*/}"
 [[ -n "${QUTE_FIFO}" ]] && me=:pass
 
+: "${QUTE_URL?no URL open in browser}"
+
 usage() {
     usage=$(
         cat <<EOF
