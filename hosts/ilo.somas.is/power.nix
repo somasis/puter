@@ -174,10 +174,6 @@
           "goimapnotify"
 
           "upower"
-
-          "xplugd"
-          "colord"
-          "xiccd"
         ]
       ++
       map

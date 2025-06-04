@@ -18,7 +18,6 @@
     ./console.nix
     ./desktop.nix
     ./disko-config.nix
-    ./display.nix
     ./documentation.nix
     ./filesystems.nix
     ./fingerprint.nix
