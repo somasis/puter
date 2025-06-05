@@ -5,7 +5,7 @@ max_line_length=100
 indent_size=2
 indent_style=space
 
-[{*.sh,*.bash,[[shell]]}]
+[{*.sh,*.bash,[shell]}]
 indent_size=4
 simplify=false
 binary_next_line=true
