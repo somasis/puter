@@ -7,11 +7,20 @@
 }:
 let
   bigCacheOptions = {
-    vfs-cache-max-size = "2G";
-    vfs-read-ahead = "128Mi";
-    buffer-size = "8Mi";
+    vfs-cache-max-size = "4G";
+    vfs-cache-max-age = "1d";
+    vfs-cache-mode = "full";
+    vfs-read-ahead = "2Mi";
     vfs-fast-fingerprint = true;
     vfs-cache-poll-interval = "10m";
+    vfs-refresh = true;
+  };
+  streamingCacheOptions = {
+    buffer-size = "8Mi";
+    vfs-fast-fingerprint = true;
+    vfs-read-chunk-size = "500Ki";
+    vfs-read-chunk-size-limit = "64Mi";
+    vfs-read-chunk-streams = "8";
   };
 in
 {
@@ -90,7 +99,7 @@ in
           mounts."" = {
             enable = true;
             mountPoint = mountPoint "raid";
-            options = bigCacheOptions;
+            options = bigCacheOptions // streamingCacheOptions;
           };
         };
 
@@ -179,7 +188,7 @@ in
           mounts."" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/audio/library-cassie";
-            options = bigCacheOptions;
+            options = bigCacheOptions // streamingCacheOptions;
           };
         };
       };
