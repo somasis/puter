@@ -6,8 +6,13 @@
   age.secrets.esther-nix-serve-key = {
     file = "${self}/secrets/nix-serve-esther.7596ff.com-2024-07-06.key.age";
     owner = "root";
-    group = "nix-serve";
-    mode = "640";
+    mode = "400";
+  };
+
+  services.nix-serve = {
+    enable = true;
+    openFirewall = true;
+    secretKeyFile = config.age.secrets.esther-nix-serve-key.path;
   };
 
   nix = {
@@ -95,21 +100,16 @@
     # }
   };
 
-  services.nix-serve = {
-    enable = true;
-    secretKeyFile = config.age.secrets.esther-nix-serve-key.path;
-  };
-
   nixpkgs.config.allowUnfree = true;
 
-  # Use `nix-index` for finding unknown commands. It's faster and it supports
-  # flakes. Additionally, we use the `nix-index-database` which provides an
-  # up-to-date database of the contents of nixpkgs' packages.
-  programs.command-not-found.enable = false;
-  programs.nix-index.enable = true;
+  programs = {
+    # Use `nix-index` for finding unknown commands. It's faster and it supports
+    # flakes. Additionally, we use the `nix-index-database` which provides an
+    # up-to-date database of the contents of nixpkgs' packages.
+    command-not-found.enable = false;
+    nix-index.enable = true;
 
-  # See <https://github.com/nix-community/comma>
-  programs.nix-index-database.comma.enable = true;
-
-  programs.nh.enable = true;
+    # See <https://github.com/nix-community/comma>
+    nix-index-database.comma.enable = true;
+  };
 }
