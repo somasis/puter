@@ -284,9 +284,8 @@
             set-option buffer lsp_servers %{
                 [nixd]
                 root_globs = ["flake.nix", "shell.nix"]
-                [nixd.formatting]
-                command = [ "nix", "fmt" ]
-                [nixd.options]
+                [nixd.settings]
+                formatting.command = [ "nix", "fmt" ]
                 home-manager.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.<name>.options.home-manager.users.type.getSubOptions []"
             }
         }
