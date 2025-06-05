@@ -136,6 +136,10 @@
     };
   };
 
+  cache.directories = [
+    { directory = config.lib.somasis.xdgCacheDir "pre-commit"; method = "symlink"; }
+  ];
+
   home.shellAliases =
     {
       am = "git am";
