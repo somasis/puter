@@ -47,11 +47,6 @@ in
           run ln -Tsf ${lib.escapeShellArg config.xdg.configHome} ~/.config
           if ! [ -L ~/.cache ] && [ -d ~/.cache ]; then run mv ~/.cache ~/.cache.bak; fi
           run ln -Tsf ${lib.escapeShellArg config.xdg.cacheHome} ~/.cache
-          run mkdir -p ~/.local
-          if ! [ -L ~/.local/share ] && [ -d ~/.local/share ]; then run mv ~/.local/share ~/.local/share.bak; fi
-          run ln -Tsf ${lib.escapeShellArg config.xdg.dataHome} ~/.local/share
-          if ! [ -L ~/.local/state ] && [ -d ~/.local/state ]; then run mv ~/.local/state ~/.local/state.bak; fi
-          run ln -Tsf ${lib.escapeShellArg config.xdg.stateHome} ~/.local/state
         '';
 
     preferXdgDirectories = true;
@@ -62,6 +57,15 @@ in
       '')
     ];
   };
+
+  log.directories = [
+    # > $XDG_STATE_HOME contains state data that should persist between (application) restarts,
+    # > but that is not important or portable enough to the user that it should be stored in
+    # > $XDG_DATA_HOME.
+    # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
+    # (config.lib.somasis.relativeToHome config.xdg.stateHome)
+    { method = "bindfs"; directory = "var/lib"; }
+  ];
 
   persist.directories = [
     {

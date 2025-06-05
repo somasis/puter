@@ -44,13 +44,6 @@
   log = {
     # defaultDirectoryMethod = "symlink";
     allowOther = true;
-    directories = [
-      # > $XDG_STATE_HOME contains state data that should persist between (application) restarts,
-      # > but that is not important or portable enough to the user that it should be stored in
-      # > $XDG_DATA_HOME.
-      # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
-      (config.lib.somasis.relativeToHome config.xdg.stateHome)
-    ];
   };
 
   persist = {
