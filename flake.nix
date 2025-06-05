@@ -327,7 +327,11 @@
 
             # Ensure we actually follow our .editorconfig rules.
             eclint.enable = true;
-            editorconfig-checker.enable = true;
+            editorconfig-checker = {
+              enable = true;
+              types = [ "text" ];
+              excludes = [ ".*\.age$" ];
+            };
 
             # Ensure we don't have dead links in comments or whatever.
             # lychee.enable = true;
