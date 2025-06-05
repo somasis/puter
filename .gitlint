@@ -1,0 +1,5 @@
+[general]
+ignore=body-is-missing
+
+# [body-min-length]
+# min-length=0
