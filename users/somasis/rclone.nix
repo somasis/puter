@@ -53,8 +53,8 @@ in
           let
             targetParts = builtins.match "(.*@)?(.+)" target;
 
-            host = builtins.elemAt targetParts 1;
-            user = builtins.elemAt targetParts 2;
+            host = builtins.elemAt targetParts 0;
+            user = builtins.elemAt targetParts 1;
           in
           assert (lib.isString host && builtins.stringLength host > 0);
           {
