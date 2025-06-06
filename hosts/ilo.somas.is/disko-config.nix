@@ -56,8 +56,7 @@
       };
 
       rootFsOptions = {
-        mountpoint = "none";
-        canmount = "off";
+        canmount = "on";
         "com.sun:auto-snapshot" = "false";
 
         compression = "zstd";
@@ -74,21 +73,27 @@
       datasets = {
         "reserved" = {
           type = "zfs_fs";
-          options.refreservation = "8G";
-          options.mountpoint = "none";
+          options = {
+            mountpoint = "none";
+            canmount = "off";
+            refreservation = "8G";
+          };
         };
 
         "nixos" = {
           type = "zfs_fs";
-          options.encryption = "aes-256-gcm";
-          options.keyformat = "passphrase";
-          options.keylocation = "prompt";
+          options = {
+            mountpoint = "none";
+            canmount = "off";
+            encryption = "aes-256-gcm";
+            keyformat = "passphrase";
+            keylocation = "prompt";
+          };
         };
 
         "nixos/root/runtime" = {
           type = "zfs_fs";
           mountpoint = "/";
-          options.canmount = "on";
           options.devices = "on";
           postCreateHook = ''
             zfs list -t snapshot -H -o name | grep -E '^ilo\.somas\.is/nixos/root/runtime' \
@@ -99,19 +104,16 @@
         "nixos/root/cache" = {
           type = "zfs_fs";
           mountpoint = "/cache";
-          options.canmount = "on";
         };
 
         "nixos/root/log" = {
           type = "zfs_fs";
           mountpoint = "/log";
-          options.canmount = "on";
         };
 
         "nixos/root/nix" = {
           type = "zfs_fs";
           mountpoint = "/nix";
-          options.canmount = "on";
           options.atime = "off";
         };
 
