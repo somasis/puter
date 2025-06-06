@@ -379,6 +379,8 @@
                 # Add treefmt to path
                 self.formatter.${system}
 
+                disko.packages.${system}.default
+
                 # `agenix`, used for secrets management (see also: `./secrets/secrets.nix`)
                 agenix.packages.${system}.default
 
