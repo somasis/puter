@@ -79,7 +79,11 @@ with users;
   ];
 
   # These are machine-specific, and should only be shared with the machines in question
-  "nix-serve-esther.7596ff.com-2024-07-06.key.age".publicKeys = [
+  "esther.7596ff.com/initrd_ssh_host_ed25519_key.age".publicKeys = [
+    somasis.esther
+    machines.esther
+  ];
+  "esther.7596ff.com/nix-serve-2024-07-06.key.age".publicKeys = [
     somasis.esther
     machines.esther
   ];
