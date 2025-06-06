@@ -1,32 +1,40 @@
-{ self
-, config
-, pkgs
-, lib
-, osConfig
-, ...
+{
+  self,
+  config,
+  lib,
+  osConfig,
+  ...
 }:
 let
   bigCacheOptions = {
-    vfs-cache-max-size = "4G";
+    vfs-cache-max-size = "16G";
     vfs-cache-max-age = "1d";
     vfs-cache-mode = "full";
-    vfs-read-ahead = "2Mi";
+    vfs-read-ahead = "128Mi";
     vfs-fast-fingerprint = true;
     vfs-cache-poll-interval = "10m";
     vfs-refresh = true;
+    dir-cache-time = "1d";
   };
+
   streamingCacheOptions = {
-    buffer-size = "8Mi";
     vfs-fast-fingerprint = true;
-    vfs-read-chunk-size = "500Ki";
-    vfs-read-chunk-size-limit = "64Mi";
-    vfs-read-chunk-streams = "8";
+    vfs-read-ahead = "128Mi";
+    # vfs-read-chunk-size = "256Ki";
+    # vfs-read-chunk-size-limit = "1G";
+    # vfs-read-chunk-streams = "16";
   };
 in
 {
   cache.directories = [
-    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "vfs"; }
-    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "vfsMeta"; }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "vfs";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "vfsMeta";
+    }
   ];
 
   home.shellAliases.rclone = "rclone --fast-list --use-mmap --human-readable";
@@ -40,32 +48,26 @@ in
 
         sftp =
           target: extraAttrs:
-            assert (lib.isString target && target != "");
-            assert (lib.isAttrs extraAttrs);
-            let
-              targetParts = builtins.match "(.*@)?(.+)" target;
+          assert (lib.isString target && target != "");
+          assert (lib.isAttrs extraAttrs);
+          let
+            targetParts = builtins.match "(.*@)?(.+)" target;
 
-              host = builtins.elemAt targetParts 1;
+            host = builtins.elemAt targetParts 1;
+            user = builtins.elemAt targetParts 2;
+          in
+          assert (lib.isString host && builtins.stringLength host > 0);
+          {
+            type = "sftp";
 
-              sshExe = lib.getExe (
-                if lib.isDerivation config.programs.ssh.package then
-                  config.programs.ssh.package
-                else
-                  osConfig.programs.ssh.package or pkgs.openssh
-              );
-            in
-            assert (lib.isString host && builtins.stringLength host > 0);
-            {
-              type = "sftp";
+            # This makes rclone not use its internal ssh library at all,
+            # which reduces the potential of ssh-related issues.
+            inherit host user;
+            # ssh = "${sshExe} ${target}";
 
-              # This makes rclone not use its internal ssh library at all,
-              # which reduces the potential of ssh-related issues.
-              # inherit host user;
-              ssh = "${sshExe} ${target}";
-
-              copy_is_hardlink = true;
-            }
-            // extraAttrs;
+            copy_is_hardlink = true;
+          }
+          // extraAttrs;
       in
       {
         esther = {
@@ -117,45 +119,6 @@ in
             mountPoint = mountPoint "fastmail";
           };
         };
-
-        # gdrive = {
-        #   config = {
-        #     type = "drive";
-        #     scope = "drive";
-        #     drive_export_formats = [
-        #       "docx"
-        #       "xlsx"
-        #       "pptx"
-        #       "svg"
-        #     ];
-        #     poll_interval = "1m";
-        #   };
-        #   secrets.token = config.age.secrets.rclone-gdrive-token.path;
-        #
-        #   mounts = {
-        #     "" = {
-        #       enable = true;
-        #       mountPoint = mountPoint "gdrive";
-        #     };
-        #     ",shared_with_me" = {
-        #       enable = true;
-        #       mountPoint = mountPoint "gdrive-shared";
-        #     };
-        #   };
-        # };
-
-        # gphotos = {
-        #   config = {
-        #     type = "google photos";
-        #     include_archived = true;
-        #   };
-        #   secrets.token = config.age.secrets.rclone-gphotos-token.path;
-        #
-        #   mounts."" = {
-        #     enable = true;
-        #     mountPoint = mountPoint "gphotos";
-        #   };
-        # };
 
         nextcloud = {
           config = rec {
