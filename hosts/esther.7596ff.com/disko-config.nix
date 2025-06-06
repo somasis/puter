@@ -69,8 +69,7 @@
         };
 
         rootFsOptions = {
-          mountpoint = "none";
-          canmount = "off";
+          canmount = "on";
           "com.sun:auto-snapshot" = "false";
 
           compression = "zstd";
@@ -87,18 +86,24 @@
         datasets = {
           "reserved" = {
             type = "zfs_fs";
-            options.refreservation = "8G";
-            options.mountpoint = "none";
+            options = {
+              mountpoint = "none";
+              canmount = "off";
+              refreservation = "8G";
+            };
           };
 
           "nixos" = {
             type = "zfs_fs";
+            options = {
+              mountpoint = "none";
+              canmount = "off";
+            };
           };
 
           "nixos/root/runtime" = {
             type = "zfs_fs";
             mountpoint = "/";
-            options.canmount = "on";
             postCreateHook = ''
               zfs list -t snapshot -H -o name | grep -E '^esther\.7596ff\.com/nixos/root/runtime' \
                   || zfs snapshot esther.7596ff.com/nixos/root/runtime@blank
@@ -108,19 +113,16 @@
           "nixos/root/cache" = {
             type = "zfs_fs";
             mountpoint = "/cache";
-            options.canmount = "on";
           };
 
           "nixos/root/log" = {
             type = "zfs_fs";
             mountpoint = "/log";
-            options.canmount = "on";
           };
 
           "nixos/root/nix" = {
             type = "zfs_fs";
             mountpoint = "/nix";
-            options.canmount = "on";
             options.atime = "off";
           };
 
@@ -178,8 +180,11 @@
         datasets = {
           "reserved" = {
             type = "zfs_fs";
-            options.mountpoint = "none";
-            options.refreservation = "32G";
+            options = {
+              mountpoint = "none";
+              canmount = "off";
+              refreservation = "32G";
+            };
           };
 
           "cassie" = {
@@ -191,6 +196,7 @@
           "cassie/timemachine" = {
             type = "zfs_fs";
             mountpoint = "/mnt/raid/cassie/timemachine";
+            options."com.sun:auto-snapshot" = "false";
             options.quota = "500G";
           };
 
