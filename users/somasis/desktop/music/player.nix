@@ -36,7 +36,7 @@ in
       showNowPlayingBackground = false;
       showProgressOnTaskBar = true;
       embeddedView = "genres";
-      defaultView = "recentlyPlayed";
+      defaultView = "albums";
       defaultFilesViewPath = libraries;
     };
     indexer = {
@@ -55,20 +55,6 @@ in
   services.mpris-proxy.enable = true;
 
   sync.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "fooyin";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "fooyin";
-    }
-
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "audacious";
-    }
-
     {
       method = "symlink";
       directory = config.lib.somasis.xdgDataDir "radiotray-ng";

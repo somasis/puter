@@ -28,9 +28,7 @@
       set-option -g cursor-style blinking-bar
       set-option -g scroll-on-clear on
 
-      # Inform tmux of alacritty's features
-      set-option -sa terminal-overrides "alacritty:Tc"
-      set-option -sa terminal-features "alacritty:extKeys"
+      # Inform tmux of my terminal emulator's features
       set-option -sa terminal-features "xterm-kitty:256:extkeys:osc7:hyperlinks:sixel:strikethrough"
 
       # Set terminal (client) titles appropriately.
