@@ -3,7 +3,9 @@
 , pkgs
 , ...
 }:
-{
+let tomlFormat = pkgs.formats.toml { };
+
+in {
   imports = [
     ./filetype
     ./clipboard.nix
@@ -281,13 +283,18 @@
         }
 
         hook -group lsp-filetype-nix global BufSetOption filetype=nix %{
-            set-option buffer lsp_servers %{
-                [nixd]
-                root_globs = ["flake.nix", "shell.nix"]
-                [nixd.settings]
-                formatting.command = [ "nix", "fmt" ]
-                home-manager.expr = "(builtins.getFlake (builtins.toString ./.)).nixosConfigurations.<name>.options.home-manager.users.type.getSubOptions []"
-            }
+            set-option buffer lsp_servers %{${tomlFormat.generate "kak-lsp-nix-servers.toml" {
+                nixd = {
+                  root_globs = ["flake.nix" "shell.nix"];
+                  settings = {
+                    formatting.command = [ "nix" "fmt" ];
+                    home-manager.expr = lib.concatStrings [
+                      "(builtins.getFlake (builtins.toString ./.))"
+                      ".nixosConfigurations.<name>.options.home-manager.users.type.getSubOptions []"
+                    ];
+                  };
+                };
+            }}}
         }
 
         hook global WinSetOption filetype=nix %{
