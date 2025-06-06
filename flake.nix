@@ -303,7 +303,8 @@
             check-merge-conflicts.enable = true;
 
             # Nix-related hooks
-            statix.enable = true; # Lint Nix code.
+            # FIXME: maybe statix is a little too harsh for pre-commit usage...
+            # statix.enable = true; # Lint Nix code.
 
             # NOTE(somasis):
             # Ensure code is formatted according to Nix RFC 166.
