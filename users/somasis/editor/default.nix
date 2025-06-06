@@ -505,7 +505,7 @@ in
       with config.theme.colors;
       ''
         # Configure Kakoune language server protocols.
-        eval %sh{kak-lsp}
+        eval %sh{kak-lsp --debug}
         lsp-enable
 
         map global user l ':enter-user-mode lsp<ret>' -docstring 'LSP mode'
