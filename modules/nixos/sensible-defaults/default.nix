@@ -22,7 +22,6 @@
       nixosModules.impermanence
 
       ./auditing.nix
-      ./console.nix
       ./debugging.nix
       ./documentation.nix
       ./quirks.nix
