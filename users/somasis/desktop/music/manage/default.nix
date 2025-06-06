@@ -13,6 +13,7 @@
 
   home.packages = with pkgs; [
     beets-unstable
+    beets-alias
     rsgain
     unflac
   ];
