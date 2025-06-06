@@ -1,8 +1,14 @@
 {
   config,
+  disko,
   ...
 }:
 {
+  imports = [
+    disko.nixosModules.disko
+    ./disko-config.nix
+  ];
+
   boot = {
     supportedFilesystems = [
       "vfat"
@@ -21,42 +27,6 @@
   };
 
   cache.files = [ "/etc/zfs/zpool.cache" ];
-
-  fileSystems = {
-    "/" = {
-      device = "none";
-      fsType = "tmpfs";
-      options = [ "mode=755" ];
-    };
-
-    "/boot" = {
-      device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_1TB_S5P2NS0X207175X-part1";
-      fsType = "vfat";
-    };
-
-    "/nix" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/root/nix";
-      fsType = "zfs";
-    };
-
-    "/persist" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
-
-    "/cache" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/root/cache";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
-
-    "/log" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/root/log";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
-  };
 
   services.zfs = {
     autoScrub = {

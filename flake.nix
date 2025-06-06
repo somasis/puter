@@ -281,7 +281,14 @@
 
       nixosConfigurations = {
         esther = lib.nixosSystem {
-          specialArgs = { inherit self inputs nixpkgs; };
+          specialArgs = {
+            inherit
+              self
+              inputs
+              nixpkgs
+              disko
+              ;
+          };
           modules = [ ./hosts/esther.7596ff.com ];
         };
 
