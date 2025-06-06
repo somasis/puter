@@ -22,21 +22,8 @@
       timeout = 0;
     };
 
-    # Silent boot.
-    consoleLogLevel = 3;
-    kernelParams = [
-      "quiet"
-      "udev.log_level=3"
-    ];
-
-    extraModprobeConfig = ''
-      options i915 enable_fbc=1
-    '';
-
     initrd = {
       availableKernelModules = [ "i915" ];
-
-      verbose = false;
 
       # NOTE: Necessary for ZFS password prompting via plymouth
       #       <https://github.com/NixOS/nixpkgs/issues/44965>
@@ -45,7 +32,6 @@
 
         storePaths = [
           pkgs.busybox
-          pkgs.dropbear
         ] ++ lib.optional config.hardware.bluetooth.enable config.hardware.bluetooth.package;
       };
     };
