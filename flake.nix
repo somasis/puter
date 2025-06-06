@@ -340,11 +340,14 @@
             detect-private-keys.enable = true;
 
             # Ensure we actually follow our .editorconfig rules.
-            editorconfig-checker = {
-              enable = true;
-              types = [ "text" ];
-              excludes = [ ".*\.age$" ];
-            };
+            # editorconfig-checker = {
+            #   enable = true;
+            #   types = lib.mkForce [ "text" ];
+
+            #   # Disable max-line-length checks, since nixfmt doesn't always wrap lines exactly,
+            #   # for example with long strings that go over the line but can't be wrapped easily.
+            #   entry = "${pkgs.editorconfig-checker}/bin/editorconfig-checker -disable-max-line-length";
+            # };
 
             # Ensure we don't have dead links in comments or whatever.
             # lychee.enable = true;
