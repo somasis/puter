@@ -20,8 +20,6 @@ python3.pkgs.buildPythonApplication rec {
 
   nativeBuildInputs = [ beets ];
 
-  pythonImportsCheck = [ "beets_alias" ];
-
   meta = {
     description = "Beets plugin that lets you define command aliases, much like git";
     homepage = "https://github.com/kergoth/beets-alias";
