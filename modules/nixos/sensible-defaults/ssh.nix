@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  self,
   ...
 }:
 {
@@ -25,4 +26,18 @@
       "${key.path}.pub"
     ]) config.services.openssh.hostKeys
   );
+
+  boot.initrd = {
+    systemd = lib.mkIf (boot.initrd.systemd.network.networks != { }) {
+      enable = true;
+      network.enable = true;
+    };
+
+    network.ssh = {
+      enable = true;
+      hostKeys = [ config.age.secrets.initrd_ssh_host_key.path ];
+    };
+  };
+
+  age.secrets.initrd_ssh_host_key.file = "${self}/secrets/${config.networking.fqdnOrHostName}/initrd_ssh_host_ed25519_key.age";
 }

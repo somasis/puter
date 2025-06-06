@@ -41,6 +41,6 @@
   boot.initrd.network.ssh = {
     # Add the SSH keys of all users in the wheel group to the initrd
     # SSH server's authorized keys as well.
-    authorizedKeys = config.lib.somasis.sshKeysForGroup "wheel";
+    authorizedKeys = config.lib.somasis.sshKeysForGroups [ "wheel" ];
   };
 }

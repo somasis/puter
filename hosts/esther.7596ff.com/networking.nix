@@ -54,6 +54,13 @@
     };
   };
 
+  # Ensure that we have ethernet at boot, for the initrd SSH server.
+  boot.initrd.systemd.network.networks.enp42s0 = {
+    enable = true;
+    name = "enp42s0";
+    DHCP = "yes";
+  };
+
   hardware.bluetooth = {
     enable = true;
     package = pkgs.bluez5-experimental;
