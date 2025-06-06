@@ -25,7 +25,7 @@
 
   # time.timeZone can't be set when using automatic-timezoned; but that's bullshit.
   # See <https://github.com/NixOS/nixpkgs/issues/68489>
-  # and <https://github.com/NixOS/nixpkgs/blob/master/pkgs/os-specific/linux/systemd/0006-hostnamed-localed-timedated-disable-methods-that-cha.patch#L79-L82>
+  # and <https://github.com/NixOS/nixpkgs/blob/39015087b0ae06b974beed0b9ff424f5bfab3e5d/pkgs/os-specific/linux/systemd/0006-hostnamed-localed-timedated-disable-methods-that-cha.patch#L79-L82>
 
   # time.timeZone = "America/New_York";
 

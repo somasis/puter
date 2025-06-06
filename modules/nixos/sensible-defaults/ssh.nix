@@ -28,7 +28,7 @@
   );
 
   boot.initrd = {
-    systemd = lib.mkIf (boot.initrd.systemd.network.networks != { }) {
+    systemd = lib.mkIf (config.boot.initrd.systemd.network.networks != { }) {
       enable = true;
       network.enable = true;
     };
