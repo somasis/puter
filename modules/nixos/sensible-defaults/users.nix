@@ -10,7 +10,18 @@
   };
 
   persist = {
-    users.root.home = "/root";
+    users.root = {
+      home = "/root";
+      directories = [
+        ".cache"
+        ".config"
+        ".local"
+        ".ssh"
+      ];
+      files = [
+        ".bash_history"
+      ];
+    };
 
     directories =
       [
