@@ -41,6 +41,7 @@
     i18n.extraLocales = [
       "tok/UTF-8" # toki pona
     ];
+    console.earlySetup = true;
 
     # Keep system firmware up to date.
     # TODO: Framework still doesn't have their updates in LVFS properly,
