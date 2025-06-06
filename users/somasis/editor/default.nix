@@ -535,7 +535,10 @@ in
                     "shell.nix"
                   ];
                   settings = {
-                    formatting.command = [ "nixfmt" ];
+                    formatting.command = [
+                      "nix"
+                      "fmt"
+                    ];
                     home-manager.expr = lib.concatStrings [
                       "(builtins.getFlake (builtins.toString ./.))"
                       ".nixosConfigurations.<name>.options.home-manager.users.type.getSubOptions []"
