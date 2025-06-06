@@ -3,7 +3,7 @@
 set -euo pipefail
 
 me="${0##*/}"
-[[ -n "${QUTE_FIFO}" ]] && me=:pass
+[[ -n ${QUTE_FIFO} ]] && me=:pass
 
 : "${QUTE_URL?no URL open in browser}"
 
@@ -19,7 +19,7 @@ EOF
     )
 
     info "${usage}"
-    if [[ -n "$1" ]]; then
+    if [[ -n $1 ]]; then
         error "$1"
         exit 69
     else
@@ -28,7 +28,7 @@ EOF
 }
 
 info() {
-    if [[ -n "${QUTE_FIFO}" ]]; then
+    if [[ -n ${QUTE_FIFO} ]]; then
         cmd "message-info \"${1//\"/\"}\""
     else
         printf '%s\n' "$1"
@@ -36,14 +36,14 @@ info() {
 }
 
 error() {
-    if [[ -n "${QUTE_FIFO}" ]]; then
+    if [[ -n ${QUTE_FIFO} ]]; then
         cmd "message-error \"${1//\"/\"}\""
     else
         printf '%s\n' "$1" >&2
     fi
 }
 
-cmd() { printf '%s\n' "$@" >"${QUTE_FIFO}";  }
+cmd() { printf '%s\n' "$@" >"${QUTE_FIFO}"; }
 
 key() {
     local keystring
@@ -128,16 +128,16 @@ while getopts :SHud:m: arg >/dev/null 2>&1; do
 done
 shift $((OPTIND - 1))
 
-if [[ "${mode}" == "url-to-entry" ]]; then
+if [[ ${mode} == "url-to-entry" ]]; then
     url-to-entry "$@"
     exit $?
 fi
 
-if [[ "$#" -gt 0 ]] && [[ "${query_is_url}" == true ]]; then
+if [[ $# -gt 0 ]] && [[ ${query_is_url} == true ]]; then
     query=$(url-to-entry "$1")
-elif [[ "$#" -gt 0 ]] && [[ "${query_is_url}" == false ]]; then
+elif [[ $# -gt 0 ]] && [[ ${query_is_url} == false ]]; then
     query="$1"
-elif [[ "$#" -eq 0 ]]; then
+elif [[ $# -eq 0 ]]; then
     query=$(url-to-entry "${QUTE_URL}")
 else
     usage
@@ -155,7 +155,7 @@ case "${mode}" in
         choice=$(dmenu-pass -m print -i "${query}") || exit 0
 
         fill username "${choice}"
-        if [[ "${delimiter}" != '<Tab>' ]] || [[ "${hints}" != true ]]; then
+        if [[ ${delimiter} != '<Tab>' ]] || [[ ${hints} != true ]]; then
             key "${delimiter}"
             sleep 1
         fi
@@ -171,7 +171,7 @@ case "${mode}" in
         pass_generate_args=$(getopt -o ncqif -l no-symbols,qrcode,clip,in-place,force -n "${me}" -- "$@")
         pass_generate_getopt_err=$?
 
-        [[ "${pass_generate_getopt_err}" -eq 0 ]] || usage
+        [[ ${pass_generate_getopt_err} -eq 0 ]] || usage
 
         eval set -- "${pass_generate_args}"
         while true; do
@@ -190,7 +190,7 @@ case "${mode}" in
         query="${1}"
         shift
 
-        if [[ "${query_is_url}" == true ]]; then
+        if [[ ${query_is_url} == true ]]; then
             query=$(url-to-entry "${query}")
             cmd "cmd-set-text :pass -m generate ${pass_generate_args:+${pass_generate_args[*]} }${query}"
             exit 0
@@ -205,8 +205,8 @@ case "${mode}" in
         ;;
 esac
 
-if [[ "${submit}" == true ]]; then
-    if [[ "${hints}" == true ]]; then
+if [[ ${submit} == true ]]; then
+    if [[ ${hints} == true ]]; then
         cmd "hint -f submit"
     else
         key "<Enter>"

@@ -1,8 +1,9 @@
-{ config
-, osConfig
-, lib
-, pkgs
-, ...
+{
+  config,
+  osConfig,
+  lib,
+  pkgs,
+  ...
 }:
 assert osConfig.services.systemd-lock-handler.enable;
 let

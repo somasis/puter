@@ -1,10 +1,10 @@
-{ lib
-, writeShellApplication
-, json2nix
-, jc
-, nixfmt-rfc-style
-, coreutils
-, # , diffutils
+{
+  lib,
+  writeShellApplication,
+  json2nix,
+  jc,
+  nixfmt-rfc-style,
+  coreutils, # , diffutils
 }:
 writeShellApplication {
   name = "ini2nix";

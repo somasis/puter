@@ -1,6 +1,7 @@
-{ pkgs
-, osConfig
-, ...
+{
+  pkgs,
+  osConfig,
+  ...
 }:
 {
   services.batsignal = {

@@ -1,8 +1,8 @@
-{ lib
-, fetchurl
-, kakouneUtils
-, kakoune
-,
+{
+  lib,
+  fetchurl,
+  kakouneUtils,
+  kakoune,
 }:
 kakouneUtils.buildKakounePluginFrom2Nix rec {
   pname = "click-kak";

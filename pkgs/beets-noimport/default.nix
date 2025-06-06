@@ -1,8 +1,8 @@
-{ lib
-, fetchFromGitLab
-, beets
-, python3Packages
-,
+{
+  lib,
+  fetchFromGitLab,
+  beets,
+  python3Packages,
 }:
 python3Packages.buildPythonApplication rec {
   pname = "beets-noimport";

@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, self
-, ...
+{
+  config,
+  pkgs,
+  self,
+  ...
 }:
 {
   age.secrets = {

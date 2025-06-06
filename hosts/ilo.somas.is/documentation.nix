@@ -1,6 +1,7 @@
-{ pkgs
-, nixpkgs
-, ...
+{
+  pkgs,
+  nixpkgs,
+  ...
 }:
 {
   documentation.man = {

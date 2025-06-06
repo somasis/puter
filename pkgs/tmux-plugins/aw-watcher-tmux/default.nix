@@ -1,11 +1,11 @@
-{ lib
-, fetchFromGitHub
-, runtimeShell
-, activitywatch
-, curl
-, tmuxPlugins
-, makeWrapper
-,
+{
+  lib,
+  fetchFromGitHub,
+  runtimeShell,
+  activitywatch,
+  curl,
+  tmuxPlugins,
+  makeWrapper,
 }:
 tmuxPlugins.mkTmuxPlugin rec {
   pluginName = "aw-watcher-tmux";

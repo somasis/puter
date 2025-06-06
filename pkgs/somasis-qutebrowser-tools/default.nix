@@ -1,10 +1,10 @@
-{ lib
-, symlinkJoin
-, writeShellApplication
-, coreutils
-, dateutils
-, sqlite
-,
+{
+  lib,
+  symlinkJoin,
+  writeShellApplication,
+  coreutils,
+  dateutils,
+  sqlite,
 }:
 symlinkJoin {
   name = "somasis-qutebrowser-tools";

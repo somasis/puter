@@ -1,14 +1,15 @@
-{ lib
-, writeShellApplication
-, coreutils
-, dmenu
-, findutils
-, gawk
-, gnugrep
-, gnused
-, libnotify
-, moreutils
-, systemd
+{
+  lib,
+  writeShellApplication,
+  coreutils,
+  dmenu,
+  findutils,
+  gawk,
+  gnugrep,
+  gnused,
+  libnotify,
+  moreutils,
+  systemd,
 }:
 writeShellApplication {
   name = "dmenu-run";

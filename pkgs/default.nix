@@ -1,5 +1,6 @@
-{ pkgs ? import <nixpkgs> { }
-, ...
+{
+  pkgs ? import <nixpkgs> { },
+  ...
 }@args:
 let
   inherit (pkgs)
@@ -25,175 +26,174 @@ rec {
     #   { target = "bin/bfs"; link = "bin/find"; }
     #   { target = "share/man/man1/bfs.1.gz"; link = "share/man/man1/find.1.gz"; }
     # ]
-      assert (lib.isStorePath package);
-      assert (lib.isList links && links != [ ]);
-      assert ((lib.filter (link: lib.isString link.target && link.target != "") links) != [ ]);
-      symlinkJoin {
-        name = "${package.pname}-with-links";
-        paths = [
-          package
-          (runCommandLocal "links" { } (
-            lib.concatLines (
-              map
-                (pair: ''
-                  mkdir -p $out/${lib.escapeShellArg (builtins.dirOf pair.link)}
-                  ln -s ${lib.escapeShellArg package}/${lib.escapeShellArg pair.target} $out/${lib.escapeShellArg pair.link}
-                '')
-                links
-            )
-          ))
-        ];
-      };
+    assert (lib.isStorePath package);
+    assert (lib.isList links && links != [ ]);
+    assert ((lib.filter (link: lib.isString link.target && link.target != "") links) != [ ]);
+    symlinkJoin {
+      name = "${package.pname}-with-links";
+      paths = [
+        package
+        (runCommandLocal "links" { } (
+          lib.concatLines (
+            map (pair: ''
+              mkdir -p $out/${lib.escapeShellArg (builtins.dirOf pair.link)}
+              ln -s ${lib.escapeShellArg package}/${lib.escapeShellArg pair.target} $out/${lib.escapeShellArg pair.link}
+            '') links
+          )
+        ))
+      ];
+    };
 
   fetchMediaFire =
-    { url
-    , name ? "${builtins.baseNameOf url}"
-    , hash
-    , postFetch ? ""
-    , postUnpack ? ""
-    , meta ? { }
-    , ...
+    {
+      url,
+      name ? "${builtins.baseNameOf url}",
+      hash,
+      postFetch ? "",
+      postUnpack ? "",
+      meta ? { },
+      ...
     }:
-      assert (
-        lib.any (prefix: lib.hasPrefix prefix url) [
-          "https://www.mediafire.com/file/"
-          "https://mediafire.com/file/"
-          "http://www.mediafire.com/file/"
-          "http://mediafire.com/file/"
-        ]
-      );
-      pkgs.stdenvNoCC.mkDerivation {
-        inherit
-          name
-          url
-          hash
-          postFetch
-          postUnpack
-          meta
-          ;
+    assert (
+      lib.any (prefix: lib.hasPrefix prefix url) [
+        "https://www.mediafire.com/file/"
+        "https://mediafire.com/file/"
+        "http://www.mediafire.com/file/"
+        "http://mediafire.com/file/"
+      ]
+    );
+    pkgs.stdenvNoCC.mkDerivation {
+      inherit
+        name
+        url
+        hash
+        postFetch
+        postUnpack
+        meta
+        ;
 
-        nativeBuildInputs = [
-          pkgs.cacert
-          pkgs.python3Packages.mediafire-dl
-        ];
+      nativeBuildInputs = [
+        pkgs.cacert
+        pkgs.python3Packages.mediafire-dl
+      ];
 
-        outputHash = hash;
-        outputHashAlgo = if hash != "" then null else "sha256";
+      outputHash = hash;
+      outputHashAlgo = if hash != "" then null else "sha256";
 
-        builder = pkgs.writeShellScript "fetch-mediafire-builder.sh" ''
-          source $stdenv/setup
+      builder = pkgs.writeShellScript "fetch-mediafire-builder.sh" ''
+        source $stdenv/setup
 
-          download="$PWD"/download
-          mkdir -p "$download"
+        download="$PWD"/download
+        mkdir -p "$download"
 
-          pushd "$download"
-          mediafire-dl "$url"
-          ls -CFlah
-          popd
+        pushd "$download"
+        mediafire-dl "$url"
+        ls -CFlah
+        popd
 
-          mv "$download"/* "$out"
-          rmdir "$download"
-        '';
-      };
+        mv "$download"/* "$out"
+        rmdir "$download"
+      '';
+    };
 
   writeCss =
     name: stylelintUserConfig: text:
-      assert (lib.isString name);
-      assert (lib.isAttrs stylelintUserConfig);
-      assert (lib.isString text);
-      let
-        stylelintConfig =
-          if stylelintUserConfig == { } then
-            { extends = "stylelint-config-standard"; }
-          else
-            stylelintUserConfig;
-      in
-      writeTextFile {
-        inherit name;
-        inherit text;
+    assert (lib.isString name);
+    assert (lib.isAttrs stylelintUserConfig);
+    assert (lib.isString text);
+    let
+      stylelintConfig =
+        if stylelintUserConfig == { } then
+          { extends = "stylelint-config-standard"; }
+        else
+          stylelintUserConfig;
+    in
+    writeTextFile {
+      inherit name;
+      inherit text;
 
-        derivationArgs = {
-          nativeCheckInputs = with pkgs; [
-            stylelint
-            stylelint-config-standard
-          ];
-          stylelintConfig = lib.generators.toJSON { } stylelintConfig;
-          passAsFile = [ "stylelintConfig" ];
-        };
-
-        checkPhase = ''
-          check() {
-              exit_code=0
-
-              stylelint ''${stylelintConfig:+--config "$stylelintConfig"} --formatter unix --stdin-filename "$name" < "$name" || exit_code=$?
-
-              case "$exit_code" in
-                  78) # invalid config file/config not found <https://stylelint.io/user-guide/cli#exit-codes>
-                      exit_code=0
-                      ;;
-              esac
-
-              return "$exit_code"
-          }
-        '';
+      derivationArgs = {
+        nativeCheckInputs = with pkgs; [
+          stylelint
+          stylelint-config-standard
+        ];
+        stylelintConfig = lib.generators.toJSON { } stylelintConfig;
+        passAsFile = [ "stylelintConfig" ];
       };
+
+      checkPhase = ''
+        check() {
+            exit_code=0
+
+            stylelint ''${stylelintConfig:+--config "$stylelintConfig"} --formatter unix --stdin-filename "$name" < "$name" || exit_code=$?
+
+            case "$exit_code" in
+                78) # invalid config file/config not found <https://stylelint.io/user-guide/cli#exit-codes>
+                    exit_code=0
+                    ;;
+            esac
+
+            return "$exit_code"
+        }
+      '';
+    };
 
   writeJqScript =
     name: args: text:
-      assert (lib.isString name);
-      assert (lib.isAttrs args);
-      assert (lib.isString text);
-      let
-        args' = {
-          inherit (pkgs) jq jqfmt;
-        } // args;
+    assert (lib.isString name);
+    assert (lib.isAttrs args);
+    assert (lib.isString text);
+    let
+      args' = {
+        inherit (pkgs) jq jqfmt;
+      } // args;
 
-        inherit (args') jq jqfmt;
+      inherit (args') jq jqfmt;
 
-        jqArgs =
-          lib.removeAttrs args' [
-            "jq"
-            "jqfmt"
-            "jqfmtArgs"
-          ]
-          // {
-            from-file = jqScript;
-          };
-
-        jqfmtArgs = (args'.jqfmtArgs or { }) // {
-          f = jqScript;
+      jqArgs =
+        lib.removeAttrs args' [
+          "jq"
+          "jqfmt"
+          "jqfmtArgs"
+        ]
+        // {
+          from-file = jqScript;
         };
 
-        jqArgs' = lib.cli.toGNUCommandLineShell { } jqArgs;
-        jqfmtArgs' = lib.cli.toGNUCommandLineShell { mkOptionName = x: "-${x}"; } jqfmtArgs;
-
-        jqScript = writeScript name ''
-          #!${jq}/bin/jq -f
-          ${text}
-        '';
-      in
-      writeTextFile {
-        inherit name;
-        executable = true;
-
-        checkPhase = ''
-          error=0
-          ${jq}/bin/jq -n ${jqArgs'} || error=$?
-
-          # 3: syntax error
-          [ "$error" -eq 3 ] && exit 1 || :
-
-          # diff -u ${lib.escapeShellArg jqScript} <(${jqfmt}/bin/jqfmt ${jqfmtArgs'}) || error=$?
-          # [ "$error" -eq 0 ] || exit 1
-
-          exit 0
-        '';
-
-        text = ''
-          #!${runtimeShell}
-          exec ${jq}/bin/jq ${jqArgs'} "$@"
-        '';
+      jqfmtArgs = (args'.jqfmtArgs or { }) // {
+        f = jqScript;
       };
+
+      jqArgs' = lib.cli.toGNUCommandLineShell { } jqArgs;
+      jqfmtArgs' = lib.cli.toGNUCommandLineShell { mkOptionName = x: "-${x}"; } jqfmtArgs;
+
+      jqScript = writeScript name ''
+        #!${jq}/bin/jq -f
+        ${text}
+      '';
+    in
+    writeTextFile {
+      inherit name;
+      executable = true;
+
+      checkPhase = ''
+        error=0
+        ${jq}/bin/jq -n ${jqArgs'} || error=$?
+
+        # 3: syntax error
+        [ "$error" -eq 3 ] && exit 1 || :
+
+        # diff -u ${lib.escapeShellArg jqScript} <(${jqfmt}/bin/jqfmt ${jqfmtArgs'}) || error=$?
+        # [ "$error" -eq 0 ] || exit 1
+
+        exit 0
+      '';
+
+      text = ''
+        #!${runtimeShell}
+        exec ${jq}/bin/jq ${jqArgs'} "$@"
+      '';
+    };
 
   wrapCommand = callPackage ./wrapCommand;
 

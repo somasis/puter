@@ -1,19 +1,20 @@
-{ pkgs ? import <nixpkgs> { }
-,
+{
+  pkgs ? import <nixpkgs> { },
 }:
 let
   inherit (pkgs) lib makeOverridable;
 
   buildZoteroXpiAddon = makeOverridable (
-    { stdenv ? pkgs.stdenv
-    , fetchurl ? pkgs.fetchurl
-    , pname
-    , version
-    , addonId
-    , url
-    , hash
-    , meta
-    , ...
+    {
+      stdenv ? pkgs.stdenv,
+      fetchurl ? pkgs.fetchurl,
+      pname,
+      version,
+      addonId,
+      url,
+      hash,
+      meta,
+      ...
     }:
     stdenv.mkDerivation {
       name = "${pname}-${version}";

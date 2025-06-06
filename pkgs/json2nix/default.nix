@@ -1,9 +1,9 @@
-{ lib
-, writeShellApplication
-, nix
-, coreutils
-, nixfmt-rfc-style
-,
+{
+  lib,
+  writeShellApplication,
+  nix,
+  coreutils,
+  nixfmt-rfc-style,
 }:
 writeShellApplication {
   name = "json2nix";

@@ -1,46 +1,59 @@
-{ config
-, osConfig
-, pkgs
-, inputs
-, ...
+{
+  config,
+  osConfig,
+  pkgs,
+  inputs,
+  ...
 }:
 assert osConfig.services.desktopManager.plasma6.enable;
 {
   persist = {
     directories =
       [ ".cert/nm-openvpn" ]
-      ++ map (x: { directory = config.lib.somasis.xdgConfigDir x; method = "symlink"; }) [
-        "gtk-3.0" # kde-gtk-config
-        "gtk-4.0" # kde-gtk-config
-        "xsettingsd" # kde-gtk-config
-        "kde.org"
-        "KDE"
-        "autostart"
-        "kdedefaults"
-        "plasma-workspace"
-        "session"
-      ]
-      ++ map (x: { directory = config.lib.somasis.xdgDataDir x; method = "symlink"; }) [
-        "baloo"
-        "dbus-1"
-        "dolphin"
-        "drkonqirc"
-        "icons"
-        "kactivitymanagerd"
-        "klipper"
-        "knewstuff3"
-        "kscreen"
-        "kwalletd"
-        "kwin"
-        "kxmlgui5"
-        "libkunitconversion"
-        "plasma"
-        "plasmashell"
-        "remoteview"
-        "sddm"
-        "systemmonitorrc"
-        "systemsettings"
-      ];
+      ++
+        map
+          (x: {
+            directory = config.lib.somasis.xdgConfigDir x;
+            method = "symlink";
+          })
+          [
+            "gtk-3.0" # kde-gtk-config
+            "gtk-4.0" # kde-gtk-config
+            "xsettingsd" # kde-gtk-config
+            "kde.org"
+            "KDE"
+            "autostart"
+            "kdedefaults"
+            "plasma-workspace"
+            "session"
+          ]
+      ++
+        map
+          (x: {
+            directory = config.lib.somasis.xdgDataDir x;
+            method = "symlink";
+          })
+          [
+            "baloo"
+            "dbus-1"
+            "dolphin"
+            "drkonqirc"
+            "icons"
+            "kactivitymanagerd"
+            "klipper"
+            "knewstuff3"
+            "kscreen"
+            "kwalletd"
+            "kwin"
+            "kxmlgui5"
+            "libkunitconversion"
+            "plasma"
+            "plasmashell"
+            "remoteview"
+            "sddm"
+            "systemmonitorrc"
+            "systemsettings"
+          ];
 
     files =
       [
@@ -106,26 +119,31 @@ assert osConfig.services.desktopManager.plasma6.enable;
   cache = {
     directories =
       [ (config.lib.somasis.xdgCacheDir "kcrash-metadata") ]
-      ++ map (x: { directory = config.lib.somasis.xdgCacheDir x; method = "symlink"; }) [
-        "drkonqi"
-        "elisa"
-        "fontconfig"
-        "kio_http"
-        "krunner"
-        "kscreenlocker_greet"
-        "ksplash"
-        "kwin"
-        "mesa_shader_cache"
-        "mesa_shader_cache_db"
-        "obexd"
-        "org.kde.ki18n"
-        "org.kde.unitconversion"
-        "plasma_engine_potd"
-        "plasmashell"
-        "systemsettings"
-        "thumbnails"
-        "xwaylandvideobridge"
-      ];
+      ++ map
+        (x: {
+          directory = config.lib.somasis.xdgCacheDir x;
+          method = "symlink";
+        })
+        [
+          "drkonqi"
+          "elisa"
+          "fontconfig"
+          "kio_http"
+          "krunner"
+          "kscreenlocker_greet"
+          "ksplash"
+          "kwin"
+          "mesa_shader_cache"
+          "mesa_shader_cache_db"
+          "obexd"
+          "org.kde.ki18n"
+          "org.kde.unitconversion"
+          "plasma_engine_potd"
+          "plasmashell"
+          "systemsettings"
+          "thumbnails"
+          "xwaylandvideobridge"
+        ];
 
     files = map config.lib.somasis.xdgDataDir [
       "krunnerstaterc"
@@ -133,21 +151,30 @@ assert osConfig.services.desktopManager.plasma6.enable;
   };
 
   log = {
-    files =
-      map config.lib.somasis.xdgDataDir [
-        "qtposition-geoclue2"
-        # "recently-used.xbel"
-      ];
+    files = map config.lib.somasis.xdgDataDir [
+      "qtposition-geoclue2"
+      # "recently-used.xbel"
+    ];
   };
 
   sync = {
     directories =
-      map (x: { method = "symlink"; directory = config.lib.somasis.xdgConfigDir x; }) [
-        "panel-colorizer"
-      ]
-      ++ map (x: { method = "symlink"; directory = config.lib.somasis.xdgDataDir x; }) [
-        "color-schemes"
-      ];
+      map
+        (x: {
+          method = "symlink";
+          directory = config.lib.somasis.xdgConfigDir x;
+        })
+        [
+          "panel-colorizer"
+        ]
+      ++ map
+        (x: {
+          method = "symlink";
+          directory = config.lib.somasis.xdgDataDir x;
+        })
+        [
+          "color-schemes"
+        ];
 
     files = map config.lib.somasis.xdgConfigDir [
       "breezerc"
@@ -155,61 +182,66 @@ assert osConfig.services.desktopManager.plasma6.enable;
     ];
   };
 
-  home.packages = with pkgs; with libsForQt5; with kdePackages; with flakePackages; [
-    plasma-manager.rc2nix
+  home.packages =
+    with pkgs;
+    with libsForQt5;
+    with kdePackages;
+    with flakePackages;
+    [
+      plasma-manager.rc2nix
 
-    ark
-    alligator
-    cameractrls-gtk3
-    gwenview
-    isoimagewriter
-    kara
-    kclock
-    kde-gtk-config
-    kjournald
-    systemdgenie
-    merkuro
-    korganizer
-    kpat
-    ksystemlog
-    kweather
-    lokalize
-    p7zip
-    pdfarranger
+      ark
+      alligator
+      cameractrls-gtk3
+      gwenview
+      isoimagewriter
+      kara
+      kclock
+      kde-gtk-config
+      kjournald
+      systemdgenie
+      merkuro
+      korganizer
+      kpat
+      ksystemlog
+      kweather
+      lokalize
+      p7zip
+      pdfarranger
 
-    kdialog
+      kdialog
 
-    breeze-gtk
-    hackneyed
-    kde-rounded-corners
-    papirus-icon-theme
+      breeze-gtk
+      hackneyed
+      kde-rounded-corners
+      papirus-icon-theme
 
-    plasma-applet-commandoutput
+      plasma-applet-commandoutput
 
-    application-title-bar
-    plasma-panel-colorizer
-    glib.bin # Used by plasma-panel-colorizer
+      application-title-bar
+      plasma-panel-colorizer
+      glib.bin # Used by plasma-panel-colorizer
 
-    plasma-panel-spacer-extended
-    kconfig # Used by plasma-panel-spacer-extended
+      plasma-panel-spacer-extended
+      kconfig # Used by plasma-panel-spacer-extended
 
-    plasma-plugin-blurredwallpaper
+      plasma-plugin-blurredwallpaper
 
-    (plasma-pass-unstable.overrideAttrs (oldAttrs: {
-      version = config.lib.somasis.flakeModifiedDateToVersion inputs.plasma-pass;
-      src = inputs.plasma-pass;
-    }))
+      (plasma-pass-unstable.overrideAttrs (oldAttrs: {
+        version = config.lib.somasis.flakeModifiedDateToVersion inputs.plasma-pass;
+        src = inputs.plasma-pass;
+      }))
 
-    qtbase # qdbus, among other things
+      qtbase # qdbus, among other things
 
-    qbittorrent
-    syncplay
+      qbittorrent
+      syncplay
 
-    waypipe
-    wl-clipboard
+      waypipe
+      wl-clipboard
 
-    emojirunner
-  ];
+      emojirunner
+    ];
 
   programs.plasma = {
     enable = true;

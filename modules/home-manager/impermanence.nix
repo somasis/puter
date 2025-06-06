@@ -1,7 +1,8 @@
-{ lib
-, config
-, osConfig ? { }
-, ...
+{
+  lib,
+  config,
+  osConfig ? { },
+  ...
 }:
 let
   inherit (lib)

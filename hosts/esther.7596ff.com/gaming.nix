@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   steamSharedLibrary = "/var/lib/steam";
@@ -25,12 +26,14 @@ in
     ];
   };
 
-  persist.directories = [{
-    mode = "6775";
-    user = "root";
-    group = "root";
-    directory = steamSharedLibrary;
-  }];
+  persist.directories = [
+    {
+      mode = "6775";
+      user = "root";
+      group = "root";
+      directory = steamSharedLibrary;
+    }
+  ];
 
   systemd.tmpfiles.rules = [
     "A ${steamSharedLibrary} - - - - user::rwx"

@@ -1,8 +1,9 @@
-{ config
-, osConfig
-, lib
-, pkgs
-, ...
+{
+  config,
+  osConfig,
+  lib,
+  pkgs,
+  ...
 }:
 let
   userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36";
@@ -134,13 +135,13 @@ in
         html-renderer "${newsboatHTMLRenderer}"
         user-agent "${userAgent}"
       ''
-      # + optionalString (tor.enable && tor.client.enable) ''
-      #   # socks5h: "CURLPROXY_SOCKS5_HOSTNAME [...] Proxy resolves URL hostname."
-      #   use-proxy yes
-      #   proxy ${tor.client.socksListenAddress.addr}:${toString tor.client.socksListenAddress.port}
-      #   proxy-type socks5h
-      #   download-timeout 60
-      # ''
+    # + optionalString (tor.enable && tor.client.enable) ''
+    #   # socks5h: "CURLPROXY_SOCKS5_HOSTNAME [...] Proxy resolves URL hostname."
+    #   use-proxy yes
+    #   proxy ${tor.client.socksListenAddress.addr}:${toString tor.client.socksListenAddress.port}
+    #   proxy-type socks5h
+    #   download-timeout 60
+    # ''
     ;
 
     # Create a list of queries from all URLs' tags.

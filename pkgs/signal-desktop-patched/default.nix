@@ -1,11 +1,11 @@
-{ lib
-, signal-desktop
-, librsvg
-, papirus-icon-theme
-, css ? ""
-, iconThemePkg ? papirus-icon-theme
-, iconThemeName ? "Papirus-Dark"
-,
+{
+  lib,
+  signal-desktop,
+  librsvg,
+  papirus-icon-theme,
+  css ? "",
+  iconThemePkg ? papirus-icon-theme,
+  iconThemeName ? "Papirus-Dark",
 }:
 signal-desktop.overrideAttrs (oldAttrs: rec {
   nativeBuildInputs =

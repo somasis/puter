@@ -1,8 +1,8 @@
-{ lib
-, stdenv
-, fetchurl
-, wine
-,
+{
+  lib,
+  stdenv,
+  fetchurl,
+  wine,
 }:
 stdenv.mkDerivation rec {
   pname = "flstudio";

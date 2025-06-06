@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 with lib;
 let
@@ -247,28 +248,28 @@ in
       foldr
         (
           widget: units:
-            lib.recursiveUpdate units {
-              targets."stw" = {
-                Unit = {
-                  Description = "All text widgets on the root window";
-                  PartOf = [ "graphical-session-post.target" ];
-                };
-                Install.WantedBy = [ "graphical-session-post.target" ];
+          lib.recursiveUpdate units {
+            targets."stw" = {
+              Unit = {
+                Description = "All text widgets on the root window";
+                PartOf = [ "graphical-session-post.target" ];
               };
+              Install.WantedBy = [ "graphical-session-post.target" ];
+            };
 
-              services."stw-${widget.name}" = {
-                Unit.Description = "${pkg.meta.description}, instance '${widget.name}'";
-                Unit.PartOf = lib.optional widget.enable "stw.target";
-                Install.WantedBy = lib.optional widget.enable "stw.target";
+            services."stw-${widget.name}" = {
+              Unit.Description = "${pkg.meta.description}, instance '${widget.name}'";
+              Unit.PartOf = lib.optional widget.enable "stw.target";
+              Install.WantedBy = lib.optional widget.enable "stw.target";
 
-                Service = {
-                  Type = if widget.update == null then "notify" else "simple";
+              Service = {
+                Type = if widget.update == null then "notify" else "simple";
 
-                  ExecStart = [ "${mkScript widget}/bin/stw-widget-${widget.name}" ];
-                  ExecReload = "${pkgs.procps}/bin/kill -ALRM $MAINPID";
-                };
+                ExecStart = [ "${mkScript widget}/bin/stw-widget-${widget.name}" ];
+                ExecReload = "${pkgs.procps}/bin/kill -ALRM $MAINPID";
               };
-            }
+            };
+          }
         )
         {
           targets.stw = {

@@ -1,15 +1,15 @@
-{ lib
-, symlinkJoin
-, writeShellApplication
-, coreutils
-, dateutils
-, gnugrep
-, gnused
-, htmlq
-, jq
-, libarchive
-, borgConfig ? { }
-,
+{
+  lib,
+  symlinkJoin,
+  writeShellApplication,
+  coreutils,
+  dateutils,
+  gnugrep,
+  gnused,
+  htmlq,
+  jq,
+  libarchive,
+  borgConfig ? { },
 }:
 let
   extraArgs = borgConfig.extraArgs or "";

@@ -1,8 +1,9 @@
-{ pkgs
-, lib
-, config
-, self
-, ...
+{
+  pkgs,
+  lib,
+  config,
+  self,
+  ...
 }:
 let
   # hledgerWebSocket = "/run/hledger-web/hledger-web.sock";

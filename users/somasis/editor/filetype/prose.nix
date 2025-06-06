@@ -1,7 +1,8 @@
-{ pkgs
-, lib
-, config
-, ...
+{
+  pkgs,
+  lib,
+  config,
+  ...
 }:
 let
   proselintKakoune = pkgs.writeJqScript "proselint-kakoune" { raw-output = true; } ''

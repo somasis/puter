@@ -1,11 +1,11 @@
-{ lib
-, symlinkJoin
-, writeShellApplication
-, curl
-, geoclue2-with-demo-agent
-, jq
-, jc
-,
+{
+  lib,
+  symlinkJoin,
+  writeShellApplication,
+  curl,
+  geoclue2-with-demo-agent,
+  jq,
+  jc,
 }:
 writeShellApplication {
   name = "location";

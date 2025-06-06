@@ -1,5 +1,5 @@
 usage() {
-    [[ "$#" -gt 0 ]] || printf 'error: %s\n' "$@" >&2
+    [[ $# -gt 0 ]] || printf 'error: %s\n' "$@" >&2
     cat >&2 <<EOF
 usage: borg-import-twitter [borg arguments --] twitter-1970-01-01-*
 EOF
@@ -11,14 +11,14 @@ case "$1" in
     --) shift ;;
     -*)
         # Get list of args to pass to `borg`.
-        until [[ "$1" == '--' ]]; do
-            borg_args+=( "$1" )
+        until [[ $1 == '--' ]]; do
+            borg_args+=("$1")
         done
         shift
         ;;
 esac
 
-if [[ "$#" -lt 1 ]]; then
+if [[ $# -lt 1 ]]; then
     usage 'no archives given'
 fi
 
@@ -48,18 +48,18 @@ printf '::twitter-%s-%s\n' "${account}" "${date}"
 bsdtar -cf - --format=ustar "${files[@]}" \
     | borg "${borg_args[@]}" \
         import-tar \
-            --stats -p \
-            --comment='imported with `borg import-tar`, via borg-import-twitter' \
-            --timestamp="${date}" \
-            "::twitter-${account}-${date}.failed" \
-            -
+        --stats -p \
+        --comment='imported with `borg import-tar`, via borg-import-twitter' \
+        --timestamp="${date}" \
+        "::twitter-${account}-${date}.failed" \
+        -
 
 borg "${borg_args[@]}" \
     rename \
-        "::twitter-${account}-${date}.failed" \
-        "twitter-${account}-${date}"
+    "::twitter-${account}-${date}.failed" \
+    "twitter-${account}-${date}"
 
 borg "${borg_args[@]}" \
     prune \
-        --keep-monthly=12 --keep-yearly=4 \
-        -a "twitter-${accountid}-*"
+    --keep-monthly=12 --keep-yearly=4 \
+    -a "twitter-${accountid}-*"

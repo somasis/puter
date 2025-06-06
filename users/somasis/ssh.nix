@@ -1,8 +1,9 @@
-{ config
-, pkgs
-, osConfig
-, lib
-, ...
+{
+  config,
+  pkgs,
+  osConfig,
+  lib,
+  ...
 }:
 {
   # Exception to the rule: ~/.ssh is used instead of ~/etc/ssh.

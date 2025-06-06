@@ -1,9 +1,9 @@
-{ lib
-, stdenvNoCC
-, fetchurl
-, ibus
-, ibus-engines
-,
+{
+  lib,
+  stdenvNoCC,
+  fetchurl,
+  ibus,
+  ibus-engines,
 }:
 stdenvNoCC.mkDerivation {
   pname = "ibus-table-sitelen-pona";

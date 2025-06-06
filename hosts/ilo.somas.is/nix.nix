@@ -1,9 +1,10 @@
-{ config
-, pkgs
-, lib
-, inputs
-, self
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  self,
+  ...
 }:
 {
   nix.settings = {

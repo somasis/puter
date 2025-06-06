@@ -1,8 +1,8 @@
-{ lib
-, writeShellApplication
-, coreutils
-, wine
-,
+{
+  lib,
+  writeShellApplication,
+  coreutils,
+  wine,
 }:
 writeShellApplication {
   name = "wineprefix";

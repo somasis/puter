@@ -1,9 +1,9 @@
-{ lib
-, fetchFromGitLab
-, writeText
-, sbcl
-, asdf
-,
+{
+  lib,
+  fetchFromGitLab,
+  writeText,
+  sbcl,
+  asdf,
 }:
 sbcl.buildASDFSystem rec {
   pname = "jhide";

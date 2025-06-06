@@ -1,8 +1,9 @@
-{ config
-, osConfig
-, pkgs
-, lib
-, ...
+{
+  config,
+  osConfig,
+  pkgs,
+  lib,
+  ...
 }:
 let
   inherit (config.lib.somasis) randomPort;
@@ -15,14 +16,14 @@ let
   syncthingGuiPort = syncthingGuiPortFor osConfig.networking.fqdnOrHostName;
 in
 # assert (
-  #   if osConfig.networking.firewall.enable then
-  #     (lib.elem syncthingGuiPort osConfig.networking.firewall.allowedTCPPorts) &&
-  #     (lib.elem syncthingListenPort osConfig.networking.firewall.allowedTCPPorts) &&
-  #     (lib.elem syncthingListenPort osConfig.networking.firewall.allowedUDPPorts) &&
-  #     (lib.elem syncthingLocalAnnouncePort osConfig.networking.firewall.allowedUDPPorts)
-  #   else
-  #     true
-  # );
+#   if osConfig.networking.firewall.enable then
+#     (lib.elem syncthingGuiPort osConfig.networking.firewall.allowedTCPPorts) &&
+#     (lib.elem syncthingListenPort osConfig.networking.firewall.allowedTCPPorts) &&
+#     (lib.elem syncthingListenPort osConfig.networking.firewall.allowedUDPPorts) &&
+#     (lib.elem syncthingLocalAnnouncePort osConfig.networking.firewall.allowedUDPPorts)
+#   else
+#     true
+# );
 {
   services.tunnels.tunnels = {
     "somasis@esther.7596ff.com:syncthing" = rec {

@@ -1,8 +1,9 @@
-{ pkgs
-, config
-, lib
-, music
-, ...
+{
+  pkgs,
+  config,
+  lib,
+  music,
+  ...
 }:
 {
   home.packages = [

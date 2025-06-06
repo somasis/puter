@@ -1,6 +1,7 @@
-{ config
-, self
-, ...
+{
+  config,
+  self,
+  ...
 }:
 {
   age.secrets.esther-nix-serve-key = {

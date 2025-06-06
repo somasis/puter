@@ -1,6 +1,7 @@
-{ lib
-, pkgs
-, ...
+{
+  lib,
+  pkgs,
+  ...
 }:
 let
   memento = pkgs.writeShellScript "qutebrowser-memento" ''

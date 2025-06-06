@@ -20,7 +20,7 @@ EOF
 }
 
 pass() {
-    if [[ -n "${notify}" ]]; then
+    if [[ -n ${notify} ]]; then
         stdbuf -o0 -e0 \
             "$(command -v pass)" "$@" \
             2> >(while IFS= read -r stderr; do notify-send -a "pass" -i "password-manager" pass "${stderr}"; done) \
@@ -53,7 +53,7 @@ shift $((OPTIND - 1))
 
 dmenu_args=("$@")
 
-if [[ -n "${initial}" ]]; then
+if [[ -n ${initial} ]]; then
     DMENU_PASS_INITIAL_HISTORY=$(md5sum <<<"${initial}")
     DMENU_PASS_INITIAL_HISTORY=${DMENU_PASS_INITIAL_HISTORY%% *}
     DMENU_PASS_INITIAL_HISTORY="${DMENU_PASS_CACHE}/${DMENU_PASS_INITIAL_HISTORY}.history"
@@ -78,11 +78,11 @@ choice=$(
             | sort -n \
             | sed 's@^[0-9]* @@; s@^\.//@@; s@\.gpg$@@' \
             | cat ${initial:+"${DMENU_PASS_INITIAL_HISTORY}"} "${DMENU_PASS_HISTORY}" - 2>/dev/null
-    )   | awk '!seen[$0]++' \
+    ) | awk '!seen[$0]++' \
         | eval "${DMENU} ${dmenu_args[*]@Q}"
 )
 
-[[ -n "${choice}" ]] || exit 0
+[[ -n ${choice} ]] || exit 0
 
 case "${mode}" in
     password)
@@ -102,7 +102,7 @@ case "${mode}" in
     fields)
         field=$(notify='' pass meta "${choice}" | grep -xvF password | ${DMENU:-dmenu} -p "pass [${choice}]" "$@")
 
-        [[ -n "${field}" ]] || exit 0
+        [[ -n ${field} ]] || exit 0
 
         exec "$0" ${clip:+"-c"} ${notify:+"-n"} -i "${choice}" -m "${field}" "$@"
         ;;
@@ -121,7 +121,7 @@ case "${mode}" in
         ;;
 esac
 
-if [[ -n "${initial}" ]]; then
+if [[ -n ${initial} ]]; then
     cat - "${DMENU_PASS_INITIAL_HISTORY}" <<<"${choice}" \
         | head -n 24 \
         | grep -v "^\s*$" \

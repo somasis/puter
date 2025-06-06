@@ -1,17 +1,17 @@
-{ lib
-, buildPythonPackage
-, fetchFromGitHub
-, arrow
-, boltons
-, click
-, click-help-colors
-, click-log
-, poetry-core
-, sphinx
-, sphinx_rtd_theme
-, tabulate
-, tomlkit
-,
+{
+  lib,
+  buildPythonPackage,
+  fetchFromGitHub,
+  arrow,
+  boltons,
+  click,
+  click-help-colors,
+  click-log,
+  poetry-core,
+  sphinx,
+  sphinx_rtd_theme,
+  tabulate,
+  tomlkit,
 }:
 
 buildPythonPackage rec {

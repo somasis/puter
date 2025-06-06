@@ -1,8 +1,9 @@
-{ config
-, pkgs
-, lib
-, inputs
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
 }:
 {
   programs.qutebrowser.greasemonkey = map config.lib.somasis.drvOrPath [
@@ -107,27 +108,25 @@
     )
 
     # Mastodon
-    (pkgs.runCommandLocal "mastodon-larger-preview.user.js"
-      {
-        src =
-          (pkgs.fetchFromGitHub {
-            owner = "Frederick888";
-            repo = "mastodon-larger-preview";
-            rev = "e9005241dfd904373041fdb46d7bf932ac7492f0";
-            hash = "sha256-1miMTG8H/lf0BqiKdt9fA9qDiuhHqUiswM5mDqu594s=";
-          })
-          + "/main.user.js";
-      } ''sed '/^\/\/ @match/ i // @match https://mastodon.social/*' "$src" > "$out"'')
-    (pkgs.runCommandLocal "mastodon-pixiv-preview.user.js"
-      {
-        src =
-          (pkgs.fetchFromGitHub {
-            owner = "Frederick888";
-            repo = "mastodon-pixiv-preview";
-            rev = "b2994b11d041c77945bb59d0ebfe7ceb2920c985";
-            hash = "sha256-pglKBOl6WPF0JDWVyk/r6J8MB9RGt9x14cRFd3A0b1E=";
-          })
-          + "/main.user.js";
-      } ''sed '/^\/\/ @match/ i // @match https://mastodon.social/*' "$src" > "$out"'')
+    (pkgs.runCommandLocal "mastodon-larger-preview.user.js" {
+      src =
+        (pkgs.fetchFromGitHub {
+          owner = "Frederick888";
+          repo = "mastodon-larger-preview";
+          rev = "e9005241dfd904373041fdb46d7bf932ac7492f0";
+          hash = "sha256-1miMTG8H/lf0BqiKdt9fA9qDiuhHqUiswM5mDqu594s=";
+        })
+        + "/main.user.js";
+    } ''sed '/^\/\/ @match/ i // @match https://mastodon.social/*' "$src" > "$out"'')
+    (pkgs.runCommandLocal "mastodon-pixiv-preview.user.js" {
+      src =
+        (pkgs.fetchFromGitHub {
+          owner = "Frederick888";
+          repo = "mastodon-pixiv-preview";
+          rev = "b2994b11d041c77945bb59d0ebfe7ceb2920c985";
+          hash = "sha256-pglKBOl6WPF0JDWVyk/r6J8MB9RGt9x14cRFd3A0b1E=";
+        })
+        + "/main.user.js";
+    } ''sed '/^\/\/ @match/ i // @match https://mastodon.social/*' "$src" > "$out"'')
   ];
 }

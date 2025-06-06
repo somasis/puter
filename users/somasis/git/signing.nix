@@ -1,8 +1,9 @@
-{ config
-, lib
-, osConfig
-, pkgs
-, ...
+{
+  config,
+  lib,
+  osConfig,
+  pkgs,
+  ...
 }:
 {
   programs.git = {

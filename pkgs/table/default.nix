@@ -1,8 +1,8 @@
-{ lib
-, writeShellApplication
-, coreutils
-, unixtools
-,
+{
+  lib,
+  writeShellApplication,
+  coreutils,
+  unixtools,
 }:
 writeShellApplication {
   name = "table";

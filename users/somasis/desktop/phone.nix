@@ -1,6 +1,7 @@
-{ config
-, osConfig
-, ...
+{
+  config,
+  osConfig,
+  ...
 }:
 assert osConfig.programs.kdeconnect.enable;
 {
@@ -11,7 +12,10 @@ assert osConfig.programs.kdeconnect.enable;
 
   persist = {
     directories = [
-      { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "kdeconnect"; }
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgConfigDir "kdeconnect";
+      }
     ];
 
     files = [
@@ -20,10 +24,22 @@ assert osConfig.programs.kdeconnect.enable;
   };
 
   cache.directories = [
-    { method = "symlink"; directory = config.lib.somasis.xdgDataDir "kpeoplevcard"; }
-    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "kdeconnect.app"; }
-    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "kdeconnect.daemon"; }
-    { method = "symlink"; directory = config.lib.somasis.xdgCacheDir "kdeconnect.sms"; }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "kpeoplevcard";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "kdeconnect.app";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "kdeconnect.daemon";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "kdeconnect.sms";
+    }
   ];
 
   programs.qutebrowser = {

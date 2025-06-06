@@ -1,7 +1,7 @@
-{ lib
-, stdenvNoCC
-, fetchurl
-,
+{
+  lib,
+  stdenvNoCC,
+  fetchurl,
 }:
 let
   rev = "c9e403246491f600633daebb85734aa3cb9e3f36";

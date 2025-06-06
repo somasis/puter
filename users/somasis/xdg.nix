@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   inherit (config.lib.somasis) relativeToHome;
@@ -64,7 +65,10 @@ in
     # > $XDG_DATA_HOME.
     # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
     # (config.lib.somasis.relativeToHome config.xdg.stateHome)
-    { method = "bindfs"; directory = "var/lib"; }
+    {
+      method = "bindfs";
+      directory = "var/lib";
+    }
   ];
 
   persist.directories = [

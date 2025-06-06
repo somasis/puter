@@ -1,6 +1,7 @@
-{ config
-, pkgs
-, ...
+{
+  config,
+  pkgs,
+  ...
 }:
 {
   home.packages = with pkgs; [
@@ -26,14 +27,26 @@
   ];
 
   persist.directories = [
-    { method = "bindfs"; directory = config.lib.somasis.xdgConfigDir "jamesdsp"; }
+    {
+      method = "bindfs";
+      directory = config.lib.somasis.xdgConfigDir "jamesdsp";
+    }
   ];
 
   sync = {
     directories = [
-      { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "jamesdsp/irs"; }
-      { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "jamesdsp/liveprog"; }
-      { method = "symlink"; directory = config.lib.somasis.xdgConfigDir "jamesdsp/presets"; }
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgConfigDir "jamesdsp/irs";
+      }
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgConfigDir "jamesdsp/liveprog";
+      }
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgConfigDir "jamesdsp/presets";
+      }
     ];
 
     files = [

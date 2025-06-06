@@ -1,41 +1,39 @@
 { pkgs, ... }:
 let
-  beets-originquery = pkgs.callPackage
-    (
-      { lib
-      , fetchFromGitHub
-      , beets
-      , python3Packages
-      ,
-      }:
-      python3Packages.buildPythonApplication rec {
-        pname = "beets-originquery";
-        version = "1.0.2";
+  beets-originquery = pkgs.callPackage (
+    {
+      lib,
+      fetchFromGitHub,
+      beets,
+      python3Packages,
+    }:
+    python3Packages.buildPythonApplication rec {
+      pname = "beets-originquery";
+      version = "1.0.2";
 
-        src = fetchFromGitHub {
-          repo = pname;
-          owner = "x1ppy";
-          rev = version;
-          hash = "sha256-32S8Ik6rzw6kx69o9G/v7rVsVzGA1qv5pHegYDmTW68=";
-        };
+      src = fetchFromGitHub {
+        repo = pname;
+        owner = "x1ppy";
+        rev = version;
+        hash = "sha256-32S8Ik6rzw6kx69o9G/v7rVsVzGA1qv5pHegYDmTW68=";
+      };
 
-        propagatedBuildInputs = with python3Packages; [
-          confuse
-          jsonpath_rw
-          pyyaml
-        ];
+      propagatedBuildInputs = with python3Packages; [
+        confuse
+        jsonpath_rw
+        pyyaml
+      ];
 
-        nativeBuildInputs = [ beets ];
+      nativeBuildInputs = [ beets ];
 
-        meta = with lib; {
-          description = "Integrates origin.txt metadata into beets' MusicBrainz queries";
-          homepage = "https://github.com/x1ppy/${pname}";
-          maintainers = with maintainers; [ somasis ];
-          license = licenses.unfree; # <https://github.com/x1ppy/beets-originquery/issues/3>
-        };
-      }
-    )
-    { beets = pkgs.beetsPackages.beets-minimal; };
+      meta = with lib; {
+        description = "Integrates origin.txt metadata into beets' MusicBrainz queries";
+        homepage = "https://github.com/x1ppy/${pname}";
+        maintainers = with maintainers; [ somasis ];
+        license = licenses.unfree; # <https://github.com/x1ppy/beets-originquery/issues/3>
+      };
+    }
+  ) { beets = pkgs.beetsPackages.beets-minimal; };
 in
 {
   home.packages = [

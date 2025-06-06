@@ -1,6 +1,7 @@
-{ config
-, lib
-, ...
+{
+  config,
+  lib,
+  ...
 }:
 let
   ansi = config.lib.somasis.colors.format "ansi-8bit-escapecode";

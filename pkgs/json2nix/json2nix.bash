@@ -2,7 +2,7 @@
 
 usage() {
     # shellcheck disable=SC2059
-    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    [[ $# -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<'EOF'
 Convert JSON input to Nix language declarations.
@@ -16,7 +16,7 @@ usage: json2nix <file>...
        json2nix [-]
 EOF
 
-    [[ "$#" -eq 0 ]] || exit 1
+    [[ $# -eq 0 ]] || exit 1
     exit 69
 }
 
@@ -35,7 +35,7 @@ while getopts : opt >/dev/null 2>&1; do
 done
 shift $((OPTIND - 1))
 
-[[ "$#" -gt 0 ]] || set -- -
+[[ $# -gt 0 ]] || set -- -
 
 for path; do
     case "${path}" in
@@ -56,7 +56,7 @@ for path; do
             --expr '{ path }: builtins.fromJSON (builtins.readFile path)'
     ) || error=$?
 
-    if [[ "${error}" -ne 0 ]]; then
+    if [[ ${error} -ne 0 ]]; then
         # shellcheck disable=SC2016
         usage 'error: `nix-instantiate` failed while converting %s from JSON (error code: %i)\n' \
             "${path@Q}" \

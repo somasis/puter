@@ -1,29 +1,33 @@
-{ config
-, lib
-, pkgs
-, self
-, modulesPath
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  self,
+  modulesPath,
+  ...
 }:
 {
-  imports = with self; with inputs; [
-    (modulesPath + "/installer/scan/not-detected.nix")
-    nixosModules.sensible-defaults
+  imports =
+    with self;
+    with inputs;
+    [
+      (modulesPath + "/installer/scan/not-detected.nix")
+      nixosModules.sensible-defaults
 
-    ./audio.nix
-    ./backups.nix
-    ./cassie.nix
-    ./desktop.nix
-    ./filesystems.nix
-    ./gaming.nix
-    ./git.nix
-    ./networking.nix
-    ./nix.nix
-    ./ntfy.nix
-    ./samba.nix
-    ./somasis.nix
-    ./users.nix
-  ];
+      ./audio.nix
+      ./backups.nix
+      ./cassie.nix
+      ./desktop.nix
+      ./filesystems.nix
+      ./gaming.nix
+      ./git.nix
+      ./networking.nix
+      ./nix.nix
+      ./ntfy.nix
+      ./samba.nix
+      ./somasis.nix
+      ./users.nix
+    ];
 
   meta.type = "workstation";
   nixpkgs.hostPlatform = "x86_64-linux";
@@ -102,14 +106,19 @@
 
   hardware.cpu.amd.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
-  environment.systemPackages = [
-    pkgs.htop
-    pkgs.tmux
-    pkgs.kakoune
-    pkgs.neovim
-  ]
-  ++ lib.unique (lib.mapAttrsToList (_: x: x) (lib.filterAttrs (_: lib.isDerivation) pkgs.nixos-artwork.wallpapers))
-  ;
+  environment.systemPackages =
+    [
+      pkgs.htop
+      pkgs.tmux
+      pkgs.kakoune
+      pkgs.neovim
+    ]
+    ++ lib.unique (
+      lib.mapAttrsToList (_: x: x) (lib.filterAttrs (_: lib.isDerivation) pkgs.nixos-artwork.wallpapers)
+    );
 
-  environment.pathsToLink = [ "/share/wallpapers" "/share/backgrounds" ];
+  environment.pathsToLink = [
+    "/share/wallpapers"
+    "/share/backgrounds"
+  ];
 }

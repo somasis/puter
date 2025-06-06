@@ -1,10 +1,11 @@
-{ config
-, pkgs
-, modulesPath
-, lib
-, nixpkgs
-, inputs
-, ...
+{
+  config,
+  pkgs,
+  modulesPath,
+  lib,
+  nixpkgs,
+  inputs,
+  ...
 }:
 {
   imports = with inputs; [

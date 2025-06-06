@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   hledgerConfigFormat =
@@ -16,22 +17,21 @@ let
       commandAttrs = lib.removeAttrs attrs [ "general" ];
 
       generalFlags = attrsToFlags generalAttrs;
-      commandFlags = lib.mapAttrsToList
-        (
-          n: v: lib.concatStringsSep " " ([ "[${n}]" ] ++ (attrsToFlags v))
-        )
-        commandAttrs;
+      commandFlags = lib.mapAttrsToList (
+        n: v: lib.concatStringsSep " " ([ "[${n}]" ] ++ (attrsToFlags v))
+      ) commandAttrs;
     in
-    lib.concatLines (generalFlags ++ commandFlags)
-  ;
+    lib.concatLines (generalFlags ++ commandFlags);
 in
 {
   home.sessionVariables.LEDGER_FILE = "${config.home.homeDirectory}/ledger/journal.ledger";
 
-  persist.directories = [{
-    directory = config.lib.somasis.relativeToHome "${config.home.homeDirectory}/ledger";
-    method = "symlink";
-  }];
+  persist.directories = [
+    {
+      directory = config.lib.somasis.relativeToHome "${config.home.homeDirectory}/ledger";
+      method = "symlink";
+    }
+  ];
 
   home.packages = [
     pkgs.hledger

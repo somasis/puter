@@ -1,7 +1,8 @@
-{ lib
-, config
-, pkgs
-, ...
+{
+  lib,
+  config,
+  pkgs,
+  ...
 }:
 let
   cfg = config.services.xsecurelock;
@@ -56,13 +57,10 @@ in
       type =
         with types;
         nullOr (
-          coercedTo
-            (oneOf [
-              nonEmptyStr
-              path
-            ])
-            toString
-            str
+          coercedTo (oneOf [
+            nonEmptyStr
+            path
+          ]) toString str
         );
 
       default = null;
@@ -79,14 +77,11 @@ in
       type =
         with types;
         attrsOf (
-          coercedTo
-            (nullOr (oneOf [
-              str
-              number
-              path
-            ]))
-            (mkValueStringDefault { })
+          coercedTo (nullOr (oneOf [
             str
+            number
+            path
+          ])) (mkValueStringDefault { }) str
         );
       apply = mergeAttrs default;
 
@@ -113,13 +108,10 @@ in
       type =
         with types;
         attrsOf (
-          coercedTo
-            (nullOr (oneOf [
-              path
-              str
-            ]))
-            (mkValueStringDefault { })
+          coercedTo (nullOr (oneOf [
+            path
             str
+          ])) (mkValueStringDefault { }) str
         );
       apply = mergeAttrs default;
 
@@ -173,22 +165,20 @@ in
 
           Type =
             if cfg.successCommand == null then
-            # TODO use Type=notify instead; couldn't figure out how to get it working.
-            # Type = "notify";
-            # NotifyAccess = "all";
-            # ExecStart = "${getExe xsecurelockPkg} -- systemd-notify --ready --status='Locked successfully'";
-            # PassEnvironment = [ "NOTIFY_SOCKET" ];
+              # TODO use Type=notify instead; couldn't figure out how to get it working.
+              # Type = "notify";
+              # NotifyAccess = "all";
+              # ExecStart = "${getExe xsecurelockPkg} -- systemd-notify --ready --status='Locked successfully'";
+              # PassEnvironment = [ "NOTIFY_SOCKET" ];
               "simple"
             else
               "forking";
 
           Environment =
             mapAttrsToList (n: v: "${n}=${escapeSystemd v}") cfg.settings
-            ++ mapAttrsToList
-              (
-                k: command: "XSECURELOCK_KEY_${k}_COMMAND=${escapeSystemd command}"
-              )
-              cfg.keyBindings;
+            ++ mapAttrsToList (
+              k: command: "XSECURELOCK_KEY_${k}_COMMAND=${escapeSystemd command}"
+            ) cfg.keyBindings;
 
           ExecStart = getExe pkg + optionalString (cfg.successCommand != null) "-- ${cfg.successCommand}";
 

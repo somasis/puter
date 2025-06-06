@@ -1,62 +1,62 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, makeWrapper
-, xorg
-, zlib
-, pango
-, pkg-config
-, runtimeShell
-, enableAlpha ? false
-, enableBarPadding ? false
-, enableBorder ? false
-, enableCaretWidth ? false
-, enableCaseInsensitive ? false
-, enableCenter ? false
-, enableColorEmoji ? true
-, enableCtrlVToPaste ? true
-, enableDynamicOptions ? false
-, enableEmojiHighlight ? false
-, enableFuzzyHighlight ? false
-, enableFuzzyMatching ? false
-, enableFzfExpect ? false
-, enableGrid ? true
-, enableGridNav ? true
-, enableHighPriority ? false
-, enableHighlight ? true
-, enableIncremental ? false
-, enableInitialText ? true
-, enableInputMethod ? true
-, enableInstant ? true
-, enableLineHeight ? true
-, enableManaged ? false
-, enableMoreColor ? false
-, enableMouseSupport ? true
-, enableMultiSelection ? false
-, enableNavHistory ? false
-, enableNoSort ? true
-, enableNonBlockingStdin ? false
-, enableNumbers ? false
-, enablePango ? true
-, enablePassword ? false
-, enablePipeOut ? false
-, enablePlainPrompt ? true
-, enablePrefixMatching ? false
-, enablePreselect ? false
-, enablePrintIndex ? false
-, enablePrintInputText ? false
-, enableRejectNoMatch ? false
-, enableRelativeInputWidth ? false
-, enableRestrictReturn ? false
-, enableScroll ? false
-, enableSeparator ? false
-, enableSymbols ? false
-, enableTsv ? false
-, enableVertFull ? true
-, enableWMType ? true
-, enableXresources ? true
-, enableXyw ? false
-,
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  makeWrapper,
+  xorg,
+  zlib,
+  pango,
+  pkg-config,
+  runtimeShell,
+  enableAlpha ? false,
+  enableBarPadding ? false,
+  enableBorder ? false,
+  enableCaretWidth ? false,
+  enableCaseInsensitive ? false,
+  enableCenter ? false,
+  enableColorEmoji ? true,
+  enableCtrlVToPaste ? true,
+  enableDynamicOptions ? false,
+  enableEmojiHighlight ? false,
+  enableFuzzyHighlight ? false,
+  enableFuzzyMatching ? false,
+  enableFzfExpect ? false,
+  enableGrid ? true,
+  enableGridNav ? true,
+  enableHighPriority ? false,
+  enableHighlight ? true,
+  enableIncremental ? false,
+  enableInitialText ? true,
+  enableInputMethod ? true,
+  enableInstant ? true,
+  enableLineHeight ? true,
+  enableManaged ? false,
+  enableMoreColor ? false,
+  enableMouseSupport ? true,
+  enableMultiSelection ? false,
+  enableNavHistory ? false,
+  enableNoSort ? true,
+  enableNonBlockingStdin ? false,
+  enableNumbers ? false,
+  enablePango ? true,
+  enablePassword ? false,
+  enablePipeOut ? false,
+  enablePlainPrompt ? true,
+  enablePrefixMatching ? false,
+  enablePreselect ? false,
+  enablePrintIndex ? false,
+  enablePrintInputText ? false,
+  enableRejectNoMatch ? false,
+  enableRelativeInputWidth ? false,
+  enableRestrictReturn ? false,
+  enableScroll ? false,
+  enableSeparator ? false,
+  enableSymbols ? false,
+  enableTsv ? false,
+  enableVertFull ? true,
+  enableWMType ? true,
+  enableXresources ? true,
+  enableXyw ? false,
 }:
 let
   optionalCpp = opt: arg: if opt then "#define ${arg} 1" else "#define ${arg} 0";

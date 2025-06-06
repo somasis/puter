@@ -1,9 +1,9 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, cmake
-, kdePackages
-,
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  cmake,
+  kdePackages,
 }:
 kdePackages.mkKdeDerivation rec {
   pname = "emojirunner";

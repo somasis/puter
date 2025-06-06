@@ -1,6 +1,7 @@
-{ pkgs
-, lib
-, ...
+{
+  pkgs,
+  lib,
+  ...
 }:
 {
   imports = [
@@ -11,7 +12,10 @@
   home.sessionPath = [ "$HOME/bin" ];
 
   persist.directories = [
-    { method = "symlink"; directory = "bin"; }
+    {
+      method = "symlink";
+      directory = "bin";
+    }
   ];
 
   home.packages = with pkgs; [

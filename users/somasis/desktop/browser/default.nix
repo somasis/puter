@@ -1,8 +1,9 @@
-{ config
-, osConfig
-, pkgs
-, lib
-, ...
+{
+  config,
+  osConfig,
+  pkgs,
+  lib,
+  ...
 }:
 let
   inherit (config.lib.somasis)
@@ -87,10 +88,9 @@ let
   inherit (osConfig.services) tor;
 
   proxies =
-    lib.optional
-      (
-        tor.enable && tor.client.enable
-      ) "socks://${tor.client.socksListenAddress.addr}:${toString tor.client.socksListenAddress.port}"
+    lib.optional (
+      tor.enable && tor.client.enable
+    ) "socks://${tor.client.socksListenAddress.addr}:${toString tor.client.socksListenAddress.port}"
     ++ lib.optionals config.services.tunnels.enable (
       lib.mapAttrsToList (_: tunnel: "socks://127.0.0.1:${toString tunnel.port}") (
         lib.filterAttrs (_: tunnel: tunnel.type == "dynamic") config.services.tunnels.tunnels
@@ -178,8 +178,7 @@ in
         "x-scheme-handler/https"
         "x-scheme-handler/about"
         "x-scheme-handler/unknown"
-      ]
-        (_: "org.qutebrowser.qutebrowser.desktop")
+      ] (_: "org.qutebrowser.qutebrowser.desktop")
     );
 
     # associations.removed = lib.genAttrs
@@ -784,8 +783,7 @@ in
             "<Ctrl+y>"
             "<Alt+e>"
             "<Ctrl+Shift+w>"
-          ]
-            (key: null);
+          ] (key: null);
 
           normal = lib.genAttrs [
             "G"
@@ -806,8 +804,7 @@ in
             "q"
             "<Ctrl+q>"
             "<F11>"
-          ]
-            (key: null);
+          ] (key: null);
         }
       ];
     };

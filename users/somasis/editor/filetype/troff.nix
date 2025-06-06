@@ -1,7 +1,8 @@
 # roff(7), mdoc(7).
-{ pkgs
-, lib
-, ...
+{
+  pkgs,
+  lib,
+  ...
 }:
 let
   lint = pkgs.writeShellScript "lint-troff" ''

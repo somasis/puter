@@ -138,10 +138,10 @@ quote_as_one() {
 }
 
 should_use_command_history() {
-    [[ -n "${DMENU_RUN_HISTORY}" ]] \
-        && [[ "${DMENU_RUN_HISTORY}" != '/dev/null' ]] \
-        && [[ -n "${DMENU_RUN_HISTORY_LENGTH}" ]] \
-        && [[ "${DMENU_RUN_HISTORY_LENGTH}" -ne 0 ]] \
+    [[ -n ${DMENU_RUN_HISTORY} ]] \
+        && [[ ${DMENU_RUN_HISTORY} != '/dev/null' ]] \
+        && [[ -n ${DMENU_RUN_HISTORY_LENGTH} ]] \
+        && [[ ${DMENU_RUN_HISTORY_LENGTH} -ne 0 ]] \
         && return 0
     return 1
 }
@@ -212,7 +212,7 @@ validate_command_history_with_notification() {
     while IFS=$' \t\n' read -r -a command_history_entry; do
         if type -t "${command_history_entry[0]}" >/dev/null 2>&1; then
             printf '%s\n' "$(quote "${command_history_entry[@]}")"
-        elif [[ "${command_history_entry_i}" -eq 0 ]]; then
+        elif [[ ${command_history_entry_i} -eq 0 ]]; then
             #     a. If it is the first command in the list, show a 'command not found'
             #        notification for it.
             notify "${command_history_entry[0]}" "command not found"
@@ -237,14 +237,14 @@ esac
 dmenu_args=("$@")
 
 for v in DMENU DMENU_RUN_HISTORY DMENU_RUN_HISTORY_LENGTH DMENU_RUN_SCRIPT; do
-    [[ -v "${v}" ]] || usage 'error: %q must be set.\n' "${v}"
+    [[ -v ${v} ]] || usage 'error: %q must be set.\n' "${v}"
 done
 unset v
 
-[[ "${DMENU_RUN_HISTORY_LENGTH:-}" =~ ^[0-9]+$ ]] || usage 'DMENU_RUN_HISTORY_LENGTH must be an unsigned integer.'
+[[ ${DMENU_RUN_HISTORY_LENGTH:-} =~ ^[0-9]+$ ]] || usage 'DMENU_RUN_HISTORY_LENGTH must be an unsigned integer.'
 
 # shellcheck source=/dev/null
-[[ -e "${DMENU_RUN_SCRIPT}" ]] && . "${DMENU_RUN_SCRIPT}"
+[[ -e ${DMENU_RUN_SCRIPT} ]] && . "${DMENU_RUN_SCRIPT}"
 
 command=$(
     # 1. Gather list of executables.
@@ -254,7 +254,7 @@ command=$(
 
 unset IFS
 read -r -a command <<<"${command}"
-[[ -n "${command[*]}" ]] || exit 0
+[[ -n ${command[*]} ]] || exit 0
 
 case "${command[0]}" in
     '+'*)
@@ -272,7 +272,7 @@ case "${command[0]}" in
             | write_command_history
 
         command_history_length_after=$(print_command_history | wc -l)
-        if [[ "${command_history_length_after}" -ne "${command_history_length_before}" ]]; then
+        if [[ ${command_history_length_after} -ne ${command_history_length_before} ]]; then
             notification_text=$(
                 printf \
                     "removed '%s' from history (%i commands in history -> %i commands in history)." \
@@ -311,7 +311,7 @@ if type -t "${command[0]}" >/dev/null 2>&1; then
 
     type -t "_dmenu_run_after_execute" >/dev/null 2>&1 && _dmenu_run_after_execute "${command[@]}"
 
-    [[ "${command_error}" -eq 0 ]] || notify "${command[0]}" "command exited with ${command_error}."
+    [[ ${command_error} -eq 0 ]] || notify "${command[0]}" "command exited with ${command_error}."
 else
     if type -t _dmenu_run_command_not_found >/dev/null 2>&1; then
         _dmenu_run_command_not_found "${command[@]}" || exit $?

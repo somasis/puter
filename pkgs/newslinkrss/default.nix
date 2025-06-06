@@ -1,13 +1,13 @@
-{ lib
-, buildPythonApplication
-, fetchFromSourcehut
-, setuptools
-, cssselect
-, lxml
-, pyrss2gen
-, python-dateutil
-, requests
-,
+{
+  lib,
+  buildPythonApplication,
+  fetchFromSourcehut,
+  setuptools,
+  cssselect,
+  lxml,
+  pyrss2gen,
+  python-dateutil,
+  requests,
 }:
 buildPythonApplication rec {
   pname = "newslinkrss";

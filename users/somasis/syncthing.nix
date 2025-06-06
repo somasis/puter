@@ -1,7 +1,8 @@
-{ config
-, osConfig
-, lib
-, ...
+{
+  config,
+  osConfig,
+  lib,
+  ...
 }:
 {
   services.syncthing = {
@@ -13,8 +14,14 @@
   };
 
   persist.directories = [
-    { method = "symlink"; directory = "shared"; }
-    { method = "symlink"; directory = "sync"; }
+    {
+      method = "symlink";
+      directory = "shared";
+    }
+    {
+      method = "symlink";
+      directory = "sync";
+    }
   ];
 
   systemd.user.services.syncthing = {

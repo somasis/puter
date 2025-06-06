@@ -1,11 +1,11 @@
-{ lib
-, symlinkJoin
-, writeTextFile
-, substituteAll
-, coreutils
-, gawk
-, runtimeShell
-,
+{
+  lib,
+  symlinkJoin,
+  writeTextFile,
+  substituteAll,
+  coreutils,
+  gawk,
+  runtimeShell,
 }:
 symlinkJoin {
   name = "pass-meta";

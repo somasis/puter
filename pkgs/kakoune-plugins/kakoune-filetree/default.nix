@@ -1,9 +1,9 @@
-{ lib
-, fetchFromGitHub
-, kakouneUtils
-, perl
-, tree
-,
+{
+  lib,
+  fetchFromGitHub,
+  kakouneUtils,
+  perl,
+  tree,
 }:
 kakouneUtils.buildKakounePluginFrom2Nix rec {
   pname = "kakoune-filetree";

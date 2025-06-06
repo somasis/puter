@@ -1,8 +1,9 @@
-{ config
-, pkgs
-, lib
-, osConfig
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  osConfig,
+  ...
 }:
 let
   inherit (lib)
@@ -209,7 +210,6 @@ let
   #     .module-ConversationHeader__button:not(:disabled):hover::before {
   #         background-color: var(--somasis-accent-color);
   #     }
-
 
   #     .react-contextmenu-item:not(:disabled):hover::before,
   #     .react-contextmenu-item:not(:disabled):hover::after,

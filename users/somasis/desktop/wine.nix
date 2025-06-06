@@ -1,8 +1,9 @@
-{ lib
-, pkgs
-, config
-, osConfig
-, ...
+{
+  lib,
+  pkgs,
+  config,
+  osConfig,
+  ...
 }:
 let
   inherit (config.lib.file) mkOutOfStoreSymlink;
@@ -13,16 +14,13 @@ let
     let
       default = pkgs.wine;
     in
-    lib.lists.findFirst
-      (
-        pkg:
-        (lib.hasPrefix "wine" (lib.getName pkg))
-        # && (lib.hasPrefix "wine" (lib.getExe pkg))
-        && (lib.hasAttr "homepage" pkg.meta)
-        && (pkg.meta.homepage == (default.meta.homepage or null))
-      )
-      default
-      (config.home.packages ++ (osConfig.environment.systemPackages or [ ]));
+    lib.lists.findFirst (
+      pkg:
+      (lib.hasPrefix "wine" (lib.getName pkg))
+      # && (lib.hasPrefix "wine" (lib.getExe pkg))
+      && (lib.hasAttr "homepage" pkg.meta)
+      && (pkg.meta.homepage == (default.meta.homepage or null))
+    ) default (config.home.packages ++ (osConfig.environment.systemPackages or [ ]));
 in
 {
   home = {

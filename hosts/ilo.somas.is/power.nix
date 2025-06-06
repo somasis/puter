@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 {
   services.logind = {
@@ -115,127 +116,127 @@
         }
       ]
       ++
-      map
-        (name: {
-          inherit name;
-          type = "BG_CPUIO";
-        })
-        [
-          "bindfs"
-          "bwrap"
-          "nix-daemon"
+        map
+          (name: {
+            inherit name;
+            type = "BG_CPUIO";
+          })
+          [
+            "bindfs"
+            "bwrap"
+            "nix-daemon"
 
-          "mbsync"
+            "mbsync"
 
-          # GeoClue
-          "geoclue"
-          ".geoclue-wrapped"
+            # GeoClue
+            "geoclue"
+            ".geoclue-wrapped"
 
-          "udisksd"
+            "udisksd"
 
-          "dbus-daemon"
+            "dbus-daemon"
 
-          "iio-sensor-proxy"
-          "localtimed"
+            "iio-sensor-proxy"
+            "localtimed"
 
-          "systemd-logind"
-          "systemd-resolved"
-          "systemd-socket-proxyd"
+            "systemd-logind"
+            "systemd-resolved"
+            "systemd-socket-proxyd"
 
-          "listenbrainz-mpd"
-          "mpDris2"
-          ".mpDris2-wrapped"
-          "..mpDris2-wrapped-wrapped" # ?
-          "mpris-proxy"
-          "mpdscribble"
-          "mpd-discord-rpc"
+            "listenbrainz-mpd"
+            "mpDris2"
+            ".mpDris2-wrapped"
+            "..mpDris2-wrapped-wrapped" # ?
+            "mpris-proxy"
+            "mpdscribble"
+            "mpd-discord-rpc"
 
-          "clipmenud"
-          ".clipmenud-wrapped"
+            "clipmenud"
+            ".clipmenud-wrapped"
 
-          "pass_secret_service"
-          ".pass_secret_service-wrapped"
+            "pass_secret_service"
+            ".pass_secret_service-wrapped"
 
-          "systemd-wait"
-          ".systemd-wait-wrapped"
-        ]
+            "systemd-wait"
+            ".systemd-wait-wrapped"
+          ]
       ++
-      map
-        (name: {
-          inherit name;
-          type = "services";
-        })
-        [
-          "fwupd"
-          ".fwupd-wrapped"
+        map
+          (name: {
+            inherit name;
+            type = "services";
+          })
+          [
+            "fwupd"
+            ".fwupd-wrapped"
 
-          "usbguard-daemon"
+            "usbguard-daemon"
 
-          "goimapnotify"
+            "goimapnotify"
 
-          "upower"
-        ]
+            "upower"
+          ]
       ++
-      map
-        (name: {
-          inherit name;
-          type = "DEWM";
-        })
-        [
-          "dunst"
-          ".dunst-wrapped"
+        map
+          (name: {
+            inherit name;
+            type = "DEWM";
+          })
+          [
+            "dunst"
+            ".dunst-wrapped"
 
-          "usbguard-notifier"
-          "xss-lock"
-          "xsecurelock"
+            "usbguard-notifier"
+            "xss-lock"
+            "xsecurelock"
 
-          "clipnotify"
+            "clipnotify"
 
-          "batsignal"
-          "dunst"
-          "fcitx5"
-          "lemonbar"
-          "stalonetray"
-          "snixembed"
-          "unclutter"
+            "batsignal"
+            "dunst"
+            "fcitx5"
+            "lemonbar"
+            "stalonetray"
+            "snixembed"
+            "unclutter"
 
-          "stw"
+            "stw"
 
-          "nmcli"
+            "nmcli"
 
-          # GeoClue
-          "agent"
-          ".agent-wrapped"
+            # GeoClue
+            "agent"
+            ".agent-wrapped"
 
-          "udiskie"
-          ".udiskie-wrapped"
+            "udiskie"
+            ".udiskie-wrapped"
 
-          # "xtitle"
-          # "bspc"
+            # "xtitle"
+            # "bspc"
 
-          # "xclip"
-          "dmenu"
-        ]
+            # "xclip"
+            "dmenu"
+          ]
       ++
-      map
-        (name: {
-          inherit name;
-          type = "common-utility";
-        })
-        [
-          "rwc"
-          "snooze"
+        map
+          (name: {
+            inherit name;
+            type = "common-utility";
+          })
+          [
+            "rwc"
+            "snooze"
 
-          "coreutils"
+            "coreutils"
 
-          "bash"
+            "bash"
 
-          "mpc"
+            "mpc"
 
-          "rfkill"
+            "rfkill"
 
-          "pactl"
-        ];
+            "pactl"
+          ];
   };
 
   # ananicy spams the log constantly

@@ -1,5 +1,5 @@
 usage() {
-    [[ "$#" -gt 0 ]] || printf 'error: %s\n' "$@" >&2
+    [[ $# -gt 0 ]] || printf 'error: %s\n' "$@" >&2
     cat >&2 <<'EOF'
 usage: borg-import-facebook [borg arguments --] facebook-*.zip
 EOF
@@ -11,14 +11,14 @@ case "$1" in
     --) shift ;;
     -*)
         # Get list of args to pass to `borg`.
-        until [[ "$1" == '--' ]]; do
+        until [[ $1 == '--' ]]; do
             borg_args+=("$1")
         done
         shift
         ;;
 esac
 
-if [[ "$#" -lt 1 ]]; then
+if [[ $# -lt 1 ]]; then
     usage 'no archives given'
 fi
 
@@ -40,18 +40,18 @@ printf '::facebook-%s-%s\n' "${account}" "${date}"
 bsdtar -cf - --format=ustar @"$1" \
     | borg "${borg_args[@]}" \
         import-tar \
-            --stats -p \
-            --comment='imported with `borg import-tar`, via borg-import-facebook' \
-            --timestamp="${date}" \
-            "::facebook-${account}-${date}.failed" \
-            -
+        --stats -p \
+        --comment='imported with `borg import-tar`, via borg-import-facebook' \
+        --timestamp="${date}" \
+        "::facebook-${account}-${date}.failed" \
+        -
 
 borg "${borg_args[@]}" \
     rename \
-        "::facebook-${account}-${date}.failed" \
-        "facebook-${account}-${date}"
+    "::facebook-${account}-${date}.failed" \
+    "facebook-${account}-${date}"
 
 borg "${borg_args[@]}" \
     prune \
-        --keep-monthly=12 --keep-yearly=4 \
-        -a "facebook-${account}-*"
+    --keep-monthly=12 --keep-yearly=4 \
+    -a "facebook-${account}-*"

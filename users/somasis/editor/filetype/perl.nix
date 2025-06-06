@@ -1,6 +1,7 @@
-{ pkgs
-, lib
-, ...
+{
+  pkgs,
+  lib,
+  ...
 }:
 let
   format = "${pkgs.perlPackages.PerlTidy}/bin/perltidy -pro=.../.perltidyrc -st -se";

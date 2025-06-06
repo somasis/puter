@@ -1,9 +1,10 @@
-{ config
-, pkgs
-, osConfig
-, inputs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  osConfig,
+  inputs,
+  lib,
+  ...
 }:
 let
   # mkConfig = lib.generators.toKeyValue {
@@ -569,14 +570,14 @@ in
   persist.files = [
     (config.lib.somasis.xdgConfigDir "catgirl/client-${osConfig.networking.fqdnOrHostName}.pem")
   ]
-    # ++ lib.mapAttrsToList
-    #   (name: value:
-    #     if value.save != null then
-    #       config.lib.somasis.xdgDataDir "catgirl/${value.save}"
-    #     else
-    #       { }
-    #   )
-    #   config.programs.catgirl.networks
+  # ++ lib.mapAttrsToList
+  #   (name: value:
+  #     if value.save != null then
+  #       config.lib.somasis.xdgDataDir "catgirl/${value.save}"
+  #     else
+  #       { }
+  #   )
+  #   config.programs.catgirl.networks
   ;
 
   xdg.configFile."catgirl/tilde.conf".text = ''

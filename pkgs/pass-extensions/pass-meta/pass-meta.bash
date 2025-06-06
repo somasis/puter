@@ -29,7 +29,7 @@ meta() {
                     if ($one) { exit }
                 }
             '
-            # -v one="${one}"
+    # -v one="${one}"
 }
 
 # one=0
@@ -41,7 +41,7 @@ while getopts : arg >/dev/null 2>&1; do
 done
 shift $((OPTIND - 1))
 
-[[ "$#" -ge 1 ]] || usage
+[[ $# -ge 1 ]] || usage
 
 check_sneaky_paths "$1"
 
@@ -54,7 +54,7 @@ case "${2:-}" in
         ;;
     login | name | user | username)
         username=$(meta "$1" "login|name|user|username")
-        [[ -z "${username}" ]] && exec basename "$1"
+        [[ -z ${username} ]] && exec basename "$1"
         printf '%s\n' "${username}"
         ;;
 

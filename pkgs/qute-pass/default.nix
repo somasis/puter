@@ -1,14 +1,14 @@
-{ lib
-, writeShellApplication
-, coreutils
-, dmenu-pass
-, gnused
-, libnotify
-, pass
-, trurl
-, util-linux
-, xdotool
-,
+{
+  lib,
+  writeShellApplication,
+  coreutils,
+  dmenu-pass,
+  gnused,
+  libnotify,
+  pass,
+  trurl,
+  util-linux,
+  xdotool,
 }:
 writeShellApplication {
   name = "qute-pass";

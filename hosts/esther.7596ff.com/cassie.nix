@@ -1,44 +1,43 @@
-{ config
-, pkgs
-, self
-, ...
+{
+  config,
+  pkgs,
+  self,
+  ...
 }:
 let
-  rarbg-selfhosted = pkgs.callPackage
-    (
-      { lib
-      , buildGoModule
-      , fetchFromGitHub
-      ,
-      }:
-      buildGoModule rec {
-        pname = "rarbg-selfhosted";
-        version = "0.0.5";
+  rarbg-selfhosted = pkgs.callPackage (
+    {
+      lib,
+      buildGoModule,
+      fetchFromGitHub,
+    }:
+    buildGoModule rec {
+      pname = "rarbg-selfhosted";
+      version = "0.0.5";
 
-        src = fetchFromGitHub {
-          owner = "mgdigital";
-          repo = "rarbg-selfhosted";
-          rev = "v${version}";
-          hash = "sha256-4eVdyMZSh+s8eXhtbC9CDBPRcbpzeteruq3FA3jw6Yc=";
-        };
+      src = fetchFromGitHub {
+        owner = "mgdigital";
+        repo = "rarbg-selfhosted";
+        rev = "v${version}";
+        hash = "sha256-4eVdyMZSh+s8eXhtbC9CDBPRcbpzeteruq3FA3jw6Yc=";
+      };
 
-        vendorHash = "sha256-xA4o977hm8gSbMJrWTbaLWWM/EUXyuXInUvcKl/Z8YY=";
+      vendorHash = "sha256-xA4o977hm8gSbMJrWTbaLWWM/EUXyuXInUvcKl/Z8YY=";
 
-        ldflags = [
-          "-s"
-          "-w"
-        ];
+      ldflags = [
+        "-s"
+        "-w"
+      ];
 
-        meta = with lib; {
-          description = "A self-hosted Torznab API for the RARBG backup, compatible with Prowlarr, Radarr, Sonarr etc";
-          homepage = "https://github.com/mgdigital/rarbg-selfhosted";
-          license = licenses.unfree; # FIXME: nix-init did not found a license
-          maintainers = with maintainers; [ somasis ];
-          mainProgram = "rarbg-selfhosted";
-        };
-      }
-    )
-    { };
+      meta = with lib; {
+        description = "A self-hosted Torznab API for the RARBG backup, compatible with Prowlarr, Radarr, Sonarr etc";
+        homepage = "https://github.com/mgdigital/rarbg-selfhosted";
+        license = licenses.unfree; # FIXME: nix-init did not found a license
+        maintainers = with maintainers; [ somasis ];
+        mainProgram = "rarbg-selfhosted";
+      };
+    }
+  ) { };
   # whatmp3 = pkgs.callPackage ({ lib, buildPythonPackage, fetchFromGithub }: buildPythonPackage rec {
   #   name = "whatmp3";
   #   version = "3.9";
@@ -52,7 +51,7 @@ let
 
 in
 #   propagatedBuildInputs = [ pkgs.flac pkgs.lame ];
-  # }) {};
+# }) {};
 {
   age.secrets = {
     cassie-beets-musicbrainz-password.file = "${self}/secrets/cassie-beets-musicbrainz-password.age";

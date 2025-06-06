@@ -1,8 +1,9 @@
 # FIXME it really don't work right now
-{ lib
-, config
-, pkgs
-, ...
+{
+  lib,
+  config,
+  pkgs,
+  ...
 }:
 let
   inherit (lib)
@@ -94,18 +95,16 @@ let
             host = mkGlobOption "User host to match" { };
 
             command = mkGlobOption "IRC commands to match against" {
-              type = either
-                (enum [
-                  "INVITE"
-                  "JOIN"
-                  "NICK"
-                  "NOTICE"
-                  "PART"
-                  "PRIVMSG"
-                  "QUIT"
-                  "SETNAME"
-                ])
-                nonEmptyStr;
+              type = either (enum [
+                "INVITE"
+                "JOIN"
+                "NICK"
+                "NOTICE"
+                "PART"
+                "PRIVMSG"
+                "QUIT"
+                "SETNAME"
+              ]) nonEmptyStr;
             };
 
             channel = mkGlobOption "Channel to match against" { type = channelType; };
@@ -282,14 +281,12 @@ in
     home.packages = [ pkg ];
 
     xdg.configFile = mkIf (cfg.networks != { }) (
-      mapAttrs'
-        (
-          n: v:
-            nameValuePair "catgirl/${n}.conf" {
-              source = configFormat.generate "${n}.conf" (lib.traceValSeq (cfg.settings // v));
-            }
-        )
-        cfg.networks
+      mapAttrs' (
+        n: v:
+        nameValuePair "catgirl/${n}.conf" {
+          source = configFormat.generate "${n}.conf" (lib.traceValSeq (cfg.settings // v));
+        }
+      ) cfg.networks
     );
   };
 }

@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, music
-, ...
+{
+  config,
+  pkgs,
+  music,
+  ...
 }:
 {
   # programs.beets.settings = {

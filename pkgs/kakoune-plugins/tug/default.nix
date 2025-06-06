@@ -1,7 +1,7 @@
-{ lib
-, fetchFromGitHub
-, kakouneUtils
-,
+{
+  lib,
+  fetchFromGitHub,
+  kakouneUtils,
 }:
 kakouneUtils.buildKakounePluginFrom2Nix rec {
   pname = "tug";

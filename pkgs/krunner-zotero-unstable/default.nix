@@ -1,10 +1,10 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, cmake
-, nlohmann_json
-, kdePackages
-,
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  cmake,
+  nlohmann_json,
+  kdePackages,
 }:
 kdePackages.mkKdeDerivation rec {
   pname = "krunner-zotero-unstable";

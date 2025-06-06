@@ -1,12 +1,12 @@
-{ lib
-, writeShellApplication
-, coreutils
-, file
-, gnugrep
-, oxipng
-, optipng
-, jpegoptim
-,
+{
+  lib,
+  writeShellApplication,
+  coreutils,
+  file,
+  gnugrep,
+  oxipng,
+  optipng,
+  jpegoptim,
 }:
 writeShellApplication {
   name = "optimize";

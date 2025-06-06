@@ -4,7 +4,7 @@ set -euo pipefail
 
 usage() {
     # shellcheck disable=SC2059
-    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    [[ $# -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
 Filter the qutebrowser history database by constructing an SQL query
@@ -29,7 +29,7 @@ options:
     title:<regex>       Match entries whose title matches <regex>.
     url:<regex>         Match entries whose URL matches <regex>.
 EOF
-    [[ "$#" -eq 0 ]] || exit 1
+    [[ $# -eq 0 ]] || exit 1
     exit 69
 }
 
@@ -39,12 +39,12 @@ EOF
 : "${XDG_DATA_HOME:=${HOME}/.local/share}"
 history="${XDG_DATA_HOME}"/qutebrowser/history.sqlite
 
-if ! [[ -e "${history}" ]]; then
+if ! [[ -e ${history} ]]; then
     printf 'error: qutebrowser history not found at expected location (%q)\n' "${history}" >&2
     exit 1
 fi
 
-if [[ -L "${history}" ]]; then
+if [[ -L ${history} ]]; then
     history=$(readlink -f "${history}")
 fi
 
@@ -61,7 +61,7 @@ done
 shift $((OPTIND - 1))
 
 criterion+=("$@")
-[[ "${#criterion[@]}" -gt 0 ]] || usage 'error: no criterion specified\n'
+[[ ${#criterion[@]} -gt 0 ]] || usage 'error: no criterion specified\n'
 
 criteria=
 criteria_type=
@@ -79,7 +79,7 @@ for criteria in "${criterion[@]}"; do
     criteria=${criteria#"${criteria_type}:"}
 
     conjunct=WHERE
-    if [[ "${criteria_processed}" -gt 0 ]]; then
+    if [[ ${criteria_processed} -gt 0 ]]; then
         case "${match_mode}" in
             all) conjunct=AND ;;
             any) conjunct=OR ;;
@@ -115,7 +115,7 @@ done
 # printf 'SELECT * FROM CompletionHistory %s\n' "${sql_criterion_CompletionHistory}" >&2
 # exit
 
-if [[ "${dry_run}" == true ]]; then
+if [[ ${dry_run} == true ]]; then
     sql="
         SELECT datetime(atime, 'unixepoch'), url
             FROM (

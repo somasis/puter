@@ -1,12 +1,12 @@
-{ lib
-, symlinkJoin
-, writeTextFile
-, bash
-, coreutils
-, gawk
-, moreutils
-, rsync
-,
+{
+  lib,
+  symlinkJoin,
+  writeTextFile,
+  bash,
+  coreutils,
+  gawk,
+  moreutils,
+  rsync,
 }:
 (symlinkJoin {
   name = "pass-link";

@@ -141,23 +141,25 @@
   };
 
   outputs =
-    { self
-    , git-hooks
-    , treefmt-nix
+    {
+      self,
+      git-hooks,
+      treefmt-nix,
 
-    , nixpkgs
-    , nixpkgsStable
-    , nixpkgsUnstable
-    , homeManager
-    , disko
+      nixpkgs,
+      nixpkgsStable,
+      nixpkgsUnstable,
+      homeManager,
+      disko,
 
-    , ...
+      ...
     }@inputs:
     let
       inherit (nixpkgs) lib;
 
       forAllSystems = lib.genAttrs lib.systems.flakeExposed;
-      treefmt = forAllSystems (system:
+      treefmt = forAllSystems (
+        system:
         treefmt-nix.lib.evalModule nixpkgsFor.${system}.pkgs {
           # See also <https://github.com/numtide/treefmt-nix/tree/main/programs>
           projectRootFile = "flake.nix";
@@ -166,14 +168,16 @@
             shellcheck.options = [
               "--exclude=SC2310,SC2312"
 
-              ''--enable=${lib.concatStringsSep "," [
-                "avoid-nullary-conditions"
-                "check-unassigned-uppercase"
-                "deprecate-which"
-                "quote-safe-variables"
-                "require-double-brackets"
-                "require-variable-braces"
-              ]}''
+              ''--enable=${
+                lib.concatStringsSep "," [
+                  "avoid-nullary-conditions"
+                  "check-unassigned-uppercase"
+                  "deprecate-which"
+                  "quote-safe-variables"
+                  "require-double-brackets"
+                  "require-variable-braces"
+                ]
+              }''
             ];
 
             shfmt.options = [
@@ -266,13 +270,12 @@
         # pkgs.flakePackages.<input name>.package
         flakePackages = final: prev: {
           flakePackages =
-            lib.mapAttrs' (inputName: input: lib.nameValuePair inputName input.packages.${system}) (
-              lib.filterAttrs
-                (_: inputValue:
-                  (inputValue ? packages.${system}) && (inputValue.packages.${system} != { })
-                )
-                inputs
-            );
+            lib.mapAttrs' (inputName: input: lib.nameValuePair inputName input.packages.${system})
+              (
+                lib.filterAttrs (
+                  _: inputValue: (inputValue ? packages.${system}) && (inputValue.packages.${system} != { })
+                ) inputs
+              );
         };
       };
 
@@ -283,7 +286,14 @@
         };
 
         ilo = lib.nixosSystem {
-          specialArgs = { inherit self inputs nixpkgs disko; };
+          specialArgs = {
+            inherit
+              self
+              inputs
+              nixpkgs
+              disko
+              ;
+          };
           modules = [ ./hosts/ilo.somas.is ];
         };
       };
@@ -342,34 +352,35 @@
         formatting = treefmt.${system}.config.build.check self;
       });
 
-      devShells = forAllSystems (system: with nixpkgsFor.${system}.pkgs; {
-        default = mkShell {
-          shellHook =
-            self.checks.${system}.git-hooks.shellHook
-            + ''
-              # Used by the default `nixos` alias provided by sensible-defaults.
-              export FLAKE="$PWD"
-            ''
-          ;
+      devShells = forAllSystems (
+        system: with nixpkgsFor.${system}.pkgs; {
+          default = mkShell {
+            shellHook =
+              self.checks.${system}.git-hooks.shellHook
+              + ''
+                # Used by the default `nixos` alias provided by sensible-defaults.
+                export FLAKE="$PWD"
+              '';
 
-          buildInputs =
-            with inputs;
-            self.checks.${system}.git-hooks.enabledPackages
-            ++ [
-              # Add treefmt to path
-              self.formatter.${system}
+            buildInputs =
+              with inputs;
+              self.checks.${system}.git-hooks.enabledPackages
+              ++ [
+                # Add treefmt to path
+                self.formatter.${system}
 
-              # `agenix`, used for secrets management (see also: `./secrets/secrets.nix`)
-              agenix.packages.${system}.default
+                # `agenix`, used for secrets management (see also: `./secrets/secrets.nix`)
+                agenix.packages.${system}.default
 
-              # Used for `htpasswd`.
-              apacheHttpd
-              replace-secret
+                # Used for `htpasswd`.
+                apacheHttpd
+                replace-secret
 
-              nix-update
-            ];
-        };
-      });
+                nix-update
+              ];
+          };
+        }
+      );
 
       formatter = forAllSystems (system: treefmt.${system}.config.build.wrapper);
     };

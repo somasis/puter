@@ -1,7 +1,8 @@
-{ config
-, lib
-, osConfig
-, ...
+{
+  config,
+  lib,
+  osConfig,
+  ...
 }:
 # Based off GNOME Colors, as always
 # <https://raw.githubusercontent.com/gnome-colors/gnome-colors/refs/heads/master/gnome-colors/Palette.svg>

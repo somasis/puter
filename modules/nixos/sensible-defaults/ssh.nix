@@ -1,6 +1,7 @@
-{ config
-, lib
-, ...
+{
+  config,
+  lib,
+  ...
 }:
 {
   services.openssh = {
@@ -20,12 +21,10 @@
   persist = {
     # Persist all host keys (NixOS has default host key locations!)
     files = lib.flatten (
-      map
-        (key: [
-          key.path
-          "${key.path}.pub"
-        ])
-        config.services.openssh.hostKeys
+      map (key: [
+        key.path
+        "${key.path}.pub"
+      ]) config.services.openssh.hostKeys
     );
 
     # Persist root's own user keys

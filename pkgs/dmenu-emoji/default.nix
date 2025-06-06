@@ -1,16 +1,16 @@
-{ lib
-, wrapCommand
-, writeShellApplication
-, coreutils
-, dmenu
-, gnugrep
-, gnused
-, moreutils
-, unicode-emoji
-, gawk
-, xclip
-, xdotool
-,
+{
+  lib,
+  wrapCommand,
+  writeShellApplication,
+  coreutils,
+  dmenu,
+  gnugrep,
+  gnused,
+  moreutils,
+  unicode-emoji,
+  gawk,
+  xclip,
+  xdotool,
 }:
 wrapCommand {
   package = writeShellApplication {

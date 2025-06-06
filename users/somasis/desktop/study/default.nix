@@ -1,23 +1,24 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 let
   inherit (config.lib.somasis) feeds;
 
   philpapers =
-    { keyword
-    , title ? "PhilPapers: ${keyword}"
-    , proOnly ? false
-    , publishedOnly ? true
-    , sort ? "pubYear"
-    , tags ? [
+    {
+      keyword,
+      title ? "PhilPapers: ${keyword}",
+      proOnly ? false,
+      publishedOnly ? true,
+      sort ? "pubYear",
+      tags ? [
         "philosophy"
         keyword
-      ]
-    , extraTags ? [ ]
-    ,
+      ],
+      extraTags ? [ ],
     }:
     let
       inherit (lib) escapeURL;

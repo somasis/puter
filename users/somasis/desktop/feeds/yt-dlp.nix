@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 let
   inherit (config.lib.somasis) feeds writeJqScript;
@@ -9,11 +10,11 @@ let
   inherit (pkgs) writeShellScript;
 
   yt-dlp =
-    { url
-    , title ? null
-    , tags ? [ ]
-    , filter ? null
-    ,
+    {
+      url,
+      title ? null,
+      tags ? [ ],
+      filter ? null,
     }:
     let
       parse = writeJqScript "parse-yt-dlp-json" { slurp = true; } ''

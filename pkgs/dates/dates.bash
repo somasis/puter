@@ -35,19 +35,19 @@ case "${1:-}" in
         ;;
 esac
 
-[[ "${right_align}" == "false" ]] && right_align=
+[[ ${right_align} == "false" ]] && right_align=
 
-[[ "$#" -gt 0 ]] || set -- *
+[[ $# -gt 0 ]] || set -- *
 
-if [[ -z "${format}" ]]; then
+if [[ -z ${format} ]]; then
     longest=0
     for t; do
-        if [[ "${t}" = _ ]] && [[ "${show_local}" = true ]]; then
+        if [[ ${t} == _ ]] && [[ ${show_local} == true ]]; then
             t=local
             continue
         fi
 
-        [[ "${#t}" -gt "${longest}" ]] && longest=${#t}
+        [[ ${#t} -gt ${longest} ]] && longest=${#t}
     done
     format="%${right_align:+-}${longest}s %s\n"
 fi
@@ -57,15 +57,15 @@ case "${format}${date_format}" in
 esac
 
 for t; do
-    if [[ "${t}" = _ ]]; then
-        if [[ "${show_local}" = true ]]; then
+    if [[ ${t} == _ ]]; then
+        if [[ ${show_local} == true ]]; then
             t=local
         else
             continue
         fi
     elif [[ -f /etc/zoneinfo/"${t}" ]]; then
         export TZ="${t}"
-    elif [[ -e "${t}" ]]; then
+    elif [[ -e ${t} ]]; then
         TZ=$(readlink -f "${t}")
         export TZ=":${TZ}"
     else
@@ -77,7 +77,7 @@ for t; do
     # shellcheck disable=SC2059,SC2312
     printf "${format}" "${t}" "$(date ${date_format:+"${date_format}"})"
 done \
-    | if [[ "${table}" == "true" ]]; then
+    | if [[ ${table} == "true" ]]; then
         table ${right_align:+-R 1} -o " "
     else
         cat

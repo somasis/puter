@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 let
   inherit (lib) makeBinPath;
@@ -125,70 +126,70 @@ let
   '';
 
   reddit =
-    { subreddit
-    , title ? "Reddit: /r/${subreddit}"
-    , tags ? [
+    {
+      subreddit,
+      title ? "Reddit: /r/${subreddit}",
+      tags ? [
         "aggregator"
         "reddit"
-      ]
-    , extraTags ? [ ]
-    , filter ? ""
-    , pointsInTitle ? true
-    ,
+      ],
+      extraTags ? [ ],
+      filter ? "",
+      pointsInTitle ? true,
     }:
-      assert (lib.isString subreddit);
-      assert (lib.isString title);
-      assert (lib.isList tags);
-      assert (lib.isList extraTags);
-      assert (lib.isString filter);
-      assert (lib.isBool pointsInTitle);
-      let
-        filter' =
-          if filter != "" then
-            writeJqScript "jq-filter" { } ''
-              .data.children |= map_values(${filter})
-            ''
-          else
-            "";
-        tags' = tags ++ lib.optionals (extraTags != null) tags;
-      in
-      {
-        # urls.filter is used so as to benefit from caching
-        url = feeds.urls.filter "https://www.reddit.com/r/${subreddit}.rss" (
-          pkgs.writeShellScript "generate-reddit-with-filter" ''
-            exec ${generateReddit} ${lib.escapeShellArg subreddit} ${lib.escapeShellArg filter'} --arg points_in_title ${lib.boolToString pointsInTitle}
+    assert (lib.isString subreddit);
+    assert (lib.isString title);
+    assert (lib.isList tags);
+    assert (lib.isList extraTags);
+    assert (lib.isString filter);
+    assert (lib.isBool pointsInTitle);
+    let
+      filter' =
+        if filter != "" then
+          writeJqScript "jq-filter" { } ''
+            .data.children |= map_values(${filter})
           ''
-        );
-        inherit title;
-        tags = tags';
-      };
+        else
+          "";
+      tags' = tags ++ lib.optionals (extraTags != null) tags;
+    in
+    {
+      # urls.filter is used so as to benefit from caching
+      url = feeds.urls.filter "https://www.reddit.com/r/${subreddit}.rss" (
+        pkgs.writeShellScript "generate-reddit-with-filter" ''
+          exec ${generateReddit} ${lib.escapeShellArg subreddit} ${lib.escapeShellArg filter'} --arg points_in_title ${lib.boolToString pointsInTitle}
+        ''
+      );
+      inherit title;
+      tags = tags';
+    };
 
   lemmy =
-    { community
-    , sort ? "Active"
-    , title ? "Lemmy: ${community}"
-    , tags ? [
+    {
+      community,
+      sort ? "Active",
+      title ? "Lemmy: ${community}",
+      tags ? [
         "aggregator"
         "lemmy"
-      ]
-    , extraTags ? [ ]
-    , instance ? "https://lemmy.ml"
-    ,
+      ],
+      extraTags ? [ ],
+      instance ? "https://lemmy.ml",
     }:
-      assert (builtins.isString community);
-      assert (builtins.isString sort);
-      assert (builtins.isString title);
-      assert (builtins.isList tags);
-      assert (builtins.isList extraTags);
-      assert (builtins.isString instance);
-      let
-        tags' = tags ++ lib.optionals (extraTags != null) tags;
-      in
-      {
-        url = "${instance}/feeds/c/${community}.xml?sort=${sort}";
-        inherit title;
-        tags = tags';
-      };
+    assert (builtins.isString community);
+    assert (builtins.isString sort);
+    assert (builtins.isString title);
+    assert (builtins.isList tags);
+    assert (builtins.isList extraTags);
+    assert (builtins.isString instance);
+    let
+      tags' = tags ++ lib.optionals (extraTags != null) tags;
+    in
+    {
+      url = "${instance}/feeds/c/${community}.xml?sort=${sort}";
+      inherit title;
+      tags = tags';
+    };
 in
 {
   lib.somasis.feeds.feeds = {

@@ -5,7 +5,7 @@ mozilla_api_endpoint=https://beacondb.net
 
 usage() {
     # shellcheck disable=SC2059
-    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    [[ $# -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
 usage: location [-Rr] [-M retries] [-a accuracy] [-c dd|dd-nesw] [-f format:prefix] [-m geoclue|mozilla] [-t timeout]
@@ -22,7 +22,7 @@ fetch_location() {
     local location=
     local location_found=false
 
-    until [[ "${location_found}" == true ]]; do
+    until [[ ${location_found} == true ]]; do
         for method in "${requested_method}" geoclue mozilla; do
             case " ${attempted_methods[*]} " in
                 *" ${method} "*) continue ;;
@@ -83,18 +83,18 @@ fetch_location() {
             esac
 
             attempted_methods+=("${method}")
-            if [[ "${location_found}" == true ]]; then
+            if [[ ${location_found} == true ]]; then
                 break
             fi
         done
 
-        if [[ "${retry}" == false ]]; then
+        if [[ ${retry} == false ]]; then
             break
         fi
     done
 
-    if [[ "${location_found}" == false ]]; then
-        if [[ "${retry}" == false ]]; then
+    if [[ ${location_found} == false ]]; then
+        if [[ ${retry} == false ]]; then
             printf 'error: no location could be retrieved, and retrying was not permitted\n' >&2
         else
             printf 'error: no location could be retrieved\n' >&2
@@ -143,7 +143,7 @@ esac
 
 fetch_location
 
-if [[ "${resolve}" == true ]]; then
+if [[ ${resolve} == true ]]; then
     resolved=$(
         curl -Lfs \
             ${timeout:+--max-time "${timeout}"} \
@@ -157,7 +157,7 @@ if [[ "${resolve}" == true ]]; then
             'https://nominatim.openstreetmap.org/reverse'
     )
 
-    if [[ -n "${resolved}" ]]; then
+    if [[ -n ${resolved} ]]; then
         address=$(jq -r '.display_name' <<<"${resolved}")
     else
         printf 'error: location could not be resolved\n' >&2
@@ -188,20 +188,20 @@ accuracy=${accuracy:-}
 case "${output_format}" in
     shell | 'shell:'*)
         shell_variable_prefix=
-        [[ "${output_format}" = 'shell' ]] || shell_variable_prefix=${output_format#shell:}
+        [[ ${output_format} == 'shell' ]] || shell_variable_prefix=${output_format#shell:}
 
         printf '%s=%q\n' \
             "${shell_variable_prefix}latitude" "${latitude}" \
             "${shell_variable_prefix}longitude" "${longitude}"
 
-        if [[ "${resolve}" == true ]]; then
+        if [[ ${resolve} == true ]]; then
             printf '%s=%q\n' \
                 "${shell_variable_prefix}accuracy" "${accuracy}" \
                 "${shell_variable_prefix}address" "${address}"
         fi
         ;;
     default)
-        if [[ "${resolve}" == true ]]; then
+        if [[ ${resolve} == true ]]; then
             printf '%s\t%s\t%s\t%s\n' \
                 "${latitude}" \
                 "${longitude}" \

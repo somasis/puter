@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 with config.lib.somasis.feeds;
 let
@@ -9,10 +10,10 @@ let
   inherit (lib) makeBinPath;
 
   redacted =
-    { subfeed
-    , title ? "Redacted: ${subfeed}"
-    , tags ? [ ]
-    ,
+    {
+      subfeed,
+      title ? "Redacted: ${subfeed}",
+      tags ? [ ],
     }:
     let
       generate = writeShellScript "generate-redacted" ''

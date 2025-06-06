@@ -1,17 +1,17 @@
-{ lib
-, writeShellApplication
-, pass-nodmenu
-, coreutils
-, dmenu
-, findutils
-, gnugrep
-, gnused
-, libnotify
-, moreutils
-, pass ? pass-nodmenu
-, gawk
-, xclip
-,
+{
+  lib,
+  writeShellApplication,
+  pass-nodmenu,
+  coreutils,
+  dmenu,
+  findutils,
+  gnugrep,
+  gnused,
+  libnotify,
+  moreutils,
+  pass ? pass-nodmenu,
+  gawk,
+  xclip,
 }:
 writeShellApplication {
   name = "dmenu-pass";

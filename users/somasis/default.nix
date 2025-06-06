@@ -1,9 +1,10 @@
-{ self
-, config
-, inputs
-, lib
-, osConfig
-, ...
+{
+  self,
+  config,
+  inputs,
+  lib,
+  osConfig,
+  ...
 }:
 {
   imports =
@@ -52,8 +53,14 @@
 
     directories = [
       # NOTE (FIXME?) bindfs has to be used because Nix doesn't want to access it if it's a symlink...
-      { method = "symlink"; directory = "src"; }
-      { method = "symlink"; directory = config.lib.somasis.xdgDataDir "nix"; }
+      {
+        method = "symlink";
+        directory = "src";
+      }
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgDataDir "nix";
+      }
     ];
   };
 

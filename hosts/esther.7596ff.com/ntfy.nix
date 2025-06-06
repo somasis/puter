@@ -39,6 +39,11 @@
   };
 
   persist.directories = [
-    { directory = "/var/lib/private/ntfy-sh"; user = "root"; group = "ntfy-sh"; mode = "0770"; }
+    {
+      directory = "/var/lib/private/ntfy-sh";
+      user = "root";
+      group = "ntfy-sh";
+      mode = "0770";
+    }
   ];
 }

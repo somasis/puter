@@ -1,15 +1,15 @@
-{ lib
-, stdenv
-, fetchurl
-, pkg-config
-, kcgi
-, fetchFromGitHub
-, zlib
-, bmake
-, libmd
-, sqlite
-, litterbox
-,
+{
+  lib,
+  stdenv,
+  fetchurl,
+  pkg-config,
+  kcgi,
+  fetchFromGitHub,
+  zlib,
+  bmake,
+  libmd,
+  sqlite,
+  litterbox,
 }:
 let
   kcgiBackport = kcgi.overrideAttrs (oldAttrs: {

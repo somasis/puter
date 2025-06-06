@@ -1,7 +1,8 @@
-{ config
-, osConfig
-, pkgs
-, ...
+{
+  config,
+  osConfig,
+  pkgs,
+  ...
 }:
 {
   home.packages = [

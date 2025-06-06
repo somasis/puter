@@ -1,6 +1,7 @@
-{ pkgs
-, nixpkgs
-, ...
+{
+  pkgs,
+  nixpkgs,
+  ...
 }:
 let
   nixpkgs-manual = pkgs.callPackage "${nixpkgs}/doc" { };

@@ -1,9 +1,10 @@
-{ pkgs
-, lib
-, config
-, self
-, osConfig
-, ...
+{
+  pkgs,
+  lib,
+  config,
+  self,
+  osConfig,
+  ...
 }:
 let
   inherit (config.lib.somasis) xdgCacheDir xdgConfigDir;

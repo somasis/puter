@@ -1,9 +1,9 @@
-{ lib
-, stdenv
-, fetchFromGitHub
-, skalibs
-, execline
-,
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  skalibs,
+  execline,
 }:
 stdenv.mkDerivation rec {
   pname = "execshell";

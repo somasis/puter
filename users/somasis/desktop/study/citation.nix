@@ -1,52 +1,51 @@
-{ pkgs
-, config
-, lib
-, osConfig
-, inputs
-, ...
+{
+  pkgs,
+  config,
+  lib,
+  osConfig,
+  inputs,
+  ...
 }:
 let
   inherit (config.lib.somasis) flakeModifiedDateToVersion;
 
-  qutebrowser-zotero = pkgs.callPackage
-    (
-      { lib
-      , fetchurl
-      , fetchFromGitHub
-      , python3Packages
-      ,
-      }:
-      python3Packages.buildPythonApplication rec {
-        pname = "qutebrowser-zotero";
-        version = flakeModifiedDateToVersion inputs.qutebrowser-zotero;
-        # version = "unstable-2019-06-15";
+  qutebrowser-zotero = pkgs.callPackage (
+    {
+      lib,
+      fetchurl,
+      fetchFromGitHub,
+      python3Packages,
+    }:
+    python3Packages.buildPythonApplication rec {
+      pname = "qutebrowser-zotero";
+      version = flakeModifiedDateToVersion inputs.qutebrowser-zotero;
+      # version = "unstable-2019-06-15";
 
-        format = "other";
+      format = "other";
 
-        src = inputs.qutebrowser-zotero;
-        # src = fetchFromGitHub {
-        #   owner = "parchd-1";
-        #   repo = "qutebrowser-zotero";
-        #   rev = "54706b43433c3ea8da6b7b410d67528da9779657";
-        #   hash = "sha256-Jv5qrpWSMrfGr6gV8PxELCOfZ0PyGBPO+nBt2czYuu4=";
-        # };
+      src = inputs.qutebrowser-zotero;
+      # src = fetchFromGitHub {
+      #   owner = "parchd-1";
+      #   repo = "qutebrowser-zotero";
+      #   rev = "54706b43433c3ea8da6b7b410d67528da9779657";
+      #   hash = "sha256-Jv5qrpWSMrfGr6gV8PxELCOfZ0PyGBPO+nBt2czYuu4=";
+      # };
 
-        propagatedBuildInputs = with python3Packages; [ requests ];
+      propagatedBuildInputs = with python3Packages; [ requests ];
 
-        installPhase = ''
-          install -m0755 -D $src/qute-zotero $out/bin/qute-zotero
-        '';
+      installPhase = ''
+        install -m0755 -D $src/qute-zotero $out/bin/qute-zotero
+      '';
 
-        meta = with lib; {
-          description = "Connect qutebrowser to a running Zotero instance";
-          homepage = "https://github.com/parchd-1/qutebrowser-zotero";
-          maintainers = with maintainers; [ somasis ];
-          license = licenses.gpl3;
-          mainProgram = "qute-zotero";
-        };
-      }
-    )
-    { };
+      meta = with lib; {
+        description = "Connect qutebrowser to a running Zotero instance";
+        homepage = "https://github.com/parchd-1/qutebrowser-zotero";
+        maintainers = with maintainers; [ somasis ];
+        license = licenses.gpl3;
+        mainProgram = "qute-zotero";
+      };
+    }
+  ) { };
 
   # Use Appalachian State University's proxy
   proxy = "https://login.proxy006.nclive.org/login";
@@ -306,43 +305,43 @@ in
 
         # Configuration options which will only become relevant with Zotero 7.
         //
-        lib.optionalAttrs
-          (
-            (lib.strings.toInt (lib.versions.major (lib.strings.getVersion config.programs.zotero.package)))
-            >= 7
-          )
-          {
-            "extensions.zotero.reader.ebookFontFamily" = "serif";
+          lib.optionalAttrs
+            (
+              (lib.strings.toInt (lib.versions.major (lib.strings.getVersion config.programs.zotero.package)))
+              >= 7
+            )
+            {
+              "extensions.zotero.reader.ebookFontFamily" = "serif";
 
-            # "extensions.zotero.openReaderInNewWindow" = true;
+              # "extensions.zotero.openReaderInNewWindow" = true;
 
-            # ouch
-            "extensions.zotero.attachmentRenameTemplate" = ''
-              {{ if {{ creators }} != "" }}{{ if {{ creators max="1" name-part-separator=", " }} == {{ creators max="1" name="family-given" }}, }}{{ creators max="2" name="family-given" join=", " suffix=" - " }}{{ else }}{{ if {{ creators max="1" }} != {{ creators max="2" }} }}{{ creators max="1" name="family-given" name-part-separator=", " join=", " suffix=" et al. - " }}{{ else }}{{ creators max="2" name="family-given" name-part-separator=", " join=", " suffix=" - " }}{{ endif }}{{ endif }}{{ else }}{{ creators max="1" name="family-given" name-part-separator=", " }}{{ endif }}{{ if shortTitle != "" }}{{ shortTitle }}{{ else }}{{ if {{ title truncate="80" }} == {{ title }} }}{{ title }}{{ else }}{{ title truncate="80" suffix="..." }}{{ endif }}{{ endif }}{{ if itemType == "book" }} ({{ year }}{{ publisher truncate="80" prefix=", " }}){{ elseif itemType == "bookSection" }} ({{ year }}{{ bookTitle prefix=", " truncate="80" }}){{ elseif itemType == "blogpost" }} ({{ if year != "" }}{{ year }}{{ blogTitle prefix=", " }}{{ else }}{{ blogTitle }}{{ endif }}){{ elseif itemType == "webpage" }} ({{ year }}{{ websiteTitle prefix=", " }}){{ elseif itemType == "newspaperArticle" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ section truncate="80" prefix=", " }}){{ elseif itemType == "presentation" }} ({{ year }}{{ meetingName truncate="80" prefix=", " }}){{ elseif publicationTitle != "" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ if volume != year }}{{ volume prefix=" "  }}{{ endif }}{{ issue prefix=", no. " }}){{ elseif year != "" }} ({{ year }}){{ endif }}
-            '';
-            "extensions.zotero.autoRenameFiles.linked" = true;
+              # ouch
+              "extensions.zotero.attachmentRenameTemplate" = ''
+                {{ if {{ creators }} != "" }}{{ if {{ creators max="1" name-part-separator=", " }} == {{ creators max="1" name="family-given" }}, }}{{ creators max="2" name="family-given" join=", " suffix=" - " }}{{ else }}{{ if {{ creators max="1" }} != {{ creators max="2" }} }}{{ creators max="1" name="family-given" name-part-separator=", " join=", " suffix=" et al. - " }}{{ else }}{{ creators max="2" name="family-given" name-part-separator=", " join=", " suffix=" - " }}{{ endif }}{{ endif }}{{ else }}{{ creators max="1" name="family-given" name-part-separator=", " }}{{ endif }}{{ if shortTitle != "" }}{{ shortTitle }}{{ else }}{{ if {{ title truncate="80" }} == {{ title }} }}{{ title }}{{ else }}{{ title truncate="80" suffix="..." }}{{ endif }}{{ endif }}{{ if itemType == "book" }} ({{ year }}{{ publisher truncate="80" prefix=", " }}){{ elseif itemType == "bookSection" }} ({{ year }}{{ bookTitle prefix=", " truncate="80" }}){{ elseif itemType == "blogpost" }} ({{ if year != "" }}{{ year }}{{ blogTitle prefix=", " }}{{ else }}{{ blogTitle }}{{ endif }}){{ elseif itemType == "webpage" }} ({{ year }}{{ websiteTitle prefix=", " }}){{ elseif itemType == "newspaperArticle" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ section truncate="80" prefix=", " }}){{ elseif itemType == "presentation" }} ({{ year }}{{ meetingName truncate="80" prefix=", " }}){{ elseif publicationTitle != "" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ if volume != year }}{{ volume prefix=" "  }}{{ endif }}{{ issue prefix=", no. " }}){{ elseif year != "" }} ({{ year }}){{ endif }}
+              '';
+              "extensions.zotero.autoRenameFiles.linked" = true;
 
-            # <https://github.com/wileyyugioh/zotmoov>
-            # "extensions.zotmoov.dst_dir" = "${config.xdg.userDirs.documents}/articles";
-            # "extensions.zotmoov.allowed_fileext" = [ "pdf" "epub" "docx" "odt" ];
-            # "extensions.zotmoov.delete_files" = true;
+              # <https://github.com/wileyyugioh/zotmoov>
+              # "extensions.zotmoov.dst_dir" = "${config.xdg.userDirs.documents}/articles";
+              # "extensions.zotmoov.allowed_fileext" = [ "pdf" "epub" "docx" "odt" ];
+              # "extensions.zotmoov.delete_files" = true;
 
-            # <https://github.com/MuiseDestiny/zotero-attanger>
-            "extensions.zotero.zoteroattanger.sourceDir" = config.xdg.userDirs.download;
-            "extensions.zotero.zoteroattanger.readPDFtitle" = "always";
-            "extensions.zotero.zoteroattanger.attachType" = "linking";
-            "extensions.zotero.zoteroattanger.destDir" = "${config.xdg.userDirs.documents}/articles";
-            "extensions.zotero.zoteroattanger.autoRemoveEmptyFolder" = true;
-            "extensions.zotero.zoteroattanger.fileTypes" = lib.concatStringsSep "," [
-              "pdf"
-              "epub"
-              "docx"
-              "odt"
-            ];
+              # <https://github.com/MuiseDestiny/zotero-attanger>
+              "extensions.zotero.zoteroattanger.sourceDir" = config.xdg.userDirs.download;
+              "extensions.zotero.zoteroattanger.readPDFtitle" = "always";
+              "extensions.zotero.zoteroattanger.attachType" = "linking";
+              "extensions.zotero.zoteroattanger.destDir" = "${config.xdg.userDirs.documents}/articles";
+              "extensions.zotero.zoteroattanger.autoRemoveEmptyFolder" = true;
+              "extensions.zotero.zoteroattanger.fileTypes" = lib.concatStringsSep "," [
+                "pdf"
+                "epub"
+                "docx"
+                "odt"
+              ];
 
-            # Enable userChrome
-            "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-          };
+              # Enable userChrome
+              "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+            };
 
       userChrome = ''
         * {
@@ -598,8 +597,7 @@ in
     "application/rdf+xml"
     "application/x-research-info-systems"
     "text/x-bibtex"
-  ]
-    (_: [ "zotero.desktop" ]);
+  ] (_: [ "zotero.desktop" ]);
 
   programs.qutebrowser = {
     aliases.zotero = "spawn -u ${qutebrowser-zotero}/bin/qute-zotero";

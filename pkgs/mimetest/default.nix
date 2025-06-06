@@ -1,7 +1,7 @@
-{ lib
-, file
-, stdenv
-,
+{
+  lib,
+  file,
+  stdenv,
 }:
 stdenv.mkDerivation {
   pname = "mimetest";

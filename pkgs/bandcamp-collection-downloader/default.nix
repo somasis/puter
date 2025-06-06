@@ -1,9 +1,9 @@
-{ lib
-, stdenvNoCC
-, fetchurl
-, jre_headless
-, makeWrapper
-,
+{
+  lib,
+  stdenvNoCC,
+  fetchurl,
+  jre_headless,
+  makeWrapper,
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "bandcamp-collection-downloader";

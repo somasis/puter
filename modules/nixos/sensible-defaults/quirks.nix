@@ -1,8 +1,9 @@
-{ config
-, lib
-, nixpkgs
-, pkgs
-, ...
+{
+  config,
+  lib,
+  nixpkgs,
+  pkgs,
+  ...
 }:
 # Quirks and workarounds for issues.
 # Ideally these can be removed on system upgrades, so try and
@@ -12,19 +13,17 @@ let
 
   nixpkgsArgs = { inherit (pkgs.stdenvNoCC) system hostPlatform; };
 
-  nixpkgs-patched = import
-    ((import nixpkgs nixpkgsArgs).applyPatches {
-      name = "nixpkgs-quirks";
-      src = nixpkgs;
-      patches = [
-        # Added 2025-04-17: switch to maintained fork of Cantata
-        (fetchpatch {
-          url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
-          hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
-        })
-      ];
-    })
-    nixpkgsArgs;
+  nixpkgs-patched = import ((import nixpkgs nixpkgsArgs).applyPatches {
+    name = "nixpkgs-quirks";
+    src = nixpkgs;
+    patches = [
+      # Added 2025-04-17: switch to maintained fork of Cantata
+      (fetchpatch {
+        url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
+        hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
+      })
+    ];
+  }) nixpkgsArgs;
 
   overlay = final: prev: {
     inherit (nixpkgs-patched.pkgs) cantata;

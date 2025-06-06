@@ -1,8 +1,10 @@
-{ config
-, osConfig
-, lib
-, ...
-}: {
+{
+  config,
+  osConfig,
+  lib,
+  ...
+}:
+{
   sync = with config.lib.somasis; {
     files = [
       (xdgConfigDir "konsolerc")
@@ -78,12 +80,19 @@
 
         application.extraConfig = somasis.extraConfig // {
           General = {
-            Environment =
-              concatStringsSep "," (mapAttrsToList (n: v: assert isValidPosixName n; "${n}=${v}") {
-                TERM = "xterm-256color";
-                COLORTERM = "truecolor";
-                EDITOR = "kate -b";
-              });
+            Environment = concatStringsSep "," (
+              mapAttrsToList
+                (
+                  n: v:
+                  assert isValidPosixName n;
+                  "${n}=${v}"
+                )
+                {
+                  TERM = "xterm-256color";
+                  COLORTERM = "truecolor";
+                  EDITOR = "kate -b";
+                }
+            );
 
             Icon = "window";
 

@@ -1,9 +1,9 @@
 # NOTE I can't recall if this actually works!
-{ lib
-, fetchFromGitHub
-, beets
-, python3Packages
-,
+{
+  lib,
+  fetchFromGitHub,
+  beets,
+  python3Packages,
 }:
 python3Packages.buildPythonApplication rec {
   pname = "beets-fetchartist";

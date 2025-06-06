@@ -1,9 +1,11 @@
-{ config
-, pkgs
-, osConfig
-, lib
-, ...
-}: {
+{
+  config,
+  pkgs,
+  osConfig,
+  lib,
+  ...
+}:
+{
   persist.directories = [
     {
       method = "symlink";
@@ -62,17 +64,22 @@
 
     settings.PASSWORD_STORE_CLIP_TIME = builtins.toString 60;
 
-    package = pkgs.pass-wayland.withExtensions (exts: with exts; with pkgs.passExtensions; [
-      (pass-audit.overrideAttrs (oldAttrs: {
-        doCheck = false;
-      }))
-      pass-update
+    package = pkgs.pass-wayland.withExtensions (
+      exts:
+      with exts;
+      with pkgs.passExtensions;
+      [
+        (pass-audit.overrideAttrs (oldAttrs: {
+          doCheck = false;
+        }))
+        pass-update
 
-      pass-otp
-      pass-botp
+        pass-otp
+        pass-botp
 
-      pass-meta
-    ]);
+        pass-meta
+      ]
+    );
   };
 
   home.packages = [ pkgs.qtpass ];

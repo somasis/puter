@@ -1,6 +1,7 @@
-{ pkgs
-, lib
-, ...
+{
+  pkgs,
+  lib,
+  ...
 }:
 let
   format = "${pkgs.clang-tools}/bin/clang-format -style=file";

@@ -2,7 +2,7 @@
 
 usage() {
     # shellcheck disable=SC2059
-    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    [[ $# -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<'EOF'
 Convert INI-style input to Nix language declarations, generally suitable
@@ -31,7 +31,7 @@ options:
   -r            Interpret quotes at start and end of values literally.
 EOF
 
-    [[ "$#" -eq 0 ]] || exit 1
+    [[ $# -eq 0 ]] || exit 1
     exit 69
 }
 
@@ -109,7 +109,7 @@ while getopts :CFdr opt >/dev/null 2>&1; do
 done
 shift $((OPTIND - 1))
 
-[[ "$#" -gt 0 ]] || set -- -
+[[ $# -gt 0 ]] || set -- -
 
 for path; do
     jc_args=()
@@ -120,20 +120,20 @@ for path; do
     esac
 
     nixpkgs_function_args='{}'
-    if [[ "${lists_as_duplicate_keys}" == false ]]; then
+    if [[ ${lists_as_duplicate_keys} == false ]]; then
         jc_args+=(--ini)
     else
         nixpkgs_function_args='{ listsAsDuplicateKeys = true; }'
         jc_args+=(--ini-dup)
     fi
 
-    if [[ "${quotes_are_literal}" == true ]]; then
+    if [[ ${quotes_are_literal} == true ]]; then
         jc_args+=(--raw)
     fi
 
     ini_as_json=$(jc "${jc_args[@]}" <"${path}") || jc_error=$?
 
-    if [[ "${jc_error}" -ne 0 ]]; then
+    if [[ ${jc_error} -ne 0 ]]; then
         # shellcheck disable=SC2016
         usage 'error: `jc` failed while converting %s to JSON (error code: %i)\n' \
             "${path@Q}" \
@@ -145,7 +145,7 @@ for path; do
     json_as_nix=$(json2nix <<<"${ini_as_json}")
 
     output="${json_as_nix}"
-    if [[ "${print_nixpkgs_function}" == true ]]; then
+    if [[ ${print_nixpkgs_function} == true ]]; then
         nixpkgs_function='lib.generators.toINI'
 
         # Check if the ini has a global section (keys without a section header preceding them).

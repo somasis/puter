@@ -29,22 +29,58 @@ let
     };
   };
 in
-with users; {
+with users;
+{
   # Before committing any modifications to the list of recipients for
   # any file listed here, run `agenix -r` in the development environment.
-  "cassie-beets-musicbrainz-password.age".publicKeys = [ somasis.esther cassie.default machines.esther ];
-  "cassie-transmission.json.age".publicKeys = [ somasis.esther cassie.default machines.esther ];
-  "cassie-openvpn-galileo.ovpn.age".publicKeys = [ somasis.esther cassie.default machines.esther ];
+  "cassie-beets-musicbrainz-password.age".publicKeys = [
+    somasis.esther
+    cassie.default
+    machines.esther
+  ];
+  "cassie-transmission.json.age".publicKeys = [
+    somasis.esther
+    cassie.default
+    machines.esther
+  ];
+  "cassie-openvpn-galileo.ovpn.age".publicKeys = [
+    somasis.esther
+    cassie.default
+    machines.esther
+  ];
 
-  "cassie-htpasswd-media.age".publicKeys = [ somasis.esther cassie.default machines.esther ];
-  "cassie-htpasswd-zotero.age".publicKeys = [ somasis.esther cassie.default machines.esther ];
+  "cassie-htpasswd-media.age".publicKeys = [
+    somasis.esther
+    cassie.default
+    machines.esther
+  ];
+  "cassie-htpasswd-zotero.age".publicKeys = [
+    somasis.esther
+    cassie.default
+    machines.esther
+  ];
 
-  "somasis-htpasswd-hledger-web.age".publicKeys = [ somasis.default machines.esther ];
-  "somasis-htpasswd-scooper.age".publicKeys = [ somasis.default machines.esther ];
+  "somasis-htpasswd-hledger-web.age".publicKeys = [
+    somasis.default
+    machines.esther
+  ];
+  "somasis-htpasswd-scooper.age".publicKeys = [
+    somasis.default
+    machines.esther
+  ];
 
-  "somasis-rclone-fastmail-pass.age".publicKeys = [ somasis.esther somasis.ilo ];
-  "somasis-rclone-nextcloud-pass.age".publicKeys = [ somasis.esther somasis.ilo ];
+  "somasis-rclone-fastmail-pass.age".publicKeys = [
+    somasis.esther
+    somasis.ilo
+  ];
+  "somasis-rclone-nextcloud-pass.age".publicKeys = [
+    somasis.esther
+    somasis.ilo
+  ];
 
   # These are machine-specific, and should only be shared with the machines in question
-  "nix-serve-esther.7596ff.com-2024-07-06.key.age".publicKeys = [ somasis.esther machines.esther ];
+  "nix-serve-esther.7596ff.com-2024-07-06.key.age".publicKeys = [
+    somasis.esther
+    machines.esther
+  ];
 }

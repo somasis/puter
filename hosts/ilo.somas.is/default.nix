@@ -1,42 +1,46 @@
-{ self
-, inputs
-, lib
-, config
-, pkgs
-, ...
+{
+  self,
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
 }:
 {
-  imports = with self; with inputs; [
-    nixosModules.sensible-defaults
-    nixosHardware.nixosModules.framework-12th-gen-intel
+  imports =
+    with self;
+    with inputs;
+    [
+      nixosModules.sensible-defaults
+      nixosHardware.nixosModules.framework-12th-gen-intel
 
-    ./audio.nix
-    ./backup.nix
-    ./bluetooth.nix
-    ./boot.nix
-    ./brightness.nix
-    ./console.nix
-    ./desktop.nix
-    ./disko-config.nix
-    ./documentation.nix
-    ./filesystems.nix
-    ./fingerprint.nix
-    ./fonts.nix
-    ./games.nix
-    ./hardware-configuration.nix
-    ./locale.nix
-    ./networking.nix
-    ./nix.nix
-    ./phone.nix
-    ./power.nix
-    ./print.nix
-    ./scan.nix
-    ./security.nix
-    ./sensors.nix
-    ./touchpad.nix
-    ./users.nix
-    ./wine.nix
-  ];
+      ./audio.nix
+      ./backup.nix
+      ./bluetooth.nix
+      ./boot.nix
+      ./brightness.nix
+      ./console.nix
+      ./desktop.nix
+      ./disko-config.nix
+      ./documentation.nix
+      ./filesystems.nix
+      ./fingerprint.nix
+      ./fonts.nix
+      ./games.nix
+      ./hardware-configuration.nix
+      ./locale.nix
+      ./networking.nix
+      ./nix.nix
+      ./phone.nix
+      ./power.nix
+      ./print.nix
+      ./scan.nix
+      ./security.nix
+      ./sensors.nix
+      ./touchpad.nix
+      ./users.nix
+      ./wine.nix
+    ];
 
   meta.type = "laptop";
   nixpkgs.hostPlatform = "x86_64-linux";

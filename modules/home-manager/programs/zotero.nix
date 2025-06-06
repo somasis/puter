@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 
 with lib;
@@ -22,16 +23,15 @@ let
   extensionPath = "extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}";
 
   profiles =
-    flip mapAttrs' cfg.profiles
-      (
-        _: profile:
-          nameValuePair "Profile${toString profile.id}" {
-            Name = profile.name;
-            Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
-            IsRelative = 1;
-            Default = if profile.isDefault then 1 else 0;
-          }
-      )
+    flip mapAttrs' cfg.profiles (
+      _: profile:
+      nameValuePair "Profile${toString profile.id}" {
+        Name = profile.name;
+        Path = if isDarwin then "Profiles/${profile.path}" else profile.path;
+        IsRelative = 1;
+        Default = if profile.isDefault then 1 else 0;
+      }
+    )
     // {
       General = {
         StartWithLastProfile = 1;
@@ -222,11 +222,9 @@ in
           "${profilesPath}/${profile.path}/user.js" =
             mkIf (profile.settings != { } || profile.extraConfig != "")
               {
-                text = mkUserJs
-                  (
-                    profile.settings // { "extensions.zotero.firstRun2" = false; }
-                  )
-                  profile.extraConfig;
+                text = mkUserJs (
+                  profile.settings // { "extensions.zotero.firstRun2" = false; }
+                ) profile.extraConfig;
               };
 
           "${profilesPath}/${profile.path}/extensions" = mkIf (profile.extensions != [ ]) {

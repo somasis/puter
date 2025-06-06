@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, disko
-, ...
+{
+  config,
+  pkgs,
+  disko,
+  ...
 }:
 {
   imports = [

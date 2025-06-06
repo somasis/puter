@@ -1,9 +1,10 @@
-{ stdenv
-, lib
-, fetchFromGitLab
-, cmake
-, oath-toolkit
-, kdePackages
+{
+  stdenv,
+  lib,
+  fetchFromGitLab,
+  cmake,
+  oath-toolkit,
+  kdePackages,
 }:
 
 stdenv.mkDerivation rec {

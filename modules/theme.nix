@@ -1,7 +1,8 @@
-{ lib
-, config
-, mkThemeColorOption
-, ...
+{
+  lib,
+  config,
+  mkThemeColorOption,
+  ...
 }:
 let
   inherit mkThemeColorOption;

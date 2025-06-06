@@ -2,7 +2,7 @@
 
 usage() {
     # shellcheck disable=SC2059
-    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    [[ $# -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
 usage: ${0##*/} [-w width]
@@ -17,7 +17,7 @@ while getopts :w: opt; do
     case "${opt}" in
         w)
             wrap_width="${OPTARG}"
-            if [[ -z "${wrap_width##*[!0-9]*}" ]]; then
+            if [[ -z ${wrap_width##*[!0-9]*} ]]; then
                 usage 'error: wrap width must be an integer\n'
             fi
             ;;
@@ -40,7 +40,7 @@ fortune_attrib=$(sed -n '$ { /^—/ { p; q; } }' "${fortune}")
 
 fortune_content_wrapped=$(fold -w "${wrap_width}" -s <<<"${fortune_content}" | sed 's/ *$//')
 
-if [[ -n "${fortune_attrib}" ]]; then # fortune has an attribution
+if [[ -n ${fortune_attrib} ]]; then # fortune has an attribution
     fortune_content_max_line_width=$(wc -L <<<"${fortune_content_wrapped}")
 
     fortune_attrib_raligned=$(printf '%'$((fortune_content_max_line_width + 1))'s\n' "${fortune_attrib}")
@@ -66,14 +66,14 @@ if [[ -n "${fortune_attrib}" ]]; then # fortune has an attribution
         printf "\r\e[0K" >&2
         tab=$(
             i=0
-            while [[ "${tab_width}" -gt "${i}" ]]; do
+            while [[ ${tab_width} -gt ${i} ]]; do
                 printf ' '
                 i=$((i + 1))
             done
         )
     fi
 
-    if [[ "${fortune_content_max_line_width}" -le "${fortune_attrib_raligned_wrapped_prefix_length}" ]]; then
+    if [[ ${fortune_content_max_line_width} -le ${fortune_attrib_raligned_wrapped_prefix_length} ]]; then
         fortune="${fortune_content_wrapped}"$'\n'"${tab}${fortune_attrib_raligned_wrapped}"
     else
         fortune="${fortune_content_wrapped}"$'\n'" ${fortune_attrib_raligned_wrapped}"

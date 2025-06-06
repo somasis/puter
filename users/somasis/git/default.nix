@@ -1,7 +1,8 @@
-{ config
-, pkgs
-, lib
-, ...
+{
+  config,
+  pkgs,
+  lib,
+  ...
 }:
 {
   imports = [
@@ -10,8 +11,14 @@
   ];
 
   cache.directories = [
-    { directory = config.lib.somasis.xdgCacheDir "pre-commit"; method = "symlink"; }
-    { directory = config.lib.somasis.xdgCacheDir "treefmt"; method = "symlink"; }
+    {
+      directory = config.lib.somasis.xdgCacheDir "pre-commit";
+      method = "symlink";
+    }
+    {
+      directory = config.lib.somasis.xdgCacheDir "treefmt";
+      method = "symlink";
+    }
   ];
 
   programs = {
@@ -227,36 +234,36 @@
       '')
     ];
 
-    shellAliases = {
-      am = "git am";
-      add = "git add -v";
+    shellAliases =
+      {
+        am = "git am";
+        add = "git add -v";
 
-      checkout = "git checkout";
-      restore = "git restore";
-      reset = "git reset";
+        checkout = "git checkout";
+        restore = "git restore";
+        reset = "git reset";
 
-      com = "git commit";
-      amend = "git commit -v --amend";
+        com = "git commit";
+        amend = "git commit -v --amend";
 
-      clone = "git clone -vv";
-      push = "git push -vv";
-      pull = "git pull -vv";
+        clone = "git clone -vv";
+        push = "git push -vv";
+        pull = "git pull -vv";
 
-      log = "git log --patch-with-stat --summary";
-      status = "git status";
+        log = "git log --patch-with-stat --summary";
+        status = "git status";
 
-      stash = "git stash";
+        stash = "git stash";
 
-      rebase = "git rebase";
+        rebase = "git rebase";
 
-      switch = "git switch";
-      branch = "git branch -vv";
-      branchoff = "git branchoff";
-    }
-    # Add git aliases to the shell
-    // lib.mapAttrs
-      (_: v: if lib.hasPrefix "!" v then lib.removePrefix "!" v else "git ${v}")
-      config.programs.git.aliases
-    ;
+        switch = "git switch";
+        branch = "git branch -vv";
+        branchoff = "git branchoff";
+      }
+      # Add git aliases to the shell
+      // lib.mapAttrs (
+        _: v: if lib.hasPrefix "!" v then lib.removePrefix "!" v else "git ${v}"
+      ) config.programs.git.aliases;
   };
 }

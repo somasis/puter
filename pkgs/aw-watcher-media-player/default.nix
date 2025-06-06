@@ -1,12 +1,12 @@
-{ lib
-, rustPlatform
-, fetchFromGitHub
-, pkg-config
-, dbus
-, openssl
-, stdenv
-, darwin ? null
-,
+{
+  lib,
+  rustPlatform,
+  fetchFromGitHub,
+  pkg-config,
+  dbus,
+  openssl,
+  stdenv,
+  darwin ? null,
 }:
 
 rustPlatform.buildRustPackage rec {
