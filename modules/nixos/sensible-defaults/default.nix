@@ -1,10 +1,11 @@
-{ config
-, lib
-, self
-, pkgs
-, inputs
-, nixpkgs
-, ...
+{
+  config,
+  lib,
+  self,
+  pkgs,
+  inputs,
+  nixpkgs,
+  ...
 }:
 {
   imports =
@@ -21,6 +22,7 @@
       nixosModules.impermanence
 
       ./auditing.nix
+      ./console.nix
       ./debugging.nix
       ./documentation.nix
       ./quirks.nix
@@ -104,19 +106,22 @@
       useUserPackages = true;
       extraSpecialArgs = { inherit self inputs nixpkgs; };
 
-      sharedModules = with self; with inputs; [
-        {
-          nixpkgs = {
-            config.allowUnfree = lib.mkDefault true;
-            overlays = lib.mkAfter (lib.mapAttrsToList (_: x: x) self.overlays);
-          };
-        }
+      sharedModules =
+        with self;
+        with inputs;
+        [
+          {
+            nixpkgs = {
+              config.allowUnfree = lib.mkDefault true;
+              overlays = lib.mkAfter (lib.mapAttrsToList (_: x: x) self.overlays);
+            };
+          }
 
-        impermanence.nixosModules.home-manager.impermanence
-        nix-index-database.hmModules.nix-index
-        homeManagerModules.lib
-        homeManagerModules.default
-      ];
+          impermanence.nixosModules.home-manager.impermanence
+          nix-index-database.hmModules.nix-index
+          homeManagerModules.lib
+          homeManagerModules.default
+        ];
     };
   };
 }
