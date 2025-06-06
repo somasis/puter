@@ -3,6 +3,8 @@
     disk = {
       ssd = {
         type = "disk";
+
+        # WD_BLACK SN850 NVMe M.2 2230, 1TB
         device = "/dev/disk/by-id/nvme-WDS100T1X0E-00AFY0_2045A0800564";
 
         content = {
@@ -56,7 +58,7 @@
       rootFsOptions = {
         mountpoint = "none";
         canmount = "off";
-        "com.sun:auto-snapshot" = "true";
+        "com.sun:auto-snapshot" = "false";
 
         compression = "zstd";
         dedup = "off";
@@ -83,35 +85,50 @@
           options.keylocation = "prompt";
         };
 
+        "nixos/root/runtime" = {
+          type = "zfs_fs";
+          mountpoint = "/";
+          options.canmount = "on";
+          options.devices = "on";
+          postCreateHook = ''
+            zfs list -t snapshot -H -o name | grep -E '^ilo\.somas\.is/nixos/root/runtime' \
+                || zfs snapshot ilo.somas.is/nixos/root/runtime@blank
+          '';
+        };
+
         "nixos/root/cache" = {
           type = "zfs_fs";
-          options.mountpoint = "/cache";
+          mountpoint = "/cache";
+          options.canmount = "on";
         };
 
         "nixos/root/log" = {
           type = "zfs_fs";
-          options.mountpoint = "/log";
+          mountpoint = "/log";
+          options.canmount = "on";
         };
 
         "nixos/root/nix" = {
           type = "zfs_fs";
+          mountpoint = "/nix";
           options.canmount = "on";
-          options.mountpoint = "/nix";
           options.atime = "off";
         };
 
         "nixos/data/persist" = {
           type = "zfs_fs";
-          options.mountpoint = "/persist";
+          mountpoint = "/persist";
           options.canmount = "on";
           options.snapdir = "visible";
+          options."com.sun:auto-snapshot" = "true";
         };
 
         "nixos/data/persist/home/somasis" = {
           type = "zfs_fs";
-          options.mountpoint = "/persist/home/somasis";
+          mountpoint = "/persist/home/somasis";
           options.canmount = "on";
           options.snapdir = "visible";
+          options."com.sun:auto-snapshot" = "true";
         };
       };
     };
