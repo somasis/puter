@@ -327,7 +327,6 @@
             detect-private-keys.enable = true;
 
             # Ensure we actually follow our .editorconfig rules.
-            eclint.enable = true;
             editorconfig-checker = {
               enable = true;
               types = [ "text" ];
