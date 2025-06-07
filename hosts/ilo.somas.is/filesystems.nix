@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   # disko,
   ...
 }:
@@ -35,13 +36,29 @@
       "vm.watermark_scale_factor" = 125;
       "vm.page-cluster" = 0;
     };
+
+    initrd.systemd.services.initrd-rollback-root = lib.mkIf (config.boot.initrd.systemd.enable) {
+      after = [ "zfs-import-rpool.service" ];
+      wantedBy = [ "initrd.target" ];
+      before = [ "sysroot.mount" ];
+      path = [ config.boot.zfs.package.userspaceTools ];
+      description = "Rollback to blank /";
+      unitConfig.DefaultDependencies = "no";
+      serviceConfig.Type = "oneshot";
+      script = ''
+        zfs rollback -r ${config.networking.fqdnOrHostName}/nixos/root/runtime@blank
+      '';
+    };
+
+    initrd.postResumeCommands = lib.optionalString (
+      !config.boot.initrd.systemd.enable
+    ) "zfs rollback -r ${config.networking.fqdnOrHostName}/nixos/root/runtime@blank";
   };
 
   fileSystems = {
     "/" = {
-      device = "none";
-      fsType = "tmpfs";
-      options = [ "mode=755" ];
+      device = "${config.networking.fqdnOrHostName}/nixos/root/runtime";
+      fsType = "zfs";
     };
 
     "/boot" = {
