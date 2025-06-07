@@ -108,5 +108,8 @@
   };
 
   home.packages = [ pkgs.mosh ];
-  home.sessionVariables."MOSH_TITLE_NOPREFIX" = 1; # Disable prepending "[mosh]" to terminal title
+  home.sessionVariables = {
+    "MOSH_TITLE_NOPREFIX" = 1; # Disable prepending "[mosh]" to terminal title
+    "SSH_AUTH_SOCK" = "$XDG_RUNTIME_DIR/ssh-agent";
+  };
 }
