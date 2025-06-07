@@ -39,6 +39,8 @@ https://pcpartpicker.com/user/7596ff/saved/k8YCrH[esther.7596ff.com]::
         *** AMD Ryzen 9 5900X 3.7 GHz 12-core processor
         *** be quiet! Pure Loop 240 liquid CPU cooler
         *** MSI PRO B550M-VC WIFI Micro ATX AM4 motherboard
+            **** MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
+            **** Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller
         *** Corsair Vengeance LPX 64 GB (2 × 32 GB) DDR4-3200 CL16 memory
         *** Samsung 980 Pro 1TB M.2-2280 PCIe 4.0 NVMe solid state drive
         *** Panasonic UJ267 9.5mm SATA slot-in optical drive
