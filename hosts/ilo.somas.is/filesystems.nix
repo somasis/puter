@@ -63,12 +63,6 @@
       options = [ "x-gvfs-hide" ];
     };
 
-    "/persist" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
-
     "/cache" = {
       device = "${config.networking.fqdnOrHostName}/nixos/root/cache";
       fsType = "zfs";
@@ -79,6 +73,17 @@
       device = "${config.networking.fqdnOrHostName}/nixos/root/log";
       fsType = "zfs";
       neededForBoot = true;
+    };
+
+    "/persist" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+
+    "/persist/home/somasis" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/data/persist/home/somasis";
+      fsType = "zfs";
     };
   };
 

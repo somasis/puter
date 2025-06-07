@@ -21,7 +21,6 @@
       ./brightness.nix
       ./console.nix
       ./desktop.nix
-      ./disko-config.nix
       ./documentation.nix
       ./filesystems.nix
       ./fingerprint.nix
