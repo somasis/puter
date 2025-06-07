@@ -35,27 +35,32 @@ with users;
   # any file listed here, run `agenix -r` in the development environment.
   "cassie-beets-musicbrainz-password.age".publicKeys = [
     somasis.esther
+    somasis.ilo
     cassie.default
     machines.esther
   ];
   "cassie-transmission.json.age".publicKeys = [
     somasis.esther
+    somasis.ilo
     cassie.default
     machines.esther
   ];
   "cassie-openvpn-galileo.ovpn.age".publicKeys = [
     somasis.esther
+    somasis.ilo
     cassie.default
     machines.esther
   ];
 
   "cassie-htpasswd-media.age".publicKeys = [
     somasis.esther
+    somasis.ilo
     cassie.default
     machines.esther
   ];
   "cassie-htpasswd-zotero.age".publicKeys = [
     somasis.esther
+    somasis.ilo
     cassie.default
     machines.esther
   ];
@@ -69,10 +74,16 @@ with users;
     machines.esther
   ];
 
+  "somasis-rclone-whatbox-webdav-pass.age".publicKeys = [
+    somasis.esther
+    somasis.ilo
+  ];
+
   "somasis-rclone-fastmail-pass.age".publicKeys = [
     somasis.esther
     somasis.ilo
   ];
+
   "somasis-rclone-nextcloud-pass.age".publicKeys = [
     somasis.esther
     somasis.ilo
