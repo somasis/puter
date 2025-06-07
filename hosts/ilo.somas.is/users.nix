@@ -8,8 +8,7 @@
     mutableUsers = false;
 
     users = {
-      # Disable root login.
-      root.hashedPassword = "!";
+      root.hashedPassword = "$y$j9T$RI9UZXWVwReRSKDI9qhyw/$atD3ojK0Wp4fSMkzZD7jxM.HR/Sp9uj9UsnA5mYRso7";
 
       somasis = {
         isNormalUser = true;
