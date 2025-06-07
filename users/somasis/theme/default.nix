@@ -64,4 +64,11 @@ in
       usegeoclue = true;
     };
   };
+
+  log.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "darkman";
+    }
+  ];
 }
