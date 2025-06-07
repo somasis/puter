@@ -1,13 +1,13 @@
 {
   config,
-  disko,
+  # disko,
   ...
 }:
 {
-  imports = [
-    disko.nixosModules.disko
-    ./disko-config.nix
-  ];
+  # imports = [
+  #   disko.nixosModules.disko
+  #   ./disko-config.nix
+  # ];
 
   boot = {
     supportedFilesystems = [
@@ -17,13 +17,49 @@
 
     zfs = {
       extraPools = [ "${config.networking.fqdnOrHostName}_raid" ];
-      forceImportRoot = false;
+      forceImportRoot = true;
     };
 
     # Restrict the ZFS ARC cache to at most 16GB.
     extraModprobeConfig = ''
       options zfs zfs_arc_max=${toString (1024000000 * 16)}
     '';
+  };
+
+  fileSystems = {
+    "/" = {
+      device = "none";
+      fsType = "tmpfs";
+      options = [ "mode=755" ];
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-id/nvme-Samsung_SSD_980_PRO_1TB_S5P2NS0X207175X-part1";
+      fsType = "vfat";
+    };
+
+    "/nix" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/root/nix";
+      fsType = "zfs";
+    };
+
+    "/persist" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+
+    "/cache" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/root/cache";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+
+    "/log" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/root/log";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
   };
 
   cache.files = [ "/etc/zfs/zpool.cache" ];

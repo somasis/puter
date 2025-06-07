@@ -1,13 +1,13 @@
 {
   config,
-  disko,
+  # disko,
   ...
 }:
 {
-  imports = [
-    disko.nixosModules.disko
-    ./disko-config.nix
-  ];
+  # imports = [
+  #   disko.nixosModules.disko
+  #   ./disko-config.nix
+  # ];
 
   boot = {
     supportedFilesystems = [
@@ -34,6 +34,51 @@
       "vm.watermark_boost_factor" = 0;
       "vm.watermark_scale_factor" = 125;
       "vm.page-cluster" = 0;
+    };
+  };
+
+  fileSystems = {
+    "/" = {
+      device = "none";
+      fsType = "tmpfs";
+      options = [ "mode=755" ];
+    };
+
+    "/home" = {
+      device = "none";
+      fsType = "tmpfs";
+      neededForBoot = true;
+      options = [
+        "mode=755"
+        # NOTE: Limit /home to 512mb of memory. I don't want to accidentally lock up
+        #       the machine by extracting stuff to /home.
+        # "size=512m"
+      ];
+    };
+
+    "/nix" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/root/nix";
+      fsType = "zfs";
+      neededForBoot = true;
+      options = [ "x-gvfs-hide" ];
+    };
+
+    "/persist" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+
+    "/cache" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/root/cache";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+
+    "/log" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/root/log";
+      fsType = "zfs";
+      neededForBoot = true;
     };
   };
 
