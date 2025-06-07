@@ -27,7 +27,7 @@ in
         theme = "Breeze";
       };
 
-      splashScreen.theme = "org.kde.breeze.desktop";
+      splashScreen.theme = "None";
     };
 
     configFile.kdeglobals.General.AccentColor = config.lib.somasis.colors.kde config.theme.colors.accent;
