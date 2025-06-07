@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   # Allow for avoiding usage of mountpoint=legacy for the root zpool.
   boot.zfs = {
