@@ -104,10 +104,6 @@
           "nixos/root/runtime" = {
             type = "zfs_fs";
             mountpoint = "/";
-            postCreateHook = ''
-              zfs list -t snapshot -H -o name | grep -E '^esther\.7596ff\.com/nixos/root/runtime' \
-                  || zfs snapshot esther.7596ff.com/nixos/root/runtime@blank
-            '';
           };
 
           "nixos/root/cache" = {

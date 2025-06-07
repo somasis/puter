@@ -14,10 +14,10 @@
       "vfat"
       "zfs"
     ];
+
     zfs = {
       extraPools = [ "${config.networking.fqdnOrHostName}_raid" ];
       forceImportRoot = false;
-      devNodes = "/dev/disk/by-id";
     };
 
     # Restrict the ZFS ARC cache to at most 16GB.

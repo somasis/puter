@@ -21,7 +21,6 @@
     tmp.useTmpfs = true;
 
     zfs.requestEncryptionCredentials = true;
-    zfs.extraPools = [ config.networking.fqdnOrHostName ];
 
     # Restrict the ZFS ARC cache to 8GB.
     extraModprobeConfig = ''

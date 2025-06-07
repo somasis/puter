@@ -22,6 +22,7 @@
       nixosModules.impermanence
 
       ./auditing.nix
+      ./boot.nix
       ./debugging.nix
       ./documentation.nix
       ./quirks.nix
@@ -53,14 +54,6 @@
 
     persist.directories = [ "/var/lib/fwupd" ];
     cache.directories = [ "/var/cache/fwupd" ];
-
-    # Required for ensuring that impermanence is happy; disko does not
-    # currently set neededForBoot in its filesystem configs.
-    fileSystems = {
-      "/cache".neededForBoot = lib.mkDefault true;
-      "/log".neededForBoot = lib.mkDefault true;
-      "/persist".neededForBoot = lib.mkDefault true;
-    };
 
     # Use a deterministic host ID, generated from the FQDN of the machine.
     networking.hostId = builtins.substring 0 8 (

@@ -95,10 +95,6 @@
           type = "zfs_fs";
           mountpoint = "/";
           options.devices = "on";
-          postCreateHook = ''
-            zfs list -t snapshot -H -o name | grep -E '^ilo\.somas\.is/nixos/root/runtime' \
-                || zfs snapshot ilo.somas.is/nixos/root/runtime@blank
-          '';
         };
 
         "nixos/root/cache" = {
