@@ -22,7 +22,7 @@
   boot.initrd.systemd = {
     # Allow logging in at root when rescue mode happens during initrd.
     # The system is encryptyed anyway so it's not really that much a security risk.
-    services.rescue.environment.ENABLE_FORCED_SULOGIN = 1;
+    services.rescue.environment.ENABLE_FORCED_SULOGIN = "1";
     # HACK Required for booting to work with disko's configuration!
     # See <https://github.com/nix-community/disko/issues/312#issuecomment-1666187472>.
     services.rollback = {
