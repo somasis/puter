@@ -30,15 +30,26 @@
       flake = false;
     };
 
-    agenix.url = "github:ryantm/agenix";
-    git-hooks.url = "github:cachix/git-hooks.nix";
-    treefmt-nix.url = "github:numtide/treefmt-nix";
-
     # NOTE Make sure to change on new releases!
     # See <https://nixos.org/manual/nixos/unstable/#sec-upgrading> for details
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05"; # most recent version (potentially beta)
     nixpkgsStable.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgsUnstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     homeManager = {
       # NOTE Make sure to change on new releases!
@@ -64,8 +75,10 @@
     # is taken care of. We rely on the file input types for reading
     # GitHub keys in ./secrets.nix (used by agenix).
     # flake-compat.url = "github:nix-community/flake-compat";
-    flake-compat.url = "github:edolstra/flake-compat";
-    flake-compat.flake = false;
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
 
     impermanence.url = "github:nix-community/impermanence";
 
@@ -77,6 +90,7 @@
 
     disko = {
       url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     plasma-manager = {
