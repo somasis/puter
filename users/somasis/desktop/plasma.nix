@@ -234,7 +234,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
 
       qtbase # qdbus, among other things
 
-      qbittorrent
       syncplay
 
       waypipe
