@@ -20,9 +20,9 @@ let
   streamingCacheOptions = {
     vfs-fast-fingerprint = true;
     vfs-read-ahead = "128Mi";
-    # vfs-read-chunk-size = "256Ki";
-    # vfs-read-chunk-size-limit = "1G";
-    # vfs-read-chunk-streams = "16";
+    vfs-read-chunk-size = "256Ki";
+    vfs-read-chunk-size-limit = "0.5G";
+    vfs-read-chunk-streams = "4";
   };
 in
 {
