@@ -45,29 +45,6 @@ in
     remotes =
       let
         mountPoint = x: "${config.home.homeDirectory}/mnt/${x}";
-
-        sftp =
-          target: extraAttrs:
-          assert (lib.isString target && target != "");
-          assert (lib.isAttrs extraAttrs);
-          let
-            targetParts = builtins.match "(.*@)?(.+)" target;
-
-            host = builtins.elemAt targetParts 0;
-            user = builtins.elemAt targetParts 1;
-          in
-          assert (lib.isString host && builtins.stringLength host > 0);
-          {
-            type = "sftp";
-
-            # This makes rclone not use its internal ssh library at all,
-            # which reduces the potential of ssh-related issues.
-            inherit host user;
-            # ssh = "${sshExe} ${target}";
-
-            copy_is_hardlink = true;
-          }
-          // extraAttrs;
       in
       {
         esther = {
@@ -75,7 +52,14 @@ in
             if osConfig.networking.fqdnOrHostName == "esther.7596ff.com" then
               { type = "local"; }
             else
-              sftp "somasis@esther.7596ff.com" { };
+              {
+                type = "sftp";
+                host = "esther.7596ff.com";
+                user = "somasis";
+                key_use_agent = true;
+
+                copy_is_hardlink = true;
+              };
 
           mounts."" = {
             enable = true;
@@ -84,7 +68,14 @@ in
         };
 
         whatbox = {
-          config = sftp "somasis@ariel.whatbox.ca" { };
+          config = {
+            type = "sftp";
+            host = "ariel.whatbox.ca";
+            user = "somasis";
+            key_use_agent = true;
+
+            copy_is_hardlink = true;
+          };
 
           mounts."" = {
             enable = true;
