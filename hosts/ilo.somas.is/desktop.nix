@@ -48,7 +48,7 @@
         wayland.enable = true;
       };
 
-      autoLogin.user = "somasis";
+      # autoLogin.user = "somasis";
     };
 
     desktopManager.plasma6 = {
