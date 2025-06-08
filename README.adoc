@@ -5,7 +5,8 @@ NixOS and home-manager configurations.
 
 == Usage
 
-Before creating any commits, run
+Before creating any commits, ensure that you have `direnv` available and
+loaded in your shell. Then, run
 
   $ direnv allow
 
@@ -13,7 +14,7 @@ which will allow you to use the Git hooks and secrets infrastructure
 provided by the flake in `flake.nix`. This will also add some commands
 to the environment; consult the package list in `devShells.default`.
 
-.Updating the flake inputs (i.e., NixOS version used to build system)
+.Updating the flake inputs (i.e., the NixOS version used to build system)
 
   $ nix flake update --commit-lock-file
 
