@@ -8,7 +8,7 @@
 let
   bigCacheOptions = {
     vfs-cache-max-size = "16G";
-    vfs-cache-max-age = "1d";
+    vfs-cache-max-age = "7d";
     vfs-cache-mode = "full";
     vfs-read-ahead = "128Mi";
     vfs-fast-fingerprint = true;
@@ -23,6 +23,7 @@ let
     vfs-read-chunk-size = "4Mi";
     vfs-read-chunk-size-limit = "25Mi";
     vfs-read-chunk-streams = "16";
+    transfers = 8;
   };
 in
 {
@@ -74,16 +75,18 @@ in
 
       whatbox = {
         config = {
-          type = "union";
-          upstreams = "whatbox-sftp:files/ whatbox-webdav:";
+          # type = "union";
+          # upstreams = "whatbox-sftp:files/ whatbox-webdav:";
+          type = "alias";
+          remote = "whatbox-sftp:files/";
         };
 
         mounts = {
-          "audio/library" = {
-            enable = true;
-            mountPoint = config.xdg.userDirs.music;
-            options = bigCacheOptions // streamingCacheOptions;
-          };
+          # "audio/library" = {
+          #   enable = true;
+          #   mountPoint = config.xdg.userDirs.music;
+          #   options = bigCacheOptions // streamingCacheOptions;
+          # };
 
           "video/anime" = {
             enable = true;
