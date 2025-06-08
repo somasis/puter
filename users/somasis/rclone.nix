@@ -52,8 +52,6 @@ in
             type = "sftp";
             host = "esther.7596ff.com";
             user = "somasis";
-            key_use_agent = true;
-
             copy_is_hardlink = true;
           };
 
@@ -70,7 +68,6 @@ in
         type = "sftp";
         host = "ariel.whatbox.ca";
         user = "somasis";
-        key_use_agent = true;
       };
 
       whatbox = {
