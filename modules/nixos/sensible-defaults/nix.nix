@@ -28,8 +28,32 @@
   # System should automatically upgrade according to the canonical version
   # of the flake repository.
   system.autoUpgrade = {
-    enable = true;
-    dates = "07:00";
+    enable = config.system.autoUpgrade.flake != null;
+
+    # Allow automatic reboots only if it is not a user-interfacing machine,
+    # and it is between 2am and 6am.
+    dates = "Sat 02:00"; # a time which no sane person would be awake
+    allowReboot = !config.meta.desktop;
+    rebootWindow = {
+      lower = "02:00";
+      upper = "06:00";
+    };
+
+    flags =
+      lib.concatMap
+        (x: [
+          "--update-input"
+          x
+        ])
+        [
+          "nixpkgs"
+          "nixpkgsStable"
+          "nixpkgsUnstable"
+          "homeManager"
+          "homeManagerStable"
+          "homeManagerUnstable"
+        ]
+      ++ [ "--commit-lock-file" ];
   };
 
   nix = {
