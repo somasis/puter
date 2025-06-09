@@ -18,8 +18,6 @@ let
     volume-level = 50;
   };
   radiotrayConfigFile = jsonFormat.generate "radiotray-ng.json" radiotrayConfig;
-
-  libraries = "${config.home.homeDirectory}/audio/libraries";
 in
 {
   home.packages =
@@ -31,21 +29,20 @@ in
       mpris-scrobbler
     ];
 
-  # Elisa is my music player of choice. I use it to play music from ~/audio/libraries,
-  # which is my music library at ~/audio/library and ~/audio/library-cassie, combined,
-  # using `~/bin/make-deduplicated-library`. Metadata from Elisa is propagated to
-  # beets using `~/bin/beets-sync-ratings-elisa`.
+  # Elisa is my music player of choice. I use it to play music from ~/audio/library.
+  # Metadata from Elisa is propagated to beets using `~/bin/beets-sync-ratings-elisa`,
+  # which is only ran manually right now.
   programs.elisa = {
     enable = true;
     appearance = {
-      showNowPlayingBackground = false;
+      showNowPlayingBackground = true;
       showProgressOnTaskBar = true;
       embeddedView = "genres";
       defaultView = "allAlbums";
-      defaultFilesViewPath = libraries;
+      defaultFilesViewPath = config.xdg.userDirs.music;
     };
     indexer = {
-      paths = [ libraries ];
+      paths = [ config.xdg.userDirs.music ];
       scanAtStartup = true;
       ratingsStyle = "favourites";
     };
