@@ -53,7 +53,7 @@
           "homeManagerStable"
           "homeManagerUnstable"
         ]
-      ++ [ "--commit-lock-file" ];
+      ++ [ "--no-write-lock-file" ];
   };
 
   nix = {
