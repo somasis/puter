@@ -22,8 +22,6 @@
       ./gaming.nix
       ./git.nix
       ./networking.nix
-      ./nix.nix
-      ./ntfy.nix
       ./samba.nix
       ./somasis.nix
       ./users.nix
