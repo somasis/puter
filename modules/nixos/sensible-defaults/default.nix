@@ -25,6 +25,7 @@
       ./boot.nix
       ./debugging.nix
       ./documentation.nix
+      ./nix.nix
       ./quirks.nix
       ./security.nix
       ./shared-nixos-config.nix

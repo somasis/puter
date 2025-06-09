@@ -29,7 +29,6 @@
       ./hardware-configuration.nix
       ./locale.nix
       ./networking.nix
-      ./nix.nix
       ./phone.nix
       ./power.nix
       ./print.nix
