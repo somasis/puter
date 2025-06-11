@@ -217,7 +217,6 @@ rec {
   fcitx5-ilo-sitelen = callPackage ./fcitx5-ilo-sitelen { };
   ffsclient = callPackage ./ffsclient { };
   hledger-fmt = callPackage ./hledger-fmt { };
-  image-id = callPackage ./image-id { };
   ini2nix = callPackage ./ini2nix { inherit json2nix; };
   jhide = callPackage ./jhide { };
   jqfmt = callPackage ./jqfmt { };
