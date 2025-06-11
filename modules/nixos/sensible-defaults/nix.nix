@@ -30,13 +30,13 @@
   system.autoUpgrade = {
     enable = config.system.autoUpgrade.flake != null;
 
-    # Allow automatic reboots only if it is not a user-interfacing machine,
-    # and it is between 2am and 6am.
-    dates = "Sat 02:00"; # a time which no sane person would be awake
+    # Allow automatic reboots only if it is not a user-interfacing
+    # machine, and it is between 2am and 5:30am.
+    dates = "Mon 03:00"; # a time which no sane person would be awake
     allowReboot = !config.meta.desktop;
     rebootWindow = {
       lower = "02:00";
-      upper = "06:00";
+      upper = "05:30";
     };
 
     flags =
@@ -146,10 +146,7 @@
       # their lists of authorized ssh keys, and flatten the
       # combined list, so that they can access the nix store
       # with any of their authorized ssh keys.
-      keys = config.lib.somasis.sshKeysForGroups [
-        "wheel"
-        "nixos"
-      ];
+      keys = config.lib.somasis.sshKeysForGroups [ "wheel" ];
     };
   };
 }
