@@ -21,7 +21,10 @@
     # Fix there not being enough space for some Nix builds
     tmp.useTmpfs = true;
 
-    zfs.requestEncryptionCredentials = true;
+    zfs = {
+      requestEncryptionCredentials = true;
+      forceImportRoot = false;
+    };
 
     # Restrict the ZFS ARC cache to 8GB.
     extraModprobeConfig = ''
@@ -108,6 +111,12 @@
       fsType = "zfs";
     };
   };
+
+  swapDevices = [
+    { label = "disk-ssd-swap"; }
+  ];
+
+  boot.zfs.allowHibernation = true;
 
   cache = {
     # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
