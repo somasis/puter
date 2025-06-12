@@ -24,6 +24,7 @@
           ++ lib.optional config.security.sudo.enable "wheel"
           ++ lib.optional config.services.printing.enable "lp"
           ++ lib.optional config.services.timesyncd.enable "systemd-timesync"
+          ++ lib.optional config.security.tpm2.enable "tss"
           ++ lib.optionals config.networking.networkmanager.enable [
             "network"
             "networkmanager"
