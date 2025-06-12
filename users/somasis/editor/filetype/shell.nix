@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -134,6 +133,7 @@ in
     pkgs.checkbashisms
     pkgs.shellcheck
     pkgs.shfmt
+    pkgs.sol
 
     shellcheckfmt
     format
@@ -157,7 +157,7 @@ in
       option = ".*/bash-fc\.[^\/]+";
       commands = ''
         set-option window filetype sh
-        set-option window formatcmd "SHELLCHECK_OPTS='--shell=bash' shformat"
+        set-option window formatcmd "sol"
         set-option window lintcmd "SHELLCHECK_OPTS='--shell=bash' shlint"
 
         # Clean up the stuff bash gives us so it looks nicer for editing...
