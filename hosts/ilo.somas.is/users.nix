@@ -45,6 +45,7 @@
     };
   };
 
+  services.displayManager.autoLogin.user = "somasis";
   # IDEA: Synchronize user passwords with password store?
   # system.activationScripts.pass-users = {
   #   text = ''

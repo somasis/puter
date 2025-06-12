@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   ...
@@ -42,13 +41,9 @@
       MaxRetentionSec = "3month";
     };
 
-    displayManager = {
-      sddm = {
-        enable = true;
-        wayland.enable = true;
-      };
-
-      # autoLogin.user = "somasis";
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
     };
 
     desktopManager.plasma6 = {
