@@ -42,7 +42,7 @@ in
   home = {
     # Necessary so dconf and rclone things don't mess activation up...
     activation.setXdgDirs =
-      lib.hm.dag.entryBefore [ "writeBoundary" "installPackages" "dconfSettings" ]
+      lib.hm.dag.entryBefore [ "writeBoundary" "installPackages" "dconfSettings" "reloadSystemd" ]
         ''
           if ! [ -L ~/.config ] && [ -d ~/.config ]; then run mv ~/.config ~/.config.bak; fi
           run ln -Tsf ${lib.escapeShellArg config.xdg.configHome} ~/.config
