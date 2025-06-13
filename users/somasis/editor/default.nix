@@ -62,6 +62,12 @@ in
           StartupWMClass = "kakoune";
           TerminalOptions = "--class ${StartupWMClass} --instance-group ${StartupWMClass} --config ${config.xdg.configHome}/kitty/application.conf --single-instance --wait-for-single-instance-window-close";
         };
+      }
+      // lib.optionalAttrs config.programs.konsole.enable {
+        settings = rec {
+          StartupWMClass = "kakoune";
+          TerminalOptions = "--desktopfile kakoune --separate --profile application";
+        };
       };
 
     mimeApps.defaultApplications = lib.genAttrs [
