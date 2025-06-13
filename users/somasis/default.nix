@@ -52,7 +52,6 @@
     allowOther = true;
 
     directories = [
-      # NOTE (FIXME?) bindfs has to be used because Nix doesn't want to access it if it's a symlink...
       {
         method = "symlink";
         directory = "src";
