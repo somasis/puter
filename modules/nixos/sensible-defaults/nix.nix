@@ -31,14 +31,17 @@
     enable = config.system.autoUpgrade.flake != null;
 
     # Allow automatic reboots only if it is not a user-interfacing
-    # machine, and it is between 2am and 5:30am.
-    dates = "Mon 03:00"; # a time which no sane person would be awake
+    # machine, and it is between 2am and 5:30am. Check for updates
+    # every day at 5pm.
+    dates = "17:00";
     allowReboot = !config.meta.desktop;
     rebootWindow = {
       lower = "02:00";
       upper = "05:30";
     };
 
+    # Ensure that nixpkgs and home-manager are always as up to date
+    # as possible, but don't attempt to commit the changes.
     flags =
       lib.concatMap
         (x: [
@@ -91,17 +94,24 @@
         [
           # Use binary cache for nonfree packages
           "https://nixpkgs-unfree.cachix.org"
+
+          # Used by various nix-community projects, which are referenced in flake.nix.
           "https://nix-community.cachix.org"
+
+          # treefmt-nix
           "https://numtide.cachix.org"
+
+          # lanzaboote
           "https://lanzaboote.cachix.org"
         ]
       ];
 
-      trusted-public-keys = lib.mkAfter [
+      trusted-public-keys = [
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "numtide.cachix.org-1:2ps1kLBUWjxIneOy1Ik6cQjb41X0iXVXeHigGmycPPE="
         "lanzaboote.cachix.org-1:Nt9//zGmqkg1k5iu+B3bkj3OmHKjSw9pvf3faffLLNk="
+        "pre-commit-hooks.cachix.org-1:Pkk3Panw5AW24TOv6kz3PvLhlH8puAsJTBbOPmBo7Rc="
       ];
 
       # Potentially reduce build times being constrained by internet speed
