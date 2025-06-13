@@ -5,27 +5,26 @@
   osConfig,
   ...
 }:
-# let
-#   bigCacheOptions = {
-#     vfs-cache-max-size = "16G";
-#     vfs-cache-max-age = "7d";
-#     vfs-cache-mode = "full";
-#     vfs-read-ahead = "128Mi";
-#     vfs-fast-fingerprint = true;
-#     vfs-cache-poll-interval = "10m";
-#     vfs-refresh = true;
-#     dir-cache-time = "1d";
-#   };
-
-#   streamingCacheOptions = {
-#     vfs-fast-fingerprint = true;
-#     vfs-read-ahead = "128Mi";
-#     vfs-read-chunk-size = "4Mi";
-#     vfs-read-chunk-size-limit = "25Mi";
-#     vfs-read-chunk-streams = "16";
-#     transfers = 8;
-#   };
-# in
+let
+  # bigCacheOptions = {
+  #   vfs-cache-max-size = "16G";
+  #   vfs-cache-max-age = "7d";
+  #   vfs-cache-mode = "full";
+  #   vfs-read-ahead = "128Mi";
+  #   vfs-fast-fingerprint = true;
+  #   vfs-cache-poll-interval = "10m";
+  #   vfs-refresh = true;
+  #   dir-cache-time = "1d";
+  # };
+  streamingCacheOptions = {
+    vfs-fast-fingerprint = true;
+    vfs-read-ahead = "128Mi";
+    vfs-read-chunk-size = "4Mi";
+    vfs-read-chunk-size-limit = "25Mi";
+    vfs-read-chunk-streams = "16";
+    transfers = 8;
+  };
+in
 {
   cache.directories = [
     {
@@ -72,37 +71,40 @@
 
       whatbox = {
         config = {
-          # type = "union";
-          # upstreams = "whatbox-sftp:files/ whatbox-webdav:";
-          type = "alias";
-          remote = "whatbox-sftp:files/";
+          type = "union";
+          upstreams = "whatbox-sftp:files/ whatbox-webdav:";
         };
 
-        # mounts = {
-        #   # "audio/library" = {
-        #   #   enable = true;
-        #   #   mountPoint = config.xdg.userDirs.music;
-        #   #   options = bigCacheOptions // streamingCacheOptions;
-        #   # };
+        mounts = {
+          "" = {
+            enable = true;
+            mountPoint = "${config.home.homeDirectory}/mnt/whatbox";
+            options = streamingCacheOptions;
+          };
 
-        #   "video/anime" = {
-        #     enable = true;
-        #     mountPoint = "${config.xdg.userDirs.videos}/anime";
-        #     options = bigCacheOptions // streamingCacheOptions;
-        #   };
+          "audio/source" = {
+            enable = true;
+            mountPoint = "${config.home.homeDirectory}/audio/source";
+          };
 
-        #   "video/film" = {
-        #     enable = true;
-        #     mountPoint = "${config.xdg.userDirs.videos}/film";
-        #     options = bigCacheOptions // streamingCacheOptions;
-        #   };
+          "video/anime" = {
+            enable = true;
+            mountPoint = "${config.xdg.userDirs.videos}/anime";
+            options = streamingCacheOptions;
+          };
 
-        #   "video/tv" = {
-        #     enable = true;
-        #     mountPoint = "${config.xdg.userDirs.videos}/tv";
-        #     options = bigCacheOptions // streamingCacheOptions;
-        #   };
-        # };
+          "video/film" = {
+            enable = true;
+            mountPoint = "${config.xdg.userDirs.videos}/film";
+            options = streamingCacheOptions;
+          };
+
+          "video/tv" = {
+            enable = true;
+            mountPoint = "${config.xdg.userDirs.videos}/tv";
+            options = streamingCacheOptions;
+          };
+        };
       };
 
       raid = {
@@ -111,19 +113,13 @@
           remote = "esther:/mnt/raid";
         };
 
-        # mounts = {
-        #   "" = {
-        #     enable = true;
-        #     mountPoint = "${config.home.homeDirectory}/mnt/raid";
-        #     options = streamingCacheOptions;
-        #   };
-
-        #   "cassie/media/music/flac2" = {
-        #     enable = true;
-        #     mountPoint = "${config.home.homeDirectory}/audio/library-cassie";
-        #     options = bigCacheOptions // streamingCacheOptions;
-        #   };
-        # };
+        mounts = {
+          "" = {
+            enable = true;
+            mountPoint = "${config.home.homeDirectory}/mnt/raid";
+            options = streamingCacheOptions;
+          };
+        };
       };
 
       fastmail = {
@@ -135,10 +131,10 @@
         };
         secrets.pass = config.age.secrets.rclone-fastmail-pass.path;
 
-        # mounts."" = {
-        #   enable = true;
-        #   mountPoint = "${config.home.homeDirectory}/mnt/fastmail";
-        # };
+        mounts."" = {
+          enable = true;
+          mountPoint = "${config.home.homeDirectory}/mnt/fastmail";
+        };
       };
 
       nextcloud = {
