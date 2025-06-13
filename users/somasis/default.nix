@@ -79,7 +79,5 @@
 
   services.home-manager.autoExpire.enable = true;
 
-  home.sessionVariables.SYSTEMD_PAGER = "cat";
-
   home.stateVersion = "24.11";
 }
