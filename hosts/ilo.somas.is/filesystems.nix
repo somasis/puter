@@ -156,8 +156,8 @@
   # Only scrub when on AC power.
   systemd.timers.zfs-scrub.unitConfig.ConditionACPower = true;
 
-  zramSwap = {
-    enable = true;
-    algorithm = "lz4";
-  };
+  # zramSwap = {
+  #   enable = true;
+  #   algorithm = "lz4";
+  # };
 }
