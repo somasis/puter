@@ -27,7 +27,7 @@ in
       desktop = lib.mkDefault "${config.home.homeDirectory}/desktop";
       documents = lib.mkDefault "${config.home.homeDirectory}/doc";
       download = lib.mkDefault "${config.home.homeDirectory}/downloads";
-      music = lib.mkDefault "/var/empty";
+      music = lib.mkDefault "${config.home.homeDirectory}/audio/library";
       pictures = lib.mkDefault "${config.home.homeDirectory}/pictures";
       publicShare = lib.mkDefault "/var/empty";
       videos = lib.mkDefault "${config.home.homeDirectory}/videos";
