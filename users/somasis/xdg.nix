@@ -32,12 +32,17 @@ in
       publicShare = lib.mkDefault "/var/empty";
       videos = lib.mkDefault "${config.home.homeDirectory}/videos";
     };
-  };
 
-  # Force replacing mimeapps.list, since it might have been changed
-  # during system runtime (and thus de-symlinked).
-  # <https://github.com/nix-community/home-manager/issues/4199#issuecomment-1620657055>
-  xdg.configFile."mimeapps.list".force = true;
+    autostart.enable = true;
+
+    # Force replacing mimeapps.list, since it might have been changed
+    # during system runtime (and thus de-symlinked). I usually only want
+    # MIME overrides to persist for a session anyway; anything permanent
+    # would be added to this configuration, so this works out well for
+    # keeping that mostly-persistent.
+    # <https://github.com/nix-community/home-manager/issues/4199#issuecomment-1620657055>
+    configFile."mimeapps.list".force = true;
+  };
 
   home = {
     # Necessary so dconf and rclone things don't mess activation up...
