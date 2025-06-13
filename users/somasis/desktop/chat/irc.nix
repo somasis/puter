@@ -560,11 +560,17 @@ in
     ];
 
     terminal = true;
-    settings = lib.mkIf config.programs.kitty.enable rec {
-      StartupWMClass = "catgirl";
-      SingleMainWindow = "true";
-      TerminalOptions = "--class ${StartupWMClass} --single-instance --instance-group ${StartupWMClass} --wait-for-single-instance-window-close --config ${config.xdg.configHome}/kitty/catgirls.conf";
-    };
+    settings =
+      lib.optionalAttrs config.programs.kitty.enable rec {
+        StartupWMClass = "catgirl";
+        SingleMainWindow = "true";
+        TerminalOptions = "--class ${StartupWMClass} --single-instance --instance-group ${StartupWMClass} --wait-for-single-instance-window-close --config ${config.xdg.configHome}/kitty/catgirls.conf";
+      }
+      // lib.optionalAttrs config.programs.konsole.enable rec {
+        StartupWMClass = "catgirl";
+        SingleMainWindow = "true";
+        TerminalOptions = "--desktopfile ${StartupWMClass} --profile application";
+      };
   };
 
   persist.files = [
