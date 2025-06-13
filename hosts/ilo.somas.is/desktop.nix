@@ -131,4 +131,11 @@
     waypipe
     usbguard-notifier
   ];
+
+  environment.plasma6.excludePackages =
+    with pkgs;
+    with kdePackages;
+    [
+      kate
+    ];
 }

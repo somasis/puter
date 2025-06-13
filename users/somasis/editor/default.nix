@@ -14,26 +14,23 @@ in
     ./clipboard.nix
   ];
 
-  home.packages =
-    with pkgs;
-    with kdePackages;
-    [
-      # Used by spell.kak; see spell.nix for dictionaries
-      aspell
+  home.packages = with pkgs; [
+    # Used by spell.kak; see spell.nix for dictionaries
+    aspell
 
-      # Used by editorconfig.kak
-      editorconfig-core-c
+    # Used by editorconfig.kak
+    editorconfig-core-c
 
-      meld
+    meld
 
-      vscode-langservers-extracted # CSS, HTML, JSON
-      marksman # Markdown
-      nixd # Nix
-      bash-language-server
-      taplo # TOML
-      yaml-language-server
-      jq-lsp
-    ];
+    vscode-langservers-extracted # CSS, HTML, JSON
+    marksman # Markdown
+    nixd # Nix
+    bash-language-server
+    taplo # TOML
+    yaml-language-server
+    jq-lsp
+  ];
 
   xdg = {
     # TODO: Unnecessary when this pull request gets merged
@@ -657,24 +654,11 @@ in
       method = "symlink";
       directory = config.lib.somasis.xdgDataDir "kak/state-save";
     }
-    (config.lib.somasis.xdgCacheDir "kate")
   ];
 
-  persist.directories = [
-    (config.lib.somasis.xdgDataDir "kate")
+  sync.directories = [
+    (config.lib.somasis.xdgDataDir "org.kde.syntax-highlighting/themes")
   ];
-
-  sync = {
-    directories = [
-      (config.lib.somasis.xdgConfigDir "kate")
-      (config.lib.somasis.xdgDataDir "org.kde.syntax-highlighting/themes")
-    ];
-    files = [
-      (config.lib.somasis.xdgConfigDir "katerc")
-      (config.lib.somasis.xdgConfigDir "katemetainfos")
-      (config.lib.somasis.xdgConfigDir "katevirc")
-    ];
-  };
 
   editorconfig = {
     enable = true;
