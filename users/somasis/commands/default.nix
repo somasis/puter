@@ -54,7 +54,7 @@
     # gets you the whole way anyway. <https://unix.stackexchange.com/a/11941>
     # I would argue that this code is so simple that it cannot really be copyrighted.
     (pkgs.writeShellScriptBin "uq" ''
-      ${lib.getExe pkgs.gawk} '!seen[$0]++' -- "$@"
+      ${lib.getExe pkgs.gawk} '!seen[$0]++' "$@"
     '')
 
     (pkgs.writeShellScriptBin "pe" ''
