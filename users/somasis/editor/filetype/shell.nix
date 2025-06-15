@@ -52,34 +52,34 @@ let
     '';
   };
 
-  format = pkgs.writeShellApplication {
-    name = "shformat";
+  # format = pkgs.writeShellApplication {
+  #   name = "shformat";
 
-    runtimeInputs = [
-      pkgs.coreutils
-      pkgs.shfmt
-      shellcheckfmt
-    ];
+  #   runtimeInputs = [
+  #     pkgs.coreutils
+  #     pkgs.shfmt
+  #     shellcheckfmt
+  #   ];
 
-    text = ''
-      trap 'rm -f "$err" "$orig" "$new"' EXIT
+  #   text = ''
+  #     trap 'rm -f "$err" "$orig" "$new"' EXIT
 
-      err=$(mktemp)
-      orig=$(mktemp)
-      new=$(mktemp)
-      cat > "$orig"
+  #     err=$(mktemp)
+  #     orig=$(mktemp)
+  #     new=$(mktemp)
+  #     cat > "$orig"
 
-      { shellcheckfmt "$orig" 2>>"$err" || cat "$orig"; } | shfmt - >"$new" 2>>"$err"
+  #     { shellcheckfmt "$orig" 2>>"$err" || cat "$orig"; } | shfmt - >"$new" 2>>"$err"
 
-      if [ "$(wc -c < "$new")" -eq 0 ]; then
-          cat "$orig"
-          cat "$err" >&2
-          exit 1
-      else
-          cat "$new"
-      fi
-    '';
-  };
+  #     if [ "$(wc -c < "$new")" -eq 0 ]; then
+  #         cat "$orig"
+  #         cat "$err" >&2
+  #         exit 1
+  #     else
+  #         cat "$new"
+  #     fi
+  #   '';
+  # };
 
   lint = pkgs.writeShellApplication {
     name = "shlint";
@@ -145,7 +145,7 @@ in
       name = "WinSetOption";
       option = "filetype=sh";
       commands = ''
-        set-option window formatcmd "shformat"
+        # set-option window formatcmd "shformat"
         set-option window lintcmd "shlint"
       '';
     }
