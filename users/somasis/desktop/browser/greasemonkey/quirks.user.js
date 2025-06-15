@@ -49,38 +49,33 @@
   )
     style += `
           *:not(
-            [id*="loading" i], [id*="spinner" i], [id*="progress" i], [class*="loading" i], [class*="spinner" i], [class*="progress" i], [role*="loading" i], [role*="spinner" i], [role*="progress" i],
-            :has([id*="loading" i], [id*="spinner" i], [id*="progress" i], [class*="loading" i], [class*="spinner" i], [class*="progress" i], [role*="loading" i], [role*="spinner" i], [role*="progress" i])
+            [id*="loading" i],
+            [id*="spinner" i],
+            [id*="progress" i],
+            [class*="loading" i],
+            [class*="spinner" i],
+            [class*="progress" i],
+            [role*="loading" i],
+            [role*="spinner" i],
+            [role*="presentation" i],
+            [role*="progress" i],
+            :has(
+              [id*="loading" i],
+              [id*="spinner" i],
+              [id*="progress" i],
+              [class*="loading" i],
+              [class*="spinner" i],
+              [class*="progress" i],
+              [role*="loading" i],
+              [role*="spinner" i],
+              [role*="presentation" i],
+              [role*="progress" i]
+            )
           ) {
             animation-duration: 0s !important;
             transition-duration: 0s !important;
           }
         `;
-
-  /* Redirect ASuLearn item pages with non-fullscreen iframes embeds (i.e.
-   * they're probably not a video or some other type of media) on them to
-   * their source URL; this is useful for when instructors use tools external
-   * to ASuLearn, like Packback. */
-  if (
-    matchURL({
-      hostname: "asulearn.appstate.edu",
-      pathname: ".*/view.php",
-    }) &&
-    document.querySelector("#page-content iframe#contentframe[allowfullscreen=true]") != null
-  )
-    document.location = document.getElementById("contentframe").src;
-
-  if (matchURL({ hostname: "ebscohost.com" })) {
-    if (
-      matchURL({ pathname: "openurl" }) &&
-      document.querySelector("span#errorText a") != null &&
-      document.querySelector("iframe#external-frame") != null
-    )
-      document.location = document.querySelector("span#errorText a").href;
-
-    if (matchURL({ pathname: "*/pdfviewer" }))
-      document.location = document.querySelector("iframe#pdfIframe").href;
-  }
 
   /* github.com: redirect .patch URLs to the actual pull request */
   if (matchURL({ hostname: "github.com", pathname: "*/pull/*.patch" })) {
