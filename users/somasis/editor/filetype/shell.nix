@@ -136,7 +136,7 @@ in
     pkgs.sol
 
     shellcheckfmt
-    format
+    # format
     lint
   ];
 
