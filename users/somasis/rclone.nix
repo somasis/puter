@@ -57,7 +57,7 @@ in
       whatbox-webdav = {
         config = {
           type = "webdav";
-          url = "https://webdav.quietzebra.box.ca";
+          url = "https://webdav.box.somas.is";
           user = "somasis";
         };
         secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
