@@ -1,84 +1,62 @@
 {
   inputs,
-  lib,
   pkgs,
   config,
-  osConfig,
   ...
 }:
 {
   imports = [
-    ./plasma.nix
-
-    ./browser
-    ./games
-    ./study
-
+    # keep-sorted start
     ./activity.nix
+    ./audio.nix
+    ./browser
+    ./chat
     ./diary.nix
+    ./file-manager.nix
+    ./games
+    ./konsole.nix
+    ./ledger.nix
     ./mess.nix
+    ./music
+    ./notifications.nix
     ./phone.nix
     ./photo.nix
+    ./plasma.nix
+    ./study
     ./syncplay.nix
     ./syncthing.nix
+    ./torrent.nix
     ./video.nix
     ./wine.nix
     ./www.nix
-
-    ./konsole.nix
-
-    # ./pim
-    # ./anki.nix
-    ./chat
-    # ./didyouknow.nix
-    # ./feeds
-    ./ledger.nix
-    # ./list.nix
-    ./music
-    ./torrent.nix
-
-    ./audio.nix
-    # ./automount.nix
-    # ./clipboard.nix
-    # ./display.nix
-    ./file-manager.nix
-    # ./mouse.nix
-    ./notifications.nix
-    # ./panel
-    # ./power.nix
-    # ./screen-brightness.nix
-    # ./screen-locker.nix
-    # ./screen-temperature.nix
-    # ./stw
-    # ./wallpaper.nix
-    # ./xsession.nix
-
-    # ./dmenu.nix
+    # keep-sorted end
   ];
 
-  home.extraOutputsToInstall = [
-    "doc"
-    "devdoc"
-    "man"
-  ];
-
-  home.packages =
-    with pkgs;
-    with kdePackages;
-    [
-      bc
-      bmake
-      ffmpeg-full
-      hyperfine
-      zenity
-
-      gucharmap
+  home = {
+    extraOutputsToInstall = [
+      "doc"
+      "devdoc"
+      "man"
     ];
 
-  home.file = {
-    ".face".source = inputs.avatarSomasis;
-    ".face.png".source = inputs.avatarSomasis;
-    ".face.icon".source = inputs.avatarSomasis;
+    packages =
+      with pkgs;
+      with kdePackages;
+      [
+        bc
+        bmake
+        ffmpeg-full
+        hyperfine
+        zenity
+
+        gucharmap
+      ];
+
+    file = {
+      ".face".source = inputs.avatarSomasis;
+      ".face.png".source = inputs.avatarSomasis;
+      ".face.icon".source = inputs.avatarSomasis;
+    };
   };
 
   services.tunnels.enable = true;
