@@ -43,6 +43,7 @@
       itch
 
       pcsx2 # Sony - PlayStation 2
+      crispy-doom
       (
         assert (osConfig.hardware.graphics.enable);
         assert (osConfig.services.udev.enable && osConfig.hardware.uinput.enable);
@@ -74,6 +75,10 @@
     {
       method = "symlink";
       directory = config.lib.somasis.xdgConfigDir "retroarch";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "crispy-doom";
     }
     {
       method = "symlink";
