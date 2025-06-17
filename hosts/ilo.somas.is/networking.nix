@@ -9,35 +9,39 @@
     hostName = "ilo";
     domain = "somas.is";
 
-    hostId = builtins.substring 0 8 (builtins.hashString "sha256" config.networking.fqdnOrHostName);
-
-    firewall.checkReversePath = "loose";
-
     useDHCP = false;
 
-    # Necessary for Syncthing.
-    firewall.allowedTCPPorts = [
-      22000
-      27385
-    ];
-    firewall.allowedUDPPorts = [
-      22000
-      27385
-    ];
+    firewall = {
+      checkReversePath = "loose";
 
-    # Necessary for KDE Connect
-    firewall.allowedTCPPortRanges = [
-      {
-        from = 1714;
-        to = 1764;
-      }
-    ];
-    firewall.allowedUDPPortRanges = [
-      {
-        from = 1714;
-        to = 1764;
-      }
-    ];
+      allowedTCPPorts = [
+        22000 # Syncthing
+        27385 # Syncthing
+
+        2234 # SoulSeek (Nicotine+, specifically)
+      ];
+
+      allowedUDPPorts = [
+        22000 # Syncthing
+        27385 # Syncthing
+      ];
+
+      allowedTCPPortRanges = [
+        {
+          # KDE Connect
+          from = 1714;
+          to = 1764;
+        }
+      ];
+
+      allowedUDPPortRanges = [
+        {
+          # KDE Connect
+          from = 1714;
+          to = 1764;
+        }
+      ];
+    };
 
     networkmanager = {
       enable = true;
@@ -65,20 +69,6 @@
     DefaultIPAccounting=true
   '';
 
-  # NOTE: systemd-resolved actually breaks `hostname -f`!
-  # services.resolved = {
-  #   enable = true;
-  #   dnssec = "false"; # slow as fuck and often broken
-  # };
-
-  # services.dnsmasq = {
-  #   enable = true;
-  #   settings = {
-  #     listen-address = [ "::1,127.0.0.1" ];
-  #     cache-size = 10000;
-  #   };
-  # };
-
   services.tor = {
     enable = false;
     client = {
@@ -89,7 +79,6 @@
     settings = {
       HardwareAccel = 1;
       SafeLogging = 1;
-
       ControlPort = 9051;
     };
   };
