@@ -75,8 +75,9 @@ in
     journal = "journalctl -e";
     syslog = "journal -b 0";
 
-    # --exclude-identifier is included due to kwin_wayland often spamming the log.
-    userlog = "journal --user --exclude-identifier kwin_wayland --exclude-identifier plasmashell --exclude-identifier kded6";
+    # Exclude log level 7 (debug messages) for user journal, since it is usually
+    # flooded with debug messages from KDE Plasma or KWin or any of that.
+    userlog = "journal --user -p 0..6";
 
     bus = "busctl --verbose -j";
 
