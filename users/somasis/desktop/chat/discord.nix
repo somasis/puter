@@ -249,6 +249,10 @@ in
     pkgs.equibop
   ];
 
+  xdg.autostart.entries = [
+    "${pkgs.equibop}/share/applications/equibop.desktop"
+  ];
+
   cache = {
     directories = [
       (config.lib.somasis.xdgConfigDir "equibop/sessionData")

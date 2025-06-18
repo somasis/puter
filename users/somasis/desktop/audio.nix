@@ -53,4 +53,16 @@
       (config.lib.somasis.xdgConfigDir "jamesdsp/application.conf")
     ];
   };
+
+  xdg.autostart.entries = [
+    (
+      (pkgs.makeDesktopItem {
+        name = "jdsp-gui";
+        icon = "jamesdsp";
+        desktopName = "JamesDSP (tray)";
+        exec = "${pkgs.jamesdsp}/bin/jamesdsp --tray";
+      })
+      + "/share/applications/jdsp-gui.desktop"
+    )
+  ];
 }

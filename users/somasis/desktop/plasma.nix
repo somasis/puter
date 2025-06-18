@@ -22,7 +22,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
             "xsettingsd" # kde-gtk-config
             "kde.org"
             "KDE"
-            "autostart"
             "kdedefaults"
             "plasma-workspace"
             "session"

@@ -33,8 +33,6 @@ in
       videos = lib.mkDefault "${config.home.homeDirectory}/videos";
     };
 
-    autostart.enable = true;
-
     # Force replacing mimeapps.list, since it might have been changed
     # during system runtime (and thus de-symlinked). I usually only want
     # MIME overrides to persist for a session anyway; anything permanent

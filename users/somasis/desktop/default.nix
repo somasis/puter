@@ -124,4 +124,6 @@
       directory = config.lib.somasis.xdgDataDir "direnv";
     }
   ];
+
+  xdg.autostart.enable = true;
 }

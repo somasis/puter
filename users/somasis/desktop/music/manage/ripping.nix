@@ -22,6 +22,10 @@
     }
   ];
 
+  xdg.autostart.entries = [
+    "${pkgs.nicotine-plus}/share/applications/org.nicotine_plus.Nicotine.desktop"
+  ];
+
   xdg.configFile."whipper/whipper.conf".text =
     lib.generators.toINI
       # Stolen from <https://github.com/nix-community/home-manager/blob/6ce3493a3c5c6a8f4cfa6f5f88723272e0cfd335/modules/services/mopidy.nix#L9-L20>
