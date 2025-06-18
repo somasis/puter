@@ -25,9 +25,6 @@ in
       # "!gi" = "https://google.com/search?tbm=isch&source=hp&q={}";
       "!yt" = "https://www.youtube.com/results?search_query={}";
 
-      "!appstate" = "https://gb1.appstate.edu/search?q={}";
-      "!apppeople" = "https://search.appstate.edu/search.php?last={}&type=all";
-
       "!libgen" = "http://libgen.rs/index.php?req={}";
       "!anna" = "https://annas-archive.org/search?q={}";
       "!annapdf" = searchEngines."!anna" + "&ext=pdf";
@@ -50,9 +47,10 @@ in
       "!mbseries" = "https://musicbrainz.org/search?query={}&type=series";
       "!mbwork" = "https://musicbrainz.org/search?query={}&type=work";
 
+      "!radarr" = "https://radarr.box.somas.is/add/new?term={}";
+      "!sonarr" = "https://sonarr.box.somas.is/add/new?term={}";
       "!imdb" = "https://www.imdb.com/find/?s=all&q={}";
       "!ltrbox" = "https://letterboxd.com/search/{}/";
-      "!trakt" = "https://trakt.tv/search?query={}";
 
       "!osm" = "https://www.openstreetmap.org/search?query={}";
       "!osmwiki" = "https://wiki.openstreetmap.org/wiki/Special:Search?search={}&go=Go";
