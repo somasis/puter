@@ -2,7 +2,6 @@
   pkgs,
   config,
   lib,
-  osConfig,
   inputs,
   ...
 }:
@@ -12,24 +11,23 @@ let
   qutebrowser-zotero = pkgs.callPackage (
     {
       lib,
-      fetchurl,
-      fetchFromGitHub,
+      # fetchFromGitHub,
       python3Packages,
     }:
     python3Packages.buildPythonApplication rec {
       pname = "qutebrowser-zotero";
-      version = flakeModifiedDateToVersion inputs.qutebrowser-zotero;
       # version = "unstable-2019-06-15";
+      version = flakeModifiedDateToVersion inputs.qutebrowser-zotero;
 
       format = "other";
 
-      src = inputs.qutebrowser-zotero;
       # src = fetchFromGitHub {
       #   owner = "parchd-1";
       #   repo = "qutebrowser-zotero";
       #   rev = "54706b43433c3ea8da6b7b410d67528da9779657";
       #   hash = "sha256-Jv5qrpWSMrfGr6gV8PxELCOfZ0PyGBPO+nBt2czYuu4=";
       # };
+      src = inputs.qutebrowser-zotero;
 
       propagatedBuildInputs = with python3Packages; [ requests ];
 
@@ -46,79 +44,12 @@ let
       };
     }
   ) { };
-
-  # Use Appalachian State University's proxy
-  proxy = "https://login.proxy006.nclive.org/login";
-
-  zoteroWindow = {
-    class = "Zotero";
-    className = "Navigator";
-    role = "browser";
-  };
 in
 {
   programs.zotero = {
     enable = true;
 
     package = pkgs.zotero_7;
-
-    # package = pkgs.wrapCommand {
-    #   package = pkgs.zotero;
-
-    #   wrappers = [{
-    #     command = "/bin/zotero";
-
-    #     # Ensure that there isn't a mismatch between extension settings
-    #     # (which could get modified during runtime, and then be written
-    #     # to prefs.js by Zotero) and our user.js.
-    #     beforeCommand =
-    #       let
-    #         prefs = "${config.home.homeDirectory}/.zotero/zotero/${config.programs.zotero.profiles.default.path}/prefs.js";
-    #         managedPrefs = lib.concatStringsSep " " (map (x: "-e 'user_pref(\"${x}\", '") (builtins.attrNames config.programs.zotero.profiles.default.settings));
-
-    #         startService = pkgs.writeShellScript "start-zotero-service" ''
-    #           ${pkgs.systemd}/bin/systemctl --user is-active -q zotero.service \
-    #               || ${pkgs.systemd}/bin/systemctl --user start zotero.service
-    #         '';
-
-    #         unhideZotero = pkgs.writeShellScript "zotero-unhide" ''
-    #           export PATH=${lib.makeBinPath [ pkgs.xdotool config.xsession.windowManager.bspwm.package ]}:"$PATH"
-
-    #           # Get only a window that matches class=zotero and role=browser,
-    #           # which matches to the main Zotero window.
-    #           if wid=$(xdotool search --limit 1 --all --class --role 'zotero|browser'); then
-    #               if [ -n "$(bspc query -N "$wid"'.hidden')" ]; then # window isn't hidden
-    #                   # If the window is hidden on a different desktop, bspwm
-    #                   # will not unhide and refocus it on the current desktop-
-    #                   # it will unhide and then focus its own desktop. This
-    #                   # is different from, say, activating a running instance
-    #                   # of Discord, so it trips me up. Move it to the focused
-    #                   # desktop when this is the case.
-    #                   bspc node "$wid" -g hidden=off -d focused -f
-    #               else
-    #                   # If it is not hidden, just focus it on the desktop it is on.
-    #                   bspc node "$wid" -g hidden=off -f
-    #               fi
-
-    #               _skip=true
-    #           fi
-    #         '';
-
-    #         filterPrefs = pkgs.writeShellScript "filter-prefs" ''
-    #           export PATH="${lib.makeBinPath [ pkgs.coreutils pkgs.gnugrep pkgs.moreutils ]}:$PATH"
-
-    #           touch "${prefs}"
-    #           grep -vF ${managedPrefs} "${prefs}" | sponge "${prefs}"
-    #         '';
-    #       in
-    #       [
-    #         ''[ -z "$_skip" ] && . ${startService}''
-    #         ''[ -z "$_skip" ] && . ${unhideZotero}''
-    #         ''[ -z "$_skip" ] && ${filterPrefs}''
-    #         ''[ -n "$_skip" ] && unset _skip''
-    #       ];
-    #   }];
-    # };
 
     profiles.default = {
       # TODO installation seems broken?
@@ -150,7 +81,6 @@ in
           "extensions.zotero.automaticScraperUpdates" = true;
 
           # Use Appalachian State University's OpenURL resolver
-          "extensions.zotero.openURL.resolver" = "${proxy}?url=https://resolver.ebscohost.com/openurl?";
           "extensions.zotero.findPDFs.resolvers" = [
             {
               "name" = "Sci-Hub";
@@ -562,36 +492,6 @@ in
     ];
   };
 
-  systemd.user.services.zotero = lib.mkIf config.xsession.enable {
-    Unit = {
-      Description = config.programs.zotero.package.meta.description;
-      PartOf = [ "xdg-desktop-autostart.target" ];
-      Conflicts = [ "game.target" ];
-      After = [ "game.target" ];
-    };
-    Install.WantedBy = [ "xdg-desktop-autostart.target" ];
-
-    Service =
-      (config.lib.somasis.makeXorgApplicationService (lib.getExe config.programs.zotero.package) zoteroWindow)
-      // {
-        SyslogIdentifier = "zotero";
-      };
-  };
-
-  xsession.windowManager.bspwm.rules."${zoteroWindow.class}:${zoteroWindow.className}:*".locked =
-    true;
-
-  services.sxhkd.keybindings."super + z" = pkgs.writeShellScript "zotero" ''
-    ${pkgs.systemd}/bin/systemctl start --user zotero.service
-    bspwm-hide-unhide ${
-      lib.escapeShellArgs [
-        zoteroWindow.class
-        zoteroWindow.className
-        zoteroWindow.role
-      ]
-    }
-  '';
-
   xdg.mimeApps.defaultApplications = lib.genAttrs [
     "application/marc"
     "application/rdf+xml"
@@ -602,48 +502,9 @@ in
   programs.qutebrowser = {
     aliases.zotero = "spawn -u ${qutebrowser-zotero}/bin/qute-zotero";
     aliases.Zotero = "hint links userscript ${qutebrowser-zotero}/bin/qute-zotero";
-    keyBindings.normal =
-      let
-        open = x: "open -rt ${x}";
-      in
-      {
-        "zpz" = "zotero";
-        "zpZ" = "Zotero";
-        "rz" = open "${proxy}?qurl={url}";
-      };
-
-    searchEngines = {
-      "!library" =
-        "${proxy}?qurl=http%3A%2F%2Fsearch.ebscohost.com%2Flogin.aspx%3Fdirect%3Dtrue%26site%3Deds-live%26scope%3Dsite%26group%3Dmain%26profile%3Deds%26authtime%3Dcookie%2Cip%2Cuid%26bQuery%3D{quoted}";
-      "!scholar" =
-        "${proxy}?qurl=https%3A%2F%2Fscholar.google.com%2Fscholar%3Fhl%3Den%26q%3D{quoted}%26btnG%3DSearch";
+    keyBindings.normal = {
+      "zpz" = "zotero";
+      "zpZ" = "Zotero";
     };
   };
-
-  # TODO this should work, but it sure don't
-  # services.xsuspender.rules.zotero = {
-  #   matchWmClassGroupContains = "Zotero";
-  #   downclockOnBattery = 0;
-  #   suspendDelay = 15;
-  #   resumeEvery = 60;
-  #   resumeFor = 5;
-
-  #   # Only suspend if LibreOffice isn't currently open, and qutebrowser isn't
-  #   # currently visible, since it would cause the connector to wait until it is
-  #   # momentarily unsuspended, which is annoying
-
-  #   execSuspend = builtins.toString (pkgs.writeShellScript "suspend" ''
-  #     ! ${pkgs.xdotool}/bin/xdotool search \
-  #         --limit 1 \
-  #         --classname \
-  #         '^libreoffice.*' \
-  #         >/dev/null \
-  #     || ! ${pkgs.xdotool}/bin/xdotool search \
-  #         --limit 1 \
-  #         --classname \
-  #         --onlyvisible \
-  #         '^qutebrowser$' \
-  #         >/dev/null
-  #   '');
-  # };
 }
