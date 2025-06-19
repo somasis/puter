@@ -104,11 +104,35 @@ let
       '';
 in
 {
-  cache.directories = [ (config.lib.somasis.xdgCacheDir "mpv") ];
+  cache.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "mpv";
+    }
+  ];
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgConfigDir "jellyfin.org";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "jellyfinmediaplayer";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "Jellyfin Media Player";
+    }
+  ];
+
   sync.directories = [
     {
       directory = config.lib.somasis.xdgCacheDir "mpv/watch-later";
-      method = "symlink";
+      method = "bindfs";
     }
   ];
 
@@ -314,5 +338,12 @@ in
     };
   };
 
-  home.shellAliases.ytaudio = "yt-dlp --format bestaudio --extract-audio --audio-format wav";
+  home = {
+    packages = [
+      pkgs.jellyfin-mpv-shim
+      pkgs.jellyfin-media-player
+    ];
+
+    shellAliases.ytaudio = "yt-dlp --format bestaudio --extract-audio --audio-format wav";
+  };
 }
