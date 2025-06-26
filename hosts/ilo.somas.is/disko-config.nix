@@ -33,15 +33,6 @@
                 pool = "ilo.somas.is";
               };
             };
-
-            swap = {
-              size = "32G";
-              content = {
-                type = "swap";
-                randomEncryption = true;
-                resumeDevice = true;
-              };
-            };
           };
         };
       };

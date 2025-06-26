@@ -40,7 +40,7 @@
       "vm.page-cluster" = 0;
     };
 
-    initrd.systemd.services.initrd-rollback-root = lib.mkIf (config.boot.initrd.systemd.enable) {
+    initrd.systemd.services.initrd-rollback-root = lib.mkIf config.boot.initrd.systemd.enable {
       after = [ "zfs-import-rpool.service" ];
       wantedBy = [ "initrd.target" ];
       before = [ "sysroot.mount" ];
@@ -112,12 +112,6 @@
     };
   };
 
-  swapDevices = [
-    { label = "disk-ssd-swap"; }
-  ];
-
-  boot.zfs.allowHibernation = true;
-
   cache = {
     # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
     files = [ "/etc/zfs/zpool.cache" ];
@@ -156,8 +150,8 @@
   # Only scrub when on AC power.
   systemd.timers.zfs-scrub.unitConfig.ConditionACPower = true;
 
-  # zramSwap = {
-  #   enable = true;
-  #   algorithm = "lz4";
-  # };
+  zramSwap = {
+    enable = true;
+    algorithm = "lz4";
+  };
 }
