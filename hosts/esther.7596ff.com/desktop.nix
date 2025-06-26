@@ -154,11 +154,6 @@
     ];
   };
 
-  virtualisation.virtualbox.host = {
-    enable = true;
-    # enableExtensionPack = true;
-  };
-
   programs.kdeconnect.enable = true;
   programs.kde-pim = {
     enable = true;

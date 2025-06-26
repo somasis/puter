@@ -132,6 +132,11 @@
     usbguard-notifier
   ];
 
+  virtualisation.virtualbox.host = {
+    enable = true;
+    # enableExtensionPack = true;
+  };
+
   environment.plasma6.excludePackages =
     with pkgs;
     with kdePackages;
