@@ -15,7 +15,7 @@
       impermanence.nixosModules.impermanence
       nix-index-database.nixosModules.nix-index
 
-      homeManager.nixosModules.default
+      home-manager.nixosModules.default
 
       nixosModules.lib
       nixosModules.meta

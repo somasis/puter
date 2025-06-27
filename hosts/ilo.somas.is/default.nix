@@ -12,7 +12,9 @@
     with inputs;
     [
       nixosModules.sensible-defaults
-      nixosHardware.nixosModules.framework-12th-gen-intel
+      nixos-hardware.nixosModules.framework-12th-gen-intel
+
+      lix-module.nixosModules.default
 
       ./audio.nix
       ./backup.nix

@@ -50,11 +50,7 @@
         ])
         [
           "nixpkgs"
-          "nixpkgsStable"
-          "nixpkgsUnstable"
-          "homeManager"
-          "homeManagerStable"
-          "homeManagerUnstable"
+          "home-manager"
         ]
       ++ [ "--no-write-lock-file" ];
   };

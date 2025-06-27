@@ -15,8 +15,7 @@
     # NOTE Make sure to change on new releases!
     # See <https://nixos.org/manual/nixos/unstable/#sec-upgrading> for details
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05"; # most recent version (potentially beta)
-    nixpkgsStable.url = "github:nixos/nixpkgs/nixos-25.05";
-    nixpkgsUnstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -33,24 +32,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    homeManager = {
+    home-manager = {
       # NOTE Make sure to change on new releases!
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    homeManagerStable = {
-      # NOTE Make sure to change on new releases!
-      url = "github:nix-community/home-manager/release-25.05";
-      inputs.nixpkgs.follows = "nixpkgsStable";
-    };
-
-    homeManagerUnstable = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgsUnstable";
-    };
-
-    nixosHardware.url = "github:nixos/nixos-hardware";
+    nixos-hardware.url = "github:nixos/nixos-hardware";
 
     # We can use the nix-community version only when
     # <https://github.com/nix-community/flake-compat/issues/1>
@@ -63,6 +51,13 @@
     };
 
     impermanence.url = "github:nix-community/impermanence";
+
+    nixos-cli.url = "github:nix-community/nixos-cli";
+
+    lix-module = {
+      url = "git+https://git.lix.systems/lix-project/nixos-module";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Secure Boot implementation.
     lanzaboote = {
@@ -77,44 +72,29 @@
 
     plasma-manager = {
       url = "github:nix-community/plasma-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "homeManager";
-    };
-
-    nixcord = {
-      url = "github:kaylorben/nixcord";
-      inputs.nixpkgs.follows = "nixpkgsUnstable";
-    };
-
-    mosh-server-upnp = {
-      url = "github:arcnmx/mosh-server-upnp";
-      inputs.nixpkgs.follows = "nixpkgsStable";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        home-manager.follows = "home-manager";
+      };
     };
 
     # Use a pre-built nix-index database
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgsUnstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # Non-flake content
     avatarSomasis = {
       # jq -nrR \
       #     --arg hash "$(printf '%s' 'kylie@somas.is' | md5sum | cut -d ' ' -f1)" \
-      #     --arg size 512 \
-      #     --arg fallback "https://avatars.githubusercontent.com/${USER}?size=512" \
-      #     '"url = \"https://www.gravatar.com/avatar/\($hash)?s=\($size)&d=\($fallback | @uri)\";"'
+      #     '"url = \"https://www.gravatar.com/avatar/\($hash)\";"'
       #     '
       flake = false;
+      type = "file";
       url = "https://www.gravatar.com/avatar/a187e38560bb56f5231cd19e45ad80f6?s=512";
     };
 
-    catgirl.flake = false;
-    catgirl.url = "git+https://git.causal.agency/catgirl?ref=somasis/tokipona";
-    dmenu-flexipatch.flake = false;
-    dmenu-flexipatch.url = "github:bakkeby/dmenu-flexipatch";
-    # radiotray-ng.flake = false;
-    # radiotray-ng.url = "github:ebruck/radiotray-ng";
     qutebrowser-zotero.flake = false;
     qutebrowser-zotero.url = "github:parchd-1/qutebrowser-zotero";
     plasma-pass.flake = false;
@@ -139,9 +119,13 @@
       treefmt-nix,
 
       nixpkgs,
-      nixpkgsStable,
-      nixpkgsUnstable,
-      homeManager,
+      nixpkgs-unstable,
+      home-manager,
+      nixos-hardware,
+
+      agenix,
+      lix-module,
+      nixos-cli,
       disko,
 
       ...
@@ -254,8 +238,7 @@
         default = final: prev: lib.recursiveUpdate prev (import ./pkgs { pkgs = final; });
 
         nixpkgsVersions = final: prev: {
-          stable = inputs.nixpkgsStable.legacyPackages.${system};
-          unstable = inputs.nixpkgsUnstable.legacyPackages.${system};
+          unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
         };
 
         # Create an overlay from all flake inputs with packages.
@@ -297,7 +280,7 @@
         };
       };
 
-      homeConfigurations.somasis = homeManager.lib.homeManagerConfiguration {
+      homeConfigurations.somasis = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgsFor.${system};
         modules = [ ./users/somasis ];
       };
