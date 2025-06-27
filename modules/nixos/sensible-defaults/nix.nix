@@ -22,7 +22,6 @@
     systemPackages = lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions;
 
     sessionVariables.FLAKE = config.system.autoUpgrade.flake;
-    shellAliases.nixos = ''nixos-rebuild --use-remote-sudo --flake "$FLAKE"'';
   };
 
   # System should automatically upgrade according to the canonical version

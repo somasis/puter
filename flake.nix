@@ -343,8 +343,8 @@
             shellHook =
               self.checks.${system}.git-hooks.shellHook
               + ''
-                # Used by the default `nixos` alias provided by sensible-defaults.
-                export FLAKE="$PWD"
+                # Used by nixos-cli.
+                export NIXOS_CONFIG="git+file://$PWD"
               '';
 
             buildInputs =
