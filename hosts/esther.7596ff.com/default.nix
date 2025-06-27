@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   self,
   modulesPath,
@@ -23,7 +22,6 @@
       ./git.nix
       ./networking.nix
       ./samba.nix
-      ./somasis.nix
       ./users.nix
     ];
 
@@ -96,7 +94,6 @@
       somasis = {
         imports = [
           "${self}/users/somasis"
-          "${self}/users/somasis/desktop"
         ];
       };
     };
@@ -104,19 +101,10 @@
 
   hardware.cpu.amd.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
-  environment.systemPackages =
-    [
-      pkgs.htop
-      pkgs.tmux
-      pkgs.kakoune
-      pkgs.neovim
-    ]
-    ++ lib.unique (
-      lib.mapAttrsToList (_: x: x) (lib.filterAttrs (_: lib.isDerivation) pkgs.nixos-artwork.wallpapers)
-    );
-
-  environment.pathsToLink = [
-    "/share/wallpapers"
-    "/share/backgrounds"
+  environment.systemPackages = [
+    pkgs.htop
+    pkgs.tmux
+    pkgs.kakoune
+    pkgs.neovim
   ];
 }
