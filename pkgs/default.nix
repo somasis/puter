@@ -236,14 +236,12 @@ rec {
   optimize = callPackage ./optimize { };
   plasma-pass-unstable = callPackage ./plasma-pass-unstable { };
   qute-pass = callPackage ./qute-pass { inherit dmenu-pass; };
-  sbase = callPackage ./sbase { };
   scooper = callPackage ./scooper { };
   signal-desktop-patched = callPackage ./signal-desktop-patched { };
   sol = callPackage ./sol { };
   somasis-qutebrowser-tools = callPackage ./somasis-qutebrowser-tools { };
   sonapona = callPackage ./sonapona { };
   table = callPackage ./table { };
-  ubase = callPackage ./ubase { };
   wcal = callPackage ./wcal { };
   wineprefix = callPackage ./wineprefix { };
   # keep-sorted end

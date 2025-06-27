@@ -833,22 +833,6 @@
         "type": "github"
       }
     },
-    "sbase": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1748848709,
-        "narHash": "sha256-pbrhp3I4VgXTnKEfS5dAD3QGbCf7ps4HaOpbaeh4a9s=",
-        "ref": "refs/heads/master",
-        "rev": "6b802ab9fd967e2478a29a583521a13fb91aef57",
-        "revCount": 2037,
-        "type": "git",
-        "url": "git://git.suckless.org/sbase"
-      },
-      "original": {
-        "type": "git",
-        "url": "git://git.suckless.org/sbase"
-      }
-    },
     "std": {
       "inputs": {
         "nix-std": "nix-std"
@@ -915,22 +899,6 @@
       "original": {
         "owner": "uBlockOrigin",
         "repo": "uAssetsCDN",
-        "type": "github"
-      }
-    },
-    "ubase": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1591329989,
-        "narHash": "sha256-wgoseKkQCtj0+99HpwK162kYUGZl/mTExc33A8hculo=",
-        "owner": "michaelforney",
-        "repo": "ubase",
-        "rev": "f152e7fc3bd1675060818ac224f96541a2d9d6e7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "michaelforney",
-        "repo": "ubase",
         "type": "github"
       }
     }

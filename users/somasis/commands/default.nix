@@ -138,21 +138,6 @@
 
     # (toybox.override { enableStatic = true; })
 
-    # (sbase.overrideAttrs (prev: {
-    #   src = inputs.sbase;
-    #   version = config.lib.somasis.flakeModifiedDateToVersion inputs.sbase;
-    # })
-
-    # (ubase.overrideAttrs (prev: {
-    #   src = inputs.ubase;
-    #   version = config.lib.somasis.flakeModifiedDateToVersion inputs.ubase;
-    # })
-
-    # (writeShellScriptBin "sbase" ''
-    #   c="$1";
-    #   exec $(PATH=${sbase}/bin:${ubase}/bin command -v "$c") "$@"
-    # '')
-
     (writeScriptBin "todos" ''
       #!${gawk}/bin/gawk -f
       /(^| )#.* (TODO|NOTE|HACK|XXX|BUG)/ {

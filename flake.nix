@@ -119,10 +119,6 @@
     qutebrowser-zotero.url = "github:parchd-1/qutebrowser-zotero";
     plasma-pass.flake = false;
     plasma-pass.url = "git+https://invent.kde.org/plasma/plasma-pass.git";
-    sbase.flake = false;
-    sbase.url = "git://git.suckless.org/sbase";
-    ubase.flake = false;
-    ubase.url = "github:michaelforney/ubase";
 
     control-panel-for-twitter.flake = false;
     control-panel-for-twitter.url = "github:insin/control-panel-for-twitter";
