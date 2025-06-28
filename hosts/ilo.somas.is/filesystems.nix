@@ -18,9 +18,6 @@
 
     swraid.enable = false;
 
-    # Fix there not being enough space for some Nix builds
-    tmp.useTmpfs = true;
-
     zfs = {
       requestEncryptionCredentials = true;
       forceImportRoot = false;
