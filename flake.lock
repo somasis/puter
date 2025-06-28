@@ -58,13 +58,13 @@
     "avatarSomasis": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-aO9kf7usSe+IPI2GKJ9sHOYp0Qyxp0kSFRjFUA0toAM=",
+        "narHash": "sha256-wQESKAcEpSlEyYqbH9pvd3BKfXJqSKlHB5GpcjTayWI=",
         "type": "file",
-        "url": "https://www.gravatar.com/avatar/a187e38560bb56f5231cd19e45ad80f6"
+        "url": "https://www.gravatar.com/avatar/a187e38560bb56f5231cd19e45ad80f6?s=512"
       },
       "original": {
         "type": "file",
-        "url": "https://www.gravatar.com/avatar/a187e38560bb56f5231cd19e45ad80f6"
+        "url": "https://www.gravatar.com/avatar/a187e38560bb56f5231cd19e45ad80f6?s=512"
       }
     },
     "control-panel-for-twitter": {
