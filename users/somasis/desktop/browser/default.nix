@@ -953,17 +953,58 @@ in
 
   services.darkman =
     let
-      qutebrowser-change-color = color: ''
-        ${lib.toShellVar "color" color}
+      settingsForMode =
+        mode:
+        with config.theme;
+        with config.programs.qutebrowser;
+        if mode == "light" then
+          [
+            "colors.tabs.bar.bg:${settings.colors.tabs.bar.bg}"
+
+            "colors.completion.even.bg:${settings.colors.completion.even.bg}"
+            "colors.completion.odd.bg:${settings.colors.completion.odd.bg}"
+            "colors.completion.fg:${settings.colors.completion.fg}"
+
+            "colors.webpage.darkmode.enabled:false"
+          ]
+        else
+          # mode == "dark"
+          [
+            "colors.webpage.darkmode.enabled:true"
+
+            "colors.tabs.bar.bg:${colors.darkWindowBackground}"
+
+            "colors.completion.even.bg:${colors.menuLightBackground}"
+            "colors.completion.odd.bg:${colors.menuLightBackground}"
+            "colors.completion.fg:${colors.menuLightForeground}"
+          ];
+
+      qutebrowser-change-color = mode: ''
         autoconfig="''${XDG_CONFIG_HOME:-$HOME/.config}/qutebrowser/autoconfig.yml"
+
+        ${lib.toShellVar "settings" (settingsForMode mode)}
+
+        # Construct the list of settings key:values
+        yq_expression=
+        qutebrowser_command=
+        for setting in "''${settings[@]}"; do
+            name=''${setting%%:*}
+            value=''${setting#*:}
+            yq_expression="''${yq_expression:+$yq_expression | }.settings.\"$name\".global = \"$value\""
+            qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set --temp $name $value"
+        done
+
+        # If qutebrowser is running, send it the commands,
         if ${pkgs.procps}/bin/pgrep -u "$USER" -laf '(python)?.*/bin/\.?qutebrowser(-wrapped)?' >/dev/null 2>&1; then
-            ${config.programs.qutebrowser.package}/bin/qutebrowser ":set colors.tabs.bar.bg $color"
+            ${config.programs.qutebrowser.package}/bin/qutebrowser ":$qutebrowser_command"
         fi
-        ${pkgs.yq-go}/bin/yq --inplace --expression '.settings."colors.tabs.bar.bg".global = "'"$color"'"' "$autoconfig"
+
+        # but always change the autoconfig file.
+        ${pkgs.yq-go}/bin/yq --inplace --expression "$yq_expression" "$autoconfig"
       '';
     in
     {
-      lightModeScripts.qutebrowser = qutebrowser-change-color config.theme.colors.lightWindowBackground;
-      darkModeScripts.qutebrowser = qutebrowser-change-color config.theme.colors.darkWindowBackground;
+      lightModeScripts.qutebrowser = qutebrowser-change-color "light";
+      darkModeScripts.qutebrowser = qutebrowser-change-color "dark";
     };
 }

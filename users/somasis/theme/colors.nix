@@ -216,6 +216,11 @@ with palette;
     menuLightForeground = accentDarkText;
     menuLightSelectedBackground = accent;
     menuLightSelectedForeground = accentText;
+    menuDarkBackground = "#1b1b1b";
+    menuDarkForeground = accentLightText;
+    menuDarkSelectedBackground = accent;
+    menuDarkSelectedForeground = accentText;
+
     menuBackground = menuLightBackground;
     menuForeground = menuLightForeground;
     menuSelectedBackground = menuLightSelectedBackground;
