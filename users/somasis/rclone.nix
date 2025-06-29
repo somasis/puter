@@ -16,15 +16,15 @@ let
   #   vfs-refresh = true;
   # };
 
-  structureCacheOptions = {
-    # With remotes that can fingerprint on their end, these options allow us to
-    # have faster access of the *structure* of a remote; but this ultimtaely
-    # requires a high degree of trust in remote fingerprinting, as well as the
-    # the VFS write cache of the mount being written back often enough.
-    dir-cache-time = "6h";
-    vfs-cache-max-age = "1d";
-    vfs-fast-fingerprint = true;
-  };
+  # structureCacheOptions = {
+  #   # With remotes that can fingerprint on their end, these options allow us to
+  #   # have faster access of the *structure* of a remote; but this ultimtaely
+  #   # requires a high degree of trust in remote fingerprinting, as well as the
+  #   # the VFS write cache of the mount being written back often enough.
+  #   vfs-refresh = true;
+  #   vfs-cache-max-age = "1d";
+  #   vfs-fast-fingerprint = true;
+  # };
 
   streamingCacheOptions = {
     vfs-fast-fingerprint = true;
@@ -95,7 +95,7 @@ in
           "audio/source" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/audio/source";
-            options = structureCacheOptions // streamingCacheOptions;
+            options = streamingCacheOptions;
           };
 
           "video/anime" = {
