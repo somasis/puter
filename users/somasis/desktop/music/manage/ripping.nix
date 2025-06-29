@@ -1,30 +1,29 @@
 {
   pkgs,
-  config,
+  # config,
   lib,
-  music,
   ...
 }:
 {
   home.packages = [
     pkgs.whipper
-    pkgs.nicotine-plus
+    # pkgs.nicotine-plus
   ];
 
-  persist.directories = [
-    {
-      method = "bindfs";
-      directory = config.lib.somasis.xdgConfigDir "nicotine";
-    }
-    {
-      method = "bindfs";
-      directory = config.lib.somasis.xdgDataDir "nicotine";
-    }
-  ];
+  # persist.directories = [
+  #   {
+  #     method = "bindfs";
+  #     directory = config.lib.somasis.xdgConfigDir "nicotine";
+  #   }
+  #   {
+  #     method = "bindfs";
+  #     directory = config.lib.somasis.xdgDataDir "nicotine";
+  #   }
+  # ];
 
-  xdg.autostart.entries = [
-    "${pkgs.nicotine-plus}/share/applications/org.nicotine_plus.Nicotine.desktop"
-  ];
+  # xdg.autostart.entries = [
+  #   "${pkgs.nicotine-plus}/share/applications/org.nicotine_plus.Nicotine.desktop"
+  # ];
 
   xdg.configFile."whipper/whipper.conf".text =
     lib.generators.toINI
