@@ -32,7 +32,6 @@
 
   services.nixos-cli = {
     enable = true;
-    prebuildOptionCache = false;
     config = {
       use_nvd = true;
       apply = {
