@@ -82,10 +82,7 @@
       min-free = 1024000000; # 512 MB
       max-free = 1024000000; # 1 GB
 
-      substituters = lib.mkMerge [
-        # Add each build machine as a substituter
-        (map (m: "${m.protocol}://${m.sshUser}@${m.hostName}") config.nix.buildMachines)
-
+      extra-substituters =
         [
           # Use binary cache for nonfree packages
           "https://nixpkgs-unfree.cachix.org"
@@ -99,7 +96,9 @@
           # lanzaboote
           "https://lanzaboote.cachix.org"
         ]
-      ];
+        ++
+        # Add each build machine as a substituter
+        (map (m: "${m.protocol}://${m.sshUser}@${m.hostName}") config.nix.buildMachines);
 
       trusted-public-keys = [
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
