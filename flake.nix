@@ -327,6 +327,8 @@
             # Ensure we don't have dead links in comments or whatever.
             # lychee.enable = true;
 
+            shellcheck.enable = true;
+
             treefmt = {
               enable = true;
               package = treefmt.${system}.config.build.wrapper;
