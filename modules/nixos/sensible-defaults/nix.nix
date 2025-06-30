@@ -124,11 +124,6 @@
       experimental-features = [
         "nix-command"
         "flakes"
-
-        # Test out content-addressed derivations, since they are built and seem
-        # to have few bugs by this point, but still are not default. The feature
-        # is worth testing out since it could improve disk space usage.
-        "ca-derivations"
       ];
 
       trusted-users = [ "@wheel" ];
