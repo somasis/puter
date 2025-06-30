@@ -132,9 +132,20 @@
     usbguard-notifier
   ];
 
-  virtualisation.virtualbox.host = {
-    enable = true;
-    # enableExtensionPack = true;
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      dockerSocket.enable = true;
+      dockerCompat = true;
+
+      autoPrune.enable = true;
+    };
+
+    virtualbox.host = {
+      enable = true;
+      # enableExtensionPack = true;
+    };
   };
 
   environment.plasma6.excludePackages =

@@ -18,6 +18,7 @@
         extraGroups =
           [ "systemd-journal" ]
           ++ lib.optional config.hardware.brillo.enable "video"
+          ++ lib.optional config.virtualisation.podman.enable "podman"
           ++ lib.optional config.hardware.sane.enable "scanner"
           ++ lib.optional config.hardware.uinput.enable "input"
           ++ lib.optional config.programs.adb.enable "adbusers"
