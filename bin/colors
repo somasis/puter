@@ -1,0 +1,244 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils
+# shellcheck shell=bash
+
+palette_only=
+randomize=
+size=
+test24bit=
+verbose=
+while getopts :2fprsv arg >/dev/null 2>&1; do
+    case "${arg}" in
+        2) test24bit=true ;;
+        p) palette_only=true ;;
+        r) randomize=true ;;
+        s) size=true ;;
+        v) verbose=true ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+printf() {
+    [[ -n "${verbose}" ]] && command printf '+ printf "\\033[%sm%s\\033[0m\\n"\n' "${1}" "${2}"
+    command printf "$@"
+}
+
+randomize() {
+    [[ -n "${randomize}" ]] && shuf "$@" || cat "$@"
+}
+
+c() {
+    if [[ $# -gt 0 ]]; then
+        printf "\033[${1}m${2}\033[0m\n"
+    else
+        printf '\n'
+    fi
+}
+
+if [[ -n "${test24bit}" ]]; then
+    i=0
+    for a in {0..255}; do
+        printf '\033[48;2;%i;%i;%im \033[0m' "${a}" "${a}" "${a}"
+    done
+    printf '\n'
+    for a in {0..255}; do
+        printf '\033[48;2;%i;0;0m \033[0m' "${a}"
+    done
+    printf '\n'
+    for a in {0..255}; do
+        printf '\033[48;2;0;%i;0m \033[0m' "${a}"
+    done
+    printf '\n'
+    for a in {0..255}; do
+        printf '\033[48;2;0;0;%im \033[0m' "${a}"
+    done
+    printf '\n'
+    exit
+fi
+
+cat <<'EOF'
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+0123456789~!@#$%^&*()_+[]\{}|;':",./<>?
+
+EOF
+
+if ! [[ -n "${palette_only}" ]]; then
+    c 0 normal
+    c 1 bold
+    c 2 dim
+    c 3 italic
+    c 4 underline
+    c 5 "slow blink"
+    c 6 "rapid blink"
+    c 7 reverse
+    c 8 conceal
+    c 9 strikethrough
+    c
+
+    if [[ -n "${fonts}" ]]; then
+        c 10 "primary font"
+        for i in $(seq 1 9); do
+            c 1"${i}" "alt font ${i}"
+        done
+        c 20 "blackletter font"
+    fi
+
+    c
+    c 21 "double underline (or, disable bold)"
+    c "2;22" "normal intensity"
+    c "3;23" "neither italic nor blackletter"
+    c "4;24" "not underlined"
+    c "5;25" "not blinking"
+    c 26 "proportional spacing"
+    c "7;27" "not reversed"
+    c "8;28" "not concealed"
+    c "9;29" "not striked through"
+
+    for i in $(seq 0 7); do
+        c 3"${i}" "set foreground color ${i}"
+    done
+
+    cube=$(seq 16 231 | randomize | tail -n1)
+
+    rgb1=$(seq 30 255 | randomize | tail -n1)
+    rgb2=$(seq 30 255 | randomize | tail -n1)
+    rgb3=$(seq 30 255 | randomize | tail -n1)
+
+    c "38;5;${cube}" "set foreground color to color ${cube} (256 color support)"
+    c "38;2;${rgb1};${rgb2};${rgb3}" "set foreground color to RGB ${rgb1}, ${rgb2}, ${rgb3} (24-bit color support)"
+
+    c 39 "set foreground color to default"
+
+    for i in $(seq 0 7); do
+        c 4"${i}" "set background color ${i}"
+    done
+
+    cube=$(seq 16 231 | randomize | head -n1)
+    rgb1=$(seq 30 255 | randomize | head -n1)
+    rgb2=$(seq 30 255 | randomize | head -n1)
+    rgb3=$(seq 30 255 | randomize | head -n1)
+
+    c "48;5;${cube}" "set background color to color ${cube} (256 color support)"
+    c "48;2;${rgb1};${rgb2};${rgb3}" "set background color to RGB ${rgb1}, ${rgb2}, ${rgb3} (24-bit color support)"
+
+    c 49 "set background color to default"
+
+    c 50 "disable proportional spacing"
+
+    c 51 "framed"
+    c 52 "encircled"
+    c 53 "overlined"
+    c 54 "neither framed nor encircled"
+    c 55 "not overlined"
+
+    cube=$(seq 16 231 | randomize | head -n1)
+    rgb1=$(seq 30 255 | randomize | head -n1)
+    rgb2=$(seq 30 255 | randomize | head -n1)
+    rgb3=$(seq 30 255 | randomize | head -n1)
+
+    c "4;58;5;${cube}" "set underline color to color ${cube} (256 color support)"
+    c "4;58;2;${rgb1};${rgb2};${rgb3}" "set underline color to RGB ${rgb1}, ${rgb2}, ${rgb3} (24-bit color support)"
+
+    c "4;59" "set underline color to default"
+
+    c "73" "superscript"
+    c "73" "subscript"
+
+    if [[ -n "${size}" ]]; then
+        printf '\033#3double-height letters\n\033#4double-height letters\n'
+        printf '\033#5single-width line (should look like a normal line)\n'
+        printf '\033#6double-width line\n'
+    fi
+
+    printf '\n'
+
+    printf 'the real test: does your terminal support emojis?\n'
+    printf '❤️🧡💛💚💙💜🤎🖤🤍<-- if you see a bunch of hearts, your terminal is full of love!\n'
+    printf '󱤀!󱤴󱤘󱥬󱥔! <--- ilo sina li ken toki pona anu seme?\n'
+
+    printf '\nsheesh, let me get out the pantones:\n'
+fi
+
+# echo empty line
+# clear
+
+# cursor_up=$(tput cuu1)
+# cursor_down=$(tput cud1)
+# cursor_left=$(tput cub1)
+# cursor_right=$(tput cuf1)
+
+# cursor_save=$(tput sc)
+# cursor_restore=$(tput rc)
+
+# color_reset='\033[0m'
+
+# pantone_width=7
+# pantone_height=3
+
+# # pantone_realign_next=
+# # pantone_realign_next_line=
+# # pantone_realign_next_line+="${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_down}"
+# # for _ in $(seq 1 "${pantone_width}"); do pantone_realign_next_line+="${cursor_right}"; done
+
+# # printf '%s\n' "${pantone_realign@Q}" >&2
+
+# color_code='\033[41m'
+# pantone_top=red
+# pantone_middle=41
+# pantone_bottom_left=1
+# pantone_bottom_right=31
+
+# pantone_bottom=$(printf '%'$((pantone_width - ${#pantone_bottom_right}))'s%'$((${#pantone_bottom_right} - ${#pantone_bottom_left}))'s' "${pantone_bottom_left}" "${pantone_bottom_right}")
+
+# # .--------.
+# # |blak   b|
+# # |     100|
+# # |8     90|
+# # '--------'
+
+# pantone_format=(
+#     '%b%-'"${pantone_width}"'s%b' "${cursor_right}${cursor_save}" '\n'
+#     '%b%'"${pantone_width}"'s%b' '\n'
+#     '%b%'"${pantone_width}"'s%b' "${cursor_reset}"
+# )
+
+# pantone_format=$(printf '%s' "${pantone_format[@]}")
+
+# color_code='\033[42m'
+# pantone_top=grn
+# pantone_middle=42
+# pantone_bottom_left=2
+# pantone_bottom_right=32
+
+# printf "${pantone_format}" \
+#     "${color_code}" "${pantone_top}"    "${color_reset}" \
+#     "${color_code}" "${pantone_middle}" "${color_reset}" \
+#     "${color_code}" "${pantone_bottom}" "${color_reset}"
+
+# printf '\n'
+# # printf 'eof\n'
+# exit
+
+printf '\033[49mbg      \033[0m\033[39;7mfg      \033[0m\033[40mblak    \033[0m\033[100mblak   b\033[0m\n'
+printf '\033[49m        \033[0m\033[39;7m        \033[0m\033[40m      40\033[0m\033[100m     100\033[0m\n'
+printf '\033[49mbg    49\033[0m\033[39;7mfg    39\033[0m\033[40m0     30\033[0m\033[100m8     90\033[0m\n'
+
+printf '\033[41mred     \033[0m\033[101mred    b\033[0m\033[42mgrn     \033[0m\033[102mgrn    b\033[0m\n'
+printf '\033[41m      41\033[0m\033[101m     101\033[0m\033[42m      42\033[0m\033[102m     102\033[0m\n'
+printf '\033[41m1     31\033[0m\033[101m9     91\033[0m\033[42m2     32\033[0m\033[102m10    92\033[0m\n'
+
+printf '\033[43mylw     \033[0m\033[103mylw     \033[0m\033[44mblue    \033[0m\033[104mblue   b\033[0m\n'
+printf '\033[43m      43\033[0m\033[103m     103\033[0m\033[44m      44\033[0m\033[104m     104\033[0m\n'
+printf '\033[43m3     33\033[0m\033[103m11    93\033[0m\033[44m4     34\033[0m\033[104m12    94\033[0m\n'
+
+printf '\033[45mpink    \033[0m\033[105mpink   b\033[0m\033[46mcyan    \033[0m\033[106mcyan   b\033[0m\n'
+printf '\033[45m      45\033[0m\033[105m     105\033[0m\033[46m      46\033[0m\033[106m     106\033[0m\n'
+printf '\033[45m5     35\033[0m\033[105m13    95\033[0m\033[46m6     36\033[0m\033[106m14    96\033[0m\n'
+
+printf '\033[47mwht     \033[0m\033[107mwht    b\033[0m\n'
+printf '\033[47m      47\033[0m\033[107m     107\033[0m\n'
+printf '\033[47m7     37\033[0m\033[107m15    97\033[0m\n'
+
+[[ -n "${palette_only}" ]] || printf '\n'

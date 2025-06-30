@@ -1,0 +1,91 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gnugrep uq
+# shellcheck shell=bash
+
+set -euo pipefail
+. edo
+
+: "${PHISHIN_USER_ENTRY:=www/phish.in}"
+: "${PHISHIN_USER_EMAIL:=$(pass meta "${PHISHIN_USER_ENTRY}" email)}"
+: "${PHISHIN_USER_PASSWORD:=$(pass meta "${PHISHIN_USER_ENTRY}" password)}"
+
+: "${BEET_SYNC_PHISHIN_NOTES:=${HOME}/notes/phish.txt}"
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} [show ...]
+
+Synchronize the metadata of Phish.in shows in the Beets library with
+your Phish.in account. This includes doing things like:
+
+- importing shows using beet-import-phish,
+- using phishin-like-show to like a show that has a rating equal to 10
+  and unlike a show that has a rating less than 10,
+
+Furthermore, it can read a file which is searched for ISO dates, which
+are assumed to be shows.
+
+options:
+    [show ...]          ISO-formatted dates (ex. 1969-12-31) which
+                        correspond to the date of a show performed
+                        by the band Phish. If no shows are provided,
+                        a list of default shows is built up from
+                        available metadata.
+
+
+environment variables:
+    \$PHISHIN_USER_ENTRY${PHISHIN_USER_ENTRY:+ (current: ${PHISHIN_USER_ENTRY@Q})}
+    \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ (current: ${PHISHIN_USER_EMAIL@Q})}
+    \$PHISHIN_USER_PASSWORD
+    \$BEET_SYNC_PHISHIN_NOTES${BEET_SYNC_PHISHIN_NOTES:+ (current: ${BEET_SYNC_PHISHIN_NOTES@Q})}
+        This file is grepped for ISO-formatted dates, if it exists,
+        and the dates it finds are used for building the default list
+        of shows to run on.
+
+see also: beet import, phishin-download-show, beet-import-phish,
+and the Phish.in project <https://phish.in>.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+case "$1" in
+    --help | -h | *) usage ;;
+esac
+
+failed_shows=()
+
+shows_to_import=("${@:-}")
+notes_mentioned_shows=()
+phishin_liked_shows=()
+
+mapfile -t shows_in_library < <(beet ls -f '$original_year-$original_month-$original_day' -a 'data_source:=Phish.in')
+mapfile -t notes_mentioned_shows < <(grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' "${BEET_SYNC_PHISHIN_NOTES}" | tac)
+mapfile -t phishin_liked_shows < <(phishin-list-liked-shows)
+
+mapfile -t shows_to_phishin_like < <(
+    {
+        printf '%s\n' "${shows_in_library[@]}"
+        beet ls -f '$original_year-$original_month-$original_day' -a \
+            'data_source:=Phish.in' 'rating:5..10'
+    } | uq
+)
+
+mapfile -t shows_to_phishin_unlike < <(
+    {
+        beet ls -f '$original_year-$original_month-$original_day' -a \
+            'data_source:=Phish.in' 'rating:0..4'
+    } | uq
+)
+
+mapfile -t shows_to_import < <(printf '%s\n' "${notes_mentioned_shows[@]}" "${phishin_liked_shows[@]}" | uq)
+mapfile -t shows_to_like < <(
+    printf '%s\n' "${shows_in_library[@]}" | uq
+)
+
+edo beet-import-phish "${shows_to_import[@]}"

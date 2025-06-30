@@ -1,0 +1,8 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gnused iproute2
+# shellcheck shell=bash
+
+comm -23 \
+    <(printf '%s\n' {49152..65535} | sort) \
+    <(ss -Htan | sed 's/[[:space:]][[:space:]]*/ /g; s/^\S\S*\s\S\S*\s\S\S*\s//; s/ .*//; s/.*://' | sort -u) \
+    | shuf -n 1

@@ -1,0 +1,17 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gitMinimal
+# shellcheck shell=bash
+
+USAGE='<file...>'
+LONG_USAGE='Bring back the last version of a file/directory that existed in a
+Git repository.
+
+Kylie McClain <kylie@somas.is>'
+. "$(git --exec-path)/git-sh-setup"
+
+set -euo pipefail
+
+for file in "$@"; do
+    rev=$(git rev-list -2 HEAD -- "${file}" | tail -1)
+    git checkout "${rev}" -- "${file}"
+done

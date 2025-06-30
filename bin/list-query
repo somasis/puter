@@ -1,0 +1,59 @@
+#!/bin/sh
+
+set -eu
+
+strip_uuid() {
+    "${strip_uuid}" && sed -E '/ uuid:/ s/ uuid:\S+//' || cat
+}
+
+filter() {
+    if [ "$#" -eq 0 ]; then
+        cat
+        return $?
+    fi
+
+    insensitive=
+    "${case_sensitive}" || insensitive='tolower($0) ~ '
+
+    case "${filter_mode}" in
+        all)
+            regex=$(printf "${insensitive}/%s/ && " "$@" | sed 's/ && $//')
+            ;;
+        any)
+            regex=$(printf "${insensitive}/%s/ || " "$@" | sed 's/ || $//')
+            ;;
+    esac
+
+    "${case_sensitive}" || regex=$(printf '%s\n' "${regex}" | tr '[:upper:]' '[:lower:]')
+
+    awk "${regex}"
+}
+
+usage() {
+    cat >&2 <<EOF
+usage: list-query [-Uai] [-c context] [-f file] [-p project] [query ...]
+EOF
+    exit 69
+}
+
+filter_mode=all
+case_sensitive=true
+strip_uuid=true
+file=/dev/stdin
+contexts=
+projects=
+
+while getopts :Uaif:c:p: arg >/dev/null; do
+    case "${arg}" in
+        c) contexts="${contexts:+${contexts} }@${OPTARG}" ;;
+        f) file="${OPTARG}" ;;
+        p) projects="${projects:+${projects} }+${OPTARG}" ;;
+        U) strip_uuid=false ;;
+        a) filter_mode=any ;;
+        i) case_sensitive=false ;;
+        *) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+filter "${contexts}" "${projects}" "$@" <"${file}" | strip_uuid

@@ -1,0 +1,24 @@
+#!/bin/sh
+# shellcheck shell=sh
+
+# shellcheck disable=SC2016
+format='$artist - $title\n'
+
+while getopts :f: arg >/dev/null 2>&1; do
+    case "${arg}" in
+        f)
+            format="${OPTARG}"
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# format=$(printf '%s' "${format}" | sed -E 's/%([a-z0-9_]+)%/\$\1/g)
+while [ $# -gt 0 ]; do
+    # shellcheck disable=SC2086
+    envtag "${1}" | sh -c 'eval "$(cat)"; eval "printf \"${1}\""' -- "${format}"
+    shift
+done

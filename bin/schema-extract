@@ -1,0 +1,36 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash jq pup
+# shellcheck shell=bash
+
+set -euo pipefail
+
+if [ "$#" -eq 0 ]; then
+    set -- -
+fi
+
+json=
+for src; do
+    case "${src}" in
+        -) src=/dev/stdin ;;
+    esac
+    src=$(<"${src}")
+
+    json+=$(pup -p 'script json{}' <<<"${src}" | jq -c '.[]')
+    json+=$(pup -p '[property][content] json{}' <<< "${src}" | jq -c '.[]')
+
+    grep --color null <<<"$json"
+done
+
+jq '
+    if (.tag == "script") then
+      if (
+        ((.type == "application/json") or (.type == "json") or (.type == "application/ld+json"))
+          or (try (.text | fromjson | true) catch (false))
+        ) then
+        .text | fromjson
+      else
+        empty
+      end
+    else .
+    end
+    ' <<<"${json}"

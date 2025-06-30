@@ -122,3 +122,12 @@ We use <https://github.com/ryantm/agenix> for actually managing the secrets.
   age.secrets.my-new-apikey.file = "${self}/secrets/my-new-apikey.age";
 }
 ```
+
+== License
+
+This repository is in the public domain.
+
+To the extent possible under law, Kylie McClain <kylie@somas.is>
+has waived all copyright and related or neighboring rights to this work.
+
+http://creativecommons.org/publicdomain/zero/1.0/

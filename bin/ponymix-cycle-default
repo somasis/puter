@@ -1,0 +1,43 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gnugrep ponymix
+# shellcheck shell=bash
+
+usage() {
+    cat >&2 <<EOF
+usage: ${0##*/} TYPE
+EOF
+    exit 69
+}
+
+[[ "$#" -eq 1 ]] || usage
+
+ponymix --short list -t "${1}" >/dev/null 2>&1 || usage
+
+devices=$(
+    ponymix --short list -t "${1}" | sort -t "$(printf '\t')" -k 2n
+    # sink	0	alsa_output.pci-0000_00_1f.3.analog-stereo	Built-in Audio Analog Stereo
+    # sink	4	bluez_sink.F8_4E_17_38_42_89.a2dp_sink	Sony WH-1000XM4
+)
+
+# Assure that the number loop back around if we're on the last default
+devices="${devices}
+${devices}"
+
+default=$(
+    # ponymix doesn't apply `-t <type>` to `defaults`?
+    ponymix --short defaults \
+        | grep "^${1}$(printf '\t')" \
+        | cut -f3
+    # sink	4	bluez_sink.F8_4E_17_38_42_89.a2dp_sink	Sony WH-1000XM4
+)
+
+use_next=
+while read -r _ _ d _; do
+    [[ "${d}" == "${default}" ]] && use_next=true && continue
+
+    if [[ "${use_next}" == true ]]; then
+        ponymix set-default -t "${1}" -d "${d}"
+        echo "${d}"
+        exit
+    fi
+done < <(echo "${devices}")

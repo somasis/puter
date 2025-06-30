@@ -1,0 +1,69 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash curl jq coreutils pandoc lowdown
+# shellcheck shell=bash
+
+set -euo pipefail
+
+: "${PHISH_NET_SECRET:=$(pass api/phish-cli/phish.net | head -n1)}"
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <show ...>
+
+Display notes for a Phish show, as provided by Phish.net.
+The output is intended for human usage. It aims to mimic
+a common style of organizing a show, often used by the
+authors of "taper notes" that accompany a fan-made recording
+of a jam band.
+
+options:
+    <show>          An ISO formatted date (ex. 1969-12-31)
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+curl() {
+    command curl --no-progress-meter --location -A "${user_agent}" "$@"
+}
+
+[[ "$#" -gt 0 ]] || usage 'error: no show provided\n'
+
+user_agent='phish-cli <kylie@somas.is>'
+
+show_data=$(curl --fail-with-body "https://phish.in/api/v2/shows/${1?no show provided}")
+
+show_date=$(jq -r '.date' <<<"${show_data}")
+show_next_date=$(jq -r '.next_show_date' <<<"${show_data}")
+show_previous_date=$(jq -r '.previous_show_date' <<<"${show_data}")
+show_tour=$(jq -r '.tour_name' <<<"${show_data}")
+show_venue=$(jq -r '"\(.venue_name), \(.venue.location)"' <<<"${show_data}")
+show_data_phishnet=$(
+    curl --fail \
+        -d "apikey=${PHISH_NET_SECRET}" \
+        "https://api.phish.net/v5/shows/showdate/${show_date}" \
+        | jq -r '.data[] | select(.artist_name == "Phish")'
+)
+show_notes=$(
+    jq -r '.setlist_notes' <<<"${show_data_phishnet}" \
+        | pandoc -f html -t commonmark \
+        | lowdown -t term | sed 's/^    //'
+)
+
+printf 'Phish\n%s\n%s\n%s\n\n' "${show_date}" "${show_tour}" "${show_venue}"
+printf '%s\n' "${show_notes}"
+
+show_sets=()
+mapfile -t show_sets < <(jq -r '.tracks[].set_name' <<<"${show_data}" | uq)
+
+for show_set in "${show_sets[@]}"; do
+    printf '\n%s\n' "${show_set}"
+    jq -r --arg show_set "${show_set}" '.tracks[] | select(.set_name == $show_set) | "\(.position). \(.title)"' <<<"${show_data}"
+done
+
+printf '\n(prev show: %s, next show: %s)\n' "${show_previous_date}" "${show_next_date}"

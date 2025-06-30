@@ -1,0 +1,100 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash jq dateutils
+# shellcheck shell=bash
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <show ...>
+
+Download a show using \`phishin-download-show\`, and then import it
+with enhanced tagging using \`beet import\`.
+
+options:
+    <show>          An ISO formatted date (ex. 1969-12-31)
+
+see also: beet import, phishin-download-show
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+phishin() {
+    jq -cr "$@" "${download_dir?phishin(): no download_dir set yet}/phishin.json"
+}
+
+# shellcheck disable=SC1091
+. edo
+
+mkdir -p ~/audio/source/bootleg-phishin
+cd ~/audio/source/bootleg-phishin
+
+if [[ "$#" -le 0 ]]; then
+    usage 'error: must provide at least one argument\n'
+fi
+
+shows_to_import=()
+for show; do
+    if [[ "${show}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]]; then
+        shows_to_import+=("${show}")
+    else
+        usage 'error: show must be an ISO-formatted date (1969-12-31)\n'
+    fi
+done
+
+for show in "${shows_to_import[@]}"; do
+    phish-show-notes "${show}"
+
+    download_dir=$(phishin-download-show "${show}")
+
+    phishin_id=$(phishin '.id')
+
+    location=$(phishin '.venue | [ .name, .location ] | join(", ")')
+    tour=$(phishin '.tour_name') || :
+
+    beet_import_args=(
+        --copy
+        --flat
+        --quiet
+        --quiet-fallback=asis
+        --write
+        --noincremental
+
+        --set=art_source='Phish.in'
+        --set=data_source='Phish.in'
+        --set=phishin_id="${phishin_id}"
+        --set=comments_source='Phish.in'
+        --set=label='Phish.in'
+        --set=media='Digital Media'
+
+        ${tour:+"--set=grouping=Phish ${tour}"}
+
+        --set=albumartist='Phish'
+        --set=albumartist_sort='Phish'
+        --set=albumstatus='bootleg'
+        --set=albumtype='live'
+
+        ${location:+"--set=location=${location}"}
+
+        --set=year="${BASH_REMATCH[1]}"
+        --set=month="${BASH_REMATCH[2]}"
+        --set=day="${BASH_REMATCH[3]}"
+        --set=original_year="${BASH_REMATCH[1]}"
+        --set=original_month="${BASH_REMATCH[2]}"
+        --set=original_day="${BASH_REMATCH[3]}"
+
+        --set=added="$(date +%Y-%m-%dT%H:%M:%S%:z)"
+    )
+
+    touch "${download_dir}"/*
+
+    edo beet import "${beet_import_args[@]}" "${download_dir}"
+done
+
+edo phishin-like-show "$@" >/dev/null

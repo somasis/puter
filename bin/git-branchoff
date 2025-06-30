@@ -1,0 +1,125 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gitMinimal gnused ncurses skim
+# shellcheck shell=bash
+
+USAGE='[revisions...]'
+LONG_USAGE='Interactively create a branch by cherry-picking a commit, using sk(1).
+If no revision range is specified, all commits not yet pushed to
+upstream will be available to chose from.
+
+Kylie McClain <kylie@somas.is>'
+
+. "$(git --exec-path)/git-sh-setup"
+
+set -euo pipefail
+
+edo() {
+    printf '+ %s\n' "$*" >&2
+    "$@"
+}
+
+lcp() {
+    lcp=$(
+        tr -d : \
+            | cut -d ' ' -f1 \
+            | sort \
+            | sed \
+                -e '$q; N; s/^\(.*\).*\(\n\)\1.*/\2\1/; D' \
+                -e 's/[\.-_]*$//'
+    )
+
+    [[ -n "${lcp}" ]] || return 1
+    printf '%s\n' "${lcp}"
+}
+
+case "${1:-}" in
+    --help | -h)
+        shift
+        usage
+        ;;
+    --) shift ;;
+esac
+
+if ! [[ -t 0 ]]; then
+    die 'git-branchoff must be ran with a terminal'
+fi
+
+current_upstream=$(git rev-parse --abbrev-ref --symbolic-full-name @{u})
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+revs=()
+
+if [[ "$#" -eq 0 ]]; then
+    commits=()
+
+    # get all non-upstream, non branch commits that make HEAD
+    mapfile -t commits < <(
+        {
+            git for-each-ref --format='%(refname)' refs/heads \
+                | while read -r _branch; do
+                    case "${_branch}" in
+                        "$(git symbolic-ref --quiet HEAD)") : ;;
+                        *)
+                            git log --reverse --format=$'%h\t%t' @{upstream}.."${_branch}"
+                            ;;
+                    esac
+                done
+            git log --reverse --format=$'%h\t%t' @{upstream}..HEAD
+        } \
+            | nl -b a -d '' -f n -w 1 \
+            | sort -t $'\t' -k3 \
+            | uniq -f2 -u \
+            | cut -f2 \
+            | pe -N1 git -c color.ui=always log --oneline -1
+    )
+
+    sk_height=$((${#commits[@]} + 2))
+    [[ "${sk_height}" -ge "$(($(tput lines) / 3 * 2))" ]] && sk_height=100%
+
+    mapfile -t revs < <(
+        printf '%s\n' "${commits[@]}" \
+            | sk \
+                --header='Select the desired revision(s) to branch off with...' \
+                --multi \
+                --ansi \
+                --no-sort \
+                --tac \
+                --sync \
+                --height="${sk_height}" \
+                --min-height=4 \
+            | NO_COLOR=1 nocolor \
+            | cut -d ' ' -f1
+    )
+    tput sgr0
+fi
+
+if [[ "${#revs[@]}" -eq 0 ]]; then
+    die 'error: no revision ranges selected'
+fi
+
+for range; do
+    mapfile -O "${#revs[@]}" revs < <(git rev-list "${range}")
+done
+
+if [[ "${#revs[@]}" -eq 1 ]]; then
+    branch_name=$(git log -1 --pretty="format:%s" "${revs[0]}" | lcp)
+else
+    branch_name=$(git log --pretty="format:%s" "${revs[@]}" | lcp)
+    if [[ -z "${branch_name}" ]]; then
+        branch_name=$(
+            git log --pretty="format:%s" "${revs[@]}" \
+                | tr -d ':' \
+                | cut -d ' ' -f1 \
+                | sk \
+                    --header="Enter the desired branch name:" \
+                    --no-sort \
+                    --no-multi \
+                    --ansi
+        )
+    fi
+fi
+
+edo git branch "${branch_name}" "${current_upstream}"
+edo git branch --set-upstream-to="${current_upstream}" "${branch_name}"
+edo git switch "${branch_name}"
+edo git cherry-pick "${revs[@]}"
+edo git switch "${current_branch}"

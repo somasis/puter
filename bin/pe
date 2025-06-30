@@ -1,0 +1,7 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p coreutils xe
+# shellcheck shell=bash
+# Parallelize an `xe` invocation, ensuring the output is sorted in the job
+# start order. This is a trick documented in xe(1).
+
+xe -LL -j0 "$@" | sort -snk1 | cut -d' ' -f2-

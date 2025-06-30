@@ -1,0 +1,42 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils
+# shellcheck shell=bash
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <filename>
+
+Search for <filename>, starting from the current working directory, and
+ascending in the tree until a file named <filename> is found.
+If a matching file is found, print its physical path. Exits
+unsuccessfully if no file is found.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+[[ $# -gt 0 ]] || usage 'error: missing file name\n'
+
+e=0
+while [[ $# -gt 0 ]]; do
+    while [[ "$PWD" != / ]]; do
+        if [[ -f "$1" ]]; then
+            link=$(readlink -f "$1")
+            printf '%s\n' "$link"
+            break
+        fi
+
+        e=$((e + 1))
+        cd ../
+    done
+    shift
+done
+
+[[ "$e" -gt 0 ]] && exit 1

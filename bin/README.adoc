@@ -1,0 +1,13 @@
+= bin
+// vim: sw=2 tw=72
+
+Various scripts I use.
+
+== License
+
+All scripts are in the public domain.
+
+To the extent possible under law, Kylie McClain <kylie@somas.is>
+has waived all copyright and related or neighboring rights to this work.
+
+http://creativecommons.org/publicdomain/zero/1.0/

@@ -1,0 +1,143 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash libnotify coreutils xdg-utils yq-go
+# shellcheck shell=bash
+
+set -euo pipefail
+
+# If another instance is running, just wait until it's gone.
+[[ "${FLOCKER:-}" != "${0}" ]] && export FLOCKER="$0" && exec flock -e "$0" "$0" "$@" || :
+
+beets_skipped_log=$(mktemp)
+
+finish_import() {
+    latest_after_import=$(beet ls -p -a 'added-' | head -n 1 || :)
+    [[ -n "${latest_after_import:-}" ]] && [[ "${latest_after_import}" != "${latest_before_import:-}" ]] || return 1
+
+    if artpath=$(beet ls -f '$artpath' -a "${latest_after_import}") && [[ "${artpath}" != 'None' ]]; then
+        printf 'using art for notification: %s\n' "${artpath}" >&2
+    else
+        artpath=
+    fi
+
+    format=$(
+        beet ls \
+            -f 'Successfully imported $albumartist - $album ($year) using metadata from $data_source.' \
+            -a \
+            "${latest_after_import}"
+    )
+
+    action=$(
+        notify-send --wait \
+            -a "${0##*/}" \
+            -A 'directory=Open directory' \
+            -A 'undo=Undo' \
+            -A 'redo=Reimport manually...' \
+            --transient \
+            ${artpath:+-i "${artpath}"} \
+            'Music imported to library' \
+            "${format}"
+    )
+
+    case "${action}" in
+        directory)
+            edo xdg-open "${latest_after_import}" &
+            disown
+            ;;
+        undo)
+            # edo kitty --title "${latest_after_import##*/} — Undoing import — beets" \
+            #     beet rm -adf "${latest_after_import}"
+
+            edo konsole --title "${latest_after_import##*/} — Undoing import — beets" -e \
+                beet rm -adf "${latest_after_import}"
+
+            # HACK for beets' thumbnails plugin not deleting .directory :/
+            rm -r "${latest_after_import}"
+            ;;
+        redo)
+            # edo kitty --title "${latest_after_import##*/} — Reimporting — beets" \
+            #     beet import "${beet_import_args}" --timid --noincremental -L "${latest_after_import}"
+            edo konsole --title "${latest_after_import##*/} — Reimporting — beets" -e \
+                beet import "${beet_import_args}" --timid --noincremental -L "${latest_after_import}"
+            ;;
+    esac
+
+    exit
+}
+
+. edo
+
+export NQDIR="${XDG_RUNTIME_DIR}/beets-import-to-library"
+
+beets_import_args=()
+for arg in "$@"; do
+    case "${arg}" in
+        -- | ./* | /* | *) break ;;
+        --*) beets_import_args+=("${arg}") ;;
+    esac
+done
+
+import="$1"
+test -e "${import}"
+shift
+
+beet_import_args+=(
+    --flat # Each argument should count as an album, for the purposes of this script
+    --noincremental
+)
+
+library_directory=$(beet config -d | yq -p yaml .library)
+
+case "${import}" in
+    "${library_directory}"/*)
+        beet_import_args+=(--nocopy --move)
+        ;;
+esac
+
+printf 'importing %s to music library...\n' "${import@Q}" >&2
+
+action=$(
+    notify-send \
+        -t 10000 \
+        -a "${0##*/}" \
+        -A 'timid-exit=Import manually...' \
+        -A 'skip=Skip' \
+        'Importing...' \
+        "$(basename "${import}")"
+)
+
+case "${action}" in
+    timid-exit)
+        edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
+            beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
+        ;;
+    skip) exit 0 ;;
+esac
+
+latest_before_import=$(beet ls -p -a 'added-' | head -n 1 || :)
+import_exit=0
+
+edo beet import --quiet --log "$beets_skipped_log" "${beet_import_args[@]}" "${import}"
+import_exit=$?
+
+if grep -q '^skip' "$beets_skipped_log" || [[ "$import_exit" -ne 0 ]]; then
+    import_exit=1
+
+    action=$(
+        notify-send --wait \
+            -u critical \
+            -a "${0##*/}" \
+            -A 'timid-exit=Import manually...' \
+            'Failed to import music' \
+            "Failed to import ${import@Q} (error code: ${import_exit})."
+    )
+
+    case "${action}" in
+        timid-exit)
+            edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
+                beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
+            ;;
+    esac
+fi
+
+finish_import
+printf 'successfully imported: %s -> %s\n' "${import@Q}" "${latest_after_import@Q}" >&2

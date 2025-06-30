@@ -1,0 +1,71 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gnused
+# shellcheck shell=bash disable=SC3000-SC3999
+
+usage() {
+    [[ "$#" -eq 0 ]] || error "$@" || :
+    cat >&2 <<EOF
+usage: parents PID
+
+Get the parent processes of a given PID, going in order from nearest
+to most distant relative. Requires that the /proc filesystem exists.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    exit 69
+}
+
+error() {
+    printf 'error: %s\n' "$@" >&2
+    exit 1
+}
+
+quote() {
+    local quoted="${1//\'/\'\\\'\'}"
+    case "$1" in
+        *[[:space:]]*) quoted="'${quoted}'" ;;
+    esac
+    printf "%s" "${quoted}"
+}
+
+get_cmdline() {
+    local arguments i
+    arguments=()
+    i=0
+
+    mapfile -t -d $'\0' arguments </proc/"$1"/cmdline || return 1
+    while [[ "${i}" -ne "${#arguments[@]}" ]]; do
+        arguments[${i}]=$(quote "${arguments[${i}]}")
+        printf '%s ' "${arguments[${i}]}"
+        i=$((i + 1))
+    done
+    printf '%s' "${arguments[${i}]}"
+}
+
+get_parent() {
+    local parent
+
+    # read/check existence in one command
+    parent=$(sed -n '/PPid:/ { s/PPid:.//; p; q }' /proc/"$1"/status 2>/dev/null) || return 1
+    if [[ "${parent}" -eq 0 ]] || [[ -z "${parent}" ]]; then
+        return 1
+    fi
+
+    echo "${parent}"
+}
+
+get() {
+    pid=$(get_parent "$1")
+    cmdline=$(get_cmdline "${pid}")
+    printf '%s\t%s\n' "${pid}" "${cmdline}"
+}
+
+[[ "$#" -eq 1 ]] || usage
+
+pid="$1"
+cmdline=$(get_cmdline "${pid}" 2>/dev/null) || error "error: non-existent PID: %s\n" "${pid}"
+
+get "${pid}"
+until get "${pid}" && [[ "${pid}" = 1 ]]; do
+    exit
+done

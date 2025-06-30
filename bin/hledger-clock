@@ -1,0 +1,172 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils dateutils gnused
+# shellcheck shell=bash
+
+set -euo pipefail
+
+case "${0##*/}" in
+    hledger-*) LEDGER=hledger ;;
+    ledger-*) LEDGER=ledger ;;
+    *) LEDGER=ledger ;;
+esac
+
+ledger() {
+    edo "${LEDGER}" "$@"
+}
+
+: "${LEDGER_FILE:-${HOME}/.${LEDGER}.journal}"
+: "${TIMELOG:=$(dirname "${LEDGER_FILE}")/timeclock.ledger}"
+
+: "${TIMELOG_ACCOUNT:=time:work}"
+
+die() {
+    # shellcheck disable=SC2059
+    printf "$@" >&2
+    exit 1
+}
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    cat >&2 <<EOF
+usage: ${0##*/} [-i] [-a account] [-c comment] [-d description] [timespec]
+       ${0##*/} [-ilr]
+EOF
+    exit 69
+}
+
+yesno() {
+    local reply
+    local default_reply="${1?yesno(): need default response}"
+    shift
+
+    local printf_args=("$@")
+
+    while [[ -z "${reply:-}" ]]; do
+        # shellcheck disable=SC2059
+        printf "${printf_args[@]}" >&2
+        read -r -n1 reply || return 127
+
+        printf '\n' >&2
+
+        reply=${reply,,}
+        reply=${reply:0:1}
+
+        case "${reply}" in
+            '')
+                reply="${default_reply,,}"
+                continue
+                ;;
+            [yn])
+                continue
+                ;;
+        esac
+
+        printf '\n' >&2
+    done
+
+    [[ "${reply,,}" == "${default_reply,,}" ]]
+}
+
+account="${TIMELOG_ACCOUNT}"
+comment=
+description=
+
+mode=clock
+while getopts :ilra:c:d: arg >/dev/null 2>&1; do
+    case "${arg}" in
+        a) account="${OPTARG}" ;;
+        c) comment="${OPTARG}" ;;
+        d) description="${OPTARG}" ;;
+        i) mode=interactive ;;
+        l) mode=list ;;
+        r)
+            mode=remove_last
+            break
+            ;;
+        ?) usage 'unknown option -- %s\n' "${OPTARG}" ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+clocktime=${1:-now}
+
+# shellcheck disable=SC2016
+[[ -e "${TIMELOG}" ]] || die 'error: timelog %s does not exist (set with $TIMELOG)\n' "${TIMELOG}"
+
+if [[ "${mode}" == 'interactive' ]]; then
+    "$0" -l | sk --multi --no-sort --reverse --preview="$0 -l {0}"
+    exit $?
+fi
+
+last_line=$(sed 's/  *;.*//; s/   *.*//; x; /^[#;\*]$/d; /^[ioIO]/!d; $!d' "${TIMELOG}")
+read -r last_status last_clockdate last_clocktime _ <<<"${last_line}"
+
+last_clocktime="${last_clockdate} ${last_clocktime}"
+unset last_clockdate
+
+case "${mode}" in
+    clock)
+        clocktime=$(date --date="${clocktime}" +'%Y-%m-%d %H:%M:%S')
+
+        [[ -n "${clocktime}" ]] && [[ -n "${account}" ]]
+
+        case "${last_status}" in
+            o)
+                last_status_word='out'
+                next_status_word='in'
+                next_line="i ${clocktime} ${account}${description:+  ${description}}${comment:+  ; ${comment}}"
+                ;;
+            i) # last was a clock in, so this is a clock out
+                last_status_word='in'
+                next_status_word='out'
+                next_line="o ${clocktime}${comment:+  ; ${comment}}"
+                ;;
+            *) exit 1 ;;
+        esac
+
+        clockdiff=$(dateconv -f '%Y-%m-%d %H:%M:%S' "${last_clocktime}")
+
+        clockdiff_seconds=$(datediff -i '%Y-%m-%d %H:%M:%S' -f '%S' "${clockdiff}" "${clocktime}")
+        clockdiff=$(datediff -i '%Y-%m-%d %H:%M:%S' -f '%Hh%Mm' "${clockdiff}" "${clocktime}")
+
+        clocktime_pretty=$(dateconv -f '%I:%M%p' "${clocktime}")
+
+        do_clock=true
+        if [[ "${clockdiff_seconds}" -le 60 ]]; then
+            printf 'you have been clocked %s only %i seconds.\n' "${last_status_word}" "${clockdiff_seconds}" >&2
+
+            do_clock=true
+            if yesno n 'are you sure you want to clock %s? [y/N] ' "${next_status_word}"; then
+                do_clock=false
+            fi
+        fi
+
+        if [[ "${do_clock}" == 'true' ]]; then
+            printf '%s\n' "${next_line}" >>"${TIMELOG}"
+
+            case "${last_status}" in
+                o) printf 'began %s at %s\n' "${account}" "${clocktime_pretty}" >&2 ;;
+                i) printf 'finished %s at %s; %s since %s\n' "${account}" "${clocktime_pretty}" "${clockdiff}" "${last_clocktime}" >&2 ;;
+            esac
+
+            printf '\n' >&2
+        fi
+        ;;
+
+    remove_last)
+        printf 'last %s clock was at %s\n' "${account}" "${last_clocktime}" >&2
+        if yesno y 'remove from timeclock? [Y/n] '; then
+            sed -i '$d' "${TIMELOG}"
+        fi
+        ;;
+esac
+
+register_args=("$@")
+
+if [[ "${mode}" = 'show' ]] && [[ "$#" -eq 0 ]]; then
+    period_start=$(dateadd -f '%Y-%m-%d' "${clocktime}" -4w)
+    register_args+=(--begin "${period_start}" --daily)
+fi
+
+ledger register "${register_args[@]}" "${account}"

@@ -1,0 +1,70 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash libnotify jq xurls
+# shellcheck shell=bash
+
+# Use notify-send to display notifications from ntfy.sh. To use this, the
+# client.yml used by `ntfy subscribe` should contain
+# "default-command: ntfy-libnotify". xurls is used to extract any URLs from the
+# message, which are made into actions that the user can click on in the
+# notification.
+
+set -euo pipefail
+
+: "${NTFY_ID:=}"
+: "${NTFY_TIME:=}"
+: "${NTFY_TOPIC:=}"
+: "${NTFY_MESSAGE:=}"
+: "${NTFY_TITLE:=}"
+: "${NTFY_PRIORITY:=}"
+: "${NTFY_TAGS:=}"
+: "${NTFY_RAW:=}"
+
+click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
+
+case "${NTFY_PRIORITY:-0}" in
+    0) priority= ;;
+    1 | 2) priority=low ;;
+    3 | 4) priority=normal ;;
+    5) priority=critical ;;
+esac
+
+case "${NTFY_TITLE}" in
+    *': '*)
+        appname=${NTFY_TITLE%%: *}
+        title=${NTFY_TITLE#*: }
+        ;;
+    *' - '*)
+        appname=${NTFY_TITLE%% - *}
+        title=${NTFY_TITLE#* - }
+        ;;
+    *) title="${NTFY_TITLE:-${NTFY_TAGS%%,*}}" ;;
+esac
+
+message="${NTFY_MESSAGE}"
+
+args=()
+
+args+=(-a "${appname:-ntfy.sh}")
+if [[ -n "${priority}" ]]; then
+    args+=(-u "${priority}")
+fi
+
+url=$(xurls <<<"${message}" | head -n1)
+
+if [[ -n "${url}" ]]; then
+    message=${message/"${url}"/}
+    click="${url}"
+fi
+
+if [[ -n "${click:=${url}}" ]]; then
+    args+=(-A click=Open)
+fi
+
+action=$(notify-send "${args[@]}" ${title:+"${title}"} "${message}")
+
+case "${action}" in
+    click)
+        xdg-open "${click}" &
+        disown
+        ;;
+esac

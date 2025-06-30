@@ -1,0 +1,171 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive tageditor
+# shellcheck shell=bash
+
+set -euo pipefail
+
+# shellcheck disable=SC1091
+. edo
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <show>
+
+Download a show from Phish.in to the current directory.
+
+options:
+    <show>          An ISO formatted date (ex. 1969-12-31)
+
+see also: beet-import-phish
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+curl() {
+    command curl -L -A "${user_agent}" "$@"
+}
+
+phishin() {
+    jq -cr "$@" <<<"${phishin_show_data}"
+}
+
+user_agent='phish-cli <kylie@somas.is>'
+
+if [[ "$#" -ne 1 ]]; then
+    usage 'error: incorrect number of arguments (1 required)\n'
+
+fi
+
+show=${1?no show provided}
+
+while :; do
+    request_album_zip=$(
+        jq -nc '{date:$show}' --arg show "${show}" \
+            | curl --no-progress-meter --json @- \
+                'https://phish.in/api/v2/shows/request_album_zip'
+    )
+
+    if jq -re '.message == "Album already generated"' <<<"${request_album_zip}" >/dev/null; then
+        break
+    else
+        sleep 15
+    fi
+done
+
+# shellcheck disable=SC2310
+if ! phishin_show_data=$(curl --no-progress-meter --fail "https://phish.in/api/v2/shows/${show}" | jq -c); then
+    printf 'error: failed to download show data for %s\n' "${show}"
+    exit 1
+fi
+
+near_show_data=
+
+show_download=$(
+    phishin '{
+            album_zip_url,
+            updated_at,
+            filename: "Phish - \(.date) \(.venue_name), \(.venue.location)\(.tags | map(" [\(.name)]") | join("")).zip"
+        }'
+)
+
+filename=$(jq -r .filename <<<"${show_download}")
+directory="${PWD}/${filename%.zip}"
+zip="${PWD}/${filename}"
+
+album_zip_url=$(jq -r .album_zip_url <<<"${show_download}")
+
+near_show_data=$(
+    if [[ -f "${zip}" ]] && bsdtar -tf "${zip}" | grep -Fq phishin.json; then
+        bsdtar -Oxf "${zip}" phishin.json
+    elif [[ -f "${directory}"/phishin.json ]]; then
+        cat "${directory}"/phishin.json
+    fi
+)
+
+extract_to_temp=$(mktemp -d)
+if ! [[ -d "${directory}" ]]; then
+    if ! [[ -f "${zip}" ]]; then
+        edo curl --location --fail -# --remote-time -o "${zip}" "${album_zip_url}"
+    fi
+    mkdir -p "${directory}"
+    edo bsdtar -C "${extract_to_temp}" -xf "${zip}"
+
+    rm -f "${extract_to_temp}"/cover_art.jpg
+    mv "${extract_to_temp}"/album_cover.jpg "${extract_to_temp}"/cover.jpg
+
+    rsync --remove-source-files --delete -ru "${extract_to_temp}"/ "${directory}"/
+    rm -rf "${extract_to_temp}"
+fi
+
+# If the far and near show data differs (either $near_show_data is empty and
+# far is not or whatever) then we need to download the show again.
+# shellcheck disable=SC2312
+if
+    [[ -n "${near_show_data}" ]] \
+        && [[ -d "${directory}" ]] \
+        && ! cmp -s <(jq -c <<<"${phishin_show_data}" || printf '{}') <(jq -c <<<"${near_show_data}" || printf '{}')
+then
+    # and if none of this is true, then we don't need to do anything!
+    printf '%s: downloaded version is up to date\n' "${show}" >&2
+    printf '%s\n' "${directory}"
+    exit 0
+fi
+
+# Go through the files and actually enhance the tagging ourselves
+file_i=0
+disc=1
+for file in "${directory}"/*.mp3; do
+    phishin_track=$(jq ".tracks[${file_i}]" <<<"${phishin_show_data}")
+    album=$(jq -r '"\(.show_date): \(.venue_name), \(.venue_location)"' <<<"${phishin_track}")
+
+    title=$(jq -r .title <<<"${phishin_track}")
+    date=$(jq -r .show_date <<<"${phishin_track}")
+    year=${date%%-*}
+
+    set_name=$(jq -r .set_name <<<"${phishin_track}")
+    last_set_name="${last_set_name:-${set_name}}"
+
+    comments=$(jq -r '[ (.tags[] | select(.notes != null) | .notes) ] | join("\n")' <<<"${phishin_track}")
+
+    if [[ "${set_name}" != "${last_set_name}" ]]; then
+        disc=$((disc + 1))
+    fi
+
+    # Tageditor yaps a lot
+    {
+        # Tageditor doesn't know about TSST, the disc subtitle tag in ID3.
+        edo tageditor set \
+            album="${album}" title="${title}" \
+            year="${year}" recorddate="${date}" \
+            disk="${disc}" id3:TSST="${set_name}" \
+            comment="${comments}" \
+            --quiet \
+            --id3v1-usage never \
+            --id3v2-version 4 \
+            --files "${file}"
+        rm -f "${file}".bak
+    } >/dev/null
+
+    last_set_name="${set_name}"
+    file_i=$((file_i + 1))
+done
+
+if ! [[ -s "${directory}"/phishin.json ]]; then
+    phishin >"${directory}"/phishin.json
+    if ! [[ -s "${directory}"/phishin.json ]]; then
+        printf 'error: failed to write show data to %s/phishin.json\n' "${directory}" >&2
+        exit 1
+    fi
+fi
+
+rm -f "${zip}"
+
+# Everything went fine so now print the downloaded show on stdout to indicate to any other tools
+# that the show in question has been downloaded.
+printf '%s\n' "${directory}"

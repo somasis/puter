@@ -1,0 +1,36 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash yq-go
+# shellcheck shell=bash
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/}
+
+Automatically clean up cruft in lyric fields in Beets, the music organizer's,
+database by acting as an \$EDITOR for \`beet edit\`. Note that this means the
+"lyrics" and "edit" plugins should be enabled in Beets.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+if [[ "${BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT:=0}" -eq 1 ]]; then
+    yq --inplace -p yaml -o yaml --expression '
+        .lyrics |= (
+            sub(".*This\\s*song\\s*is\\s*an\\s*instrumental.*|.*[\(\[][Ii]nstrumental[\]\)].*"; "[instrumental]")
+            | sub(".*Lyrics for this song have yet to be transcribed.*"; "")
+            | sub("^[0-9]+\\s*Contributors?[^\\n]+?(Lyrics|Embed)(.+Read More)?"; "")
+        )
+    ' "$@"
+    exit $?
+fi
+
+export EDITOR="$0"
+BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT=1 beet edit -f lyrics "$@"

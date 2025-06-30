@@ -1,0 +1,137 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash curl libnotify moreutils wl-clipboard xclip
+# shellcheck shell=bash
+
+: "${UPLOAD_HOST:=https://0x0.st}"
+: "${UPLOAD_POST_FILE_VARIABLE:=file}"
+: "${UPLOAD_POST_URL_VARIABLE:=url}"
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} [-cnv] [-h <host>] [-m (file | url)] [item...]
+
+A simple client for uploading files to services in the style of
+sprunge.us, 0x0.st, and workalikes. Generally, these services
+will have a minimal, plain text HTTP homepage, prescribing that
+those wishing to use the service use curl(1) to perform a POST
+to upload the file.
+
+options:
+    -c              Copy the destination URL to the clipboard. (X11/Wayland)
+    -h <host>       Set the host to be uploaded to.
+    -m (file | url)
+        Operate in <mode> mode; valid modes are "file" and "url".
+        For "file", attempt to upload <item> to the host. For "url",
+        attempt to have the host download <item>.
+    -n              Show a desktop notification on success.
+    -v              Be more verbose; this is handled by curl(1).
+
+    [<item>...]
+        Upload <item> to host. If no items are provided, assume standard input
+        as <item>, block until EOF, and then upload it.
+
+variables:
+    \$UPLOAD_HOST${UPLOAD_HOST:+ [current: ${UPLOAD_HOST@Q}]}
+    \$UPLOAD_POST_FILE_VARIABLE${UPLOAD_POST_FILE_VARIABLE:+ [current: ${UPLOAD_POST_FILE_VARIABLE@Q}]}
+    \$UPLOAD_POST_URL_VARIABLE${UPLOAD_POST_URL_VARIABLE:+ [current: ${UPLOAD_POST_URL_VARIABLE@Q}]}
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+clip() {
+    if [[ -v DISPLAY ]]; then
+        xclip -in -selection clipboard <<<"$1"
+    else
+        wl-copy -n <<<"$1"
+    fi
+}
+
+output() {
+    local item="$1"
+    local url="$2"
+
+    printf '%s\n' "${url}"
+
+    if [[ "${clip}" == 'true' ]]; then
+        clip "${url}"
+    fi
+
+    if [[ "${notification}" == 'true' ]]; then
+        action=$(
+            notify-send \
+                -a upload \
+                -i upload-media \
+                -A 'open=Open' \
+                -A 'copy=Copy to clipboard' \
+                'Uploaded successfully' \
+                "Uploaded ${item@Q} to ${url}.${clip:+ Copied to clipboard.}"
+        )
+
+        case "${action}" in
+            open)
+                xdg-open "${url}" &
+                disown
+                ;;
+            copy) clip "${url}" ;;
+        esac
+    fi
+}
+
+curl() {
+    command curl -A "${user_agent}" "${verbose:--sS}" "$@"
+}
+
+upload_stdin() { sponge | curl -F "${UPLOAD_POST_FILE_VARIABLE}=<-" "${UPLOAD_HOST}"; }
+upload_file() { curl -F "${UPLOAD_POST_FILE_VARIABLE}=@${1}" "${UPLOAD_HOST}"; }
+upload_url() { curl -F "${UPLOAD_POST_URL_VARIABLE}=${1}" "${UPLOAD_HOST}"; }
+
+user_agent='upload <kylie@somas.is>'
+
+mode='upload_file'
+
+clip=
+notification=
+verbose=
+
+while getopts :cm:nv arg >/dev/null 2>&1; do
+    case "${arg}" in
+        c) clip=true ;;
+        n) notification=true ;;
+        v) verbose=true ;;
+        m)
+            case "${OPTARG}" in
+                file | url) mode="${OPTARG}" ;;
+                *) usage 'error: unknown mode -- %s\n' "${OPTARG}" ;;
+            esac
+            ;;
+        *) usage 'error: unknown argument -- %s\n' "${OPTARG}" ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+[[ "${clip}" == true ]] || clip=
+[[ "${verbose}" == true ]] || verbose=
+
+if [[ "$#" -eq 0 ]]; then
+    item=$(upload_stdin)
+    output "standard input" "${url}"
+    exit
+fi
+
+for item; do
+    case "${mode}" in
+        file) url=$(upload_file "${item}") ;;
+        url) url=$(upload_url "${item}") ;;
+    esac
+
+    output "${item}" "${url}"
+    shift
+done

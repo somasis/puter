@@ -1,0 +1,93 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils curl jq
+# shellcheck shell=bash
+
+: "${PHISHIN_USER_ENTRY:=www/phish.in}"
+: "${PHISHIN_USER_EMAIL:=$(pass meta "${PHISHIN_USER_ENTRY}" email)}"
+: "${PHISHIN_USER_PASSWORD:=$(pass meta "${PHISHIN_USER_ENTRY}" password)}"
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <show...>
+
+Like a given show on Phish.in.
+
+options:
+    <show>          An ISO formatted date (ex. 1969-12-31)
+
+variables:
+    \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ [currently: $PHISHIN_USER_EMAIL]}
+        The email which will be used to authenticate to Phish.in.
+    \$PHISHIN_USER_PASSWORD${PHISHIN_USER_PASSWORD:+ [currently: $PHISHIN_USER_PASSWORD]}
+        The password which will be used to authenticate to Phish.in.
+
+see also: phishin-list-liked-shows
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+[[ "$#" -gt 0 ]] || usage 'error: no arguments provided\n'
+
+curl_header_file=$(mktemp)
+
+curl() {
+    command curl --no-progress-meter --user-agent "${user_agent}" "$@"
+}
+
+curl_authed() {
+    if ! [[ -s "${curl_header_file}" ]]; then
+        printf 'X-Auth-Token: %s\n' "${PHISHIN_USER_TOKEN}" >>"${curl_header_file}"
+    fi
+
+    curl --header "@${curl_header_file}" "${@?curl_authed(): no arguments given}"
+}
+
+trap 'rm -f "$curl_header_file"' QUIT
+
+user_agent='phish-cli <kylie@somas.is>'
+
+export PHISHIN_USER_EMAIL PHISHIN_USER_PASSWORD
+
+if ! PHISHIN_USER_TOKEN=$(
+    export PHISHIN_USER_EMAIL PHISHIN_USER_PASSWORD
+    jq -nc '{"email": env.PHISHIN_USER_EMAIL, "password": env.PHISHIN_USER_PASSWORD}' \
+        | curl --fail-with-body -X POST --json @- 'https://phish.in/api/v2/auth/login'
+) || [[ -z "${PHISHIN_USER_TOKEN}" ]]; then
+    printf 'error during authentication: %s\n' "${PHISHIN_USER_TOKEN}" >&2
+    exit 1
+fi
+
+PHISHIN_USER_NAME=$(jq -cre '.username' <<<"${PHISHIN_USER_TOKEN}")
+PHISHIN_USER_TOKEN=$(jq -cre '.jwt' <<<"${PHISHIN_USER_TOKEN}")
+
+errors=0
+for show; do
+    # /likes requires the show ID be given, not a date
+    show_id=$(curl --no-progress-meter --fail-with-body "https://phish.in/api/v2/shows/${1?no show given}")
+    show_id=$(jq -ce '.id' <<<"${show_id}")
+
+    result=$(
+        jq -nc --argjson show_id "${show_id}" \
+            '{"likable_type": "Show", "likable_id": $show_id}' \
+            | curl_authed -X POST --json @- "https://phish.in/api/v2/likes"
+    )
+
+    if jq -ce --arg show "$show" '.id | $show' <<<"$result"; then
+        printf '%s\n' "$show"
+    else
+        errors=$((errors + 1))
+        printf 'error: failed while liking show %s (id: %i)\n' "$show" "$show_id" >&2
+    fi
+done
+
+if [[ "$errors" -gt 0 ]]; then
+    exit 1
+fi

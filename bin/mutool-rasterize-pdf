@@ -1,0 +1,43 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash gnused mupdf xe
+# shellcheck shell=bash
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <file>
+
+Rasterize a PDF file using MuPDF, but much faster than \`mutoool convert\`
+normally is, by parallelizing it.
+
+variables:
+    \$JOBS [currently: ${JOBS:=32}]
+        How many jobs should be ran at once.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+[[ "$#" -eq 1 ]] || usage 'error: only one PDF file should be provided\n'
+
+pdf="$1"
+export pdf
+
+mutool show "$pdf" pages \
+    | sed -E '/^page [0-9]+.*/ { !d; s/^page ([0-9]+).*/\1/ }' \
+    | xe -j "${JOBS}" -FL -s '
+        set -euo pipefail
+        n=$(printf "%0.4d" "$1")
+        set -x
+        mutool convert \
+            -F png \
+            -O resolution=300 \
+            -o ./.out-"$n"_.png \
+            "$pdf" \
+            "$1" \
+            && mv .out-"$n"_1.png out-"$n".png
+    '

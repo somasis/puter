@@ -1,0 +1,6 @@
+# SC2016: don't warn about set -e being disabled in `if ... then` commands
+disable=SC2016
+
+enable=avoid-nullary-conditions
+enable=check-extra-masked-returns
+enable=deprecate-which

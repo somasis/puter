@@ -1,0 +1,47 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash xe coreutils
+# shellcheck shell=bash
+
+export PS4='$ '
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: filter <command...>
+       stest <test(1) arguments>
+
+Test each item given on standard input against <command>,
+and print item if <command> exits positively.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+set -euo pipefail
+
+pe() {
+    xe -LL -j0 "$@" | sort -snk1 | cut -d' ' -f2-
+}
+
+case "${0##*/}" in
+    stest)
+        test_error=
+        # shellcheck disable=SC2065,SC2319
+        test "$@" >/dev/null 2>&1 || test_error=$?
+        if [[ "${test_error}" -eq 2 ]]; then
+            # syntax error; test only exits with 1 in bash on files not testing positively
+            exec test "$@"
+        fi
+
+        set -- test "$@"
+        ;;
+esac
+
+set -- "${@@Q}"
+
+# shellcheck disable=SC2145
+exec pe -s "$*"' && printf "%s\n" "$1"'

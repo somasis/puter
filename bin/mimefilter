@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use autodie;
+use feature qw(say);
+use utf8;
+
+use File::Basename;
+use File::MimeInfo::Magic ();
+use Getopt::Std;
+
+sub HELP_MESSAGE {
+    say STDERR "usage: " . (fileparse($0))[0] . " [-!0v] TYPE FILES...";
+    exit 69;
+}
+
+sub VERSION_MESSAGE { HELP_MESSAGE; }
+
+my %opt;
+getopts('!0v', \%opt) && scalar @ARGV >= 2 or HELP_MESSAGE;
+
+my $types       = File::MimeInfo->new;
+my $filter      = $ARGV[0];
+my $filter_type = 0;                     # 0: parent/child, 1: parent
+
+if ($filter =~ m/^[^\/]+\/\*$/) {
+    $filter_type = 1;
+    $filter =~ s#/\*$##;
+} else {
+    if (not $filter = $types->mimetype_canon($filter)) { HELP_MESSAGE; }
+}
+
+shift @ARGV;
+
+my $filetype;
+my $match;
+
+$\ = "\n";
+$\ = "\0" if $opt{'0'};
+
+foreach my $file (@ARGV) {
+    if (not -e $file) {
+        say STDERR "error: file '$file' does not exist";
+        exit 2;
+    }
+
+    my $mimetype = $types->mimetype($file);
+
+    say "$file: $mimetype" if $opt{'v'};
+
+    if (not $filetype = $mimetype) {
+        say STDERR "warning: couldn't get type for '$file', so it won't be printed";
+        next;
+    }
+
+    $filetype =~ s#/.*## if $filter_type == 1;
+
+    if ($filter eq $filetype) {
+        print "$file" unless $opt{'!'};
+    } else {
+        print "$file" if $opt{'!'};
+    }
+}

@@ -1,0 +1,234 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gawk gnugrep jq sqlite savepagenow
+# shellcheck shell=bash
+
+set -euo pipefail
+
+: "${XDG_CACHE_HOME:=${HOME}/.cache}"
+: "${XDG_CONFIG_HOME:=${HOME}/.config}"
+: "${XDG_DATA_HOME:=${HOME}/.local}"
+
+last_run=0
+
+escape_regex() {
+    local string="$1"
+    # string=${string//[.[\(*^$+?{|]/\\&/}
+    string=${string//[.\[\*^$]/\\&}
+    printf '%s' "${string}"
+}
+
+make_regex() {
+    local type pattern regex
+
+    type="${1:?no type given}"
+    pattern="${2:?no pattern given}"
+    regex=
+
+    case "${type}" in
+        url) regex="${pattern}" ;;
+        scheme) regex="^${pattern}://" ;;
+        host) regex="^.+://.*\.${pattern}//|^.+://${pattern}//" ;;
+        path) regex="^.+://.*//(${pattern})\?" ;;
+        query) regex="^.+://.*/?.*(&?${pattern}=?)" ;;
+        *) return 1 ;;
+    esac
+
+    [[ -n "${regex}" ]] && printf '%s' "${regex}" || return 1
+}
+
+make_fixed() {
+    local type pattern fixed
+
+    type="${1:?no type given}"
+    pattern="${2:?no pattern given}"
+    fixed=()
+
+    case "${type}" in
+        url) fixed+=("${pattern}") ;;
+        scheme) fixed+=("${pattern}://") ;;
+        host) fixed+=("://${pattern}///" ".${pattern}///") ;;
+        path) fixed+=("///${pattern}" "/${pattern}/" "/${pattern}?" "${pattern}?") ;;
+        query) fixed+=("?${pattern}=" "&${pattern}=" "?${pattern}" "&${pattern}") ;;
+        *) return 1 ;;
+    esac
+
+    [[ -n "${fixed[*]}" ]] && printf '%s\n' "${fixed[@]}" || return 1
+}
+
+mkdir -p "${XDG_CONFIG_HOME}"/qutebrowser/wayback-history
+mkdir -p "${XDG_CACHE_HOME}"/qutebrowser/wayback-history
+
+if [[ -e "${XDG_CACHE_HOME}"/qutebrowser/wayback-history/last_run.timestamp ]]; then
+    last_run=$(<"${XDG_CACHE_HOME}"/qutebrowser/wayback-history/last_run.timestamp)
+else
+    printf '0' >"${XDG_CACHE_HOME}"/qutebrowser/wayback-history/last_run.timestamp
+fi
+
+excludes_patterns=(
+    "scheme:blob"
+    "scheme:mailto"
+    "scheme:file"
+
+    "scheme:about"
+    "scheme:chrome-error"
+    "scheme:chrome-extension"
+    "scheme:chrome"
+    "scheme:edge"
+    "scheme:extension"
+    "scheme:moz-extension"
+    "scheme:qute"
+    "scheme:safari-web-extension"
+
+    "host:0.0.0.0"
+    "host:127.0.0.1"
+    "host:localhost"
+
+    "hostre:192\.168\..+\..+|10\..+\..+\..+"
+)
+
+[[ -e "${XDG_CONFIG_HOME}"/qutebrowser/wayback-history/exclude.patterns ]] \
+    && mapfile -t -O "${#excludes_patterns[@]}" excludes_patterns <"${XDG_CONFIG_HOME}"/qutebrowser/wayback-history/exclude.patterns
+
+mapfile -t excludes_patterns < <(
+    grep -v \
+        -e '^$' \
+        -e '^#' \
+        <(printf '%s\n' "${excludes_patterns[@]}") \
+        | sort -ud
+)
+
+excludes_fixed=()
+excludes_regex=()
+
+while IFS=: read -r pattern_type pattern; do
+    case "${pattern_type}" in
+        urlre | schemere | hostre | pathre | queryre) excludes_regex+=("${pattern_type%re}:${pattern}") ;;
+        url | scheme | host | path | query) excludes_fixed+=("${pattern_type}:${pattern}") ;;
+        '' | *)
+            printf 'error: "%s" is an invalid pattern type\n' "${pattern_type}" >&2
+            exit 1
+            ;;
+    esac
+done < <(printf '%s\n' "${excludes_patterns[@]}")
+
+mapfile -t excludes_regex < <(
+    for regex in "${excludes_regex[@]}"; do
+        type=${regex%%:*}
+        pattern=${regex#"${type}":}
+
+        case "${type}" in
+            url | scheme | host | path | query) regex=$(make_regex "${type}" "${pattern}") ;;
+        esac
+
+        printf '%s\n' "${regex:-}"
+    done
+)
+
+mapfile -t excludes_fixed < <(
+    for fixed in "${excludes_fixed[@]}"; do
+        type=${fixed%%:*}
+        pattern=${fixed#"${type}":}
+
+        case "${type}" in
+            url | scheme | host | path | query) fixed=$(make_fixed "${type}" "${pattern}") ;;
+        esac
+
+        printf '%s\n' "${fixed:-}"
+    done
+)
+
+# printf 'excludes_regex: %s\n' "${excludes_regex[@]}" >&2
+# printf 'excludes_fixed: %s\n' "${excludes_fixed[@]}" >&2
+
+# if [[ "$(grep -Ei -c -f <(printf '%s\n' "${excludes_patterns}") /dev/null || printf '%s\n' -1)" -ge 0 ]]; then
+#     printf 'error: problem with exclusion patterns\n' >&2
+#     exit 1
+# fi
+
+# First, get all the URLs in qutebrowser's history.
+history=$(
+    TZ=UTC sqlite3 -readonly -tabs \
+        "${XDG_DATA_HOME}"/qutebrowser/history.sqlite \
+        'SELECT redirect, atime, url FROM History ORDER BY atime ASC;'
+)
+
+current_run=$(TZ=UTC date +%s)
+
+printf 'history before any processing: %s links\n' "$(wc -l <<<"${history}")" >&2
+
+# Then, filter out
+#     - any URLs that we have already encounted
+#       (i.e. their access time is from before our last run),
+#     - any duplicate URLs,
+#     - and any URLs which we were redirected from.
+history=$(
+    awk -F '\t' -v last_run="${last_run}" '{
+        if ($2 >= last_run && !seen[$3]++ && $1 == 0)
+            print $3
+        }' <<<"${history}"
+)
+
+# printf 'history after deduplication: %s links\n' "$(wc -l <<<"${history}")"  >&2
+
+# Normalize the URLs with `trurl`, but in a kinda silly way, so that the fixed
+# matches are easier to work with.
+history=$(
+    #     -g '{scheme}://{host}//{path}?{query}' \
+    trurl \
+        --no-guess-scheme \
+        --accept-space \
+        -s fragment= \
+        -s query= \
+        -g '{default:scheme}://{default:host}//{default:path}?{default:query}' \
+        -f - \
+        <<<"${history}"
+)
+
+history=$(sort -ud <<<"${history}")
+
+# printf 'history after deduplication: %s links\n' "$(wc -l <<<"${history}")"  >&2
+
+# Then, exclude URLs matching the exclusions patterns.
+history=$(grep -Fiv -f <(printf '%s\n' "${excludes_fixed[@]}") <<<"${history}")
+# printf 'history after fixed filtering: %s links\n' "$(wc -l <<<"${history}")"  >&2
+history=$(grep -Eiv -f <(printf '%s\n' "${excludes_regex[@]}") <<<"${history}")
+# printf 'history after regex filtering: %s links\n' "$(wc -l <<<"${history}")"  >&2
+
+history=$(sed -E 's/\?$//; s|/$||; s|//*|/|g; s|:/|&/|' <<<"${history}")
+
+history=$(sort -ud <<<"${history}")
+
+printf 'history after final deduplication: %s links\n' "$(wc -l <<<"${history}")" >&2
+
+links_archived=$(mktemp)
+links_failed=$(mktemp)
+
+export links_archived links_failed
+
+xe -L -N 1 -j 4 -s '
+    set -euo pipefail
+
+    edo() { printf "+ %s\n" "$*" >&2; error=0; "$@" 2>/dev/null || error=$?; return "$error"; }
+
+    sleep=$(( 60 + RANDOM ))
+    max_runs=5
+    runs=0
+
+    while [[ "$runs" -lt "$max_runs" ]]; do
+        if edo savepagenow -c "$@" >/dev/null; then
+            printf "%s\n" "$@" >> "$links_archived"
+            exit
+        else
+            sleep $(( (sleep * runs) % 600 + 1 ))
+        fi
+        runs+=$(( runs + 1 ))
+    done
+
+    printf "%s\n" "$@" >> "$links_failed"
+' <<<"${history}"
+
+printf 'links archived: %s links\n' "$(wc -l <<<"${links_archived}")" >&2
+printf 'links failed: %s links\n' "$(wc -l <<<"${links_failed}")" >&2
+rm -f "${links_archived}" "${links_failed}"
+
+printf '%s\n' "${current_run}" >"${XDG_CACHE_HOME}"/qutebrowser/wayback-history/last_run.timestamp

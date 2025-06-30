@@ -1,0 +1,130 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p curl jq imagemagickBig util-linux
+# shellcheck shell=bash
+# tan pi ilo ni:
+# o pali e sitelen lili pi nimi toki pona.
+# sitelen ona li tawa kepeken pi ilo Siko.
+
+sona() {
+    cat >&2 <<EOF
+kepeken: sitelen-lili-nimi [-u] [-l mute] [-L kule] [-p mute] [-P kule]
+                           [-n nasin] [-s mute] [-S kule] [-o open_nimi
+                           [nimi...]
+EOF
+    exit 69
+}
+
+mu() {
+    if [[ -n "${mu}" ]]; then
+        "$@" >&2
+    fi
+}
+
+open_nimi=
+mu=
+while getopts :up:P:n:s:S:l:L:o: wile; do
+    case "${wile}" in
+        u) mu=true ;;
+        p) mute_poki="${OPTARG}" ;;
+        P) kule_poki="${OPTARG}" ;;
+        n) nasin_sitelen="${OPTARG}" ;;
+        s) mute_sitelen="${OPTARG}" ;;
+        S) kule_sitelen="${OPTARG}" ;;
+        l) mute_selo_sitelen="${OPTARG}" ;;
+        L) kule_selo_sitelen="${OPTARG}" ;;
+        o) open_nimi="${OPTARG}" ;;
+        *) sona ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+: "${mute_poki:=128}"
+: "${kule_poki:=transparent}"
+: "${nasin_sitelen:=PuLukin}"
+: "${mute_sitelen:=114}"
+: "${kule_sitelen:=white}"
+: "${mute_selo_sitelen:=4}"
+: "${kule_selo_sitelen:=#36393f}"
+: "${open_nimi:=}"
+
+if [[ "$#" -eq 0 ]]; then
+    nimi=$(curl -sL "https://lipu-linku.github.io/jasima/data.json" \
+        | jq -r \
+            '.data[]
+                | select(.book == "pu" or .book == "ku suli")
+                | select(.word != "ali")
+                | .word
+    ')" kin tonsi ku _"
+    # shellcheck disable=SC2086
+    {
+        nimi=$(printf '%s\n' ${nimi} | sort -d)
+        set -- ${nimi}
+    }
+fi
+
+nasin_sitelen=$(readlink -f "$(fc-match -f '%{file}\n' "${nasin_sitelen}")")
+
+mu printf 'mi pali e nimi %s ni:\n' "$#"
+printf '%s\n' "$@" | mu column
+printf '%s\t%s\n' \
+    "mute_poki"     "${mute_poki}" \
+    "kule_poki"     "${kule_poki}" \
+    "nasin_sitelen" "${nasin_sitelen}" \
+    "mute_sitelen"  "${mute_sitelen}" \
+    "kule_sitelen"  "${kule_sitelen}" \
+    "mute_selo_sitelen"     "${mute_selo_sitelen}" \
+    "kule_selo_sitelen"     "${kule_selo_sitelen}" \
+    | mu column -t
+
+set -e
+
+mu printf 'mi pali e poki pi sitelen ni: '
+while [[ "$#" -gt 0 ]]; do
+    if [[ "$1" = "_" ]]; then
+        mu printf 'nimi ala'
+        convert \
+            -size "${mute_poki}x${mute_poki}" \
+            "xc:${kule_poki}" \
+            "${open_nimi}_.png"
+        shift
+        [[ -n "$1" ]] && mu printf ', en '
+        continue
+    fi
+
+    mu printf 'nimi "%s"' "${1}"
+    magick \
+        -size "${mute_poki}x${mute_poki}" \
+        "canvas:none" \
+        -antialias \
+        \( \
+            -clone 0 \
+            "xc:${kule_poki}" \
+        \) \( \
+            -clone 0 \
+            -fill "${kule_sitelen}" \
+            -font "${nasin_sitelen}" \
+            -pointsize 116 \
+            -gravity center \
+            -draw "text 0,0 '${1}'" \
+            -fill "${kule_selo_sitelen}" \
+            -colorize 100 \
+            -blur 1x65000 \
+            -morphology Convolve Disk:"${mute_selo_sitelen}" \
+            -fill "${kule_selo_sitelen}" \
+            -colorize 100 \
+            -morphology Open Disk \
+        \) \( \
+            -clone 0 \
+            -fill "${kule_sitelen}" \
+            -font "${nasin_sitelen}" \
+            -pointsize "${mute_sitelen}" \
+            -gravity center \
+            -draw "text 0,0 '${1}'" \
+        \) \
+        -background transparent \
+        -flatten \
+        "${open_nimi}${1}.png"
+        shift
+        [[ -n "$1" ]] && mu printf ', en '
+done
+mu printf '.\nmi pini a!\n'

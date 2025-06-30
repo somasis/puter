@@ -1,0 +1,85 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gnugrep jc jq pastel
+# shellcheck shell=bash
+
+: "${XDG_CONFIG_HOME:=~/.config}"
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/}
+
+Generate a Windows Registry key file that sets Wine's theme to be
+somewhat similar to KDE's Breeze theme, using the accent color
+set by the user.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+to_registry_color() {
+    pastel format rgb "$1" | tr -cd '[0-9] '
+}
+set -x
+
+if [[ "$#" -eq 0 ]] && [[ -e "${XDG_CONFIG_HOME}/kdeglobals" ]]; then
+    accent_color=$(
+        <"${XDG_CONFIG_HOME}"/kdeglobals jc --ini \
+            | jq -r .General.AccentColor \
+            | pastel format hex
+    )
+else
+    accent_color="${1:-#3daee9}"
+fi
+
+set -euo pipefail
+
+pastel color "${accent_color}" >&2
+
+registry_accent_color=$(to_registry_color "${accent_color}")
+
+registry_file=$(mktemp --suffix=.reg)
+
+cat >"$registry_file" <<EOF
+Windows Registry Editor Version 5.00
+
+[HKEY_CURRENT_USER\\Control Panel\\Colors]
+"ActiveBorder"="239 240 241"
+"ActiveTitle"="71 80 87"
+"AppWorkSpace"="239 240 241"
+"Background"="26 26 26"
+"ButtonAlternateFace"="179 180 181"
+"ButtonDkShadow"="248 249 249"
+"ButtonFace"="239 240 241"
+"ButtonHilight"="248 249 249"
+"ButtonLight"="179 180 181"
+"ButtonShadow"="179 180 181"
+"ButtonText"="0 0 0"
+"GradientActiveTitle"="71 80 87"
+"GradientInactiveTitle"="239 240 241"
+"GrayText"="100 101 102"
+"Hilight"="${registry_accent_color}"
+"HilightText"="255 255 255"
+"HotTrackingColor"="${registry_accent_color}"
+"InactiveBorder"="239 240 241"
+"InactiveTitle"="239 240 241"
+"InactiveTitleText"="189 195 195"
+"InfoText"="0 0 0"
+"InfoWindow"="255 255 225"
+"Menu"="248 249 249"
+"MenuBar"="239 240 241"
+"MenuHilight"="${registry_accent_color}"
+"MenuText"="0 0 0"
+"Scrollbar"="239 240 241"
+"TitleText"="255 255 255"
+"Window"="255 255 255"
+"WindowFrame"="179 180 181"
+"WindowText"="0 0 0"
+EOF
+
+wine regedit "$registry_file"
+rm -f "$registry_file"

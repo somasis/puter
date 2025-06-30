@@ -1,0 +1,83 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash ncurses rwc xe
+# shellcheck shell=bash
+
+set -euo pipefail
+
+: "${HLEDGER_WATCH_NO_CLEAR:=}"
+
+ledger() {
+    edo hledger "$@"
+}
+
+run() {
+    local error=
+
+    [[ -n "${HLEDGER_WATCH_NO_CLEAR}" ]] || clear
+
+    # allow for chaining commands: `hledger watch areg assets:cash \; balancesheet`
+    local args=("$@") arg i
+    local collector=()
+    local command=()
+
+    i=0
+    for arg in "${args[@]}" \; \;; do
+        i=$((i + 1))
+
+        # there's something in command, but not in the collector, so we should run it
+        if [[ "${#command[@]}" -gt 0 ]] && [[ "${#collector[@]}" -eq 0 ]]; then
+            error=${error:-0}
+
+            if ! PAGER=cat ledger "${command[@]}"; then
+                error=$?
+                if [[ "${error}" -ne 0 ]]; then
+                    printf '\n[`hledger %s` exited with error code %i]\n' "${command[@]@Q}" "${error}" >&2
+                fi
+            fi
+
+            if [[ "${#args[@]}" -gt "${i}" ]]; then
+                printf '\n' >&2
+            fi
+
+            command=()
+            collector=()
+        fi
+
+        if [[ "${arg}" == ';' ]]; then
+            # reset the collector, we've reached the end of this command
+            command=("${collector[@]}")
+            collector=()
+
+            continue
+        else
+            # add command argument to the collector
+            collector+=("${arg}")
+        fi
+    done
+
+    return "${error}"
+}
+
+if [[ "$#" -eq 0 ]]; then
+    printf 'error: no `hledger` command given\n' >&2
+    exit 69
+fi
+
+files=()
+
+if ! mapfile -t files < <(hledger files || printf '%s\n' "${LEDGER_FILE:-${HOME}/.hledger.journal}"); then printf 'error: failed while gathering files to open\n' >&2; fi
+
+files+=("${XDG_CONFIG_HOME:-${HOME}/.config}"/hledger/hledger.conf)
+
+for arg; do
+    # one the first argument that exists as hledger-{arg} in $PATH, add
+    # it to the watched files list and then move on
+    if hledger_command=$(command -v hledger-"${arg}" 2>/dev/null) && [[ -n "${hledger_command}" ]]; then
+        files+=("${hledger_command}")
+        break
+    fi
+done
+
+run "$@"
+
+printf '%s\n' "${files[@]}" | rwc -p | while read -r _; do run "$@"; done

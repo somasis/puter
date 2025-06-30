@@ -1,0 +1,52 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils gawk s6-portable-utils
+# shellcheck shell=bash
+# Sort paths given on standard input by their depth.
+
+set -euo pipefail
+
+usage() {
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    cat >&2 <<EOF
+usage: ${0##*/} [-d <delimiter>] [file...]
+
+Sort paths given on standard input by their depth,
+without regard for any other ordering.
+
+options:
+    -h                  display this help message
+    -d <delimiter>      use an alternate path delimiter
+
+Kylie McClain <kylie@somas.is>
+EOF
+    exit 69
+}
+
+delim=/
+while getopts :d:h arg >/dev/null 2>&1; do
+    case "${arg}" in
+        d) delim="${OPTARG}" ;;
+        h) usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+delim=$(s6-quote -d "/" "${delim}")
+
+if [[ "$#" -eq 0 ]]; then
+    set -- -
+fi
+
+for input; do
+    if [[ "$input" == '-' ]]; then
+        input=$(</dev/stdin)
+    else
+        input=$(<"$input")
+    fi
+
+    slashes=$(awk "{print gsub(${delim}, \"\")}" <<<"${input}")
+    paste <(printf '%s' "${slashes}") <(printf '%s' "$input") \
+        | sort -t $'\t' -s -k1n \
+        | cut -f2-
+done
+
