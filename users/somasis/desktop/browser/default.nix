@@ -959,11 +959,11 @@ in
         with config.programs.qutebrowser;
         if mode == "light" then
           [
-            ''colors.tabs.bar.bg:"${settings.colors.tabs.bar.bg}''
+            ''colors.tabs.bar.bg:"${settings.colors.tabs.bar.bg}"''
 
-            ''colors.completion.even.bg:"${settings.colors.completion.even.bg}''
-            ''colors.completion.odd.bg:"${settings.colors.completion.odd.bg}''
-            ''colors.completion.fg:"${settings.colors.completion.fg}''
+            ''colors.completion.even.bg:"${settings.colors.completion.even.bg}"''
+            ''colors.completion.odd.bg:"${settings.colors.completion.odd.bg}"''
+            ''colors.completion.fg:"${settings.colors.completion.fg}"''
 
             "colors.webpage.darkmode.enabled:false"
           ]
@@ -972,11 +972,11 @@ in
           [
             "colors.webpage.darkmode.enabled:true"
 
-            ''colors.tabs.bar.bg:"${colors.darkWindowBackground}''
+            ''colors.tabs.bar.bg:"${colors.darkWindowBackground}"''
 
-            ''colors.completion.even.bg:"${colors.menuLightBackground}''
-            ''colors.completion.odd.bg:"${colors.menuLightBackground}''
-            ''colors.completion.fg:"${colors.menuLightForeground}''
+            ''colors.completion.even.bg:"${colors.menuLightBackground}"''
+            ''colors.completion.odd.bg:"${colors.menuLightBackground}"''
+            ''colors.completion.fg:"${colors.menuLightForeground}"''
           ];
 
       qutebrowser-change-color = mode: ''
