@@ -14,6 +14,9 @@ which will allow you to use the Git hooks and secrets infrastructure
 provided by the flake in `flake.nix`. This will also add some commands
 to the environment; consult the package list in `devShells.default`.
 
+The way I prefer to interface with the NixOS system is through the `nixos` command,
+which comes from the https://github.com/nix-community/nixos-cli[nixos-cli] project.
+
 .Updating the flake inputs (i.e., the NixOS version used to build system)
 
   $ nix flake update --commit-lock-file
