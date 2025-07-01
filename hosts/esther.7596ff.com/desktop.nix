@@ -7,6 +7,7 @@
   persist.directories = [
     "/var/lib/cups"
     "/var/lib/power-profiles-daemon"
+    "/var/lib/sddm"
     "/var/lib/udisks2"
     "/var/lib/upower"
   ];
