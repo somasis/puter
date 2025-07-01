@@ -116,6 +116,17 @@
       "/share/applications"
     ];
 
+  nix.buildMachines = [
+    {
+      hostName = "esther.7596ff.com";
+      sshUser = "somasis";
+      system = "x86_64-linux";
+      maxJobs = 8;
+      protocol = "ssh-ng";
+      speedFactor = 2;
+    }
+  ];
+
   home-manager = {
     verbose = true;
 
