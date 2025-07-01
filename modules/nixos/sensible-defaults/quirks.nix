@@ -47,12 +47,6 @@ in
   # but it can happen in other applications, like KDE's systemsettings.
   # Necessary as of 2025-03-13 NixOS 24.11.
   environment.sessionVariables.QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
-
-  # Seems to be necessary to fix a weird crash right now?
-  # > nix-daemon[38088]: terminate called after throwing an instance of 'nix::Unsupported'
-  # > nix-daemon[38088]:   what():  error: operation 'queryRealisation' is not supported by store 'ssh://nix-ssh@esther.7596ff.com'
-  # > systemd-coredump[38109]: Process 38088 (nix-daemon) of user 0 terminated abnormally with signal 6/ABRT, processing...
-  nix.sshServe.protocol = "ssh-ng";
 }
 // lib.optionalAttrs (patches != [ ]) {
   nixpkgs.overlays = [ overlay ];
