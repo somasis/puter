@@ -3,6 +3,13 @@
 
 Various scripts I use.
 
+== Exposition
+
+I have a few scripts in here that I think are worth talking about.
+
+upload::
+    A script for uploading files to services like 0x0.st (which it defaults to).
+
 == License
 
 All scripts are in the public domain.

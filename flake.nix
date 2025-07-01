@@ -300,6 +300,7 @@
           hooks = {
             # Git style
             gitlint.enable = true;
+
             check-merge-conflicts.enable = true;
 
             # Nix-related hooks

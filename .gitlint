@@ -1,4 +1,5 @@
 [general]
+regex-style-search=true
 ignore=body-is-missing,max-line-length
 
 # [body-min-length]
@@ -8,4 +9,4 @@ ignore=body-is-missing,max-line-length
 # Ignore line length maximum when using `nix flake update --commit-lock-file`
 # and its default commit message.
 regex=^Flake lock file updates:$
-ignore=body-max-line-length
+ignore=B1,body-max-line-length
