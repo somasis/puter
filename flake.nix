@@ -14,7 +14,7 @@
 
     # NOTE Make sure to change on new releases!
     # See <https://nixos.org/manual/nixos/unstable/#sec-upgrading> for details
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05"; # most recent version (potentially beta)
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs";
 
     agenix = {
@@ -34,7 +34,7 @@
 
     home-manager = {
       # NOTE Make sure to change on new releases!
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 

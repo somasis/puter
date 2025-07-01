@@ -2,10 +2,9 @@
   lib,
   symlinkJoin,
   writeTextFile,
-  substituteAll,
+  replaceVars,
   coreutils,
   gawk,
-  runtimeShell,
 }:
 symlinkJoin {
   name = "pass-meta";
@@ -17,10 +16,11 @@ symlinkJoin {
       executable = true;
       destination = "/lib/password-store/extensions/meta.bash";
 
-      text = builtins.readFile (substituteAll {
-        src = ./pass-meta.bash;
-        inherit coreutils gawk runtimeShell;
-      });
+      text = builtins.readFile (
+        replaceVars ./pass-meta.bash {
+          inherit coreutils gawk;
+        }
+      );
     })
 
     (writeTextFile {
