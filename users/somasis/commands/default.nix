@@ -18,17 +18,31 @@
     }
   ];
 
+  programs.jq.enable = true;
+
   home.packages = with pkgs; [
     # keep-sorted start
     as-tree
     dateutils
+    ellipsis
     execline
     file
+    frangipanni
+    fx
+    html-tidy
+    ijq
+    ini2nix
+    jc
+    jqfmt
+    json2nix
+    lowdown
     ltrace
     ncdu
     nq
+    pastel
     patchutils
     pigz
+    pup
     pv
     rlwrap
     rsync
@@ -40,13 +54,18 @@
     s6-portable-utils
     s6-rc
     snooze
+    sqlite-interactive.bin
     strace
+    table
     teip
     tree
     trurl
+    ugrep
     xe
+    xmlstarlet
     xurls
     xz
+    yq-go
     zstd
     # keep-sorted end
 
@@ -55,38 +74,6 @@
     # I would argue that this code is so simple that it cannot really be copyrighted.
     (pkgs.writeShellScriptBin "uq" ''
       ${lib.getExe pkgs.gawk} '!seen[$0]++' "$@"
-    '')
-
-    (pkgs.writeShellScriptBin "pe" ''
-      ${lib.getExe pkgs.xe} -LL -j0 "$@" | sort -snk1 | cut -d' ' -f2-
-    '')
-
-    (pkgs.writeShellScriptBin "upward" ''
-      usage() {
-          cat >&2 <<EOF
-      usage: ''${0##*/} <filename>
-
-      Search for <filename>, starting from the current working directory, and
-      ascending in the tree until a file named <filename> is found.
-      If a matching file is found, print its physical path. Exits
-      unsuccessfully if no file is found.
-      EOF
-          exit 69
-      }
-
-      [ $# -gt 0 ] || usage
-
-      e=0
-      while [ $# -gt 0 ]; do
-          while [ "$PWD" != / ]; do
-              [ -f "$1" ] && printf '%s\n' "$(readlink -f "$1")" && break
-              e=$((e + 1))
-              cd ../
-          done
-          shift
-      done
-
-      [ "$e" -gt 0 ] && exit 1
     '')
 
     # moreutils's /bin/ts conflicts with outils.

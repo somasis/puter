@@ -15,24 +15,24 @@
       agenix.homeManagerModules.default
       plasma-manager.homeManagerModules.plasma-manager
 
+      # keep-sorted start
       ./commands
       ./editor
       ./git
-      ./shell
-      ./theme
-
       ./less.nix
       ./locale.nix
       ./man.nix
       ./monitor.nix
       ./pass.nix
       ./rclone.nix
+      ./shell
       ./skim.nix
       ./ssh.nix
       ./syncthing.nix
-      ./text-manipulation.nix
+      ./theme
       ./tmux.nix
       ./xdg.nix
+      # keep-sorted end
     ];
 
   age.identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
