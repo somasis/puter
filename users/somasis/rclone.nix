@@ -6,15 +6,15 @@
   ...
 }:
 let
-  # bigCacheOptions = {
-  #   vfs-cache-max-size = "16G";
-  #   vfs-cache-max-age = "7d";
-  #   vfs-cache-mode = "full";
-  #   vfs-read-ahead = "128Mi";
-  #   vfs-fast-fingerprint = true;
-  #   vfs-cache-poll-interval = "10m";
-  #   vfs-refresh = true;
-  # };
+  bigCacheOptions = {
+    vfs-cache-max-size = "16G";
+    vfs-cache-max-age = "7d";
+    vfs-cache-mode = "full";
+    vfs-read-ahead = "128Mi";
+    vfs-fast-fingerprint = true;
+    vfs-cache-poll-interval = "10m";
+    vfs-refresh = true;
+  };
 
   # structureCacheOptions = {
   #   # With remotes that can fingerprint on their end, these options allow us to
@@ -28,11 +28,11 @@ let
 
   streamingCacheOptions = {
     vfs-fast-fingerprint = true;
-    vfs-read-ahead = "128Mi";
     vfs-read-chunk-size = "4Mi";
-    vfs-read-chunk-size-limit = "32Mi";
-    vfs-read-chunk-streams = "16";
-    transfers = 8;
+    vfs-read-chunk-size-limit = "8Mi";
+    vfs-read-chunk-streams = "25";
+    write-back-cache = true;
+    transfers = 4;
   };
 in
 {
@@ -95,7 +95,7 @@ in
           "audio/source" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/audio/source";
-            options = streamingCacheOptions;
+            options = bigCacheOptions;
           };
 
           "video/anime" = {
