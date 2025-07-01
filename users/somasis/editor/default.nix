@@ -120,12 +120,12 @@ in
           effect = "<esc>: comment-block<ret>i";
         }
 
-        {
-          docstring = "unindent line";
-          mode = "insert";
-          key = "<s-tab>";
-          effect = "<esc><i";
-        }
+        # {
+        #   docstring = "unindent line";
+        #   mode = "insert";
+        #   key = "<s-tab>";
+        #   effect = "<esc><i";
+        # }
 
         {
           docstring = "jump to the word left of the cursor";
@@ -388,6 +388,14 @@ in
       hooks = [
         # autolint/autoformat
         {
+          name = "BufSetOption";
+          option = "filetype=sh";
+          commands = ''
+            hook buffer BufWritePre .* lsp-formatting-sync
+          '';
+        }
+
+        {
           name = "BufWritePre";
           option = ".*";
           commands = ''evaluate-commands %sh{ [ -n "$kak_opt_lintcmd" ] && echo lint || echo nop }'';
@@ -442,7 +450,7 @@ in
           option = ".*";
           commands = ''
             # Default to space indentation and alignmnet.
-            expandtab
+            # expandtab
 
             # Read in all file-specific settings.
             # Modelines are higher priority than editorconfig.
@@ -451,9 +459,9 @@ in
 
             # Don't use noexpandtab when the file is tab-indented; use smarttab so that
             # alignments can be done with spaces.
-            set-option buffer aligntab false
+            # set-option buffer aligntab false
 
-            autoconfigtab
+            # autoconfigtab
           '';
         }
 
@@ -649,7 +657,7 @@ in
       kakoune-find
       kakoune-lsp
       kakoune-state-save
-      smarttab-kak
+      # smarttab-kak
       tug
     ];
   };

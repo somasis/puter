@@ -4,7 +4,6 @@
   ...
 }:
 let
-  inherit (config.lib.somasis) commaList;
 
   shellcheckfmt = pkgs.writeShellApplication {
     name = "shellcheckfmt";
@@ -145,7 +144,7 @@ in
       name = "WinSetOption";
       option = "filetype=sh";
       commands = ''
-        # set-option window formatcmd "shformat"
+        set-option window formatcmd "shfmt"
         set-option window lintcmd "shlint"
       '';
     }
@@ -185,21 +184,4 @@ in
       '';
     }
   ];
-
-  xdg.configFile."shellcheckrc".text =
-    # Don't use `enable = "all"`; it enables warnings about using Bashisms
-    # in bash scripts, which is annoying and unhelpful.
-    ''
-      enable=${
-        commaList [
-          "avoid-nullary-conditions"
-          "check-extra-masked-returns"
-          "check-set-e-suppressed"
-          "deprecate-which"
-          "quote-safe-variables"
-          "require-double-brackets"
-          "require-variable-braces"
-        ]
-      }
-    '';
 }
