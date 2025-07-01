@@ -959,13 +959,13 @@ in
         with config.programs.qutebrowser;
         if mode == "light" then
           [
+            "colors.webpage.darkmode.enabled:false"
+
             ''colors.tabs.bar.bg:"${settings.colors.tabs.bar.bg}"''
 
             ''colors.completion.even.bg:"${settings.colors.completion.even.bg}"''
             ''colors.completion.odd.bg:"${settings.colors.completion.odd.bg}"''
             ''colors.completion.fg:"${settings.colors.completion.fg}"''
-
-            "colors.webpage.darkmode.enabled:false"
           ]
         else
           # mode == "dark"
