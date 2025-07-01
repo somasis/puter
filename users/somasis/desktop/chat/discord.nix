@@ -275,15 +275,15 @@ in
 
   xdg.configFile = {
     "equibop/TrayIcons/deafened_nixos.png".source =
-      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/32x32@2x/panel/discord-tray-deafened.svg";
+      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-deafened.svg";
     "equibop/TrayIcons/icon_nixos.png".source =
-      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/32x32@2x/panel/discord-tray.svg";
-    # "equibop/TrayIcons/unread.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/32x32@2x/panel/discord-tray-unread.svg";
+      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray.svg";
+    # "equibop/TrayIcons/unread.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-unread.svg";
     "equibop/TrayIcons/idle_nixos.png".source =
-      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/32x32@2x/panel/discord-tray-connected.svg";
+      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-connected.svg";
     "equibop/TrayIcons/muted_nixos.png".source =
-      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/32x32@2x/panel/discord-tray-muted.svg";
+      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-muted.svg";
     "equibop/TrayIcons/speaking_nixos.png".source =
-      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/32x32@2x/panel/discord-tray-speaking.svg";
+      mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-speaking.svg";
   };
 }
