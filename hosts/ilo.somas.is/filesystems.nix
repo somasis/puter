@@ -41,7 +41,7 @@
       after = [ "zfs-import-rpool.service" ];
       wantedBy = [ "initrd.target" ];
       before = [ "sysroot.mount" ];
-      path = [ config.boot.zfs.package.userspaceTools ];
+      path = [ config.boot.zfs.package ];
       description = "Rollback to blank /";
       unitConfig.DefaultDependencies = "no";
       serviceConfig.Type = "oneshot";
