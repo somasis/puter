@@ -8,25 +8,36 @@
 # Quirks and workarounds for issues.
 # Ideally these can be removed on system upgrades, so try and
 # remove things if they don't appear necessary anymore.
+
+# Leave dead code in here so that sometimes no quirks are needed,
+# without deadnix wanting to change this file.
 let
+  # deadnix: skip
   inherit (pkgs) fetchpatch;
+  patches = [
+    # Here's an example:
+    # # Added 2025-04-17: switch to maintained fork of Cantata
+    # (fetchpatch {
+    #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
+    #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
+    # })
+  ];
 
-  nixpkgsArgs = { inherit (pkgs.stdenvNoCC) system hostPlatform; };
-
-  nixpkgs-patched = import ((import nixpkgs nixpkgsArgs).applyPatches {
-    name = "nixpkgs-quirks";
-    src = nixpkgs;
-    patches = [
-      # Added 2025-04-17: switch to maintained fork of Cantata
-      (fetchpatch {
-        url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
-        hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
-      })
-    ];
-  }) nixpkgsArgs;
+  # deadnix: skip
+  nixpkgs-quirks =
+    let
+      args = { inherit (pkgs.stdenvNoCC) system hostPlatform; };
+    in
+    import ((import nixpkgs args).applyPatches {
+      name = "nixpkgs-quirks";
+      src = nixpkgs;
+      patches = [ ];
+    }) args;
 
   overlay = final: prev: {
-    inherit (nixpkgs-patched.pkgs) cantata;
+    # Continuing the earlier example, make sure to do an override
+    # for the patched package too.
+    # inherit (nixpkgs-quirks.pkgs) cantata;
   };
 in
 {
@@ -42,7 +53,8 @@ in
   # > nix-daemon[38088]:   what():  error: operation 'queryRealisation' is not supported by store 'ssh://nix-ssh@esther.7596ff.com'
   # > systemd-coredump[38109]: Process 38088 (nix-daemon) of user 0 terminated abnormally with signal 6/ABRT, processing...
   nix.sshServe.protocol = "ssh-ng";
-
+}
+// lib.optionalAttrs (patches != [ ]) {
   nixpkgs.overlays = [ overlay ];
   home-manager.sharedModules = [
     (lib.optionalAttrs (!config.home-manager.useGlobalPkgs) { nixpkgs.overlays = [ overlay ]; })
