@@ -507,33 +507,14 @@ in
       with config.theme.colors;
       ''
         # Configure Kakoune LSP.
+        eval %sh{kak-lsp --debug}
+
         set global lsp_auto_highlight_references true
         set global lsp_hover_anchor true
 
         lsp-inlay-hints-enable global
         lsp-auto-hover-enable
         lsp-auto-signature-help-enable
-
-        eval %sh{kak-lsp --debug}
-        lsp-enable
-
-        map global user l ':enter-user-mode lsp<ret>' -docstring 'LSP mode'
-
-        map global normal <tab> '<a-;><gt>'
-        map global normal <s-tab> '<a-;><lt>'
-
-        map -docstring 'Select next snippet placeholder' global insert <tab> %{
-          <a-;>
-          :try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <gt> }<ret>
-        }
-        map global insert <s-tab> '<a-;><lt>'
-
-        map -docstring 'LSP any symbol' global object a '<a-semicolon>lsp-object<ret>'
-        map -docstring 'LSP any symbol' global object <a-a> '<a-semicolon>lsp-object<ret>'
-        map -docstring 'LSP function or method' global object f '<a-semicolon>lsp-object Function Method<ret>'
-        map -docstring 'LSP class interface or struct' global object t '<a-semicolon>lsp-object Class Interface Struct<ret>'
-        map -docstring 'LSP errors and warnings' global object d '<a-semicolon>lsp-diagnostic-object --include-warnings<ret>'
-        map -docstring 'LSP errors' global object D '<a-semicolon>lsp-diagnostic-object<ret>'
 
         hook global BufSetOption filetype=(.+) %{
             hook buffer BufWritePre .* lsp-formatting-sync
@@ -572,6 +553,25 @@ in
             }
         }
 
+        map global user l ':enter-user-mode lsp<ret>' -docstring 'LSP mode'
+
+        map global normal <tab> '<a-;><gt>'
+        map global normal <s-tab> '<a-;><lt>'
+
+        map -docstring 'Select next snippet placeholder' global insert <tab> %{
+          <a-;>
+          :try lsp-snippets-select-next-placeholders catch %{ execute-keys -with-hooks <gt> }<ret>
+        }
+        map global insert <s-tab> '<a-;><lt>'
+
+        map -docstring 'LSP any symbol' global object a '<a-semicolon>lsp-object<ret>'
+        map -docstring 'LSP any symbol' global object <a-a> '<a-semicolon>lsp-object<ret>'
+        map -docstring 'LSP function or method' global object f '<a-semicolon>lsp-object Function Method<ret>'
+        map -docstring 'LSP class interface or struct' global object t '<a-semicolon>lsp-object Class Interface Struct<ret>'
+        map -docstring 'LSP errors and warnings' global object d '<a-semicolon>lsp-diagnostic-object --include-warnings<ret>'
+        map -docstring 'LSP errors' global object D '<a-semicolon>lsp-diagnostic-object<ret>'
+
+        # Appearance, highlighters, so on
         face global InfoDefault               Information
         face global InfoBlock                 Information
         face global InfoBlockQuote            Information
@@ -647,6 +647,8 @@ in
         set-face global MenuBackground      ${kakColor menuForeground},${kakColor menuBackground},default
         set-face global MenuForeground      ${kakColor menuSelectedForeground},${kakColor menuSelectedBackground},default+b
         set-face global MenuInfo            bright-black,default,default+i
+
+        lsp-enable
       '';
 
     plugins = with pkgs.kakounePlugins; [
