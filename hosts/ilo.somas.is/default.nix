@@ -121,7 +121,7 @@
     buildMachines = [
       {
         hostName = "esther.7596ff.com";
-        sshUser = "nix-ssh";
+        sshUser = "somasis";
         system = "x86_64-linux";
         speedFactor = 2;
       }
