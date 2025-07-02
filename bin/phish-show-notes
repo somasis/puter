@@ -2,9 +2,14 @@
 #! nix-shell -i bash -p bash curl jq coreutils pandoc lowdown
 # shellcheck shell=bash
 
-set -euo pipefail
+if [[ -n "${PHISHNET_SECRET_COMMAND:-}" ]] && [[ -z "${PHISHNET_SECRET}" ]]; then
+    set +x
+    PHISHNET_SECRET=$(eval "$PHISHNET_SECRET_COMMAND")
+fi
 
-: "${PHISH_NET_SECRET:=$(pass api/phish-cli/phish.net | head -n1)}"
+: "${PHISHNET_SECRET:?no API secret for Phish.net provided in \$PHISHNET_SECRET or by \$PHISHNET_SECRET_COMMAND}"
+
+set -euo pipefail
 
 usage() {
     # shellcheck disable=SC2059
@@ -45,7 +50,7 @@ show_tour=$(jq -r '.tour_name' <<<"${show_data}")
 show_venue=$(jq -r '"\(.venue_name), \(.venue.location)"' <<<"${show_data}")
 show_data_phishnet=$(
     curl --fail \
-        -d "apikey=${PHISH_NET_SECRET}" \
+        -d "apikey=${PHISHNET_SECRET}" \
         "https://api.phish.net/v5/shows/showdate/${show_date}" \
         | jq -r '.data[] | select(.artist_name == "Phish")'
 )

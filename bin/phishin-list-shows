@@ -2,9 +2,18 @@
 #! nix-shell -i bash -p bash coreutils curl jq
 # shellcheck shell=bash
 
-: "${PHISHIN_USER_ENTRY:=www/phish.in}"
-: "${PHISHIN_USER_EMAIL:=$(pass meta "${PHISHIN_USER_ENTRY}" email)}"
-: "${PHISHIN_USER_PASSWORD:=$(pass meta "${PHISHIN_USER_ENTRY}" password)}"
+if [[ -n "${PHISHIN_USER_EMAIL_COMMAND:-}" ]] && [[ -z "${PHISHIN_USER_EMAIL}" ]]; then
+    set +x
+    PHISHIN_USER_EMAIL=$(eval "$PHISHIN_USER_EMAIL_COMMAND")
+fi
+
+if [[ -n "${PHISHIN_USER_PASSWORD_COMMAND:-}" ]] && [[ -z "${PHISHIN_USER_PASSWORD}" ]]; then
+    set +x
+    PHISHIN_USER_PASSWORD=$(eval "$PHISHIN_USER_PASSWORD_COMMAND")
+fi
+
+: "${PHISHIN_USER_EMAIL:?no Phish.in user email provided in \$PHISHIN_USER_EMAIL or by \$PHISHIN_USER_EMAIL_COMMAND}"
+: "${PHISHIN_USER_PASSWORD:?no Phish.in user email provided in \$PHISHIN_USER_PASSWORD or by \$PHISHIN_USER_PASSWORD_COMMAND}"
 
 set -euo pipefail
 
@@ -13,16 +22,19 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/}
+usage: ${0##*/} [-l]
 
-List all show dates liked by your user on Phish.in.
+List all matching show dates, as catalogued by Phish.in.
 
 options:
+    -l              List shows liked by your user.
     <show>          An ISO formatted date (ex. 1969-12-31)
 
 variables:
+    \$PHISHIN_USER_EMAIL_COMMAND${PHISHIN_USER_EMAIL_COMMAND:+ [currently: $PHISHIN_USER_EMAIL_COMMAND]}
     \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ [currently: $PHISHIN_USER_EMAIL]}
         The email which will be used to authenticate to Phish.in.
+    \$PHISHIN_USER_PASSWORD_COMMAND${PHISHIN_USER_PASSWORD_COMMAND:+ [currently: $PHISHIN_USER_PASSWORD_COMMAND]}
     \$PHISHIN_USER_PASSWORD${PHISHIN_USER_PASSWORD:+ [currently: $PHISHIN_USER_PASSWORD]}
         The password which will be used to authenticate to Phish.in.
 
@@ -38,18 +50,26 @@ curl() {
     command curl --no-progress-meter --user-agent "${user_agent}" "$@"
 }
 
-fetch_liked_shows_page() {
+fetch_shows_page() {
     printf 'X-Auth-Token: %s\n' "${PHISHIN_USER_TOKEN}" \
         | curl \
             --fail-with-body \
             --header @- \
             --get \
-            -d liked_by_user=true \
+            -d liked_by_user="${liked_by_user}" \
             -d "page=${1?no page provided}" \
             "https://phish.in/api/v2/shows"
 }
 
 user_agent='phish-cli <kylie@somas.is>'
+liked_by_user=false
+while getopts :l opt >/dev/null 2>&1; do
+    case "$opt" in
+        l) liked_by_user=true ;;
+        *) usage 'error: unknown command: %s\n' "${opt}" ;;
+    esac
+done
+shift $((OPTIND - 1))
 
 export PHISHIN_USER_EMAIL PHISHIN_USER_PASSWORD
 

@@ -5,10 +5,6 @@
 set -euo pipefail
 . edo
 
-: "${PHISHIN_USER_ENTRY:=www/phish.in}"
-: "${PHISHIN_USER_EMAIL:=$(pass meta "${PHISHIN_USER_ENTRY}" email)}"
-: "${PHISHIN_USER_PASSWORD:=$(pass meta "${PHISHIN_USER_ENTRY}" password)}"
-
 : "${BEET_SYNC_PHISHIN_NOTES:=${HOME}/notes/phish.txt}"
 
 usage() {
@@ -37,9 +33,6 @@ options:
 
 
 environment variables:
-    \$PHISHIN_USER_ENTRY${PHISHIN_USER_ENTRY:+ (current: ${PHISHIN_USER_ENTRY@Q})}
-    \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ (current: ${PHISHIN_USER_EMAIL@Q})}
-    \$PHISHIN_USER_PASSWORD
     \$BEET_SYNC_PHISHIN_NOTES${BEET_SYNC_PHISHIN_NOTES:+ (current: ${BEET_SYNC_PHISHIN_NOTES@Q})}
         This file is grepped for ISO-formatted dates, if it exists,
         and the dates it finds are used for building the default list
@@ -65,7 +58,11 @@ notes_mentioned_shows=()
 phishin_liked_shows=()
 
 mapfile -t shows_in_library < <(beet ls -f '$original_year-$original_month-$original_day' -a 'data_source:=Phish.in')
-mapfile -t notes_mentioned_shows < <(grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' "${BEET_SYNC_PHISHIN_NOTES}" | tac)
+
+if [[ -e "$BEET_SYNC_PHISHIN_NOTES" ]]; then
+    mapfile -t notes_mentioned_shows < <(grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' "${BEET_SYNC_PHISHIN_NOTES}" | tac)
+fi
+
 mapfile -t phishin_liked_shows < <(phishin-list-liked-shows)
 
 mapfile -t shows_to_phishin_like < <(
