@@ -8,12 +8,9 @@
 let
   bigCacheOptions = {
     vfs-cache-max-size = "16G";
-    vfs-cache-max-age = "7d";
     vfs-cache-mode = "full";
-    vfs-read-ahead = "128Mi";
     vfs-fast-fingerprint = true;
-    vfs-cache-poll-interval = "10m";
-    vfs-refresh = true;
+    write-back-cache = true;
   };
 
   # structureCacheOptions = {
@@ -27,12 +24,13 @@ let
   # };
 
   streamingCacheOptions = {
+    buffer-size = "4Mi";
+    vfs-read-ahead = "512M";
     vfs-fast-fingerprint = true;
-    vfs-read-chunk-size = "4Mi";
-    vfs-read-chunk-size-limit = "8Mi";
+    vfs-read-chunk-size = "4M";
+    vfs-read-chunk-size-limit = "512M";
     vfs-read-chunk-streams = "25";
     write-back-cache = true;
-    transfers = 4;
   };
 in
 {
@@ -64,14 +62,14 @@ in
             copy_is_hardlink = true;
           };
 
-      whatbox-webdav = {
-        config = {
-          type = "webdav";
-          url = "https://webdav.box.somas.is";
-          user = "somasis";
-        };
-        secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
-      };
+      # whatbox-webdav = {
+      #   config = {
+      #     type = "webdav";
+      #     url = "https://webdav.box.somas.is";
+      #     user = "somasis";
+      #   };
+      #   secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
+      # };
 
       whatbox-sftp.config = {
         type = "sftp";
@@ -81,8 +79,10 @@ in
 
       whatbox = {
         config = {
-          type = "union";
-          upstreams = "whatbox-sftp:files/ whatbox-webdav:";
+          type = "alias";
+          remote = "whatbox-sftp:files/";
+          # type = "union";
+          # upstreams = "whatbox-sftp:files/ whatbox-webdav:";
         };
 
         mounts = {
@@ -95,7 +95,7 @@ in
           "audio/source" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/audio/source";
-            options = bigCacheOptions;
+            options = streamingCacheOptions // bigCacheOptions;
           };
 
           "video/anime" = {
