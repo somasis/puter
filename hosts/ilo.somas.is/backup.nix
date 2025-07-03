@@ -66,8 +66,6 @@ let
       "*[Tt]humbnail*"
       ".stversions"
       "/persist/home/somasis/etc/syncthing/index-*.db"
-      "pp:/persist/home/somasis/audio/source"
-      "re:/persist/home/somasis/etc/discord(canary)?/[0-9\.]+/.*"
     ];
 
     extraArgs = "--lock-wait 600";
