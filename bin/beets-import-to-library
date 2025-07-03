@@ -7,8 +7,6 @@ set -euo pipefail
 # If another instance is running, just wait until it's gone.
 [[ "${FLOCKER:-}" != "${0}" ]] && export FLOCKER="$0" && exec flock -e "$0" "$0" "$@" || :
 
-beets_skipped_log=$(mktemp)
-
 finish_import() {
     latest_after_import=$(beet ls -p -a 'added-' | head -n 1 || :)
     [[ -n "${latest_after_import:-}" ]] && [[ "${latest_after_import}" != "${latest_before_import:-}" ]] || return 1
@@ -28,11 +26,11 @@ finish_import() {
 
     action=$(
         notify-send --wait \
+            -t 10000 \
             -a "${0##*/}" \
             -A 'directory=Open directory' \
             -A 'undo=Undo' \
             -A 'redo=Reimport manually...' \
-            --transient \
             ${artpath:+-i "${artpath}"} \
             'Music imported to library' \
             "${format}"
@@ -66,19 +64,14 @@ finish_import() {
 
 . edo
 
-export NQDIR="${XDG_RUNTIME_DIR}/beets-import-to-library"
-
 beets_import_args=()
 for arg in "$@"; do
     case "${arg}" in
-        -- | ./* | /* | *) break ;;
+        --) break ;;
         --*) beets_import_args+=("${arg}") ;;
+        ./* | /* | *) break ;;
     esac
 done
-
-import="$1"
-test -e "${import}"
-shift
 
 beet_import_args+=(
     --flat # Each argument should count as an album, for the purposes of this script
@@ -87,57 +80,81 @@ beet_import_args+=(
 
 library_directory=$(beet config -d | yq -p yaml .library)
 
-case "${import}" in
-    "${library_directory}"/*)
-        beet_import_args+=(--nocopy --move)
-        ;;
-esac
+import_errors=()
+for import; do
+    error=0
+    (
+        case "${import}" in
+            "${library_directory}"/*)
+                beet_import_args+=(--nocopy --move)
+                ;;
+        esac
 
-printf 'importing %s to music library...\n' "${import@Q}" >&2
+        test -e "${import}"
 
-action=$(
-    notify-send \
-        -t 10000 \
-        -a "${0##*/}" \
-        -A 'timid-exit=Import manually...' \
-        -A 'skip=Skip' \
-        'Importing...' \
-        "$(basename "${import}")"
-)
+        printf 'importing %s to music library...\n' "${import@Q}" >&2
 
-case "${action}" in
-    timid-exit)
-        edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
-            beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
-        ;;
-    skip) exit 0 ;;
-esac
+        action=$(
+            notify-send \
+                -t 10000 \
+                --transient \
+                -a "${0##*/}" \
+                -A 'timid-exit=Import manually...' \
+                -A 'skip=Skip' \
+                'Importing...' \
+                "$(basename "${import}")"
+        )
 
-latest_before_import=$(beet ls -p -a 'added-' | head -n 1 || :)
-import_exit=0
+        case "${action}" in
+            timid-exit)
+                edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
+                    beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
+                ;;
+            skip) exit 0 ;;
+        esac
 
-edo beet import --quiet --log "$beets_skipped_log" "${beet_import_args[@]}" "${import}"
-import_exit=$?
+        latest_before_import=$(beet ls -p -a 'added-' | head -n 1 || :)
+        import_exit=0
 
-if grep -q '^skip' "$beets_skipped_log" || [[ "$import_exit" -ne 0 ]]; then
-    import_exit=1
+        beets_skipped_log=$(mktemp)
 
-    action=$(
-        notify-send --wait \
-            -u critical \
-            -a "${0##*/}" \
-            -A 'timid-exit=Import manually...' \
-            'Failed to import music' \
-            "Failed to import ${import@Q} (error code: ${import_exit})."
-    )
+        edo beet import --quiet --log "$beets_skipped_log" "${beet_import_args[@]}" "${import}"
+        import_exit=$?
 
-    case "${action}" in
-        timid-exit)
-            edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
-                beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
-            ;;
-    esac
+        if grep -q '^skip' "$beets_skipped_log" || [[ "$import_exit" -ne 0 ]]; then
+            import_exit=1
+
+            action=$(
+                notify-send --wait \
+                    -t 10000 \
+                    -u critical \
+                    -a "${0##*/}" \
+                    -A 'timid-exit=Import manually...' \
+                    'Failed to import music' \
+                    "Failed to import ${import@Q} (error code: ${import_exit})."
+            )
+
+            case "${action}" in
+                timid-exit)
+                    edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
+                        beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
+                    ;;
+            esac
+        fi
+
+        rm -f "$beets_skipped_log"
+
+        finish_import
+        printf 'successfully imported: %s -> %s\n' "${import@Q}" "${latest_after_import@Q}" >&2
+    ) || error=$?
+
+    if [[ "$error" -ne 0 ]]; then
+        import_errors+=("$import")
+    fi
+done
+
+if [[ "${#import_errors[@]}" -gt 0 ]]; then
+    printf '%i import(s) failed for some reason:\n' "${#import_errors[@]}" >&2
+    printf '    - %s\n' "${import_errors[@]}" >&2
+    exit 2
 fi
-
-finish_import
-printf 'successfully imported: %s -> %s\n' "${import@Q}" "${latest_after_import@Q}" >&2
