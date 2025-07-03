@@ -2,6 +2,8 @@
 #! nix-shell -i bash -p bash coreutils gitMinimal gnused ncurses skim
 # shellcheck shell=bash
 
+# These are used by git-sh-setup.
+# shellcheck disable=SC2034
 USAGE='[revisions...]'
 LONG_USAGE='Interactively create a branch by cherry-picking a commit, using sk(1).
 If no revision range is specified, all commits not yet pushed to

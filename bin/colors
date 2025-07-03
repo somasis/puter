@@ -64,7 +64,7 @@ abcdefghijklmnopqrstuvwxyz
 
 EOF
 
-if ! [[ -n "${palette_only}" ]]; then
+if [[ -z "${palette_only}" ]]; then
     c 0 normal
     c 1 bold
     c 2 dim

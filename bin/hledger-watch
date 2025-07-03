@@ -28,7 +28,7 @@ run() {
         if [[ "${#command[@]}" -gt 0 ]] && [[ "${#collector[@]}" -eq 0 ]]; then
             error=${error:-0}
 
-            if ! PAGER=cat ledger "${command[@]}"; then
+            if ! PAGER='cat' ledger "${command[@]}"; then
                 error=$?
                 if [[ "${error}" -ne 0 ]]; then
                     printf '\n[`hledger %s` exited with error code %i]\n' "${command[@]@Q}" "${error}" >&2

@@ -3,7 +3,11 @@
 set -eu
 
 strip_uuid() {
-    "${strip_uuid}" && sed -E '/ uuid:/ s/ uuid:\S+//' || cat
+    if [ "${strip_uuid}" = 'true' ]; then
+        sed -E '/ uuid:/ s/ uuid:\S+//'
+    else
+        cat
+    fi
 }
 
 filter() {

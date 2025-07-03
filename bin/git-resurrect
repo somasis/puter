@@ -2,6 +2,8 @@
 #! nix-shell -i bash -p bash coreutils gitMinimal
 # shellcheck shell=bash
 
+# These are used by git-sh-setup.
+# shellcheck disable=SC2034
 USAGE='<file...>'
 LONG_USAGE='Bring back the last version of a file/directory that existed in a
 Git repository.

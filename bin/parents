@@ -2,6 +2,8 @@
 #! nix-shell -i bash -p bash coreutils gnused
 # shellcheck shell=bash disable=SC3000-SC3999
 
+# Remove this disable line if usage is ever ran with arguments.
+# shellcheck disable=SC2120
 usage() {
     [[ "$#" -eq 0 ]] || error "$@" || :
     cat >&2 <<EOF
@@ -35,11 +37,11 @@ get_cmdline() {
 
     mapfile -t -d $'\0' arguments </proc/"$1"/cmdline || return 1
     while [[ "${i}" -ne "${#arguments[@]}" ]]; do
-        arguments[${i}]=$(quote "${arguments[${i}]}")
-        printf '%s ' "${arguments[${i}]}"
+        arguments[i]=$(quote "${arguments[i]}")
+        printf '%s ' "${arguments[i]}"
         i=$((i + 1))
     done
-    printf '%s' "${arguments[${i}]}"
+    printf '%s' "${arguments[i]}"
 }
 
 get_parent() {
