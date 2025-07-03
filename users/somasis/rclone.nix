@@ -24,11 +24,12 @@ let
   # };
 
   streamingCacheOptions = {
-    buffer-size = "4Mi";
+    transfers = 16;
+    buffer-size = "4M";
     vfs-read-ahead = "512M";
     vfs-fast-fingerprint = true;
     vfs-read-chunk-size = "4M";
-    vfs-read-chunk-size-limit = "512M";
+    vfs-read-chunk-size-limit = "1024M";
     vfs-read-chunk-streams = "25";
     write-back-cache = true;
   };
