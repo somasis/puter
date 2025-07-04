@@ -991,7 +991,7 @@ in
             name=''${setting%%:*}
             value=''${setting#*:}
             yq_expression="''${yq_expression:+$yq_expression | }.settings.\"$name\".global = $value"
-            qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set --temp $name $value"
+            qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set $name $value"
         done
 
         # If qutebrowser is running, send it the commands,
