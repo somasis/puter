@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   ...
 }:
 {
@@ -68,13 +67,6 @@
     yq-go
     zstd
     # keep-sorted end
-
-    # uq is unmaintained by upstream now and this Awk pretty much
-    # gets you the whole way anyway. <https://unix.stackexchange.com/a/11941>
-    # I would argue that this code is so simple that it cannot really be copyrighted.
-    (pkgs.writeShellScriptBin "uq" ''
-      ${lib.getExe pkgs.gawk} '!seen[$0]++' "$@"
-    '')
 
     # moreutils's /bin/ts conflicts with outils.
     (symlinkJoin {

@@ -1,0 +1,5 @@
+#!/bin/sh
+# uq (the Rust tool) is unmaintained by upstream now and this Awk pretty much
+# gets you the whole way anyway. <https://unix.stackexchange.com/a/11941>
+# I would argue that this code is so simple that it cannot really be copyrighted.
+exec awk '!seen[$0]++'
