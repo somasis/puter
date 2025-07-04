@@ -89,7 +89,7 @@ for show; do
             | curl_authed -X POST --json @- "https://phish.in/api/v2/likes"
     )
 
-    if jq -ce --arg show "$show" '.id | $show' <<<"$result"; then
+    if jq -cre --arg show "$show" '.id | $show' <<<"$result"; then
         printf '%s\n' "$show"
     else
         errors=$((errors + 1))
