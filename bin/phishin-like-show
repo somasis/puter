@@ -34,7 +34,7 @@ variables:
     \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ [currently: $PHISHIN_USER_EMAIL]}
         The email which will be used to authenticate to Phish.in.
     \$PHISHIN_USER_PASSWORD_COMMAND${PHISHIN_USER_PASSWORD_COMMAND:+ [currently: $PHISHIN_USER_PASSWORD_COMMAND]}
-    \$PHISHIN_USER_PASSWORD${PHISHIN_USER_PASSWORD:+ [currently: $PHISHIN_USER_PASSWORD]}
+    \$PHISHIN_USER_PASSWORD
         The password which will be used to authenticate to Phish.in.
 
 see also: phishin-list-liked-shows
@@ -65,17 +65,17 @@ trap 'rm -f "$curl_header_file"' QUIT
 
 user_agent='phish-cli <kylie@somas.is>'
 
-if PHISHIN_USER_TOKEN=$(
-    export PHISHIN_USER_EMAIL PHISHIN_USER_PASSWORD
+export PHISHIN_USER_EMAIL PHISHIN_USER_PASSWORD
+if ! PHISHIN_USER_TOKEN=$(
     jq -nc '{"email": env.PHISHIN_USER_EMAIL, "password": env.PHISHIN_USER_PASSWORD}' \
-        | curl --fail-with-body -X POST --json @- 'https://phish.in/api/v2/auth/login'
-); then
+        | curl --fail-with-body -X POST --json @- 'https://phish.in/api/v2/auth/login' \
+        | jq -cre '.jwt'
+) || [[ -z "$PHISHIN_USER_TOKEN" ]]; then
     printf 'error during authentication: %s\n' "${PHISHIN_USER_TOKEN}" >&2
     exit 1
 fi
 
-# PHISHIN_USER_NAME=$(jq -cre '.username' <<<"${PHISHIN_USER_TOKEN}")
-PHISHIN_USER_TOKEN=$(jq -cre '.jwt' <<<"${PHISHIN_USER_TOKEN}")
+unset PHISHIN_USER_PASSWORD
 
 errors=0
 for show; do

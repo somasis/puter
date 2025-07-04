@@ -35,7 +35,7 @@ variables:
     \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ [currently: $PHISHIN_USER_EMAIL]}
         The email which will be used to authenticate to Phish.in.
     \$PHISHIN_USER_PASSWORD_COMMAND${PHISHIN_USER_PASSWORD_COMMAND:+ [currently: $PHISHIN_USER_PASSWORD_COMMAND]}
-    \$PHISHIN_USER_PASSWORD${PHISHIN_USER_PASSWORD:+ [currently: $PHISHIN_USER_PASSWORD]}
+    \$PHISHIN_USER_PASSWORD
         The password which will be used to authenticate to Phish.in.
 
 see also: phishin-like-show
