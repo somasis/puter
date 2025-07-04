@@ -558,7 +558,7 @@ in
         map global normal <tab> '<a-;><gt>'
         map global normal <s-tab> '<a-;><lt>'
 
-        map -docstring 'Select next snippet placeholder' global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{execute-keys -with-hooks <gt>}<ret>'
+        map -docstring 'Select next snippet placeholder' global insert <tab> '<a-;>:try lsp-snippets-select-next-placeholders catch %{execute-keys -with-hooks <a-;><gt>}<ret>'
         map global insert <s-tab> '<a-;><lt>'
 
         map -docstring 'LSP any symbol' global object a '<a-semicolon>lsp-object<ret>'
