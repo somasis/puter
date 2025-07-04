@@ -9,6 +9,8 @@ LONG_USAGE='Bring back the last version of a file/directory that existed in a
 Git repository.
 
 Kylie McClain <kylie@somas.is>'
+
+# shellcheck source=/dev/null
 . "$(git --exec-path)/git-sh-setup"
 
 set -euo pipefail

@@ -11,6 +11,7 @@ upstream will be available to chose from.
 
 Kylie McClain <kylie@somas.is>'
 
+# shellcheck source=/dev/null
 . "$(git --exec-path)/git-sh-setup"
 
 set -euo pipefail
@@ -46,7 +47,7 @@ if ! [[ -t 0 ]]; then
     die 'git-branchoff must be ran with a terminal'
 fi
 
-current_upstream=$(git rev-parse --abbrev-ref --symbolic-full-name @{u})
+current_upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}')
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 revs=()
 
@@ -61,11 +62,11 @@ if [[ "$#" -eq 0 ]]; then
                     case "${_branch}" in
                         "$(git symbolic-ref --quiet HEAD)") : ;;
                         *)
-                            git log --reverse --format=$'%h\t%t' @{upstream}.."${_branch}"
+                            git log --reverse --format=$'%h\t%t' "@{upstream}..${_branch}"
                             ;;
                     esac
                 done
-            git log --reverse --format=$'%h\t%t' @{upstream}..HEAD
+            git log --reverse --format=$'%h\t%t' '@{upstream}..HEAD'
         } \
             | nl -b a -d '' -f n -w 1 \
             | sort -t $'\t' -k3 \
@@ -75,7 +76,7 @@ if [[ "$#" -eq 0 ]]; then
     )
 
     sk_height=$((${#commits[@]} + 2))
-    [[ "${sk_height}" -ge "$(($(tput lines) / 3 * 2))" ]] && sk_height=100%
+    [[ "${sk_height}" -ge "$(($(tput lines) * 2 / 3))" ]] && sk_height=100%
 
     mapfile -t revs < <(
         printf '%s\n' "${commits[@]}" \

@@ -4,6 +4,15 @@
 
 set -euo pipefail
 
+# shellcheck source=edo
+. edo
+
+: "${XDG_CONFIG_HOME:=${HOME}/.config}"
+: "${XDG_DATA_HOME:=${HOME}/.local/share}"
+
+: "${ELISA_DATABASE:=${XDG_DATA_HOME}/elisa/elisaDatabase.db}"
+: "${BEETS_DIRECTORY:=}"
+
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
@@ -20,14 +29,6 @@ Kylie McClain <kylie@somas.is>
 EOF
     exit 69
 }
-
-: "${XDG_CONFIG_HOME:=${HOME}/.config}"
-: "${XDG_DATA_HOME:=${HOME}/.local/share}"
-
-: "${ELISA_DATABASE:=${XDG_DATA_HOME}/elisa/elisaDatabase.db}"
-: "${BEETS_DIRECTORY:=}"
-
-. edo
 
 if [[ -z "${BEETS_DIRECTORY}" ]]; then
     BEETS_DIRECTORY=$(beet config -d | yq -o json | jq -r .directory)

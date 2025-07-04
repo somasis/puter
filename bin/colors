@@ -25,11 +25,16 @@ printf() {
 }
 
 randomize() {
-    [[ -n "${randomize}" ]] && shuf "$@" || cat "$@"
+    if [[ -n "${randomize}" ]]; then
+        shuf
+    else
+        cat
+    fi
 }
 
 c() {
     if [[ $# -gt 0 ]]; then
+        # shellcheck disable=SC2059
         printf "\033[${1}m${2}\033[0m\n"
     else
         printf '\n'
@@ -160,66 +165,6 @@ if [[ -z "${palette_only}" ]]; then
 
     printf '\nsheesh, let me get out the pantones:\n'
 fi
-
-# echo empty line
-# clear
-
-# cursor_up=$(tput cuu1)
-# cursor_down=$(tput cud1)
-# cursor_left=$(tput cub1)
-# cursor_right=$(tput cuf1)
-
-# cursor_save=$(tput sc)
-# cursor_restore=$(tput rc)
-
-# color_reset='\033[0m'
-
-# pantone_width=7
-# pantone_height=3
-
-# # pantone_realign_next=
-# # pantone_realign_next_line=
-# # pantone_realign_next_line+="${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_left}${cursor_down}"
-# # for _ in $(seq 1 "${pantone_width}"); do pantone_realign_next_line+="${cursor_right}"; done
-
-# # printf '%s\n' "${pantone_realign@Q}" >&2
-
-# color_code='\033[41m'
-# pantone_top=red
-# pantone_middle=41
-# pantone_bottom_left=1
-# pantone_bottom_right=31
-
-# pantone_bottom=$(printf '%'$((pantone_width - ${#pantone_bottom_right}))'s%'$((${#pantone_bottom_right} - ${#pantone_bottom_left}))'s' "${pantone_bottom_left}" "${pantone_bottom_right}")
-
-# # .--------.
-# # |blak   b|
-# # |     100|
-# # |8     90|
-# # '--------'
-
-# pantone_format=(
-#     '%b%-'"${pantone_width}"'s%b' "${cursor_right}${cursor_save}" '\n'
-#     '%b%'"${pantone_width}"'s%b' '\n'
-#     '%b%'"${pantone_width}"'s%b' "${cursor_reset}"
-# )
-
-# pantone_format=$(printf '%s' "${pantone_format[@]}")
-
-# color_code='\033[42m'
-# pantone_top=grn
-# pantone_middle=42
-# pantone_bottom_left=2
-# pantone_bottom_right=32
-
-# printf "${pantone_format}" \
-#     "${color_code}" "${pantone_top}"    "${color_reset}" \
-#     "${color_code}" "${pantone_middle}" "${color_reset}" \
-#     "${color_code}" "${pantone_bottom}" "${color_reset}"
-
-# printf '\n'
-# # printf 'eof\n'
-# exit
 
 printf '\033[49mbg      \033[0m\033[39;7mfg      \033[0m\033[40mblak    \033[0m\033[100mblak   b\033[0m\n'
 printf '\033[49m        \033[0m\033[39;7m        \033[0m\033[40m      40\033[0m\033[100m     100\033[0m\n'

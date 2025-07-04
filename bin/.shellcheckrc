@@ -1,11 +1,12 @@
-# SC2016: don't warn about set -e being disabled in `if ... then` commands
 # SC2016: too many false positives, especially with regex usage in command
-#         arguments, like sed, or variable names, like in jq commands
-# SC2312: this is intentional
+#         arguments, like sed, or variable names, like in jq commands.
 # SC2119: this is intentional
+# SC2312: this is intentional
 disable=SC2016
 disable=SC2119
 disable=SC2312
+
+external-sources=true
 
 enable=avoid-nullary-conditions
 enable=check-extra-masked-returns

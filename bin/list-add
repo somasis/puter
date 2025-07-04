@@ -48,11 +48,11 @@ while getopts :C:D:P:c:f:p:uv arg >/dev/null; do
 done
 shift $((OPTIND - 1))
 
-[ $# -gt 0 ] || usage
+[[ $# -gt 0 ]] || usage
 
 task=
-while [ $# -gt 0 ]; do
-    [ "${set_uuid}" = 'true' ] && set_uuid=$(uuidgen)
+while [[ $# -gt 0 ]]; do
+    [[ "${set_uuid}" = 'true' ]] && set_uuid=$(uuidgen)
     task="${priority:+${priority} }${created_date:+${created_date} }${1}${due_date:+ due:$due_date}${contexts:+ ${contexts}}${projects:+ ${projects}}${uuid:+ uuid:${uuid}}"
     printf '%s\n' "${task}" >>"${file}"
     "${verbose}" && printf '%s\n' "${task}"

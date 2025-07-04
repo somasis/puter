@@ -5,18 +5,28 @@
 set -euo pipefail
 
 # If another instance is running, just wait until it's gone.
-[[ "${FLOCKER:-}" != "${0}" ]] && export FLOCKER="$0" && exec flock -e "$0" "$0" "$@" || :
+if [[ "${FLOCKER:-}" != "${0}" ]]; then
+    export FLOCKER="$0"
+    exec flock -e "$0" "$0" "$@"
+fi
+
+# shellcheck source=edo
+. edo
 
 finish_import() {
     latest_after_import=$(beet ls -p -a 'added-' | head -n 1 || :)
-    [[ -n "${latest_after_import:-}" ]] && [[ "${latest_after_import}" != "${latest_before_import:-}" ]] || return 1
+    [[ -n "${latest_after_import:-}" ]] \
+        && [[ "${latest_after_import}" != "${latest_before_import:-}" ]] \
+        || return 1
 
+    # shellcheck disable=SC2016
     if artpath=$(beet ls -f '$artpath' -a "${latest_after_import}") && [[ "${artpath}" != 'None' ]]; then
         printf 'using art for notification: %s\n' "${artpath}" >&2
     else
         artpath=
     fi
 
+    # shellcheck disable=SC2016
     format=$(
         beet ls \
             -f 'Successfully imported $albumartist - $album ($year) using metadata from $data_source.' \
@@ -61,8 +71,6 @@ finish_import() {
 
     exit
 }
-
-. edo
 
 beets_import_args=()
 for arg in "$@"; do

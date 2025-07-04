@@ -4,6 +4,9 @@
 
 set -euo pipefail
 
+# shellcheck source=edo
+. edo
+
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
@@ -28,9 +31,6 @@ EOF
 phishin() {
     jq -cr "$@" "${download_dir?phishin(): no download_dir set yet}/phishin.json"
 }
-
-# shellcheck disable=SC1091
-. edo
 
 mkdir -p ~/audio/source/bootleg-phishin
 cd ~/audio/source/bootleg-phishin

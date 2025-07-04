@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-# shellcheck disable=SC1091
+# shellcheck source=edo
 . edo
 
 usage() {
@@ -39,7 +39,6 @@ user_agent='phish-cli <kylie@somas.is>'
 
 if [[ "$#" -ne 1 ]]; then
     usage 'error: incorrect number of arguments (1 required)\n'
-
 fi
 
 show=${1?no show provided}

@@ -6,6 +6,7 @@
 set -euo pipefail
 
 usage() {
+    # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
     cat >&2 <<EOF
 usage: ${0##*/} [-d <delimiter>] [file...]
@@ -27,6 +28,7 @@ while getopts :d:h arg >/dev/null 2>&1; do
     case "${arg}" in
         d) delim="${OPTARG}" ;;
         h) usage ;;
+        *) usage 'error: unknown argument -- %s\n' "${arg}" ;;
     esac
 done
 shift $((OPTIND - 1))
@@ -49,4 +51,3 @@ for input; do
         | sort -t $'\t' -s -k1n \
         | cut -f2-
 done
-

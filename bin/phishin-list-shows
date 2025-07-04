@@ -82,7 +82,6 @@ if ! PHISHIN_USER_TOKEN=$(
     exit 1
 fi
 
-PHISHIN_USER_NAME=$(jq -cre '.username' <<<"${PHISHIN_USER_TOKEN}")
 PHISHIN_USER_TOKEN=$(jq -cre '.jwt' <<<"${PHISHIN_USER_TOKEN}")
 
 pages=("$(fetch_liked_shows_page 1)")
