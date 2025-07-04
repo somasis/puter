@@ -53,7 +53,7 @@ shift $((OPTIND - 1))
 task=
 while [ $# -gt 0 ]; do
     [ "${set_uuid}" = 'true' ] && set_uuid=$(uuidgen)
-    task="${priority:+${priority} }${created_date:+${created_date} }${1}${contexts:+ ${contexts}}${projects:+ ${projects}}${uuid:+ uuid:${uuid}}"
+    task="${priority:+${priority} }${created_date:+${created_date} }${1}${due_date:+ due:$due_date}${contexts:+ ${contexts}}${projects:+ ${projects}}${uuid:+ uuid:${uuid}}"
     printf '%s\n' "${task}" >>"${file}"
     "${verbose}" && printf '%s\n' "${task}"
     uuid=
