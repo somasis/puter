@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+edo() {
+    local arg string
+    string="$"
+    for arg; do
+        if [[ "${arg@Q}" == "'$arg'" ]]; then
+            string+=" $arg"
+        else
+            string+=" ${arg@Q}"
+        fi
+    done
+
+    printf '%s\n' "$string" >&2 || :
+    "$@"
+}
