@@ -4,7 +4,7 @@ edo() {
     local arg string
     string="$"
     for arg; do
-        if [[ "${arg@Q}" == "'$arg'" ]]; then
+        if [[ "${arg@Q}" == "'$arg'" ]] && ! [[ "${arg}" =~ [[:blank:]] ]]; then
             string+=" $arg"
         else
             string+=" ${arg@Q}"
