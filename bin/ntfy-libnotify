@@ -60,11 +60,14 @@ if [[ -n "${click:=${url}}" ]]; then
     args+=(-A click=Open)
 fi
 
-action=$(notify-send "${args[@]}" ${title:+"${title}"} "${message}")
+(
+    action=$(notify-send --timeout $((60 * 1000)) "${args[@]}" ${title:+"${title}"} "${message}")
 
-case "${action}" in
-    click)
-        xdg-open "${click}" &
-        disown
-        ;;
-esac
+    case "${action}" in
+        click)
+            xdg-open "${click}" &
+            disown
+            ;;
+    esac
+) &
+disown
