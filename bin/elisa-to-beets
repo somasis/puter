@@ -41,7 +41,7 @@ if [[ -z "${BEETS_DIRECTORY}" ]]; then
     esac
 fi
 
-if [[ -e "${ELISA_DATABASE}" ]]; then
+if ! [[ -e "${ELISA_DATABASE}" ]]; then
     printf 'error: Elisa database file does not exist (expected %s).\n' "${ELISA_DATABASE@Q}" >&2
     printf '       Make sure it exists before running this tool by running Elisa.\n' >&2
     exit 1
@@ -81,6 +81,11 @@ elisa=$(
         | sort
 )
 
+# Then, actually perform the modifications on what tracks differ between beets
+# and Elisa's databases. We do not account for changes in the other direction
+# (that is, a rating being removed in Elisa and that being propagated to beets).
+# TODO maybe? this script would need to be made a lot smarter I think to do that
+# and probably rewritten
 diff -u <(printf '%s\n' "${beets}") <(printf '%s\n' "${elisa}") | grep '^+' \
     | cut -c2- \
     | while IFS=$'\t' read -r filename elisa_rating; do
