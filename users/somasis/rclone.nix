@@ -7,7 +7,8 @@
 }:
 let
   bigCacheOptions = {
-    vfs-cache-max-size = "16G";
+    vfs-cache-max-size = "4G";
+    vfs-cache-max-age = "7d";
     vfs-cache-mode = "full";
     vfs-fast-fingerprint = true;
     write-back-cache = true;
@@ -96,7 +97,7 @@ in
           "audio/source" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/audio/source";
-            options = streamingCacheOptions // bigCacheOptions;
+            options = bigCacheOptions;
           };
 
           "video/anime" = {
