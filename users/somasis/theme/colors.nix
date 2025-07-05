@@ -142,26 +142,9 @@ with palette;
 {
   theme.colors = palette // rec {
     # Colors by user interface functionality
-    accent =
-      if osConfig.networking.fqdnOrHostName == "esther.7596ff.com" then
-        purple
-      # else if osConfig.networking.fqdnOrHostName == "ilo.somas.is" then  blue
-      else
-        blue;
-
-    brightAccent =
-      if osConfig.networking.fqdnOrHostName == "esther.7596ff.com" then
-        brightPurple
-      # else if osConfig.networking.fqdnOrHostName == "ilo.somas.is" then brightBlue
-      else
-        brightBlue;
-
-    dimAccent =
-      if osConfig.networking.fqdnOrHostName == "esther.7596ff.com" then
-        dimPurple
-      # else if osConfig.networking.fqdnOrHostName == "ilo.somas.is" then dimBlue
-      else
-        dimBlue;
+    accent = pink;
+    brightAccent = brightPink;
+    dimAccent = dimPink;
 
     accentLightText = "#eeeeec";
     accentDarkText = "#101010";
