@@ -144,7 +144,7 @@ in
       name = "WinSetOption";
       option = "filetype=sh";
       commands = ''
-        set-option window formatcmd "shfmt"
+        # set-option window formatcmd "shfmt"
         set-option window lintcmd "shlint"
       '';
     }
