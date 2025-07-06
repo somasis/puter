@@ -18,4 +18,10 @@
     # ];
     files = [ (config.lib.somasis.xdgConfigDir "neochatrc") ];
   };
+
+  # Required to build packages like pkgs.kdePackages.neochat, due to its dependency
+  # on libolm, which is deprecated...
+  nixpkgs.config.permittedInsecurePackages = [
+    "olm-3.2.16"
+  ];
 }
