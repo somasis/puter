@@ -122,6 +122,7 @@
       {
         hostName = "esther.7596ff.com";
         sshUser = "somasis";
+        protocol = "ssh-ng";
         system = "x86_64-linux";
         speedFactor = 2;
       }
