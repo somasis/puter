@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   # disko,
   ...
 }:
@@ -38,12 +39,15 @@
     };
 
     initrd.systemd.services.initrd-rollback-root = lib.mkIf config.boot.initrd.systemd.enable {
-      after = [ "zfs-import-rpool.service" ];
-      wantedBy = [ "initrd.target" ];
-      before = [ "sysroot.mount" ];
-      path = [ config.boot.zfs.package ];
       description = "Rollback to blank /";
+
+      wantedBy = [ "initrd.target" ];
+      after = [ "zfs-import-${config.networking.fqdnOrHostName}.service" ];
+      before = [ "sysroot.mount" ];
+      path = [ pkgs.zfs ];
+
       unitConfig.DefaultDependencies = "no";
+
       serviceConfig.Type = "oneshot";
       script = ''
         zfs rollback -r ${config.networking.fqdnOrHostName}/nixos/root/runtime@blank
