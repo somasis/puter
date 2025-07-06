@@ -34,18 +34,18 @@
           extraConfig = {
             Appearance = {
               LineSpacing = 0;
-              BoldIntense = false;
+              BoldIntense = true; # otherwise, nothing seems to even happen with bold fonts!
             };
 
             "Cursor Options".CursorShape = 1; # I-Beam
 
             General = {
               DimWhenInactive = false;
-              InvertSelectionColors = false;
+              InvertSelectionColors = true;
               SemanticInputClick = true;
               SemanticUpDown = true;
               TerminalCenter = true;
-              TerminalMargin = 3;
+              TerminalMargin = 2;
               TerminalColumns = 90;
             };
 
@@ -66,7 +66,8 @@
             };
 
             Scrolling = {
-              HistoryMode = 2; # Unlimited history
+              HistoryMode = 1; # Limited history
+              HistorySize = 10000; # lines
               MarkerColor = config.lib.somasis.colors.kde config.theme.colors.orange;
               ScrollBarPosition = 2; # Disable scrollbar
             };
