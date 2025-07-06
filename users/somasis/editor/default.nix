@@ -24,8 +24,11 @@ in
     meld
 
     vscode-langservers-extracted # CSS, HTML, JSON
+    gopls # Go
+    clang-tools # C, C++, etc.
     marksman # Markdown
     nixd # Nix
+    typos
     bash-language-server
     taplo # TOML
     yaml-language-server
@@ -105,7 +108,7 @@ in
           docstring = "comment out the line(s) selected";
           mode = "insert";
           key = "<a-c>";
-          effect = "<esc>: comment-line<ret>i";
+          effect = "<a-;>: comment-line<ret>i";
         }
         {
           docstring = "comment out the string(s) selected";
@@ -117,15 +120,8 @@ in
           docstring = "comment out the string(s) selected";
           mode = "insert";
           key = "<a-C>";
-          effect = "<esc>: comment-block<ret>i";
+          effect = "<a-;>: comment-block<ret>i";
         }
-
-        # {
-        #   docstring = "unindent line";
-        #   mode = "insert";
-        #   key = "<s-tab>";
-        #   effect = "<esc><i";
-        # }
 
         {
           docstring = "jump to the word left of the cursor";
@@ -162,7 +158,7 @@ in
           docstring = "open a file";
           mode = "insert";
           key = "<c-o>";
-          effect = "<esc>:edit ";
+          effect = "<a-;>:edit ";
         }
         {
           docstring = "write the current buffer";
@@ -174,7 +170,7 @@ in
           docstring = "write the current buffer";
           mode = "insert";
           key = "<c-s>";
-          effect = "<esc>: write<ret>i";
+          effect = "<a-;>: write<ret>i";
         }
         {
           docstring = "close the current buffer";
@@ -186,7 +182,7 @@ in
           docstring = "close the current buffer";
           mode = "insert";
           key = "<c-w>";
-          effect = "<esc>: delete-buffer<ret>i";
+          effect = "<a-;>: delete-buffer<ret>i";
         }
         {
           docstring = "quit Kakoune";
@@ -198,7 +194,7 @@ in
           docstring = "quit Kakoune";
           mode = "insert";
           key = "<c-q>";
-          effect = "<esc>: quit<ret>";
+          effect = "<a-;>: quit<ret>";
         }
 
         {
@@ -211,44 +207,51 @@ in
           docstring = "find";
           mode = "insert";
           key = "<c-f>";
-          effect = "<esc>/";
+          effect = "<a-;>/";
         }
 
         {
-          docstring = "copy selection to clipboard";
+          docstring = "indent according to indentwidth";
+          mode = "normal";
+          key = "<tab>";
+          effect = "<gt>";
+        }
+        {
+          docstring = "unindent according to indentwidth";
+          mode = "normal";
+          key = "<s-tab>";
+          effect = "<lt>";
+        }
+        {
+          docstring = "indent according to indentwidth";
+          mode = "insert";
+          key = "<tab>";
+          effect = "<a-;><gt>";
+        }
+        {
+          docstring = "unindent according to indentwidth";
+          mode = "insert";
+          key = "<s-tab>";
+          effect = "<a-;><lt>";
+        }
+
+        {
+          docstring = "copy to graphical clipboard";
           mode = "normal";
           key = "<c-c>";
-          effect = "y";
+          effect = "<a-;><a-|>wl-copy";
         }
         {
-          docstring = "copy selection to clipboard";
-          mode = "insert";
-          key = "<c-c>";
-          effect = "<esc>yi";
-        }
-        {
-          docstring = "cut selection to clipboard";
-          mode = "normal";
-          key = "<c-x>";
-          effect = "d";
-        }
-        {
-          docstring = "cut selection to clipboard";
-          mode = "insert";
-          key = "<c-x>";
-          effect = "<esc>cc";
-        } # yank and delete and re-enter insert mode
-        {
-          docstring = "paste selection from clipboard";
+          docstring = "paste from graphical clipboard";
           mode = "normal";
           key = "<c-v>";
-          effect = "R";
+          effect = "<a-;><a-|>wl-paste";
         }
         {
-          docstring = "paste selection from clipboard";
-          mode = "insert";
-          key = "<c-v>";
-          effect = "<esc>Ri";
+          docstring = "cut to graphical clipboard";
+          mode = "normal";
+          key = "<c-x>";
+          effect = "<a-;>|wl-copy";
         }
 
         {
@@ -261,7 +264,7 @@ in
           docstring = "switch to the next buffer";
           mode = "insert";
           key = "<a-A>";
-          effect = "<esc>: buffer-next<ret>i";
+          effect = "<a-;>: buffer-next<ret>i";
         }
         {
           docstring = "select buffer contents";
@@ -516,13 +519,20 @@ in
         lsp-auto-hover-enable
         lsp-auto-signature-help-enable
 
-        hook global BufSetOption filetype=(.+) %{
-            hook buffer BufWritePre .* lsp-formatting-sync
+        hook -global lsp-autoformat global BufSetOption filetype=(.+) %{
+            hook -group lsp-autoformat-on-save buffer BufWritePre .* lsp-formatting-sync
         }
 
         hook -group lsp-filetype-nix global BufSetOption filetype=nix %{
             set-option buffer lsp_servers %sh{cat ${
-              tomlFormat.generate "kak-lsp-nix-servers.toml" {
+              tomlFormat.generate "kak-lsp-servers.toml" {
+                typos = {
+                  settings = {
+                    diagnosticSeverity = "Warning";
+                    logLevel = "error";
+                  };
+                };
+
                 nixd = {
                   args = [ "--semantic-tokens=true" ];
                   root_globs = [
@@ -555,19 +565,13 @@ in
 
         map global user l ':enter-user-mode lsp<ret>' -docstring 'LSP mode'
 
-        map global normal <tab> '<a-;><gt>'
-        map global normal <s-tab> '<a-;><lt>'
-
-        map -docstring 'Select next snippet placeholder' global insert <tab> %{
-            <a-;>:
-            try %{
-                lsp-snippets-select-next-placeholders
-            } catch %{
-                execute-keys -with-hooks <a-;><gt>
-            }<ret>
-        }
-
-        map global insert <s-tab> '<a-;><lt>'
+        # map -docstring 'Select next snippet placeholder' global insert <tab> %{
+        #     <a-;>: try %{
+        #         lsp-snippets-select-next-placeholders
+        #     } catch %{
+        #         execute-keys -with-hooks <a-;><gt>
+        #     }<ret>
+        # }
 
         map -docstring 'LSP any symbol' global object a '<a-semicolon>lsp-object<ret>'
         map -docstring 'LSP any symbol' global object <a-a> '<a-semicolon>lsp-object<ret>'
@@ -577,19 +581,25 @@ in
         map -docstring 'LSP errors' global object D '<a-semicolon>lsp-diagnostic-object<ret>'
 
         # Appearance, highlighters, so on
-        face global InfoDefault               Information
-        face global InfoBlock                 Information
-        face global InfoBlockQuote            Information
-        face global InfoBullet                Information
-        face global InfoHeader                Information
-        face global InfoLink                  Information
-        face global InfoLinkMono              Information
-        face global InfoMono                  Information
-        face global InfoRule                  Information
-        face global InfoDiagnosticError       Information
-        face global InfoDiagnosticHint        Information
-        face global InfoDiagnosticInformation Information
-        face global InfoDiagnosticWarning     Information
+
+        # Used by Kakoune LSP for hint styling.
+        set-face global InlayHint black+b
+
+        # Used by Kakoune LSP for Markdown formatting in hints,
+        # which some language servers provide.
+        set-face global InfoDefault               Information
+        set-face global InfoBlock                 Information
+        set-face global InfoBlockQuote            Information
+        set-face global InfoBullet                Information
+        set-face global InfoHeader                Information
+        set-face global InfoLink                  blue+u
+        set-face global InfoLinkMono              Information
+        set-face global InfoMono                  Information
+        set-face global InfoRule                  Information
+        set-face global InfoDiagnosticError       Information
+        set-face global InfoDiagnosticHint        Information
+        set-face global InfoDiagnosticInformation Information
+        set-face global InfoDiagnosticWarning     Information
 
         # Highlight issues, nasty code, and notes, in descending order of goodness.
         add-highlighter global/user-fixme regex \b(BUG|FIXME|REMOVE)\b  1:red+bf
