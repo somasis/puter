@@ -38,20 +38,6 @@
       lower = "02:00";
       upper = "05:30";
     };
-
-    # Ensure that nixpkgs and home-manager are always as up to date
-    # as possible, but don't attempt to commit the changes.
-    flags =
-      lib.concatMap
-        (x: [
-          "--update-input"
-          x
-        ])
-        [
-          "nixpkgs"
-          "home-manager"
-        ]
-      ++ [ "--no-write-lock-file" ];
   };
 
   nix = {
