@@ -8,6 +8,9 @@ python3Packages.buildPythonApplication rec {
   pname = "beets-noimport";
   version = "0.1.0b5";
 
+  pyproject = true;
+  build-system = [ python3Packages.setuptools ];
+
   src = fetchFromGitLab {
     repo = pname;
     owner = "tiago.dias";

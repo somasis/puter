@@ -9,6 +9,9 @@ python3Packages.buildPythonApplication rec {
   pname = "beets-originquery";
   version = "1.0.2";
 
+  pyproject = true;
+  build-system = [ python3Packages.setuptools ];
+
   src = fetchFromGitHub {
     repo = pname;
     owner = "x1ppy";
