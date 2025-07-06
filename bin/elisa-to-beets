@@ -30,6 +30,14 @@ EOF
     exit 69
 }
 
+urldecode() {
+    # Based off <https://stackoverflow.com/a/37840948>, but modified
+    # to get rid of the expectation that spaces are escaped with '+',
+    # since this isn't true of Elisa's own URL encoding.
+    : "${*}"
+    echo -e "${_//%/\\x}"
+}
+
 if [[ -z "${BEETS_DIRECTORY}" ]]; then
     BEETS_DIRECTORY=$(beet config -d | yq -o json | jq -r .directory)
 
