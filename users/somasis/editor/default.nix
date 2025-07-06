@@ -239,19 +239,19 @@ in
           docstring = "copy to graphical clipboard";
           mode = "normal";
           key = "<c-c>";
-          effect = "<a-;><a-|>wl-copy";
+          effect = "<a-;><a-|>wl-copy<ret>";
         }
         {
           docstring = "paste from graphical clipboard";
           mode = "normal";
           key = "<c-v>";
-          effect = "<a-;><a-|>wl-paste";
+          effect = "<a-;><a-|>wl-paste<ret>";
         }
         {
           docstring = "cut to graphical clipboard";
           mode = "normal";
           key = "<c-x>";
-          effect = "<a-;>|wl-copy";
+          effect = "<a-;>|wl-copy<ret>";
         }
 
         {
