@@ -23,6 +23,7 @@
     ./phone.nix
     ./photo.nix
     ./plasma.nix
+    ./radio.nix
     ./study
     ./syncplay.nix
     ./syncthing.nix
