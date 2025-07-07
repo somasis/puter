@@ -21,7 +21,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
             "gtk-4.0" # kde-gtk-config
             "xsettingsd" # kde-gtk-config
             "kde.org"
-            "KDE"
             "kdedefaults"
             "plasma-workspace"
             "session"
@@ -60,6 +59,11 @@ assert osConfig.services.desktopManager.plasma6.enable;
         ".directory" # Dolphin
       ]
       ++ map config.lib.somasis.xdgConfigDir [
+        "KDE/kunifiedpush-distributor.conf"
+        "KDE/kjournald.conf"
+        "KDE/UserFeedback.conf"
+        "KDE/Sonnet.conf"
+
         "QtProject.conf"
         "Trolltech.conf"
         "baloofileinformationrc"
