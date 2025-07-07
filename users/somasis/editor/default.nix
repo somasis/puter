@@ -9,10 +9,7 @@ let
 
 in
 {
-  imports = [
-    ./filetype
-    ./clipboard.nix
-  ];
+  imports = [ ./filetype ];
 
   home.packages = with pkgs; [
     # Used by spell.kak; see spell.nix for dictionaries
@@ -214,6 +211,7 @@ in
           docstring = "indent according to indentwidth";
           mode = "normal";
           key = "<tab>";
+          # indent, excluding empty lines
           effect = "<gt>";
         }
         {
@@ -226,32 +224,14 @@ in
           docstring = "indent according to indentwidth";
           mode = "insert";
           key = "<tab>";
-          effect = "<a-;><gt>";
+          # indent, including empty lines
+          effect = "<a-;><a-gt>";
         }
         {
           docstring = "unindent according to indentwidth";
           mode = "insert";
           key = "<s-tab>";
           effect = "<a-;><lt>";
-        }
-
-        {
-          docstring = "copy to graphical clipboard";
-          mode = "normal";
-          key = "<c-c>";
-          effect = "<a-;><a-|>wl-copy<ret>";
-        }
-        {
-          docstring = "paste from graphical clipboard";
-          mode = "normal";
-          key = "<c-v>";
-          effect = "<a-;><a-|>wl-paste<ret>";
-        }
-        {
-          docstring = "cut to graphical clipboard";
-          mode = "normal";
-          key = "<c-x>";
-          effect = "<a-;>|wl-copy<ret>";
         }
 
         {
@@ -438,24 +418,16 @@ in
           '';
         }
 
-        # Load file-specific settings, using editorconfig, modelines, and smarttab.kak's
+        # Load file-specific settings, using editorconfig and modelines
         {
           name = "WinCreate";
           option = ".*";
           commands = ''
-            # Default to space indentation and alignmnet.
-            # expandtab
-
             # Read in all file-specific settings.
-            # Modelines are higher priority than editorconfig.
             editorconfig-load %sh{ cd "$(dirname "$kak_buffile")" && upward .editorconfig }
+
+            # Modelines are higher priority than editorconfig.
             modeline-parse
-
-            # Don't use noexpandtab when the file is tab-indented; use smarttab so that
-            # alignments can be done with spaces.
-            # set-option buffer aligntab false
-
-            # autoconfigtab
           '';
         }
 
@@ -491,6 +463,17 @@ in
           commands = ''
             unmap window insert <tab> <c-n>
             unmap window insert <s-tab> <c-p>
+          '';
+        }
+
+        # When running under Wayland, use wl-copy and wl-paste for <c-[cvcx]> operations.
+        {
+          name = "ModuleLoaded";
+          option = "wayland";
+          commands = ''
+            map -docstring 'copy to clipboard'    window normal <c-c> '<a-|>wl-copy<ret>'
+            map -docstring 'paste from clipboard' window normal <c-v> '<a-|>wl-paste<ret>'
+            map -docstring 'cut to clipboard'     window normal <c-x> '|wl-copy<ret>'
           '';
         }
       ];
