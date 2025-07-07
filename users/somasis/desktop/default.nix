@@ -12,6 +12,7 @@
     ./browser
     ./chat
     ./diary.nix
+    ./feeds.nix
     ./file-manager.nix
     ./games
     ./konsole.nix
