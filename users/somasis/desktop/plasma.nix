@@ -202,15 +202,17 @@ assert osConfig.services.desktopManager.plasma6.enable;
       kclock
       kde-gtk-config
       kjournald
-      systemdgenie
       merkuro
       korganizer
       kpat
       ksystemlog
       kweather
       lokalize
-      p7zip
+
       pdfarranger
+
+      # Used by Ark
+      p7zip
 
       kdialog
 
