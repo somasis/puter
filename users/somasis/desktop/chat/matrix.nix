@@ -8,6 +8,10 @@
     pkgs.kdePackages.neochat
   ];
 
+  xdg.autostart.entries = [
+    "${pkgs.kdePackages.neochat}/share/applications/org.kde.neochat.desktop"
+  ];
+
   persist = {
     files = [
       (config.lib.somasis.xdgConfigDir "neochatrc")
