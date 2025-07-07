@@ -9,14 +9,17 @@
   ];
 
   persist = {
-    # ~/share/KDE is already handled by plasma.nix
-    # directories = [
-    #   {
-    #     method = "symlink";
-    #     directory = config.lib.somasis.xdgDataDir "KDE/neochat";
-    #   }
-    # ];
-    files = [ (config.lib.somasis.xdgConfigDir "neochatrc") ];
+    files = [
+      (config.lib.somasis.xdgConfigDir "neochatrc")
+      (config.lib.somasis.xdgConfigDir "KDE/neochat.conf")
+    ];
+
+    directories = [
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgDataDir "KDE/neochat";
+      }
+    ];
   };
 
   # Required to build packages like pkgs.kdePackages.neochat, due to its dependency
