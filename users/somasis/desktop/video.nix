@@ -129,13 +129,6 @@ in
     }
   ];
 
-  sync.directories = [
-    {
-      directory = config.lib.somasis.xdgCacheDir "mpv/watch-later";
-      method = "bindfs";
-    }
-  ];
-
   programs = {
     mpv = {
       enable = true;
