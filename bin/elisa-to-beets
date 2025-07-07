@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash sqlite teip gnused trurl coreutils jq yq-go
+#! nix-shell -i bash -p bash coreutils gnused jq sqlite yq-go
 # shellcheck shell=bash
 
 set -euo pipefail
@@ -80,8 +80,8 @@ beets=$(
         | sort
 )
 
-# All paths from Elisa are absolute paths.
-# `trurl` is used so that URL decoding is used; Elisa stores the paths with that.
+# All paths from Elisa are absolute paths. URL decoding has to be used before
+# comparing the paths to the paths in Beets' database.
 elisa=$(
     sqlite3 -json -readonly "${ELISA_DATABASE}" 'SELECT FileName, Rating FROM Tracks;' \
         | jq --arg dir "${BEETS_DIRECTORY_absolute}/" -r \
