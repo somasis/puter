@@ -4,9 +4,17 @@
   ...
 }:
 {
+  # Keep uptime statistics.
+  services.uptimed.enable = true;
+  persist.directories = [ "/var/lib/uptimed" ];
+
   # services.nixseparatedebuginfod.enable = true;
   # cache.directories = [ "/var/cache/nixseparatedebuginfod" ];
 
-  programs.bandwhich.enable = true;
-  programs.iotop.enable = true;
+  # Add some additional tools for monitoring the system's resources.
+  programs = {
+    htop.enable = true;
+    iotop.enable = true;
+    bandwhich.enable = true;
+  };
 }

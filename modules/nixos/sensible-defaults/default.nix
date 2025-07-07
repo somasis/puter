@@ -21,7 +21,6 @@
       nixosModules.meta
       nixosModules.impermanence
 
-      ./auditing.nix
       ./boot.nix
       ./debugging.nix
       ./nix.nix
