@@ -16,6 +16,7 @@
     files = [
       (config.lib.somasis.xdgConfigDir "neochatrc")
       (config.lib.somasis.xdgConfigDir "KDE/neochat.conf")
+      (config.lib.somasis.xdgConfigDir "kunifiedpush-org.kde.neochat")
     ];
 
     directories = [
