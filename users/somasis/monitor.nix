@@ -81,6 +81,7 @@
         (text "System")
         (text "Uptime")
         (text "Systemd")
+        (text "SystemdUser")
         (text "DiskIO")
         (text "ZFSCARC")
         (text "NetworkIO")
