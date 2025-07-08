@@ -52,16 +52,22 @@
         sort_key = fields.PERCENT_CPU; # Sort by PID
 
         fields = with fields; [
-          USER
           PID
           ELAPSED
           STATE
           NICE
           PRIORITY
           IO_PRIORITY
+          # SCHEDULERPOLICY # TODO needs to be in home-manager
+
           PERCENT_CPU
+          # GPU_PERCENT # TODO needs to be in home-manager
           PERCENT_MEM
+          # M_PRIV # TODO needs to be in home-manager
+          # M_SWAP # TODO needs to be in home-manager
           IO_RATE
+
+          USER
           COMM
         ];
 
