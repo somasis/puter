@@ -54,9 +54,8 @@ let
 
         e=0
         mv "$format_out" "$bufdir/.''${format_out##*/}.nix"
-        if nix fmt "$bufdir/.''${format_out##*/}.nix" >/dev/null; then
-            mv "$bufdir/.''${format_out##*/}.nix" "$format_out"
-        fi
+        nix fmt "$bufdir/.''${format_out##*/}.nix" >/dev/null || e=$?
+        mv "$bufdir/.''${format_out##*/}.nix" "$format_out"
     fi
 
     return "$e"
