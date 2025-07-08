@@ -199,20 +199,9 @@ in
     qutebrowser = {
       enable = true;
 
-      package = pkgs.wrapCommand {
-        package = pkgs.qutebrowser.override {
+      package = pkgs.qutebrowser.override {
           withPdfReader = config.programs.qutebrowser.settings.content.pdfjs;
           enableWideVine = true;
-        };
-
-        # Workaround for poor font rendering with fractional scaling on Wayland/KDE.
-        # <https://www.reddit.com/r/qutebrowser/comments/15xmvaz/how_do_i_get_crisp_text_on_wayland/kpfevjn/>
-        # <https://bugreports.qt.io/browse/QTBUG-113574?focusedId=723760&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-723760>
-        wrappers = [
-          {
-            setEnvironmentDefault.QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
-          }
-        ];
       };
 
       loadAutoconfig = true;
