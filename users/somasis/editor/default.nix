@@ -342,6 +342,32 @@ in
           key = "<c-s-right>";
           effect = "<a-;>W";
         }
+
+        {
+          docstring = "expand selection to the point above the cursor";
+          mode = "normal";
+          key = "<c-s-up>";
+          effect = "K";
+        }
+        {
+          docstring = "expand selection to the point above the cursor";
+          mode = "insert";
+          key = "<c-s-up>";
+          effect = "<a-;>K";
+        }
+        {
+          docstring = "expand selection to the point below the cursor";
+          mode = "normal";
+          key = "<c-s-down>";
+          effect = "J";
+        }
+        {
+          docstring = "expand selection to the point below the cursor";
+          mode = "insert";
+          key = "<c-s-down>";
+          effect = "<a-;>J";
+        }
+
         {
           docstring = "delete the word left of the cursor";
           mode = "normal";
