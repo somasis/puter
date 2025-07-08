@@ -105,7 +105,7 @@ in
           docstring = "comment out the line(s) selected";
           mode = "insert";
           key = "<a-c>";
-          effect = "<a-;>: comment-line<ret>i";
+          effect = "<a-;>: comment-line<ret>";
         }
         {
           docstring = "comment out the string(s) selected";
@@ -117,7 +117,7 @@ in
           docstring = "comment out the string(s) selected";
           mode = "insert";
           key = "<a-C>";
-          effect = "<a-;>: comment-block<ret>i";
+          effect = "<a-;>: comment-block<ret>";
         }
 
         {
@@ -143,19 +143,19 @@ in
           docstring = "create a new window";
           mode = "insert";
           key = "<c-n>";
-          effect = ": new<ret>i";
+          effect = "<a-;>: new<ret>";
         }
         {
           docstring = "open a file";
           mode = "normal";
           key = "<c-o>";
-          effect = ":edit ";
+          effect = ": edit ";
         }
         {
           docstring = "open a file";
           mode = "insert";
           key = "<c-o>";
-          effect = "<a-;>:edit ";
+          effect = "<a-;>: edit ";
         }
         {
           docstring = "write the current buffer";
@@ -167,7 +167,7 @@ in
           docstring = "write the current buffer";
           mode = "insert";
           key = "<c-s>";
-          effect = "<a-;>: write<ret>i";
+          effect = "<a-;>: write<ret>";
         }
         {
           docstring = "close the current buffer";
@@ -179,7 +179,7 @@ in
           docstring = "close the current buffer";
           mode = "insert";
           key = "<c-w>";
-          effect = "<a-;>: delete-buffer<ret>i";
+          effect = "<a-;>: delete-buffer<ret>";
         }
         {
           docstring = "quit Kakoune";
@@ -244,7 +244,7 @@ in
           docstring = "switch to the next buffer";
           mode = "insert";
           key = "<a-A>";
-          effect = "<a-;>: buffer-next<ret>i";
+          effect = "<a-;>: buffer-next<ret>";
         }
         {
           docstring = "select buffer contents";
@@ -256,7 +256,7 @@ in
           docstring = "select buffer contents";
           mode = "insert";
           key = "<c-a>";
-          effect = "<esc>%i";
+          effect = "<a-;>%";
         }
         {
           docstring = "switch to the previous buffer";
@@ -268,7 +268,7 @@ in
           docstring = "switch to the previous buffer";
           mode = "insert";
           key = "<a-a>";
-          effect = "<esc>: buffer-previous<ret>i";
+          effect = "<a-;>: buffer-previous<ret>";
         }
         {
           docstring = "switch to the debug buffer";
@@ -280,7 +280,7 @@ in
           docstring = "switch to the debug buffer";
           mode = "insert";
           key = "<a-d>";
-          effect = "<esc>: buffer *debug*<ret>i";
+          effect = "<a-;>: buffer *debug*<ret>";
         }
         {
           docstring = "jump to the word left of the cursor";
@@ -316,7 +316,7 @@ in
           docstring = "select the word left of the cursor";
           mode = "insert";
           key = "<c-s-left>";
-          effect = "<esc>bi";
+          effect = "<a-;>b";
         }
         {
           docstring = "expand selection to the word left of the cursor";
@@ -328,7 +328,7 @@ in
           docstring = "expand selection to the word left of the cursor";
           mode = "insert";
           key = "<c-s-left>";
-          effect = "<esc>Bi";
+          effect = "<a-;>B";
         }
         {
           docstring = "expand selection to the word right of the cursor";
@@ -340,7 +340,7 @@ in
           docstring = "expand selection to the word right of the cursor";
           mode = "insert";
           key = "<c-s-right>";
-          effect = "<esc>Wi";
+          effect = "<a-;>W";
         }
         {
           docstring = "delete the word left of the cursor";
