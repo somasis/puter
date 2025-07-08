@@ -41,15 +41,25 @@
     mpris-proxy.enable = true;
   };
 
-  persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "elisa";
-    }
+  persist = {
+    directories = [
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgDataDir "elisa";
+      }
 
-    (config.lib.somasis.xdgConfigDir "mpris-scrobbler")
-    (config.lib.somasis.xdgDataDir "mpris-scrobbler")
-  ];
+      (config.lib.somasis.xdgConfigDir "mpris-scrobbler")
+      (config.lib.somasis.xdgDataDir "mpris-scrobbler")
+    ];
+
+    # ~/etc/kde.org is already preserved by plasma.nix, because
+    # KDE programs create so many little files in this directory,
+    # it's just easier that way without having to make the
+    # persistence more strict.
+    # files = [
+    #   (config.lib.somasis.xdgConfigDir "kde.org/elisa.conf")
+    # ];
+  };
 
   systemd.user.targets.graphical-session.Unit.Wants = [ "mpris-scrobbler.service" ];
 
