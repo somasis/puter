@@ -18,12 +18,15 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [--dry-run] [options for \`beet modify\`]...
+usage: ${0##*/} [--dry-run]
 
-Synchronize rated tracks from Elisa, the KDE music player, to
-the rating tag stored in Beets.
+Update tracks in the Beets database, based off of tracks
+stored in the library database for Elisa, the KDE music player.
 
-See \`beet modify --help\` for more details.
+Currently, this means
+- Updating the Beets database entries for tracks which have been rated in
+  Elisa's database. Tracks rated in Elisa will have their corresponing
+  Beets database entries be updated to have it in their $rating field.
 
 Kylie McClain <kylie@somas.is>
 EOF
