@@ -1,14 +1,15 @@
 {
   lib,
-  python3,
-  beets,
   fetchFromGitHub,
+  beets,
+  python3Packages,
 }:
-
-python3.pkgs.buildPythonApplication rec {
+python3Packages.buildPythonApplication rec {
   pname = "beets-alias";
   version = "1.0.1";
+
   pyproject = true;
+  build-system = [ python3Packages.poetry-core ];
 
   src = fetchFromGitHub {
     owner = "kergoth";
@@ -16,8 +17,6 @@ python3.pkgs.buildPythonApplication rec {
     rev = "v${version}";
     hash = "sha256-dCfMr9sWHCIr8LXgbymoDCV1WaWW++OxsMpUm7xdAQ4=";
   };
-
-  build-system = with python3.pkgs; [ poetry-core ];
 
   nativeBuildInputs = [ beets ];
 
