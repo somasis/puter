@@ -195,13 +195,19 @@ in
     # ;
   };
 
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.pipe (lib.getName pkg) [ (lib.removeSuffix "-unwrapped") ]) [
+      "widevine-cdm"
+    ];
+
   programs = {
     qutebrowser = {
       enable = true;
 
       package = pkgs.qutebrowser.override {
-          withPdfReader = config.programs.qutebrowser.settings.content.pdfjs;
-          enableWideVine = true;
+        withPdfReader = config.programs.qutebrowser.settings.content.pdfjs;
+        enableWideVine = true;
       };
 
       loadAutoconfig = true;

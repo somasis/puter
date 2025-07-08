@@ -40,8 +40,10 @@
         allowUnfreePredicate =
           pkg:
           builtins.elem (lib.pipe (lib.getName pkg) [ (lib.removeSuffix "-unwrapped") ]) [
+            # keep-sorted start
             "nvidia-x11"
             "steam"
+            # keep-sorted end
           ];
       };
 
