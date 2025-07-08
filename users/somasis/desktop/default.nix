@@ -99,6 +99,10 @@
       method = "symlink";
       directory = config.lib.somasis.xdgCacheDir "mesa_shader_cache_db";
     }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "containers";
+    }
   ];
 
   log.directories = [
@@ -116,6 +120,10 @@
     {
       method = "bindfs";
       directory = config.lib.somasis.xdgDataDir "applications";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "containers";
     }
   ];
 
