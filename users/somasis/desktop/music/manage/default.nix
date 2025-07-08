@@ -13,8 +13,12 @@
   ];
 
   home.packages = with pkgs; [
-    beets-unstable
-    beets-alias
+    (beets-unstable.override {
+      pluginOverrides.alias = {
+        enable = true;
+        propagatedBuildInputs = [ beets-alias ];
+      };
+    })
     rsgain
     unflac
   ];
