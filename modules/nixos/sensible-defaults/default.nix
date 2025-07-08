@@ -33,7 +33,18 @@
 
   config = {
     nixpkgs = {
-      config.allowUnfree = true;
+      config = {
+        # Don't allow unfree stuff *too* easily--come on, have some principles.
+        # allowUnfree = true
+        # Except video games I guess
+        allowUnfreePredicate =
+          pkg:
+          builtins.elem (lib.pipe (lib.getName pkg) [ (lib.removeSuffix "-unwrapped") ]) [
+            "nvidia-x11"
+            "steam"
+          ];
+      };
+
       overlays = lib.mapAttrsToList (_: x: x) self.overlays;
     };
 
@@ -110,13 +121,6 @@
         with self;
         with inputs;
         [
-          {
-            nixpkgs = {
-              config.allowUnfree = lib.mkDefault true;
-              overlays = lib.mkAfter (lib.mapAttrsToList (_: x: x) self.overlays);
-            };
-          }
-
           impermanence.nixosModules.home-manager.impermanence
           nix-index-database.hmModules.nix-index
           homeManagerModules.lib

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   beets-originquery = pkgs.callPackage (
     {
@@ -10,6 +10,9 @@ let
     python3Packages.buildPythonApplication rec {
       pname = "beets-originquery";
       version = "1.0.2";
+
+      pyproject = true;
+      build-system = [ python3Packages.setuptools ];
 
       src = fetchFromGitHub {
         repo = pname;
@@ -42,6 +45,15 @@ in
     pkgs.gazelle-origin
     pkgs.sshfs-fuse
   ];
+
+  # NOTE(somasis) Only required if nixpkgs.config.allowUnfree is not set to true.
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.pipe (lib.getName pkg) [ (lib.removeSuffix "-unwrapped") ]) [
+      "discord"
+      "gazelle-origin"
+      "beets-originquery"
+    ];
 
   programs.beets = {
     enable = true;
