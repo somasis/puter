@@ -23,12 +23,7 @@
     unflac
   ];
 
-  cache.directories = [ (config.lib.somasis.xdgCacheDir "MusicBrainz") ];
   sync.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "MusicBrainz";
-    }
     {
       method = "symlink";
       directory = config.lib.somasis.xdgConfigDir "beets";
