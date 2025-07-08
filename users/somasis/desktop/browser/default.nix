@@ -231,6 +231,13 @@ in
 
         # Unlimited tab focus switching history.
         tabs = {
+          padding = {
+            top = 6;
+            bottom = 6;
+            left = 8;
+            right = 6;
+          };
+
           focus_stack_size = -1;
           undo_stack_size = -1;
 
@@ -259,6 +266,12 @@ in
         };
 
         hints = {
+          padding = {
+            top = 2;
+            bottom = 2;
+            left = 2;
+            right = 2;
+          };
           radius = 0;
           border = "1px solid ${tc.accent}";
         };
@@ -407,15 +420,33 @@ in
         downloads.position = "bottom";
 
         # Statusbar.
-        statusbar.position = "top";
-        statusbar.widgets = [
-          "keypress"
-          "url"
-          "scroll"
-          "history"
-          "tabs"
-          "progress"
-        ];
+        statusbar = {
+          padding =
+            if osConfig.meta.type == "laptop" then
+              {
+                top = 14;
+                bottom = 0;
+                left = 2;
+                right = 8;
+              }
+            else
+              {
+                top = 28;
+                bottom = 0;
+                left = 4;
+                right = 11;
+              };
+
+          position = "top";
+          widgets = [
+            "keypress"
+            "url"
+            "scroll"
+            "history"
+            "tabs"
+            "progress"
+          ];
+        };
 
         completion.open_categories = [
           "quickmarks"
@@ -604,22 +635,6 @@ in
 
         scrolling.bar = "always";
       };
-
-      extraConfig = lib.concatStrings [
-        ''
-          c.hints.padding = {"top": 2, "bottom": 2, "left": 2, "right": 2}
-        ''
-        # TODO how is this done properly in programs.qutebrowser.settings?
-        (lib.optionalString (osConfig.meta.type == "laptop") ''
-          c.statusbar.padding = {"top": 14, "bottom": 0, "left": 2, "right": 8}
-          c.tabs.padding = {"top": 6, "bottom": 6, "left": 6, "right": 6}
-          c.tabs.padding = {"top": 6, "bottom": 6, "left": 8, "right": 6}
-        '')
-        (lib.optionalString (osConfig.meta.type != "laptop") ''
-          c.statusbar.padding = {"top": 28, "bottom": 0, "left": 4, "right": 11}
-          c.tabs.padding = {"top": 6, "bottom": 6, "left": 8, "right": 6}
-        '')
-      ];
 
       # enableDefaultBindings = false;
       aliases = {
