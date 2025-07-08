@@ -3,11 +3,11 @@
     "adblockEasyList": {
       "flake": false,
       "locked": {
-        "lastModified": 1751878241,
-        "narHash": "sha256-OjIK+53Vf9RIKx8se7SaCacfSEC7QXZL3MY9fpNqUDg=",
+        "lastModified": 1751962941,
+        "narHash": "sha256-jACyEZy4WuGAy3CW7eoeb9M7R5mAY/14hwmCj5Piijc=",
         "owner": "thedoggybrad",
         "repo": "easylist-mirror",
-        "rev": "d5930a40b414d7396e5178e848642ec0360e0702",
+        "rev": "dcaccfea3fe8adae8073a5d5ae5fd8f440baca12",
         "type": "github"
       },
       "original": {
@@ -471,11 +471,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1751856698,
-        "narHash": "sha256-g8r1mbrdYGYPzI4TqyewcyTCV55hmJyHz3lDdYKtuV0=",
+        "lastModified": 1751909859,
+        "narHash": "sha256-gbpuESxl/An4GTh7QEbQRYJozVIxWkwVGbWK0/0GoRc=",
         "ref": "refs/heads/main",
-        "rev": "71e7a249295c1a30bebc874bdb989c050d3d7bd7",
-        "revCount": 147,
+        "rev": "4d4c2b8f0a801c91ce5b717c77fe3a17efa1402f",
+        "revCount": 150,
         "type": "git",
         "url": "https://git.lix.systems/lix-project/nixos-module"
       },
@@ -532,11 +532,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1751872844,
-        "narHash": "sha256-u6gyqQo/8fkH/eqIar4HyLGc4R56YvDngLgsHhSpg98=",
+        "lastModified": 1751949665,
+        "narHash": "sha256-kHOAtFWbRnYp92MNRTkvb1jM3Mf2W4LIaxOq3IOGbqk=",
         "owner": "nix-community",
         "repo": "nixos-cli",
-        "rev": "9a0143ffd3565fdd08e3c8f1f856835259753947",
+        "rev": "f97b93743085841c9ea1795555d02ba8b9ba0e29",
         "type": "github"
       },
       "original": {
@@ -594,11 +594,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1751877604,
-        "narHash": "sha256-RiuTuQ61tolwxoeNkPiKw/fqehMvj+xd0wEeZ4IjpUk=",
+        "lastModified": 1751961911,
+        "narHash": "sha256-o9JSh2gpjRxi+KCn7BDS3byaoo3jSO2PIT9jSQGylGw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9f902ee89a02b598f9008c3fce2dc87e271c94ba",
+        "rev": "76c4ca93f42236f3e386416e92f70a02072bdca7",
         "type": "github"
       },
       "original": {
@@ -860,11 +860,11 @@
     "uAssets": {
       "flake": false,
       "locked": {
-        "lastModified": 1751870718,
-        "narHash": "sha256-T8wGqGcDtn1ok6PrVxbo06DB9IcUr/ZcOY1wvjEkqMU=",
+        "lastModified": 1751959785,
+        "narHash": "sha256-cG1AgqFFg2iXMWAuQhn7XSLuamJOABofJPIM/rcTxXo=",
         "owner": "uBlockOrigin",
         "repo": "uAssetsCDN",
-        "rev": "39cc67eeb306e3eb8fabe84efa95e362860f6e5d",
+        "rev": "555ba461bf0e8c58eef1ac90b5aed02c7ce02045",
         "type": "github"
       },
       "original": {
