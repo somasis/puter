@@ -238,4 +238,9 @@ with palette;
     color14 = brightCyan;
     color15 = brightWhite;
   };
+
+  xdg.dataFile = {
+    "color-schemes/SomasisDark.colors".source = ./SomasisDark.colors;
+    "color-schemes/SomasisLight.colors".source = ./SomasisLight.colors;
+  };
 }
