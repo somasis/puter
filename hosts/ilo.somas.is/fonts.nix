@@ -24,7 +24,6 @@
 
       lmodern
 
-      linja-luka
       linja-namako
       linja-pimeja-pona
       linja-pona

@@ -22,10 +22,7 @@
 
     lmodern
 
-    linja-luka
     linja-namako
-    linja-pi-pu-lukin
-    linja-pi-tomo-lipu
     linja-pimeja-pona
     linja-pona
     linja-sike
