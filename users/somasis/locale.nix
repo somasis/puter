@@ -104,7 +104,6 @@
     # aspell is still used by kakoune's spell.kak, unfortunately.
     aspellDicts.en
     aspellDicts.en-computers
-    aspellDicts.en-science
 
     aspellDicts.es
     aspellDicts.de
