@@ -17,6 +17,8 @@
     steam.enable = true;
   };
 
+  nixpkgs.allowUnfreePackages = [ "steam" ];
+
   # RetroArch joysticks and stuff
   services = {
     joycond.enable = true;

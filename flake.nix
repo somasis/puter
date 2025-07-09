@@ -222,6 +222,7 @@
     {
       nixosModules = {
         default = ./modules/nixos;
+        freedom = ./modules/freedom.nix;
         lib = ./modules/lib.nix;
         impermanence = ./modules/nixos/impermanence.nix;
         sensible-defaults = ./modules/nixos/sensible-defaults;
@@ -231,6 +232,7 @@
 
       homeManagerModules = {
         default = ./modules/home-manager;
+        freedom = ./modules/freedom.nix;
         lib = ./modules/lib.nix;
       };
 

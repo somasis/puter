@@ -30,6 +30,7 @@
   system.stateVersion = "24.11";
 
   nixpkgs.config.allowUnfree = true;
+  home-manager.useGlobalPkgs = true; # Propagate allowUnfree to home-manager users
 
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";

@@ -32,23 +32,7 @@
     ];
 
   config = {
-    nixpkgs = {
-      config = {
-        # Don't allow unfree stuff *too* easily--come on, have some principles.
-        # allowUnfree = true
-        # Except video games I guess
-        allowUnfreePredicate =
-          pkg:
-          builtins.elem (lib.pipe (lib.getName pkg) [ (lib.removeSuffix "-unwrapped") ]) [
-            # keep-sorted start
-            "nvidia-x11"
-            "steam"
-            # keep-sorted end
-          ];
-      };
-
-      overlays = lib.mapAttrsToList (_: x: x) self.overlays;
-    };
+    nixpkgs.overlays = lib.mapAttrsToList (_: x: x) self.overlays;
 
     i18n.extraLocales = [
       "tok/UTF-8" # toki pona

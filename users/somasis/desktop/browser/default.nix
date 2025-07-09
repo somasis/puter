@@ -195,11 +195,7 @@ in
     # ;
   };
 
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.pipe (lib.getName pkg) [ (lib.removeSuffix "-unwrapped") ]) [
-      "widevine-cdm"
-    ];
+  nixpkgs.allowUnfreePackages = [ "widevine-cdm" ];
 
   programs = {
     qutebrowser = {

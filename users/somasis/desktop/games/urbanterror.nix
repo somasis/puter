@@ -4,6 +4,8 @@
     pkgs.urbanterror
   ];
 
+  nixpkgs.allowUnfreePackages = [ "urbanterror" ];
+
   sync.directories = [
     {
       directory = config.lib.somasis.xdgConfigDir "urbanterror";

@@ -46,15 +46,6 @@ in
     pkgs.sshfs-fuse
   ];
 
-  # NOTE(somasis) Only required if nixpkgs.config.allowUnfree is not set to true.
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.pipe (lib.getName pkg) [ (lib.removeSuffix "-unwrapped") ]) [
-      "discord"
-      "gazelle-origin"
-      "beets-originquery"
-    ];
-
   programs.beets = {
     enable = true;
     package = pkgs.beets.override {

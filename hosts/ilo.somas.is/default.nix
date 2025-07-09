@@ -12,6 +12,7 @@
     with inputs;
     [
       nixosModules.sensible-defaults
+      nixosModules.freedom
       nixos-hardware.nixosModules.framework-12th-gen-intel
 
       lix-module.nixosModules.default
