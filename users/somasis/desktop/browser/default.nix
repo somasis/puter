@@ -817,11 +817,7 @@ in
 
     chromium = {
       enable = false;
-      package =
-        if (osConfig.nixpkgs.config.allowUnfree or config.nixpkgs.config.allowUnfree) then
-          pkgs.google-chrome
-        else
-          pkgs.ungoogled-chromium.override { enableWideVine = true; };
+      package = pkgs.ungoogled-chromium.override { enableWideVine = true; };
 
       dictionaries = with pkgs.hunspellDictsChromium; [
         en-us
@@ -840,9 +836,7 @@ in
 
     browserpass = {
       inherit (config.programs.chromium) enable;
-      browsers = [
-        (if config.programs.chromium.package == pkgs.google-chrome then "chrome" else "chromium")
-      ];
+      browsers = [ "chromium" ];
     };
   };
 

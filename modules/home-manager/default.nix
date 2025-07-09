@@ -1,8 +1,8 @@
 {
   imports = [
     ../lib.nix
-    ../freedom.nix
 
+    ./freedom.nix
     ./impermanence.nix
     ./programs
     ./services

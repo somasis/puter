@@ -185,6 +185,8 @@ assert osConfig.services.desktopManager.plasma6.enable;
     ];
   };
 
+  nixpkgs.allowUnfreePackages = [ "unrar" ];
+
   home.packages =
     with pkgs;
     with libsForQt5;
@@ -193,7 +195,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
     [
       plasma-manager.rc2nix
 
-      ark
       alligator
       cameractrls-gtk3
       gwenview

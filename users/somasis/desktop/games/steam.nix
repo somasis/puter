@@ -43,8 +43,5 @@ assert steam.enable;
     }
   ];
 
-  home.packages = [
-    pkgs.steamcmd
-    pkgs.r2modman
-  ];
+  home.packages = [    pkgs.r2modman  ];
 }

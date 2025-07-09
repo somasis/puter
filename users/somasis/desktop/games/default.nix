@@ -59,7 +59,7 @@
             parallel-n64 # Nintendo - Nintendo 64 (Dr. Mario 64)
             melonds # Nintendo - Nintendo DS
             mesen # Nintendo - Nintendo Entertainment System / Nintendo - Family Computer Disk System
-            snes9x # Nintendo - Super Nintendo Entertainment System
+            bsnes-mercury # Nintendo - Super Nintendo Entertainment System
             picodrive # Sega - 32X
             flycast # Sega - Dreamcast
             genesis-plus-gx # Sega - Mega-Drive - Genesis
@@ -70,6 +70,13 @@
         )
       )
     ];
+
+  nixpkgs.allowUnfreePackages = [
+    "libretro-picodrive"
+    "libretro-genesis-plus-gx"
+    "SpaceCadetPinball"
+    "tetrio-desktop"
+  ];
 
   persist.directories = [
     {

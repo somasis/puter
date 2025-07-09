@@ -2,7 +2,6 @@
 # ...except video games, I guess.
 {
   config,
-  osConfig ? { },
   lib,
   ...
 }:
@@ -23,7 +22,7 @@
       builtins.elem (lib.pipe pkg [
         lib.getName
         (lib.removeSuffix "-unwrapped")
-      ]) ((osConfig.nixpkgs.allowUnfreePackages or [ ]) ++ config.nixpkgs.allowUnfreePackages)
+      ]) config.nixpkgs.allowUnfreePackages
     );
   };
 }
