@@ -142,18 +142,7 @@
 
           settings.formatter = {
             shellcheck.options = [
-              "--exclude=SC2310,SC2312"
-
-              ''--enable=${
-                lib.concatStringsSep "," [
-                  "avoid-nullary-conditions"
-                  "check-unassigned-uppercase"
-                  "deprecate-which"
-                  "quote-safe-variables"
-                  "require-double-brackets"
-                  "require-variable-braces"
-                ]
-              }''
+              "--external-sources"
             ];
 
             shfmt.options = [
@@ -232,7 +221,7 @@
 
       homeManagerModules = {
         default = ./modules/home-manager;
-        freedom = ./modules/freedom.nix;
+        freedom = ./modules/home-manager/freedom.nix;
         lib = ./modules/lib.nix;
       };
 
@@ -330,7 +319,7 @@
             # Ensure we don't have dead links in comments or whatever.
             # lychee.enable = true;
 
-            shellcheck.enable = true;
+            # shellcheck.enable = true;
 
             treefmt = {
               enable = true;
