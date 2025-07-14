@@ -11,13 +11,62 @@ let
     xdgConfigDir
     xdgCacheDir
     xdgDataDir
-
-    randomPort
     ;
 
   dictcli = "${config.programs.qutebrowser.package}/share/qutebrowser/scripts/dictcli.py";
 
   tc = config.theme.colors;
+
+  qutebrowser-darkman =
+    with config.theme;
+    with config.programs.qutebrowser;
+    pkgs.writeShellScript "qutebrowser-darkman" ''
+      set -euo pipefail
+
+      : "''${QUTE_FIFO:?}"
+
+      if ! darkman "''${@:-}"; then
+          exit 1
+      fi
+
+      case "''${1:-}" in
+          set) mode="$2" ;;
+      esac
+
+      settings=()
+      case "''${mode:-$(darkman get)}" in
+          light)
+              settings=(
+                  'colors.webpage.darkmode.enabled:false'
+                  'colors.tabs.bar.bg:${settings.colors.tabs.bar.bg}'
+                  'colors.completion.even.bg:${settings.colors.completion.even.bg}'
+                  'colors.completion.odd.bg:${settings.colors.completion.odd.bg}'
+                  'colors.completion.fg:${settings.colors.completion.fg}'
+              )
+          ;;
+          dark)
+              settings=(
+                  'colors.webpage.darkmode.enabled:true'
+
+                  'colors.tabs.bar.bg:${colors.darkWindowBackground}'
+
+                  'colors.completion.even.bg:${colors.menuLightBackground}'
+                  'colors.completion.odd.bg:${colors.menuLightBackground}'
+                  'colors.completion.fg:${colors.menuLightForeground}'
+              )
+          ;;
+      esac
+
+      # Construct the list of settings key:values
+      qutebrowser_command=
+      for setting in "''${settings[@]}"; do
+          name=''${setting%%:*}
+          value=''${setting#*:}
+          qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set $name $value"
+      done
+
+      printf ':%s\n' "$qutebrowser_command" > "$QUTE_FIFO"
+    '';
 
   translate = pkgs.writeShellScript "translate" ''
     set -euo pipefail
@@ -109,7 +158,6 @@ in
   persist = {
     directories = [
       (xdgConfigDir "qutebrowser")
-      (xdgConfigDir "google-chrome")
       (xdgConfigDir "chromium")
     ];
 
@@ -126,7 +174,6 @@ in
   cache = {
     directories = [
       (xdgCacheDir "chromium")
-      (xdgCacheDir "google-chrome")
       (xdgCacheDir "qutebrowser")
       (xdgDataDir "qutebrowser/greasemonkey/requires")
       (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
@@ -634,9 +681,10 @@ in
 
       # enableDefaultBindings = false;
       aliases = {
-        translate = "spawn -u ${translate}";
         history-filter = "spawn --output-messages qutebrowser-history-filter";
+        translate = "spawn -u ${translate}";
         yank-text-anchor = "spawn -u ${yank-text-anchor}";
+        darkman = "spawn -u --output-messages ${qutebrowser-darkman}";
       };
 
       keyBindings = lib.mkMerge [
@@ -813,6 +861,11 @@ in
           ] (key: null);
         }
       ];
+
+      extraConfig = ''
+        import subprocess
+        subprocess.run(["${qutebrowser-darkman}", "get"])
+      '';
     };
 
     chromium = {
@@ -927,20 +980,14 @@ in
     };
 
     timers.qutebrowser-dictionaries = {
-      Unit.Description = "Install/update qutebrowser's spell checking dictionaries every week";
+      Unit.Description = "Install/update qutebrowser's spell checking dictionaries";
       Install.WantedBy = [ "timers.target" ];
 
       Timer = {
-        OnCalendar = "weekly";
+        OnCalendar = "monthly";
         Persistent = true;
       };
     };
-  };
-
-  services.tunnels.tunnels.proxy-esther = rec {
-    type = "dynamic";
-    port = randomPort "${remote}:proxy";
-    remote = "somasis@esther.7596ff.com";
   };
 
   home.packages =
@@ -953,54 +1000,10 @@ in
 
   services.darkman =
     let
-      settingsForMode =
-        mode:
-        with config.theme;
-        with config.programs.qutebrowser;
-        if mode == "light" then
-          [
-            "colors.webpage.darkmode.enabled:false"
-
-            ''colors.tabs.bar.bg:"${settings.colors.tabs.bar.bg}"''
-
-            ''colors.completion.even.bg:"${settings.colors.completion.even.bg}"''
-            ''colors.completion.odd.bg:"${settings.colors.completion.odd.bg}"''
-            ''colors.completion.fg:"${settings.colors.completion.fg}"''
-          ]
-        else
-          # mode == "dark"
-          [
-            "colors.webpage.darkmode.enabled:true"
-
-            ''colors.tabs.bar.bg:"${colors.darkWindowBackground}"''
-
-            ''colors.completion.even.bg:"${colors.menuLightBackground}"''
-            ''colors.completion.odd.bg:"${colors.menuLightBackground}"''
-            ''colors.completion.fg:"${colors.menuLightForeground}"''
-          ];
-
       qutebrowser-change-color = mode: ''
-        autoconfig="''${XDG_CONFIG_HOME:-$HOME/.config}/qutebrowser/autoconfig.yml"
-
-        ${lib.toShellVar "settings" (settingsForMode mode)}
-
-        # Construct the list of settings key:values
-        yq_expression=
-        qutebrowser_command=
-        for setting in "''${settings[@]}"; do
-            name=''${setting%%:*}
-            value=''${setting#*:}
-            yq_expression="''${yq_expression:+$yq_expression | }.settings.\"$name\".global = $value"
-            qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set $name $value"
-        done
-
-        # If qutebrowser is running, send it the commands,
         if ${pkgs.procps}/bin/pgrep -u "$USER" -laf '(python)?.*/bin/\.?qutebrowser(-wrapped)?' >/dev/null 2>&1; then
-            ${config.programs.qutebrowser.package}/bin/qutebrowser ":$qutebrowser_command"
+            ${config.programs.qutebrowser.package}/bin/qutebrowser ":darkman set ${mode}"
         fi
-
-        # but always change the autoconfig file.
-        ${pkgs.yq-go}/bin/yq --inplace --expression "$yq_expression" "$autoconfig"
       '';
     in
     {
