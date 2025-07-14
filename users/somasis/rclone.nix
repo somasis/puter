@@ -23,17 +23,6 @@ let
   #   vfs-cache-max-age = "1d";
   #   vfs-fast-fingerprint = true;
   # };
-
-  streamingCacheOptions = {
-    transfers = 16;
-    buffer-size = "4M";
-    vfs-read-ahead = "512M";
-    vfs-fast-fingerprint = true;
-    vfs-read-chunk-size = "4M";
-    vfs-read-chunk-size-limit = "1024M";
-    vfs-read-chunk-streams = "25";
-    write-back-cache = true;
-  };
 in
 {
   cache.directories = [
@@ -81,8 +70,11 @@ in
 
       whatbox = {
         config = {
-          type = "alias";
-          remote = "whatbox-sftp:files/";
+          type = "sftp";
+          host = "ariel.whatbox.ca";
+          user = "somasis";
+          # type = "alias";
+          # remote = "whatbox-sftp:files/";
           # type = "union";
           # upstreams = "whatbox-sftp:files/ whatbox-webdav:";
         };
@@ -91,7 +83,6 @@ in
           "" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/mnt/whatbox";
-            options = streamingCacheOptions;
           };
 
           "audio/source" = {
@@ -103,19 +94,16 @@ in
           "video/anime" = {
             enable = true;
             mountPoint = "${config.xdg.userDirs.videos}/anime";
-            options = streamingCacheOptions;
           };
 
           "video/film" = {
             enable = true;
             mountPoint = "${config.xdg.userDirs.videos}/film";
-            options = streamingCacheOptions;
           };
 
           "video/tv" = {
             enable = true;
             mountPoint = "${config.xdg.userDirs.videos}/tv";
-            options = streamingCacheOptions;
           };
         };
       };
@@ -130,7 +118,6 @@ in
           "" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/mnt/raid";
-            options = streamingCacheOptions;
           };
         };
       };
