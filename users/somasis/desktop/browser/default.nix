@@ -17,7 +17,7 @@ let
 
   tc = config.theme.colors;
 
-  qutebrowser-darkman =
+  qutebrowser-darkman-set =
     with config.theme;
     with config.programs.qutebrowser;
     pkgs.writeShellScript "qutebrowser-darkman" ''
@@ -25,34 +25,24 @@ let
 
       : "''${QUTE_FIFO:=}"
 
-      if ! darkman "''${@:-}"; then
-          exit 1
-      fi
-
-      case "''${1:-}" in
-          set) mode="$2" ;;
-      esac
-
       settings=()
-      case "''${mode:-$(darkman get)}" in
+      case "''${1:-$(darkman get)}" in
           light)
               settings=(
                   'colors.webpage.darkmode.enabled:false'
-                  'colors.tabs.bar.bg:${settings.colors.tabs.bar.bg}'
-                  'colors.completion.even.bg:${settings.colors.completion.even.bg}'
-                  'colors.completion.odd.bg:${settings.colors.completion.odd.bg}'
-                  'colors.completion.fg:${settings.colors.completion.fg}'
+                  'colors.tabs.bar.bg:"${settings.colors.tabs.bar.bg}"'
+                  'colors.completion.even.bg:"${settings.colors.completion.even.bg}"'
+                  'colors.completion.odd.bg:"${settings.colors.completion.odd.bg}"'
+                  'colors.completion.fg:"${settings.colors.completion.fg}"'
               )
           ;;
           dark)
               settings=(
                   'colors.webpage.darkmode.enabled:true'
-
-                  'colors.tabs.bar.bg:${colors.darkWindowBackground}'
-
-                  'colors.completion.even.bg:${colors.menuLightBackground}'
-                  'colors.completion.odd.bg:${colors.menuLightBackground}'
-                  'colors.completion.fg:${colors.menuLightForeground}'
+                  'colors.tabs.bar.bg:"${colors.darkWindowBackground}"'
+                  'colors.completion.even.bg:"${colors.menuLightBackground}"'
+                  'colors.completion.odd.bg:"${colors.menuLightBackground}"'
+                  'colors.completion.fg:"${colors.menuLightForeground}"'
               )
           ;;
       esac
@@ -65,11 +55,7 @@ let
           qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set $name $value"
       done
 
-      if [[ -n "$QUTE_FIFO" ]]; then
-          printf ':%s\n' "$qutebrowser_command" > "$QUTE_FIFO"
-      else
-          qutebrowser ":$qutebrowser_command"
-      fi
+      printf ':%s\n' "$qutebrowser_command" > "$QUTE_FIFO"
     '';
 
   translate = pkgs.writeShellScript "translate" ''
@@ -657,7 +643,7 @@ in
         history-filter = "spawn --output-messages qutebrowser-history-filter";
         translate = "spawn -u ${translate}";
         yank-text-anchor = "spawn -u ${yank-text-anchor}";
-        darkman = "spawn -u --output-messages ${qutebrowser-darkman}";
+        darkman-set = "spawn -u --output-messages ${qutebrowser-darkman-set}";
       };
 
       keyBindings = lib.mkMerge [
@@ -838,7 +824,9 @@ in
       extraConfig = lib.concatStrings [
         (lib.optionalString (config.services.darkman.enable) ''
           import subprocess
-          subprocess.run(["${qutebrowser-darkman}", "get"])
+
+          # Dirty hack for ensure qutebrowser has the right mode settings at start.
+          subprocess.run(["darkman", "toggle"])
         '')
 
         ''
@@ -990,7 +978,7 @@ in
     let
       qutebrowser-change-color = mode: ''
         if ${pkgs.procps}/bin/pgrep -u "$USER" -laf '(python)?.*/bin/\.?qutebrowser(-wrapped)?' >/dev/null 2>&1; then
-            ${config.programs.qutebrowser.package}/bin/qutebrowser ":darkman set ${mode}"
+            ${config.programs.qutebrowser.package}/bin/qutebrowser ":darkman-set ${mode}"
         fi
       '';
     in
