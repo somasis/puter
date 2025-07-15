@@ -80,28 +80,28 @@ in
         };
 
         mounts = {
-          "" = {
+          "files/" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/mnt/whatbox";
           };
 
-          "audio/source" = {
+          "files/audio/source" = {
             enable = true;
             mountPoint = "${config.home.homeDirectory}/audio/source";
             options = bigCacheOptions;
           };
 
-          "video/anime" = {
+          "files/video/anime" = {
             enable = true;
             mountPoint = "${config.xdg.userDirs.videos}/anime";
           };
 
-          "video/film" = {
+          "files/video/film" = {
             enable = true;
             mountPoint = "${config.xdg.userDirs.videos}/film";
           };
 
-          "video/tv" = {
+          "files/video/tv" = {
             enable = true;
             mountPoint = "${config.xdg.userDirs.videos}/tv";
           };
