@@ -62,11 +62,11 @@ in
       #   secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
       # };
 
-      whatbox-sftp.config = {
-        type = "sftp";
-        host = "ariel.whatbox.ca";
-        user = "somasis";
-      };
+      # whatbox-sftp.config = {
+      #   type = "sftp";
+      #   host = "ariel.whatbox.ca";
+      #   user = "somasis";
+      # };
 
       whatbox = {
         config = {
