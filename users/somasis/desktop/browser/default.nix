@@ -25,6 +25,13 @@ let
 
       : "''${QUTE_FIFO:=}"
 
+      set_temp=
+      case "$1" in
+          --temp)
+              set_temp=--temp
+              ;;
+      esac
+
       settings=()
       case "''${1:-$(darkman get)}" in
           light)
@@ -52,7 +59,7 @@ let
       for setting in "''${settings[@]}"; do
           name=''${setting%%:*}
           value=''${setting#*:}
-          qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set $name $value"
+          qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set $set_temp $name $value"
       done
 
       printf ':%s\n' "$qutebrowser_command" > "$QUTE_FIFO"
@@ -822,13 +829,6 @@ in
       ];
 
       extraConfig = lib.concatStrings [
-        (lib.optionalString (config.services.darkman.enable) ''
-          import subprocess
-
-          # Dirty hack for ensure qutebrowser has the right mode settings at start.
-          subprocess.run(["darkman", "toggle"])
-        '')
-
         ''
           c.hints.padding = {"top": 2, "bottom": 2, "left": 2, "right": 2}
         ''
@@ -978,7 +978,27 @@ in
     let
       qutebrowser-change-color = mode: ''
         if ${pkgs.procps}/bin/pgrep -u "$USER" -laf '(python)?.*/bin/\.?qutebrowser(-wrapped)?' >/dev/null 2>&1; then
-            ${config.programs.qutebrowser.package}/bin/qutebrowser ":darkman-set ${mode}"
+            # Method from home-manager's `modules/program/qutebrowser.nix`, to avoid using
+            # `qutebrowser`, which would cause an infinite recursion...
+            hash="$(echo -n "$USER" | md5sum | cut -d' ' -f1)"
+            socket="''${XDG_RUNTIME_DIR:-/run/user/$UID}/qutebrowser/ipc-$hash"
+            if [[ -S $socket ]]; then
+              command=${
+                lib.escapeShellArg (
+                  builtins.toJSON {
+                    args = [
+                      ":darkman-set"
+                      "--temp"
+                      mode
+                    ];
+                    target_arg = null;
+                    protocol_version = 1;
+                  }
+                )
+              }
+              echo "$command" | ${pkgs.socat}/bin/socat -lf /dev/null - UNIX-CONNECT:"$socket"
+            fi
+            unset hash socket command
         fi
       '';
     in
