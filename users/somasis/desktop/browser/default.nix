@@ -23,7 +23,7 @@ let
     pkgs.writeShellScript "qutebrowser-darkman" ''
       set -euo pipefail
 
-      : "''${QUTE_FIFO:?}"
+      : "''${QUTE_FIFO:=}"
 
       if ! darkman "''${@:-}"; then
           exit 1
@@ -65,7 +65,11 @@ let
           qutebrowser_command="''${qutebrowser_command:+$qutebrowser_command ;; }set $name $value"
       done
 
-      printf ':%s\n' "$qutebrowser_command" > "$QUTE_FIFO"
+      if [[ -n "$QUTE_FIFO" ]]; then
+          printf ':%s\n' "$qutebrowser_command" > "$QUTE_FIFO"
+      else
+          qutebrowser ":$qutebrowser_command"
+      fi
     '';
 
   translate = pkgs.writeShellScript "translate" ''
