@@ -34,7 +34,7 @@ let
               printf 'using last choice (%s); run again with ,, to override\n' "''${last_choice@Q}" >&2
           else
               sk -p ', ' --no-sort --reverse <<< "$items"
-              return $?
+              exit $?
           fi
       )
 
