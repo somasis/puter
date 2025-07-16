@@ -60,11 +60,6 @@
       };
 
       extraConfig = {
-        sendemail = {
-          annotate = true;
-          smtpserver = lib.getExe (config.programs.msmtp.package or pkgs.msmtp);
-        };
-
         init.defaultBranch = "main";
         interactive.singlekey = true;
 
