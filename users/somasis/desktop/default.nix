@@ -45,13 +45,13 @@
       with pkgs;
       with kdePackages;
       [
+        # keep-sorted start
         bc
-        bmake
         ffmpeg-full
         hyperfine
         zenity
-
         gucharmap
+        # keep-sorted end
       ];
 
     file = {
