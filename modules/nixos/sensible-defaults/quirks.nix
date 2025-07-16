@@ -21,9 +21,10 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
+    # Added 2025-07-16: Update radiotray-ng and fix its build
     (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/425697.patch";
-      hash = "sha256-AY1UYr7V574RS+yyDZoZeh6lvMxJI+xghClm7FoWAxs=";
+      url = "https://github.com/NixOS/nixpkgs/pull/425864.patch";
+      hash = "sha256-8cDi3Fy7Tiku6aIxsPnIWSaypi0mJKsAdNBOpVzVuQs=";
     })
   ];
 
@@ -49,6 +50,7 @@ let
 
     # Added 2025-07-16: doesn't currently work on nixos-unstable
     darktable = final.stable.darktable;
+    gimp = final.stable.gimp;
   };
 in
 {
