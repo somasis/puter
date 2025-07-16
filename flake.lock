@@ -576,6 +576,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1752649415,
+        "narHash": "sha256-utVsM0z8557zkacLOrLF4N20gdKSH6UWvtEjmvB+1hg=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "e26962fddc11a6c39634e40d15e30fadc9958527",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-stable": {
       "locked": {
         "lastModified": 1730741070,
@@ -592,17 +607,18 @@
         "type": "github"
       }
     },
-    "nixpkgs-unstable": {
+    "nixpkgs-stable_2": {
       "locked": {
-        "lastModified": 1752619186,
-        "narHash": "sha256-WFNMmWwJQ9VpKtS562vtdIxPU7/25WVv5g/Mp3OoqCo=",
+        "lastModified": 1752436162,
+        "narHash": "sha256-Kt1UIPi7kZqkSc5HVj6UY5YLHHEzPBkgpNUByuyxtlw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "fa3633a6a184ad4bb9873082b9a5d40280d68f02",
+        "rev": "dfcd5b901dbab46c9c6e80b265648481aafb01f8",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
+        "ref": "nixos-25.05",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -741,7 +757,8 @@
         "nixos-cli": "nixos-cli",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
-        "nixpkgs-unstable": "nixpkgs-unstable",
+        "nixpkgs-master": "nixpkgs-master",
+        "nixpkgs-stable": "nixpkgs-stable_2",
         "plasma-manager": "plasma-manager",
         "plasma-pass": "plasma-pass",
         "qutebrowser-zotero": "qutebrowser-zotero",

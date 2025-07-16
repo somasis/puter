@@ -46,6 +46,9 @@ let
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
     inherit (nixpkgs-quirks.pkgs) radiotray-ng;
+
+    # Added 2025-07-16: doesn't currently work on nixos-unstable
+    darktable = final.stable.darktable;
   };
 in
 {

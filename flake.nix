@@ -15,7 +15,9 @@
     # NOTE Make sure to change on new releases!
     # See <https://nixos.org/manual/nixos/unstable/#sec-upgrading> for details
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:nixos/nixpkgs";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -119,7 +121,8 @@
       treefmt-nix,
 
       nixpkgs,
-      nixpkgs-unstable,
+      nixpkgs-stable,
+      nixpkgs-master,
       home-manager,
       nixos-hardware,
 
@@ -229,7 +232,9 @@
         default = final: prev: lib.recursiveUpdate prev (import ./pkgs { pkgs = final; });
 
         nixpkgsVersions = final: prev: {
+          stable = inputs.nixpkgs-stable.legacyPackages.${system};
           unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+          master = inputs.nixpkgs-master.legacyPackages.${system};
         };
 
         # Create an overlay from all flake inputs with packages.
