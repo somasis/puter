@@ -3,11 +3,11 @@
     "adblockEasyList": {
       "flake": false,
       "locked": {
-        "lastModified": 1752621865,
-        "narHash": "sha256-5LgcgKQfzZWrzm/PVIOeDgudZ382+2s+HaEzbmeGCec=",
+        "lastModified": 1752649883,
+        "narHash": "sha256-rTzffsVy+4bNZDid0/69W4l1lE3eTm9TTX06qV3d3bQ=",
         "owner": "thedoggybrad",
         "repo": "easylist-mirror",
-        "rev": "b0be3806ed4cd79f565e45c0426ef3fa3c6f204d",
+        "rev": "9f0a5b6cbde8fefa8bb9b75469f3232e2342f7bd",
         "type": "github"
       },
       "original": {
@@ -578,11 +578,11 @@
     },
     "nixpkgs-master": {
       "locked": {
-        "lastModified": 1752649415,
-        "narHash": "sha256-utVsM0z8557zkacLOrLF4N20gdKSH6UWvtEjmvB+1hg=",
+        "lastModified": 1752649867,
+        "narHash": "sha256-EfSrur0shLnUzfMXVm7w1vzzbfoOrO1xKEa2ewNkFFc=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e26962fddc11a6c39634e40d15e30fadc9958527",
+        "rev": "4c04711a91b372c6712e50febbef932d1670a4e4",
         "type": "github"
       },
       "original": {
@@ -619,6 +619,22 @@
       "original": {
         "owner": "nixos",
         "ref": "nixos-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1752480373,
+        "narHash": "sha256-JHQbm+OcGp32wAsXTE/FLYGNpb+4GLi5oTvCxwSoBOA=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "62e0f05ede1da0d54515d4ea8ce9c733f12d9f08",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -681,11 +697,11 @@
     "plasma-pass": {
       "flake": false,
       "locked": {
-        "lastModified": 1749989192,
-        "narHash": "sha256-wvNgVifPyKPilc3T5I1uTJN0zrp6cKciJQz/Onf/aik=",
+        "lastModified": 1752631665,
+        "narHash": "sha256-XbogRiRZk15Q3822o1l+eVlxQ8DyyJRt/2X+aeKqpNk=",
         "ref": "refs/heads/master",
-        "rev": "8e7e09cc9a1287815558f2764bca7821557078da",
-        "revCount": 356,
+        "rev": "eafa183a8ec1b7d6706884985ee6d100534199b5",
+        "revCount": 357,
         "type": "git",
         "url": "https://invent.kde.org/plasma/plasma-pass.git"
       },
@@ -759,6 +775,7 @@
         "nixpkgs": "nixpkgs_3",
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-stable": "nixpkgs-stable_2",
+        "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",
         "plasma-pass": "plasma-pass",
         "qutebrowser-zotero": "qutebrowser-zotero",
@@ -877,11 +894,11 @@
     "uAssets": {
       "flake": false,
       "locked": {
-        "lastModified": 1752607641,
-        "narHash": "sha256-ew8sW4okJV9hB/5p6Twlr38GPPFHDCX93TGxbt+t3bI=",
+        "lastModified": 1752644285,
+        "narHash": "sha256-/FHGCU/ozJ9d5PUmoGOJElmbwHlKe+9JW2nTRiOV1MM=",
         "owner": "uBlockOrigin",
         "repo": "uAssetsCDN",
-        "rev": "063dd5cd6954f8e2a6cca2d44f20ddfe49f43cef",
+        "rev": "4a7feac28852b131c3ca084b3833c501fd4ae2f9",
         "type": "github"
       },
       "original": {
