@@ -17,6 +17,16 @@
       256 # enable renicing all realtime tasks
     ];
 
+    consoleLogLevel = 3;
+    initrd.verbose = false;
+    kernelParams = [
+      "quiet"
+      "splash"
+      "boot.shell_on_fail"
+      "udev.log_priority=3"
+      "rd.systemd.show_status=auto"
+    ];
+
     # Provide a nice splash screen. (<Esc> will show boot log anyway)
     plymouth = {
       enable = true;
