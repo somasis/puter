@@ -7,7 +7,7 @@
 {
   imports = [
     ./steam.nix
-    ./minecraft.nix
+    # ./minecraft.nix # TODO doesn't work on nixos-unstable currently
     ./urbanterror.nix
   ];
 

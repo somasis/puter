@@ -7,7 +7,6 @@
 {
   home.packages = [
     pkgs.prismlauncher
-    (config.osConfig.programs.java.package or pkgs.jre)
   ];
 
   persist.directories = [
