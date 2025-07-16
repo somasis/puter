@@ -21,6 +21,10 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/425697.patch";
+      hash = "sha256-AY1UYr7V574RS+yyDZoZeh6lvMxJI+xghClm7FoWAxs=";
+    })
   ];
 
   # deadnix: skip
@@ -41,6 +45,7 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
+    inherit (nixpkgs-quirks.pkgs) radiotray-ng;
   };
 in
 {
