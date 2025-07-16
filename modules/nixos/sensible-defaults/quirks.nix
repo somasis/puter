@@ -25,14 +25,17 @@ let
 
   # deadnix: skip
   nixpkgs-quirks =
-    let
-      args = { inherit (pkgs.stdenvNoCC) system hostPlatform; };
-    in
-    import ((import nixpkgs args).applyPatches {
-      name = "nixpkgs-quirks";
-      src = nixpkgs;
-      patches = [ ];
-    }) args;
+    if patches != [ ] then
+      let
+        args = { inherit (pkgs.stdenvNoCC) system hostPlatform; };
+      in
+      import ((import nixpkgs args).applyPatches {
+        name = "nixpkgs-quirks";
+        src = nixpkgs;
+        inherit patches;
+      }) args
+    else
+      nixpkgs;
 
   overlay = final: prev: {
     # Continuing the earlier example, make sure to do an override
