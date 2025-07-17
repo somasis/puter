@@ -988,9 +988,7 @@ in
                 lib.escapeShellArg (
                   builtins.toJSON {
                     args = [
-                      ":darkman-set"
-                      "--temp"
-                      mode
+                      ":darkman-set --temp ${mode}"
                     ];
                     target_arg = null;
                     protocol_version = 1;
