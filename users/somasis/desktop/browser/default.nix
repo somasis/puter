@@ -26,9 +26,10 @@ let
       : "''${QUTE_FIFO:=}"
 
       set_temp=
-      case "$1" in
+      case "''${1:-}" in
           --temp)
               set_temp=--temp
+              shift
               ;;
       esac
 
