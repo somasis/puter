@@ -24,11 +24,10 @@ usage() {
     cat >&2 <<EOF
 usage: ${0##*/} [-l]
 
-List all matching show dates, as catalogued by Phish.in.
+List show dates performed by Phish, as catalogued by Phish.in.
 
 options:
     -l              List shows liked by your user.
-    <show>          An ISO formatted date (ex. 1969-12-31)
 
 variables:
     \$PHISHIN_USER_EMAIL_COMMAND${PHISHIN_USER_EMAIL_COMMAND:+ [currently: $PHISHIN_USER_EMAIL_COMMAND]}
@@ -86,10 +85,11 @@ PHISHIN_USER_TOKEN=$(jq -cre '.jwt' <<<"${PHISHIN_USER_TOKEN}")
 
 pages=("$(fetch_shows_page 1)")
 total_pages=$(jq -cre '.total_pages' <<<"${pages[0]}")
-
+i=0
 for i in $(seq 2 "${total_pages}"); do
     if ! page=$(fetch_shows_page "${i}") || [[ -z "${page}" ]]; then
-        printf 'error getting liked shows (page %i/%i): %s\n' "${i}" "${total_pages}" "${page}"
+        printf 'error getting shows (page %i/%i): %s\n' \
+            "${i}" "${total_pages}" "${page}" >&2
         exit 1
     fi
     pages+=("${page}")
