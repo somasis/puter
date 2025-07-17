@@ -39,16 +39,15 @@ if [[ "$#" -le 0 ]]; then
     usage 'error: must provide at least one argument\n'
 fi
 
-shows_to_import=()
 for show; do
-    if [[ "${show}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]]; then
-        shows_to_import+=("${show}")
-    else
+    if ! [[ "${show}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]]; then
         usage 'error: show must be an ISO-formatted date (1969-12-31)\n'
     fi
 done
 
-for show in "${shows_to_import[@]}"; do
+for show; do
+    [[ "${show}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]]
+
     phish-show-notes "${show}"
 
     download_dir=$(phishin-download-show "${show}")
