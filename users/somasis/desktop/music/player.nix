@@ -28,7 +28,7 @@
     indexer = {
       paths = [ config.xdg.userDirs.music ];
       scanAtStartup = true;
-      ratingsStyle = "favourites";
+      ratingsStyle = "stars";
     };
     player = {
       playAtStartup = false;
