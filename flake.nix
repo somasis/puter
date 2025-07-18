@@ -251,17 +251,18 @@
       };
 
       nixosConfigurations = {
-        esther = lib.nixosSystem {
-          specialArgs = {
-            inherit
-              self
-              inputs
-              nixpkgs
-              disko
-              ;
-          };
-          modules = [ ./hosts/esther.7596ff.com ];
-        };
+        # esther = lib.nixosSystem {
+        #   specialArgs = {
+        #     inherit
+        #       self
+        #       inputs
+        #       nixpkgs
+        #       disko
+        #       ;
+        #   };
+        #   modules = [ ./hosts/esther.7596ff.com ];
+        # };
+        esther = throw "esther is now unsupported 💔";
 
         ilo = lib.nixosSystem {
           specialArgs = {
