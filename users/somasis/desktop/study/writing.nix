@@ -90,62 +90,11 @@ let
       done
     '';
 
-  # languageToolConfigFormat = lib.generators.toKeyValue {
-  #   mkKeyValue = k: v:
-  #     lib.generators.mkKeyValueDefault
-  #       {
-  #         mkValueString = value:
-  #           if lib.isList value then
-  #             commaList value
-  #           else
-  #             lib.escape [ ":" ] (lib.generators.mkValueStringDefault { } value)
-  #         ;
-  #       } "="
-  #       k
-  #       v
-  #   ;
-  # };
-
-  # "Languagetool.cfg" is not a typo.
-  # languageToolConfig = pkgs.writeText "Languagetool.cfg" (languageToolConfigFormat rec {
-  #   inherit ltVersion;
-  #   motherTongue = "en-US";
-
-  #   autoDetect = false;
-
-  #   "disabledCategories.en-US" = [ "Creative Writing" "Wikipedia" ];
-  #   "disabledRules.en-US" = [ "HASH_SYMBOL" "WIKIPEDIA_CONTRACTIONS" "WIKIPEDIA_CURRENTLY" "TOO_LONG_SENTENCE" "WIKIPEDIA_12_PM" "WIKIPEDIA_12_AM" ];
-  #   "enabledRules.en-US" = [ "THREE_NN" "EN_REDUNDANCY_REPLACE" ];
-
-  #   fixedLanguage = motherTongue;
-
-  #   isMultiThread = true; # Use multiple cores for checking
-  #   noDefaultCheck = true;
-  #   doRemoteCheck = false; # Check locally
-  #   useOtherServer = false; # Check locally
-
-  #   numberParagraphs = -2;
-
-  #   otherServerUrl = "http://127.0.0.1:${builtins.toString config.services.tunnels.tunnels.languagetool.port}";
-
-  #   isPremium = true;
-  #   # remoteUserName = config.home.username;
-
-  #   taggerShowsDisambigLog = false;
-
-  #   useGUIConfig = false;
-  # });
-
-  # loSetLanguageToolConfiguration = pkgs.writeShellScript "libreoffice-set-languagetool-configuration" ''
-  #   cat ${languageToolConfig} > "''${XDG_CONFIG_HOME:=$HOME/.config}"/LanguageTool/LibreOffice/Languagetool.cfg
-  # '';
-
   loWrapperBeforeCommands = pkgs.writeShellScript "libreoffice-before-execute" ''
     if [[ "$(pgrep -c -u "''${USER:=$(id -un)}" 'soffice\.bin')" -eq 0 ]]; then
         ${loInstallExtensions} || :
     fi
   '';
-  # ${loSetLanguageToolConfiguration} || :
 
   loWrapped = lo.override {
     extraMakeWrapperArgs = [
@@ -155,19 +104,19 @@ let
   };
 in
 rec {
-  home.packages = [
+  home.packages = with pkgs; [
     loWrapped
 
-    pkgs.languagetool
+    languagetool
 
-    # Free replacements for pkgs.corefonts
-    pkgs.caladea # Cambria
-    pkgs.carlito # Calibri
-    pkgs.comic-relief # Comic Sans MS
-    pkgs.gelasio # Georgia
-    pkgs.liberation-sans-narrow # Arial Narrow
-    pkgs.liberation_ttf # Arial, Helvetica, Times New Roman, Courier New
-    pkgs.noto-fonts-extra # Arial, Times New Roman
+    # Free replacements for corefonts
+    caladea # Cambria
+    carlito # Calibri
+    comic-relief # Comic Sans MS
+    gelasio # Georgia
+    liberation-sans-narrow # Arial Narrow
+    liberation_ttf # Arial, Helvetica, Times New Roman, Courier New
+    noto-fonts-extra # Arial, Times New Roman
   ];
 
   # See for more details:
@@ -194,109 +143,12 @@ rec {
   ];
   log.files = [ (xdgConfigDir "LanguageTool/LibreOffice/LanguageTool.log") ];
 
-  xdg.configFile = {
-    "libreoffice/jre".source = lo.unwrapped.jdk;
-    "LanguageTool/LibreOffice/.keep".source = builtins.toFile "keep" "";
+  xdg = {
+    configFile = {
+      "libreoffice/jre".source = lo.unwrapped.jdk;
+      "LanguageTool/LibreOffice/.keep".source = builtins.toFile "keep" "";
+    };
 
-    # TODO: why doesn't this work?
-    #       LibreOffice will fail to recognize the Java environment at all, if I
-    #       generate the javasettings XML file during build time...
-    #   let
-    #     system = osConfig.nixpkgs.localSystem.uname;
-    #   in
-    #   {
-    #     "libreoffice/4/user/config/javasettings_${system.system}_${lib.toUpper system.processor}.xml".text = toXML {} {
-    #       java = {
-    #         "@xmlns" = "http://openoffice.org/2004/java/framework/1.0";
-    #         "@xmlns:xsi" = "http://www.w3.org/2001/XMLSchema-instance";
-
-    #         enabled."@xsi:nil" = "true";
-    #         userClassPath."@xsi:nil" = "false";
-    #         vmParameters."@xsi:nil" = "false";
-    #         jreLocations."@xsi:nil" = "true";
-
-    #         # We can't use LibreOffice's own buildInput jdk because it's headless.
-    #         # javaInfo = let inherit (lo.unwrapped) jdk; in {
-    #         javaInfo = let jdk = pkgs.openjdk19; in {
-    #           "@xsi:nil" = "false";
-    #           "@vendorUpdate" = "2019-07-26"; # ?
-    #           "@autoSelect" = "true";
-    #           vendor = "N/A";
-    #           location = "file://${jdk}/lib/openjdk";
-    #           version = replaceStrings [ "+.*" ] [ "" ] jdk.version;
-    #           features = 0;
-    #           requirements = 1;
-
-    #           vendorData = "660069006C0065003A002F002F002F006E00690078002F00730074006F00720065002F007A003000300066006D0035003200760078007900670069006B007300620067007000770067006D00770036006A00310066006100370062007700360071006E002D006F00700065006E006A0064006B002D00310039002E0030002E0032002B0037002F006C00690062002F006F00700065006E006A0064006B002F006C00690062002F007300650072007600650072002F006C00690062006A0076006D002E0073006F000A002F006E00690078002F00730074006F00720065002F007A003000300066006D0035003200760078007900670069006B007300620067007000770067006D00770036006A00310066006100370062007700360071006E002D006F00700065006E006A0064006B002D00310039002E0030002E0032002B0037002F006C00690062002F006F00700065006E006A0064006B002F006C00690062002F0061006D006400360034002F0063006C00690065006E0074003A002F006E00690078002F00730074006F00720065002F007A003000300066006D0035003200760078007900670069006B007300620067007000770067006D00770036006A00310066006100370062007700360071006E002D006F00700065006E006A0064006B002D00310039002E0030002E0032002B0037002F006C00690062002F006F00700065006E006A0064006B002F006C00690062002F0061006D006400360034002F007300650072007600650072003A002F006E00690078002F00730074006F00720065002F007A003000300066006D0035003200760078007900670069006B007300620067007000770067006D00770036006A00310066006100370062007700360071006E002D006F00700065006E006A0064006B002D00310039002E0030002E0032002B0037002F006C00690062002F006F00700065006E006A0064006B002F006C00690062002F0061006D006400360034002F006E00610074006900760065005F0074006800720065006100640073003A002F006E00690078002F00730074006F00720065002F007A003000300066006D0035003200760078007900670069006B007300620067007000770067006D00770036006A00310066006100370062007700360071006E002D006F00700065006E006A0064006B002D00310039002E0030002E0032002B0037002F006C00690062002F006F00700065006E006A0064006B002F006C00690062002F0061006D006400360034000A00"; # wtf
-    #         };
-    #       };
-    #     };
-  };
-
-  xdg.mimeApps.associations.removed = lib.genAttrs [ "text/plain" ] (_: "libreoffice.desktop");
-
-  # Do some really convoluted stuff to make LibreOffice run in the background.
-  # systemd.user.services.libreoffice = {
-  #   Unit = {
-  #     Description = lo.meta.description;
-  #     PartOf = [ "graphical-session.target" ];
-  #   };
-  #   Install.WantedBy = [ "graphical-session.target" ];
-
-  #   Service =
-  #     let
-  #       loWait = pkgs.writeShellScript "libreoffice-wait" ''
-  #         ${pkgs.procps}/bin/pwait -u "$USER" "soffice.bin" || :
-  #         ${pkgs.coreutils}/bin/rm -f ${lib.escapeShellArg config.xdg.configHome}/libreoffice/4/.lock
-  #       '';
-  #     in
-  #     {
-  #       Type = "simple";
-
-  #       # Only run the daemon during school. Saves memory.
-  #       # ExecCondition = [ "${pkgs.playtime}/bin/playtime -iq" ];
-
-  #       # Wait for any standalone instances of libreoffice to quit; there might be one open,
-  #       # which will cause ExecStart to fail if we don't wait for it to end by itself.
-  #       # We especially do not want to kill it since it might be some in-progress writing.
-  #       # If there is no process matching the pattern, pwait will exit non-zero.
-  #       ExecStartPre =
-  #         [ "-${loWait}" ]
-  #         ++ [
-  #           loInstallExtensions
-  #           loSetLanguageToolConfiguration
-  #         ]
-  #       ;
-
-  #       ExecStart = [ "${lo}/bin/soffice --quickstart --nologo --nodefault" ];
-
-  #       Restart = "always";
-  #       RestartSec = 0;
-
-  #       KillSignal = "SIGQUIT";
-
-  #       # If using `--headless`, things get echoed to the standard output of this process... :|
-  #       StandardOutput = "null";
-  #     };
-  # };
-
-  # services.sxhkd.keybindings."@F1" = pkgs.writeShellScript "conditional-f1" ''
-  #   case "$(xprop -id "$(xdotool getactivewindow)" WM_CLASS in
-  #       libreoffice*
-  #   pkill -USR2 -x sxhkd
-  #   ${pkgs.xdotool}/bin/xdotool key F1
-  #   pkill -USR2 -x sxhkd
-  # '';
-
-  services.tunnels.tunnels.languagetool = {
-    port = 3864;
-    remotePort = self.nixosConfigurations.esther.config.services.languagetool.port;
-    remote = "somasis@esther.7596ff.com";
-    linger = "15m";
-  };
-
-  home.sessionVariables = {
-    LANGUAGETOOL_HOSTNAME = "127.0.0.1";
-    LANGUAGETOOL_PORT = builtins.toString services.tunnels.tunnels.languagetool.port;
+    mimeApps.associations.removed = lib.genAttrs [ "text/plain" ] (_: "libreoffice.desktop");
   };
 }
