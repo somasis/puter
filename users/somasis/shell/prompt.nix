@@ -110,6 +110,9 @@ in
       # was at when it was editing the entry in question.
       # history-preserve-point = true;
 
+      # Complete case-insensitively.
+      completion-ignore-case = true;
+
       # Briefly move the cursor over to a matching parenthesis
       # (for visibility).
       blink-matching-paren = true;
