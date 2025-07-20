@@ -61,7 +61,7 @@ if [[ -n "${click:=${url}}" ]]; then
 fi
 
 (
-    action=$(notify-send --timeout $((60 * 1000)) "${args[@]}" ${title:+"${title}"} "${message}")
+    action=$(notify-send --expire-time $((60 * 1000)) "${args[@]}" ${title:+"${title}"} "${message}")
 
     case "${action}" in
         click)
