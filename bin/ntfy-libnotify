@@ -1,6 +1,7 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash libnotify jq xurls
 # shellcheck shell=bash
+# vim: ft=sh
 
 # Use notify-send to display notifications from ntfy.sh. To use this, the
 # client.yml used by `ntfy subscribe` should contain
@@ -49,19 +50,20 @@ if [[ -n "${priority}" ]]; then
     args+=(-u "${priority}")
 fi
 
-url=$(xurls <<<"${message}" | head -n1)
+mapfile -t urls < <(xurls <<<"${message}")
 
-if [[ -n "${url}" ]]; then
-    message=${message/"${url}"/}
-    click="${url}"
-fi
+for url in "${urls[@]}"; do
+    url_hyperlink="<a href=${url}>${url}</a>"
+    message=${message/"$url"/"$url_hyperlink"}
+done
 
-if [[ -n "${click:=${url}}" ]]; then
+if [[ -n "${click:-}" ]]; then
     args+=(-A click=Open)
+    args+=(--expire-time $((60 * 1000)))
 fi
 
 (
-    action=$(notify-send --expire-time $((60 * 1000)) "${args[@]}" ${title:+"${title}"} "${message}")
+    action=$(notify-send "${args[@]}" ${title:+"${title}"} "${message}")
 
     case "${action}" in
         click)
