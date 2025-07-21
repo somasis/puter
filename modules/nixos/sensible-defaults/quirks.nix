@@ -21,17 +21,6 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
-    # Added 2025-07-16: Update radiotray-ng and fix its build
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/425864.patch";
-      hash = "sha256-8cDi3Fy7Tiku6aIxsPnIWSaypi0mJKsAdNBOpVzVuQs=";
-    })
-
-    # Added 2025-07-20: Fix beets checks
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/425908.patch";
-      hash = "sha256-B+VP3yxvtG3RrEwfN7afowLdf+41X58sMrhfYhOcHz8=";
-    })
   ];
 
   # deadnix: skip
@@ -52,12 +41,6 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
-    inherit (nixpkgs-quirks.pkgs)
-      beets
-      beets-unstable
-      beetsPackages
-      radiotray-ng
-      ;
 
     # Added 2025-07-16: doesn't currently work on nixos-unstable
     inherit (final.stable) darktable gimp;
