@@ -83,10 +83,24 @@ in
     # ];
   };
 
-  systemd.user.targets.graphical-session.Unit.Wants = [
-    "mpris-discord-rpc.service"
-    "mpris-scrobbler.service"
-  ];
+  systemd.user = {
+    targets.graphical-session.Unit.Wants = [
+      "mpris-discord-rpc.service"
+      "mpris-scrobbler.service"
+    ];
+
+    services.mpris-discord-rpc = {
+      Unit = {
+        Description = pkgs.mpris-discord-rpc.meta.description;
+        After = [ "network.target" ];
+      };
+      Install.WantedBy = [ "default.target" ];
+      Service = {
+        Type = "simple";
+        ExecStart = lib.getExe pkgs.mpris-discord-rpc;
+      };
+    };
+  };
 
   xdg.configFile = {
     "mpris-discord-rpc/config.yaml".source = yamlFormat.generate "mpris-discord-rpc-config.yaml" {
