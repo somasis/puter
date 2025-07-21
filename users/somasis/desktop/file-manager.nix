@@ -13,12 +13,10 @@
       filelight
     ];
 
-  sync.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "kio/servicemenus";
-    }
-  ];
+  xdg.dataFile."kio/servicemenus" = {
+    source = "${self}/share/kio/servicemenus";
+    recursive = true;
+  };
 
   dconf.settings = {
     "org/gtk/settings/file-chooser" = {
