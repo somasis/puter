@@ -4,12 +4,16 @@
   pkgs,
   ...
 }:
+let
+  yamlFormat = pkgs.formats.yaml { };
+in
 {
   home.packages =
     with pkgs;
     with kdePackages;
     [
       config.services.playerctld.package
+      mpris-discord-rpc
       mpris-scrobbler
     ];
 
@@ -79,18 +83,43 @@
     # ];
   };
 
-  systemd.user.targets.graphical-session.Unit.Wants = [ "mpris-scrobbler.service" ];
+  systemd.user.targets.graphical-session.Unit.Wants = [
+    "mpris-discord-rpc.service"
+    "mpris-scrobbler.service"
+  ];
 
-  xdg.configFile."mpris-scrobbler/config".text =
-    lib.generators.toINIWithGlobalSection { listsAsDuplicateKeys = true; }
-      {
-        globalSection.ignore = [
-          "playerctld"
-          "kdeconnect"
-          "mpv"
-          "chromium"
-          "qutebrowser"
-          "firefox"
-        ];
-      };
+  xdg.configFile = {
+    "mpris-discord-rpc/config.yaml".source = yamlFormat.generate "mpris-discord-rpc-config.yaml" {
+      interval = 10;
+      button = [
+        "yt"
+        "listenbrainz"
+      ];
+
+      lastfm_api_key = "";
+      lastfm_name = "kyliesomasis";
+      listenbrainz_name = "Somasis";
+
+      small_image = "player";
+
+      allowlist = [
+        "Elisa"
+      ];
+
+      disable_musicbrainz_cover = false;
+    };
+
+    "mpris-scrobbler/config".text =
+      lib.generators.toINIWithGlobalSection { listsAsDuplicateKeys = true; }
+        {
+          globalSection.ignore = [
+            "playerctld"
+            "kdeconnect"
+            "mpv"
+            "chromium"
+            "qutebrowser"
+            "firefox"
+          ];
+        };
+  };
 }
