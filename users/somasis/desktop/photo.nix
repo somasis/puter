@@ -30,7 +30,7 @@ in
 
       krita
 
-      darktable
+      # darktable # TODO reenable when it builds...
       inkscape
     ];
 
