@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Service
+MimeType=application/octet-stream
+Actions=upload
+
+[Desktop Action upload]
+Name=Upload to 0x0.st
+Icon=cloud-upload
+Exec=upload %U
