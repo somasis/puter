@@ -81,7 +81,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
         "device_automounter_kcmrc"
         "dolphinrc"
         "drkonqirc"
-        "elisarc"
         "kactivitymanagerd-statsrc"
         "kactivitymanagerdrc"
         "kcminputrc"

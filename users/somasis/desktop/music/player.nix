@@ -21,10 +21,16 @@
     appearance = {
       showNowPlayingBackground = true;
       showProgressOnTaskBar = true;
-      embeddedView = "genres";
+
       defaultView = "allAlbums";
       defaultFilesViewPath = config.xdg.userDirs.music;
+
+      # Elisa doesn't currently attempt to split the genre tags
+      # in any way (I use '; ' as a separator), so this looks
+      # kinda silly.
+      # embeddedView = "genres";
     };
+
     indexer = {
       paths = [ config.xdg.userDirs.music ];
       scanAtStartup = true;
@@ -34,6 +40,18 @@
       playAtStartup = false;
       useAbsolutePlaylistPaths = false;
     };
+  };
+
+  # TODO contribute the settings needed to add these to `programs.elisa`.
+  programs.plasma.configFile.elisarc.Views = {
+    # Sort the Albums view in descending order
+    SortOrderPreferences.value = "Album==DescendingOrder";
+
+    # albums: sort by year (latest first); tracks: in alphabetical order by title
+    SortRolePreferences.value = "Album==YearRole,Track==TitleRole";
+
+    # albums: grid; files: list; genres: list
+    ViewStylePreferences.value = "Album==GridStyle,FileName==ListStyle,Genre==ListStyle";
   };
 
   services = {
