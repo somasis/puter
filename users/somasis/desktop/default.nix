@@ -19,6 +19,7 @@
     ./ledger.nix
     ./mess.nix
     ./music
+    ./notes.nix
     ./notifications.nix
     ./phone.nix
     ./photo.nix
@@ -48,9 +49,9 @@
         # keep-sorted start
         bc
         ffmpeg-full
+        gucharmap
         hyperfine
         zenity
-        gucharmap
         # keep-sorted end
       ];
 
