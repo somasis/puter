@@ -458,23 +458,6 @@ in
       {
         _hidden = false;
 
-        _name = "12ft.io";
-        _alias = "12ft.io";
-        _description = "Show me a 10ft paywall, I'll show you a 12ft ladder";
-        _icon = "https://12ft.io/favicon.png";
-
-        _urlTemplate = "https://12ft.io/api/proxy?q={z:url}";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-        };
-      }
-
-      {
-        _hidden = false;
-
         _name = "Unpaywall";
         _alias = "Unpaywall";
         _description = "Unpaywall Lookup";

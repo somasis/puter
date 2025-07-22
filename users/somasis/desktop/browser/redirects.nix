@@ -114,7 +114,6 @@ in
         open = x: "open -r ${x}";
       in
       {
-        # "1" = open "https://12ft.io/api/proxy?q={url}";
         # "a" = open "https://web.archive.org/web/*/{url}";
         "raa" = "wayback {url}";
         "raA" = open "https://archive.today/newest/{url}";
