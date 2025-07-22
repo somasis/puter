@@ -48,7 +48,6 @@ in
     ./shell.nix
     ./troff.nix
     ./web.nix
-    ./yaml.nix
   ];
 
   # Detect filetype for files using nix-shell.

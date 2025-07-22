@@ -534,6 +534,18 @@ in
             hook -group lsp-autoformat-on-save buffer BufWritePre .* lsp-formatting-sync
         }
 
+        hook -group lsp-filetype-yaml global BufSetOption filetype=yaml %{
+            set-option -add buffer lsp_servers %{
+                [yaml-language-server]
+                root_globs = [".git"]
+                [yaml-language-server.settings.yaml]
+                format.enable = true
+                format.bracketSpacing = true
+                hover = true
+                completion = true
+            }
+        }
+
         hook -group lsp-filetype-nix global BufSetOption filetype=nix %{
             set-option buffer lsp_servers %sh{cat ${
               tomlFormat.generate "kak-lsp-servers.toml" {
