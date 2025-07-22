@@ -69,18 +69,7 @@
     # Send an in-band keep-alive every 30 seconds.
     serverAliveInterval = 30;
 
-    # I use ssh_config(5)'s Tag feature for determining how much
-    # forwarding (of X11, of agent, etc.) to do.
-
     matchBlocks = {
-      # trusted = {
-      #   match = "tagged trusted";
-
-      #   forwardAgent = true;
-      #   forwardX11 = true;
-      #   forwardX11Trusted = true;
-      # };
-
       "*" = {
         # Too often, IPv6 is broken on the wifi I'm on.
         # addressFamily = "inet";
@@ -103,17 +92,13 @@
 
       # Trusted hosts
       "esther.7596ff.com" = {
-        # extraOptions.Tag = "trusted";
-
-        host = "esther.7596ff.com esther.7596ff.com.lan esther";
+        host = "esther.7596ff.com esther";
         hostname = "esther.7596ff.com";
 
         forwardAgent = true;
       };
 
       "ariel.whatbox.ca" = {
-        extraOptions.Tag = "trusted";
-
         host = "ariel.whatbox.ca whatbox genesis";
         hostname = "ariel.whatbox.ca";
       };
@@ -139,9 +124,8 @@
     };
   };
 
-  home.packages = [ pkgs.mosh ];
-  home.sessionVariables = {
-    "MOSH_TITLE_NOPREFIX" = 1; # Disable prepending "[mosh]" to terminal title
-    "SSH_AUTH_SOCK" = "$XDG_RUNTIME_DIR/ssh-agent";
+  home = {
+    packages = [ pkgs.mosh ];
+    sessionVariables.MOSH_TITLE_NOPREFIX = 1; # Disable prepending "[mosh]" to terminal title
   };
 }
