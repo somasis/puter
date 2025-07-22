@@ -6,7 +6,6 @@
 }:
 let
   tomlFormat = pkgs.formats.toml { };
-
 in
 {
   imports = [ ./filetype ];
@@ -35,40 +34,39 @@ in
   xdg = {
     # TODO: Unnecessary when this pull request gets merged
     #       <https://github.com/mawww/kakoune/pull/4699>
-    desktopEntries.kakoune =
-      {
-        name = "Kakoune";
-        icon = "kakoune";
+    desktopEntries.kakoune = {
+      name = "Kakoune";
+      icon = "kakoune";
 
-        genericName = "Text editor";
-        comment = "Edit text files modally";
-        categories = [
-          "Utility"
-          "Development"
-          "TextTools"
-          "TextEditor"
-          "ConsoleOnly"
-        ];
+      genericName = "Text editor";
+      comment = "Edit text files modally";
+      categories = [
+        "Utility"
+        "Development"
+        "TextTools"
+        "TextEditor"
+        "ConsoleOnly"
+      ];
 
-        exec = "kak -- %F";
-        terminal = true;
-        mimeType = [
-          "text/*"
-          "text/plain"
-        ];
-      }
-      // lib.optionalAttrs config.programs.kitty.enable {
-        settings = rec {
-          StartupWMClass = "kakoune";
-          TerminalOptions = "--class ${StartupWMClass} --instance-group ${StartupWMClass} --config ${config.xdg.configHome}/kitty/application.conf --single-instance --wait-for-single-instance-window-close";
-        };
-      }
-      // lib.optionalAttrs config.programs.konsole.enable {
-        settings = rec {
-          StartupWMClass = "kakoune";
-          TerminalOptions = "--desktopfile kakoune --separate --profile application";
-        };
+      exec = "kak -- %F";
+      terminal = true;
+      mimeType = [
+        "text/*"
+        "text/plain"
+      ];
+    }
+    // lib.optionalAttrs config.programs.kitty.enable {
+      settings = rec {
+        StartupWMClass = "kakoune";
+        TerminalOptions = "--class ${StartupWMClass} --instance-group ${StartupWMClass} --config ${config.xdg.configHome}/kitty/application.conf --single-instance --wait-for-single-instance-window-close";
       };
+    }
+    // lib.optionalAttrs config.programs.konsole.enable {
+      settings = rec {
+        StartupWMClass = "kakoune";
+        TerminalOptions = "--desktopfile kakoune --separate --profile application";
+      };
+    };
 
     mimeApps.defaultApplications = lib.genAttrs [
       "text/*"
