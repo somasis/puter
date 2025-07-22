@@ -22,15 +22,14 @@
         ConditionSecurity = "tpm2";
 
         # and if additionally there are no existing TPM-generated keys.
-        ConditionPathExistsGlob = "!~/.ssh/id_*.tpm";
+        ConditionPathExistsGlob = "!%h/.ssh/id_*.tpm";
       };
       Install.WantedBy = [ "ssh-tpm-agent.service" ];
 
       Service = {
         Type = "oneshot";
         ExecStart = ''
-          ${config.services.ssh-tpm-agent.package}/bin/ssh-tpm-keygen \
-              -C "%u@%H_tpm" -N ""
+          ${config.services.ssh-tpm-agent.package}/bin/ssh-tpm-keygen -C "%u@%H_tpm" -N ""
         '';
       };
     };
@@ -39,7 +38,7 @@
       Unit = {
         Description = "Automatically generate a user SSH key";
         Before = [ "ssh-agent.service" ];
-        ConditionPathExistsGlob = "!~/.ssh/id_*";
+        ConditionPathExistsGlob = "!%h/.ssh/id_*";
       };
       Install.WantedBy = [ "ssh-agent.service" ];
 
