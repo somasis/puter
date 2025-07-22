@@ -522,6 +522,9 @@ in
         set global lsp_auto_highlight_references true
         set global lsp_hover_anchor true
 
+        set global lsp_progress_indicator    '∴'
+        set global lsp_code_action_indicator '!'
+
         lsp-inlay-hints-enable global
         lsp-auto-hover-enable
         lsp-auto-signature-help-enable
