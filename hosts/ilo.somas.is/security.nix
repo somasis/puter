@@ -15,12 +15,7 @@
 
   environment.systemPackages = with pkgs; [
     sbctl
-    ssh-tpm-agent
     age-plugin-tpm
-  ];
-
-  systemd.packages = with pkgs; [
-    ssh-tpm-agent
   ];
 
   boot = {

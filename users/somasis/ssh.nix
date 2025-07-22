@@ -9,21 +9,53 @@
   # Exception to the rule: ~/.ssh is used instead of ~/etc/ssh.
   persist.directories = [ ".ssh" ];
 
-  systemd.user.services.ssh-keygen = {
-    Unit = {
-      Description = "Automatically generate a user's SSH key if it doesn't exist";
-      After = [ "ssh-agent.service" ];
-      ConditionPathExists = "!~/.ssh";
+  systemd.user.services = {
+    ssh-tpm-keygen = {
+      Unit = {
+        Description = "Automatically generate a user SSH key, using TPM if available";
+        Before = [
+          "ssh-tpm-agent.service"
+          "ssh-keygen.service"
+        ];
+
+        # Only attempt execution if machine has TPM2,
+        ConditionSecurity = "tpm2";
+
+        # and if additionally there are no existing TPM-generated keys.
+        ConditionPathExistsGlob = "!~/.ssh/id_*.tpm";
+      };
+      Install.WantedBy = [ "ssh-tpm-agent.service" ];
+
+      Service = {
+        Type = "oneshot";
+        ExecStart = ''
+          ${config.services.ssh-tpm-agent.package}/bin/ssh-tpm-keygen \
+              -C "%u@%H_tpm" -N ""
+        '';
+      };
     };
-    Service = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "auto-ssh-keygen" ''
-        ${pkgs.openssh}/bin/ssh-keygen -C "$USER@$(hostname -f)_$(date -I)" -N ""
-      '';
+
+    ssh-keygen = {
+      Unit = {
+        Description = "Automatically generate a user SSH key";
+        Before = [ "ssh-agent.service" ];
+        ConditionPathExistsGlob = "!~/.ssh/id_*";
+      };
+      Install.WantedBy = [ "ssh-agent.service" ];
+
+      Service = {
+        Type = "oneshot";
+        ExecStart = ''
+          ${pkgs.openssh}/bin/ssh-keygen -C "%u@%H" -N ""
+        '';
+      };
     };
   };
 
-  services.ssh-agent.enable = true;
+  services = {
+    ssh-agent.enable = true;
+    ssh-tpm-agent.enable = osConfig.security.tpm2.enable;
+  };
 
   programs.ssh = {
     enable = true;
