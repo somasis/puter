@@ -18,7 +18,7 @@ usage() {
 usage: ${0##*/} <show ...>
 
 Download a show using \`phishin-download-show\`, and then import it
-with enhanced tagging using \`beet import\`.
+with enhanced tagging using \`beet import --noautotag\`.
 
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
@@ -72,6 +72,7 @@ for show; do
         --flat
         --quiet
         --quiet-fallback=asis
+        --noautotag
         --write
         --noincremental
 
