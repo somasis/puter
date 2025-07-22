@@ -41,112 +41,119 @@ in
   programs.rclone = {
     enable = true;
 
-    remotes = {
-      esther.config =
-        if osConfig.networking.fqdnOrHostName == "esther.7596ff.com" then
-          { type = "local"; }
-        else
-          {
+    remotes =
+      let
+        sshExe = lib.getExe (osConfig.programs.ssh.package or config.programs.ssh.package);
+      in
+      {
+        esther.config =
+          if osConfig.networking.fqdnOrHostName == "esther.7596ff.com" then
+            { type = "local"; }
+          else
+            rec {
+              type = "sftp";
+              host = "esther.7596ff.com";
+              user = "somasis";
+              copy_is_hardlink = true;
+              ssh = "${sshExe} ${user}@${host}";
+            };
+
+        # whatbox-webdav = {
+        #   config = {
+        #     type = "webdav";
+        #     url = "https://webdav.box.somas.is";
+        #     user = "somasis";
+        #   };
+        #   secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
+        # };
+
+        # whatbox-sftp.config = rec {
+        #   type = "sftp";
+        #   host = "ariel.whatbox.ca";
+        #   user = "somasis";
+        #   ssh = "${sshExe} ${user}@${host}";
+        # };
+
+        whatbox = {
+          config = rec {
             type = "sftp";
-            host = "esther.7596ff.com";
+            host = "ariel.whatbox.ca";
             user = "somasis";
-            copy_is_hardlink = true;
+            ssh = "${sshExe} ${user}@${host}";
+            # type = "alias";
+            # remote = "whatbox-sftp:files/";
+            # type = "union";
+            # upstreams = "whatbox-sftp:files/ whatbox-webdav:";
           };
 
-      # whatbox-webdav = {
-      #   config = {
-      #     type = "webdav";
-      #     url = "https://webdav.box.somas.is";
-      #     user = "somasis";
-      #   };
-      #   secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
-      # };
+          mounts = {
+            "files/" = {
+              enable = true;
+              mountPoint = "${config.home.homeDirectory}/mnt/whatbox";
+            };
 
-      # whatbox-sftp.config = {
-      #   type = "sftp";
-      #   host = "ariel.whatbox.ca";
-      #   user = "somasis";
-      # };
+            "files/audio/source" = {
+              enable = true;
+              mountPoint = "${config.home.homeDirectory}/audio/source";
+              options = bigCacheOptions;
+            };
 
-      whatbox = {
-        config = {
-          type = "sftp";
-          host = "ariel.whatbox.ca";
-          user = "somasis";
-          # type = "alias";
-          # remote = "whatbox-sftp:files/";
-          # type = "union";
-          # upstreams = "whatbox-sftp:files/ whatbox-webdav:";
+            "files/video/anime" = {
+              enable = true;
+              mountPoint = "${config.xdg.userDirs.videos}/anime";
+            };
+
+            "files/video/film" = {
+              enable = true;
+              mountPoint = "${config.xdg.userDirs.videos}/film";
+            };
+
+            "files/video/tv" = {
+              enable = true;
+              mountPoint = "${config.xdg.userDirs.videos}/tv";
+            };
+          };
         };
 
-        mounts = {
-          "files/" = {
-            enable = true;
-            mountPoint = "${config.home.homeDirectory}/mnt/whatbox";
+        raid = {
+          config = {
+            type = "alias";
+            remote = "esther:/mnt/raid";
           };
 
-          "files/audio/source" = {
-            enable = true;
-            mountPoint = "${config.home.homeDirectory}/audio/source";
-            options = bigCacheOptions;
+          mounts = {
+            "" = {
+              enable = true;
+              mountPoint = "${config.home.homeDirectory}/mnt/raid";
+            };
           };
+        };
 
-          "files/video/anime" = {
-            enable = true;
-            mountPoint = "${config.xdg.userDirs.videos}/anime";
+        fastmail = {
+          config = rec {
+            type = "webdav";
+            vendor = "fastmail";
+            url = "https://webdav.fastmail.com/${lib.replaceStrings [ "@" ] [ "." ] user}/files";
+            user = "kylie@somas.is";
           };
+          secrets.pass = config.age.secrets.rclone-fastmail-pass.path;
 
-          "files/video/film" = {
+          mounts."" = {
             enable = true;
-            mountPoint = "${config.xdg.userDirs.videos}/film";
+            mountPoint = "${config.home.homeDirectory}/mnt/fastmail";
           };
+        };
 
-          "files/video/tv" = {
-            enable = true;
-            mountPoint = "${config.xdg.userDirs.videos}/tv";
+        nextcloud = {
+          config = rec {
+            type = "webdav";
+            vendor = "nextcloud";
+            url = "https://nxc.journcy.net/remote.php/dav/files/${user}";
+            user = "somasis";
           };
+          secrets.pass = config.age.secrets.rclone-nextcloud-pass.path;
         };
       };
-
-      raid = {
-        config = {
-          type = "alias";
-          remote = "esther:/mnt/raid";
-        };
-
-        mounts = {
-          "" = {
-            enable = true;
-            mountPoint = "${config.home.homeDirectory}/mnt/raid";
-          };
-        };
-      };
-
-      fastmail = {
-        config = rec {
-          type = "webdav";
-          vendor = "fastmail";
-          url = "https://webdav.fastmail.com/${lib.replaceStrings [ "@" ] [ "." ] user}/files";
-          user = "kylie@somas.is";
-        };
-        secrets.pass = config.age.secrets.rclone-fastmail-pass.path;
-
-        mounts."" = {
-          enable = true;
-          mountPoint = "${config.home.homeDirectory}/mnt/fastmail";
-        };
-      };
-
-      nextcloud = {
-        config = rec {
-          type = "webdav";
-          vendor = "nextcloud";
-          url = "https://nxc.journcy.net/remote.php/dav/files/${user}";
-          user = "somasis";
-        };
-        secrets.pass = config.age.secrets.rclone-nextcloud-pass.path;
-      };
-    };
   };
 
   age.secrets = {
