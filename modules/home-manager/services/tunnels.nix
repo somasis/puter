@@ -322,46 +322,45 @@ in
                 };
               };
 
-              services."tunnel-${mkPathSafeName target}" =
-                {
-                  Unit = {
-                    Description = "Open tunnel to ${target}";
-                    PartOf = [ "tunnels-${mkPathSafeName tunnel.remote}.target" ];
+              services."tunnel-${mkPathSafeName target}" = {
+                Unit = {
+                  Description = "Open tunnel to ${target}";
+                  PartOf = [ "tunnels-${mkPathSafeName tunnel.remote}.target" ];
 
-                    After = [ "ssh-agent.service" ];
-                  } // optionalAttrs (tunnel.type == "local") { StopWhenUnneeded = true; };
-
-                  Service =
-                    {
-                      # Forking is used because it allows us to know exactly when the
-                      # forwards have been established successfully. Otherwise, the
-                      # socket's first request might not end up being served.
-                      Type = "forking";
-
-                      ExecStart = ssh-tunnel ''
-                        ${toShellVar "target" target}
-                        ${toShellVar "type" tunnel.type}
-                        ${toShellVar "port" tunnel.port}
-                        ${toShellVar "remote_host" tunnel.remoteHost}
-                        ${toShellVar "remote_port" tunnel.remotePort}
-                        ${toShellVar "remote" tunnel.remote}
-                        ${toShellVar "socket" socket}
-                        ${optionalString (
-                          tunnel.extraOptions != [ ]
-                        ) "ssh_args+=( ${escapeShellArgs tunnel.extraOptions} )"}
-                      '';
-
-                      ExecStopPost = optional (tunnel.type == "local") "${pkgs.coreutils}/bin/rm -f %t/tunnel/${socket}";
-
-                      Restart = "on-failure";
-                    }
-                    // optionalAttrs osConfig.networking.networkmanager.enable {
-                      ExecStartPre = [ "${pkgs.networkmanager}/bin/nm-online -q" ];
-                    };
+                  After = [ "ssh-agent.service" ];
                 }
-                // optionalAttrs (tunnel.type == "dynamic") {
-                  Install.WantedBy = [ "tunnels-${mkPathSafeName tunnel.remote}.target" ];
+                // optionalAttrs (tunnel.type == "local") { StopWhenUnneeded = true; };
+
+                Service = {
+                  # Forking is used because it allows us to know exactly when the
+                  # forwards have been established successfully. Otherwise, the
+                  # socket's first request might not end up being served.
+                  Type = "forking";
+
+                  ExecStart = ssh-tunnel ''
+                    ${toShellVar "target" target}
+                    ${toShellVar "type" tunnel.type}
+                    ${toShellVar "port" tunnel.port}
+                    ${toShellVar "remote_host" tunnel.remoteHost}
+                    ${toShellVar "remote_port" tunnel.remotePort}
+                    ${toShellVar "remote" tunnel.remote}
+                    ${toShellVar "socket" socket}
+                    ${optionalString (
+                      tunnel.extraOptions != [ ]
+                    ) "ssh_args+=( ${escapeShellArgs tunnel.extraOptions} )"}
+                  '';
+
+                  ExecStopPost = optional (tunnel.type == "local") "${pkgs.coreutils}/bin/rm -f %t/tunnel/${socket}";
+
+                  Restart = "on-failure";
+                }
+                // optionalAttrs osConfig.networking.networkmanager.enable {
+                  ExecStartPre = [ "${pkgs.networkmanager}/bin/nm-online -q" ];
                 };
+              }
+              // optionalAttrs (tunnel.type == "dynamic") {
+                Install.WantedBy = [ "tunnels-${mkPathSafeName tunnel.remote}.target" ];
+              };
             }
           )
         )

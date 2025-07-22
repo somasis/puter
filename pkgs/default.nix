@@ -146,7 +146,8 @@ rec {
     let
       args' = {
         inherit (pkgs) jq jqfmt;
-      } // args;
+      }
+      // args;
 
       inherit (args') jq jqfmt;
 

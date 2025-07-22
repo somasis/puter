@@ -22,35 +22,34 @@ let
       inherit name;
       inherit runtimeInputs;
 
-      text =
-        ''
-          # shellcheck disable=SC2034,SC2090,SC2317
-          ${preHook}
+      text = ''
+        # shellcheck disable=SC2034,SC2090,SC2317
+        ${preHook}
 
-          type=$(type -t borg)
-          case "$type" in
-              function)
-                  prev_borg=$(declare -f borg)
+        type=$(type -t borg)
+        case "$type" in
+            function)
+                prev_borg=$(declare -f borg)
 
-                  eval "prev_$prev_borg"
-                  borg() {
-                      local ${lib.toShellVar "extraArgs" extraArgs}
+                eval "prev_$prev_borg"
+                borg() {
+                    local ${lib.toShellVar "extraArgs" extraArgs}
 
-                      # shellcheck disable=SC2086
-                      prev_borg $extraArgs "$@"
-                  }
-                  ;;
-              *)
-                  borg() {
-                      local ${lib.toShellVar "extraArgs" extraArgs}
+                    # shellcheck disable=SC2086
+                    prev_borg $extraArgs "$@"
+                }
+                ;;
+            *)
+                borg() {
+                    local ${lib.toShellVar "extraArgs" extraArgs}
 
-                      # shellcheck disable=SC2086
-                      command borg $extraArgs "$@"
-                  }
-                  ;;
-          esac
-        ''
-        + builtins.readFile (./. + "/${name}.bash");
+                    # shellcheck disable=SC2086
+                    command borg $extraArgs "$@"
+                }
+                ;;
+        esac
+      ''
+      + builtins.readFile (./. + "/${name}.bash");
     };
 in
 symlinkJoin {

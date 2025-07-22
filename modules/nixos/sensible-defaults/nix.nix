@@ -68,21 +68,20 @@
       min-free = 1024000000; # 512 MB
       max-free = 1024000000; # 1 GB
 
-      extra-substituters =
-        [
-          # Use binary cache for nonfree packages
-          "https://nixpkgs-unfree.cachix.org"
+      extra-substituters = [
+        # Use binary cache for nonfree packages
+        "https://nixpkgs-unfree.cachix.org"
 
-          # Used by various nix-community projects, which are referenced in flake.nix.
-          "https://nix-community.cachix.org"
+        # Used by various nix-community projects, which are referenced in flake.nix.
+        "https://nix-community.cachix.org"
 
-          # treefmt-nix
-          "https://numtide.cachix.org"
+        # treefmt-nix
+        "https://numtide.cachix.org"
 
-          # lanzaboote
-          "https://lanzaboote.cachix.org"
-        ]
-        ++
+        # lanzaboote
+        "https://lanzaboote.cachix.org"
+      ]
+      ++
         # Add each build machine as a substituter
         (map (m: "${m.protocol}://${m.sshUser}@${m.hostName}") config.nix.buildMachines);
 

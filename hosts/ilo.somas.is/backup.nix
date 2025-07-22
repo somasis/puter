@@ -6,22 +6,21 @@
 }:
 let
   runas_user = "somasis";
-  runas =
-    ''
-      export PATH=${config.security.wrapperDir}:"$PATH"
+  runas = ''
+    export PATH=${config.security.wrapperDir}:"$PATH"
 
-      runas() {
-          local runas_user
-          ${lib.toShellVar "runas_user" runas_user}
-          if test "$(id -un)" = "$runas_user"; then
-              "$@"; return $?
-          else
-              su -l - "$runas_user" sh -c '"$@"' -- "$@"; return $?
-          fi
-      }
+    runas() {
+        local runas_user
+        ${lib.toShellVar "runas_user" runas_user}
+        if test "$(id -un)" = "$runas_user"; then
+            "$@"; return $?
+        else
+            su -l - "$runas_user" sh -c '"$@"' -- "$@"; return $?
+        fi
+    }
 
-    ''
-    + "runas";
+  ''
+  + "runas";
 
   repoEsther = "somasis@esther.7596ff.com:/mnt/raid/somasis/backup/borg";
 

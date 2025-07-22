@@ -8,120 +8,122 @@
 assert osConfig.services.desktopManager.plasma6.enable;
 {
   persist = {
-    directories =
-      [ ".cert/nm-openvpn" ]
-      ++
-        map
-          (x: {
-            directory = config.lib.somasis.xdgConfigDir x;
-            method = "symlink";
-          })
-          [
-            "gtk-3.0" # kde-gtk-config
-            "gtk-4.0" # kde-gtk-config
-            "xsettingsd" # kde-gtk-config
-            "kde.org"
-            "kdedefaults"
-            "plasma-workspace"
-            "session"
-          ]
-      ++
-        map
-          (x: {
-            directory = config.lib.somasis.xdgDataDir x;
-            method = "symlink";
-          })
-          [
-            "baloo"
-            "dbus-1"
-            "dolphin"
-            "drkonqirc"
-            "icons"
-            "kactivitymanagerd"
-            "klipper"
-            "knewstuff3"
-            "kscreen"
-            "kwalletd"
-            "kwin"
-            "kxmlgui5"
-            "libkunitconversion"
-            "plasma"
-            "plasmashell"
-            "remoteview"
-            "sddm"
-            "systemmonitorrc"
-            "systemsettings"
-          ];
+    directories = [
+      ".cert/nm-openvpn"
+    ]
+    ++
+      map
+        (x: {
+          directory = config.lib.somasis.xdgConfigDir x;
+          method = "symlink";
+        })
+        [
+          "gtk-3.0" # kde-gtk-config
+          "gtk-4.0" # kde-gtk-config
+          "xsettingsd" # kde-gtk-config
+          "kde.org"
+          "kdedefaults"
+          "plasma-workspace"
+          "session"
+        ]
+    ++
+      map
+        (x: {
+          directory = config.lib.somasis.xdgDataDir x;
+          method = "symlink";
+        })
+        [
+          "baloo"
+          "dbus-1"
+          "dolphin"
+          "drkonqirc"
+          "icons"
+          "kactivitymanagerd"
+          "klipper"
+          "knewstuff3"
+          "kscreen"
+          "kwalletd"
+          "kwin"
+          "kxmlgui5"
+          "libkunitconversion"
+          "plasma"
+          "plasmashell"
+          "remoteview"
+          "sddm"
+          "systemmonitorrc"
+          "systemsettings"
+        ];
 
-    files =
-      [
-        ".gtkrc-2.0" # kde-gtk-config
-        ".directory" # Dolphin
-      ]
-      ++ map config.lib.somasis.xdgConfigDir [
-        "KDE/kunifiedpush-distributor.conf"
-        "KDE/kjournald.conf"
-        "KDE/UserFeedback.conf"
-        "KDE/Sonnet.conf"
+    files = [
+      ".gtkrc-2.0" # kde-gtk-config
+      ".directory" # Dolphin
+    ]
+    ++ map config.lib.somasis.xdgConfigDir [
+      "KDE/kunifiedpush-distributor.conf"
+      "KDE/kjournald.conf"
+      "KDE/UserFeedback.conf"
+      "KDE/Sonnet.conf"
 
-        "QtProject.conf"
-        "Trolltech.conf"
-        "baloofileinformationrc"
-        "gwenviewrc"
-        "partitionmanagerrc"
-        "xdg-desktop-portal-kderc"
-        "gtkrc"
-        "gtkrc-2.0"
-        "baloofilerc"
-        "bluedevilglobalrc"
-        "bluedevilreceiverrc"
-        "plasma-nm"
-        "krunnerrc"
-        "filetypesrc"
-        "device_automounter_kcmrc"
-        "dolphinrc"
-        "drkonqirc"
-        "kactivitymanagerd-statsrc"
-        "kactivitymanagerdrc"
-        "kcminputrc"
-        "kconf_updaterc"
-        "kded5rc"
-        "kdeglobals"
-        "kglobalshortcutsrc"
-        "kiorc"
-        "kioslaverc"
-        "klipperrc"
-        "kscreenlockerrc"
-        "kservicemenurc"
-        "ksmserverrc"
-        "ksplashrc"
-        "ktimezonedrc"
-        "ktrashrc"
-        "kwalletrc"
-        "kwinoutputconfig.json"
-        "kwinrc"
-        "kxkbrc"
-        "plasma-localerc"
-        "plasma-org.kde.plasma.desktop-appletsrc"
-        "plasmanotifyrc"
-        "plasmaparc"
-        "plasmarc"
-        "plasmashellrc"
-        "powerdevilrc"
-        "powermanagementprofilesrc"
-        "spectaclerc"
-        "systemsettingsrc"
-        "trashrc"
-      ]
-      ++ map config.lib.somasis.xdgDataDir [
-        "user-places.xbel"
-      ];
+      "QtProject.conf"
+      "Trolltech.conf"
+      "baloofileinformationrc"
+      "gwenviewrc"
+      "partitionmanagerrc"
+      "xdg-desktop-portal-kderc"
+      "gtkrc"
+      "gtkrc-2.0"
+      "baloofilerc"
+      "bluedevilglobalrc"
+      "bluedevilreceiverrc"
+      "plasma-nm"
+      "krunnerrc"
+      "filetypesrc"
+      "device_automounter_kcmrc"
+      "dolphinrc"
+      "drkonqirc"
+      "kactivitymanagerd-statsrc"
+      "kactivitymanagerdrc"
+      "kcminputrc"
+      "kconf_updaterc"
+      "kded5rc"
+      "kdeglobals"
+      "kglobalshortcutsrc"
+      "kiorc"
+      "kioslaverc"
+      "klipperrc"
+      "kscreenlockerrc"
+      "kservicemenurc"
+      "ksmserverrc"
+      "ksplashrc"
+      "ktimezonedrc"
+      "ktrashrc"
+      "kwalletrc"
+      "kwinoutputconfig.json"
+      "kwinrc"
+      "kxkbrc"
+      "plasma-localerc"
+      "plasma-org.kde.plasma.desktop-appletsrc"
+      "plasmanotifyrc"
+      "plasmaparc"
+      "plasmarc"
+      "plasmashellrc"
+      "powerdevilrc"
+      "powermanagementprofilesrc"
+      "spectaclerc"
+      "systemsettingsrc"
+      "trashrc"
+    ]
+    ++ map config.lib.somasis.xdgDataDir [
+      "user-places.xbel"
+    ];
   };
 
   cache = {
-    directories =
-      [ (config.lib.somasis.xdgCacheDir "kcrash-metadata") ]
-      ++ map
+    directories = [
+      (config.lib.somasis.xdgCacheDir "kcrash-metadata")
+    ]
+    ++
+      map
         (x: {
           directory = config.lib.somasis.xdgCacheDir x;
           method = "symlink";
@@ -169,14 +171,15 @@ assert osConfig.services.desktopManager.plasma6.enable;
         [
           "panel-colorizer"
         ]
-      ++ map
-        (x: {
-          method = "symlink";
-          directory = config.lib.somasis.xdgDataDir x;
-        })
-        [
-          "color-schemes"
-        ];
+      ++
+        map
+          (x: {
+            method = "symlink";
+            directory = config.lib.somasis.xdgDataDir x;
+          })
+          [
+            "color-schemes"
+          ];
 
     files = map config.lib.somasis.xdgConfigDir [
       "breezerc"

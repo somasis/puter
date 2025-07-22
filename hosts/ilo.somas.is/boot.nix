@@ -32,7 +32,8 @@
 
         storePaths = [
           pkgs.busybox
-        ] ++ lib.optional config.hardware.bluetooth.enable config.hardware.bluetooth.package;
+        ]
+        ++ lib.optional config.hardware.bluetooth.enable config.hardware.bluetooth.package;
       };
     };
   };

@@ -178,15 +178,6 @@
             # <https://github.com/google/keep-sorted>
             keep-sorted.enable = true;
 
-            # NOTE(somasis):
-            # Ensure code is formatted according to Nix RFC 166.
-            # <https://github.com/NixOS/rfcs/pull/166>
-            # I think it's good to keep it formatted according to a standard,
-            # but I don't really like the default format coming from `nixpkgs-fmt`,
-            # which is now abandoned by its author in favor of `nixfmt`.
-            # Namely, `nixfmt` is *way* too pedantic about making lists longer
-            # than they need to be right now.
-            # Ideally this will be improved by the end of 2025 or something?
             nixfmt.enable = true;
             # oxipng.enable = true;
             # perltidy.enable = true;
@@ -340,12 +331,10 @@
       devShells = forAllSystems (
         system: with nixpkgsFor.${system}.pkgs; {
           default = mkShell {
-            shellHook =
-              self.checks.${system}.git-hooks.shellHook
-              + ''
-                # Used by nixos-cli.
-                export NIXOS_CONFIG="git+file://$PWD"
-              '';
+            shellHook = self.checks.${system}.git-hooks.shellHook + ''
+              # Used by nixos-cli.
+              export NIXOS_CONFIG="git+file://$PWD"
+            '';
 
             buildInputs =
               with inputs;

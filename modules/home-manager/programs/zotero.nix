@@ -194,11 +194,10 @@ in
         in
         {
           assertion = duplicates == { };
-          message =
-            ''
-              Must not have Zotero profiles with duplicate IDs but
-            ''
-            + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
+          message = ''
+            Must not have Zotero profiles with duplicate IDs but
+          ''
+          + concatStringsSep "\n" (mapAttrsToList mkMsg duplicates);
         }
       )
     ];

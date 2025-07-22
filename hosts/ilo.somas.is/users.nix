@@ -15,21 +15,22 @@
         description = "Kylie McClain";
         uid = 1000;
 
-        extraGroups =
-          [ "systemd-journal" ]
-          ++ lib.optional config.hardware.brillo.enable "video"
-          ++ lib.optional config.virtualisation.podman.enable "podman"
-          ++ lib.optional config.hardware.sane.enable "scanner"
-          ++ lib.optional config.hardware.uinput.enable "input"
-          ++ lib.optional config.programs.adb.enable "adbusers"
-          ++ lib.optional config.security.sudo.enable "wheel"
-          ++ lib.optional config.services.printing.enable "lp"
-          ++ lib.optional config.services.timesyncd.enable "systemd-timesync"
-          ++ lib.optional config.security.tpm2.enable "tss"
-          ++ lib.optionals config.networking.networkmanager.enable [
-            "network"
-            "networkmanager"
-          ];
+        extraGroups = [
+          "systemd-journal"
+        ]
+        ++ lib.optional config.hardware.brillo.enable "video"
+        ++ lib.optional config.virtualisation.podman.enable "podman"
+        ++ lib.optional config.hardware.sane.enable "scanner"
+        ++ lib.optional config.hardware.uinput.enable "input"
+        ++ lib.optional config.programs.adb.enable "adbusers"
+        ++ lib.optional config.security.sudo.enable "wheel"
+        ++ lib.optional config.services.printing.enable "lp"
+        ++ lib.optional config.services.timesyncd.enable "systemd-timesync"
+        ++ lib.optional config.security.tpm2.enable "tss"
+        ++ lib.optionals config.networking.networkmanager.enable [
+          "network"
+          "networkmanager"
+        ];
 
         # $ mkpasswd -m sha-512 -s
         # and don't forget...

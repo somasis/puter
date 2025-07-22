@@ -9,8 +9,7 @@
 }:
 signal-desktop.overrideAttrs (oldAttrs: rec {
   nativeBuildInputs =
-    (oldAttrs.nativeBuildInputs or [ ])
-    ++ lib.optional (iconThemePkg != null) librsvg;
+    (oldAttrs.nativeBuildInputs or [ ]) ++ lib.optional (iconThemePkg != null) librsvg;
 
   buildInputs = (oldAttrs.buildInputs or [ ]) ++ lib.optional (iconThemePkg != null) iconThemePkg;
 

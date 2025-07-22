@@ -74,15 +74,14 @@ stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  buildInputs =
-    [
-      xorg.libX11
-      xorg.libXinerama
-      zlib
-      pango
-    ]
-    ++ lib.optional enablePango pango
-    ++ lib.optional enableAlpha xorg.libXrender;
+  buildInputs = [
+    xorg.libX11
+    xorg.libXinerama
+    zlib
+    pango
+  ]
+  ++ lib.optional enablePango pango
+  ++ lib.optional enableAlpha xorg.libXrender;
 
   nativeBuildInputs = [
     makeWrapper

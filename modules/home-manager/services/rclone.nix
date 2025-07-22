@@ -141,16 +141,15 @@ in
 
                 SyslogIdentifier = "rclone-${mount.what}-${mount.where}";
 
-                Environment =
-                  [
-                    "RCLONE_CONFIG=%E/rclone/rclone.conf"
-                    "RCLONE_CACHE_DIR=%C/rclone"
-                    ''"WHERE=${mount.where}"''
-                    ''"WHAT=${mount.remote}:${mount.what}"''
-                  ]
-                  ++ lib.optionals (mount.options != [ ]) (
-                    map (flag: ''"${rcloneFlagToEnvVar "--${flag}"}"'') mount.options
-                  );
+                Environment = [
+                  "RCLONE_CONFIG=%E/rclone/rclone.conf"
+                  "RCLONE_CACHE_DIR=%C/rclone"
+                  ''"WHERE=${mount.where}"''
+                  ''"WHAT=${mount.remote}:${mount.what}"''
+                ]
+                ++ lib.optionals (mount.options != [ ]) (
+                  map (flag: ''"${rcloneFlagToEnvVar "--${flag}"}"'') mount.options
+                );
 
                 # <https://rclone.org/commands/rclone_mount/#systemd>
                 # > Note that systemd runs mount units without any environment variables

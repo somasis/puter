@@ -537,13 +537,6 @@ in
         hook -group lsp-filetype-nix global BufSetOption filetype=nix %{
             set-option buffer lsp_servers %sh{cat ${
               tomlFormat.generate "kak-lsp-servers.toml" {
-                typos = {
-                  settings = {
-                    diagnosticSeverity = "Warning";
-                    logLevel = "error";
-                  };
-                };
-
                 nixd = {
                   args = [ "--semantic-tokens=true" ];
                   root_globs = [

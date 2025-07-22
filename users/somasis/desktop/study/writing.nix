@@ -11,57 +11,56 @@ let
 
   lo = pkgs.libreoffice-fresh;
 
-  loExtensions =
-    [
-      # <https://extensions.libreoffice.org/en/extensions/show/27416>
-      (pkgs.fetchurl {
-        url = "https://extensions.libreoffice.org/assets/downloads/90/1676301090/TemplateChanger-L-2.0.1.oxt";
-        hash = "sha256-i1+Huqsq2fYstUS4HevqpNc0/1zKRBQONMz6PB9HYh4=";
-      })
+  loExtensions = [
+    # <https://extensions.libreoffice.org/en/extensions/show/27416>
+    (pkgs.fetchurl {
+      url = "https://extensions.libreoffice.org/assets/downloads/90/1676301090/TemplateChanger-L-2.0.1.oxt";
+      hash = "sha256-i1+Huqsq2fYstUS4HevqpNc0/1zKRBQONMz6PB9HYh4=";
+    })
 
-      # <https://extensions.libreoffice.org/en/extensions/show/27347>
-      (pkgs.fetchurl {
-        url = "https://extensions.libreoffice.org/assets/downloads/73/1672894181/open_recent_doc.oxt";
-        hash = "sha256-4ZZlqJKPuEw/9Sg7vyjLHERFL9yqWamtwAvldJkgFTg=";
-      })
+    # <https://extensions.libreoffice.org/en/extensions/show/27347>
+    (pkgs.fetchurl {
+      url = "https://extensions.libreoffice.org/assets/downloads/73/1672894181/open_recent_doc.oxt";
+      hash = "sha256-4ZZlqJKPuEw/9Sg7vyjLHERFL9yqWamtwAvldJkgFTg=";
+    })
 
-      # <https://extensions.libreoffice.org/en/extensions/show/english-dictionaries>
-      (pkgs.fetchurl {
-        url = "https://extensions.libreoffice.org/assets/downloads/41/1680302696/dict-en-20230401_lo.oxt";
-        hash = "sha256-TXRr6BgGAQ4xKDY19OtowN6i4MdINS2BEtq2zLJDkZ0=";
-      })
+    # <https://extensions.libreoffice.org/en/extensions/show/english-dictionaries>
+    (pkgs.fetchurl {
+      url = "https://extensions.libreoffice.org/assets/downloads/41/1680302696/dict-en-20230401_lo.oxt";
+      hash = "sha256-TXRr6BgGAQ4xKDY19OtowN6i4MdINS2BEtq2zLJDkZ0=";
+    })
 
-      # <https://extensions.libreoffice.org/en/extensions/show/spanish-dictionaries>
-      (pkgs.fetchurl {
-        url = "https://extensions.libreoffice.org/assets/downloads/98/1659525229/es.oxt";
-        hash = "sha256-EPpR3/t48PwV/XkXcIE/VR2kPPAHtSy4+2zLC0EX6F8=";
-      })
+    # <https://extensions.libreoffice.org/en/extensions/show/spanish-dictionaries>
+    (pkgs.fetchurl {
+      url = "https://extensions.libreoffice.org/assets/downloads/98/1659525229/es.oxt";
+      hash = "sha256-EPpR3/t48PwV/XkXcIE/VR2kPPAHtSy4+2zLC0EX6F8=";
+    })
 
-      # <https://extensions.libreoffice.org/en/extensions/show/dictionnaires-francais>
-      (pkgs.fetchurl {
-        url = "https://extensions.libreoffice.org/assets/downloads/z/lo-oo-ressources-linguistiques-fr-v5-7.oxt";
-        hash = "sha256-lHPFZQg2QmN5jYd6wy/oSccQhXNyUXBVQzRsi6NCGt8=";
-      })
+    # <https://extensions.libreoffice.org/en/extensions/show/dictionnaires-francais>
+    (pkgs.fetchurl {
+      url = "https://extensions.libreoffice.org/assets/downloads/z/lo-oo-ressources-linguistiques-fr-v5-7.oxt";
+      hash = "sha256-lHPFZQg2QmN5jYd6wy/oSccQhXNyUXBVQzRsi6NCGt8=";
+    })
 
-      # <https://extensions.libreoffice.org/en/extensions/show/german-de-de-frami-dictionaries>
-      (pkgs.fetchurl {
-        url = "https://extensions.libreoffice.org/assets/downloads/z/dict-de-de-frami-2017-01-12.oxt";
-        hash = "sha256-r1FQFeMGxjQ3O1OCgIo5aRIA3jQ5gR0vFQLpuRwjtGo=n";
-      })
+    # <https://extensions.libreoffice.org/en/extensions/show/german-de-de-frami-dictionaries>
+    (pkgs.fetchurl {
+      url = "https://extensions.libreoffice.org/assets/downloads/z/dict-de-de-frami-2017-01-12.oxt";
+      hash = "sha256-r1FQFeMGxjQ3O1OCgIo5aRIA3jQ5gR0vFQLpuRwjtGo=n";
+    })
 
-      # <https://extensions.libreoffice.org/en/extensions/show/latin-spelling-and-hyphenation-dictionaries>
-      (pkgs.fetchurl {
-        url = "https://extensions.libreoffice.org/assets/downloads/z/dict-la-2013-03-31.oxt";
-        hash = "sha256-2DDGbz6Fihz7ruGIoA2HZIL78XK7MgJr3UeeoaYywtI=n";
-      })
+    # <https://extensions.libreoffice.org/en/extensions/show/latin-spelling-and-hyphenation-dictionaries>
+    (pkgs.fetchurl {
+      url = "https://extensions.libreoffice.org/assets/downloads/z/dict-la-2013-03-31.oxt";
+      hash = "sha256-2DDGbz6Fihz7ruGIoA2HZIL78XK7MgJr3UeeoaYywtI=n";
+    })
 
-      # <https://extensions.libreoffice.org/en/extensions/show/languagetool>
-      (pkgs.fetchurl {
-        url = "https://writingtool.org/writingtool/releases/WritingTool-1.0.oxt";
-        hash = "sha256-fACV86IIsMMmMnNMfgtePt9bMvRaDICSyLKhVQUXNKw=";
-      })
-    ]
-    ++ lib.optional config.programs.zotero.enable "${config.programs.zotero.package}/usr/lib/zotero-bin-${pkgs.zotero.version}/extensions/zoteroOpenOfficeIntegration@zotero.org/install/Zotero_OpenOffice_Integration.oxt";
+    # <https://extensions.libreoffice.org/en/extensions/show/languagetool>
+    (pkgs.fetchurl {
+      url = "https://writingtool.org/writingtool/releases/WritingTool-1.0.oxt";
+      hash = "sha256-fACV86IIsMMmMnNMfgtePt9bMvRaDICSyLKhVQUXNKw=";
+    })
+  ]
+  ++ lib.optional config.programs.zotero.enable "${config.programs.zotero.package}/usr/lib/zotero-bin-${pkgs.zotero.version}/extensions/zoteroOpenOfficeIntegration@zotero.org/install/Zotero_OpenOffice_Integration.oxt";
 
   loInstallExtensions =
     assert (builtins.isList loExtensions);
