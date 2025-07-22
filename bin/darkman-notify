@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash darkman libnotify
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} [darkman(1) arguments]
+
+Run \`darkman\`, and provide desktop notifications for the action
+produced by a command.
+
+see also: darkman(1)
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+set_variables() {
+    before_mode=
+    after_mode_wanted=
+
+    case "$1" in
+        set) after_mode_wanted="$2" ;;
+        toggle)
+            before_mode=$(darkman get)
+            case "${before_mode}" in
+                dark) after_mode_wanted=light ;;
+                light) after_mode_wanted=dark ;;
+            esac
+            ;;
+    esac
+
+    case "${before_mode:=$(darkman get)}" in
+        dark) before_icon="$dark_icon" ;;
+        light) before_icon="$light_icon" ;;
+    esac
+
+    case "${after_mode_wanted?}" in
+        dark) after_icon="$dark_icon" ;;
+        light) after_icon="$light_icon" ;;
+    esac
+
+    : "${after_mode_wanted?}"
+    : "${after_icon?}"
+}
+
+dark_icon=night-light-symbolic
+light_icon=high-brightness
+
+set_variables "${@:-toggle}"
+
+id=$(
+    notify-send --print-id \
+        --app-name=darkman --icon="$after_icon" \
+        --transient \
+        --urgency=low \
+        --print-id \
+        "\`darkman${*:+ $*}\`..."
+)
+
+case "$1" in
+    set | toggle) : ;;
+    *)
+        output=$(darkman "$@")
+        exit_code=$?
+        notify-send \
+            --app-name=darkman \
+            --replace-id="$id" \
+            "\`darkman${*:+ $*}\`" \
+            "${output}"
+        exit "$exit_code"
+        ;;
+esac
+
+if after_mode=$(darkman "$@") && [[ "$after_mode" == "$after_mode_wanted" ]]; then
+    notify-send --app-name=darkman --icon="$after_icon" \
+        --transient \
+        --urgency=low \
+        --replace-id="$id" \
+        "\`darkman${*:+ $*}\`" \
+        "${after_mode^} mode activated."
+else
+    notify-send --app-name=darkman --icon="$before_icon" \
+        --urgency=critical \
+        --replace-id="$id" \
+        "\`darkman${*:+ $*}\`" \
+        "Failed to activate ${after_mode_wanted} mode."
+fi
