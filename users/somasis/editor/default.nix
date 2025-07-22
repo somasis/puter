@@ -528,7 +528,8 @@ in
         lsp-auto-hover-enable
         lsp-auto-signature-help-enable
 
-        hook -group lsp-autoformat global BufSetOption filetype=(.+) %{
+        # If there is an LSP server present, format with it.
+        hook -group lsp-autoformat global BufSetOption lsp_servers=.+ %{
             hook -group lsp-autoformat-on-save buffer BufWritePre .* lsp-formatting-sync
         }
 
