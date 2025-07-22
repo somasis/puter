@@ -32,9 +32,13 @@
 
   xdg.userDirs.music = "${config.home.homeDirectory}/audio/library";
 
-  # Workaround a bug when two users are running beets at once
-  home.shellAliases.beet = ''TMPDIR="$XDG_RUNTIME_DIR" beet'';
+  home = {
+    # Workaround a bug when two users are running beets at once
+    shellAliases.beet = ''TMPDIR="$XDG_RUNTIME_DIR" beet'';
 
+    # Used by `bin/beet-import-phish`.
+    sessionVariables.BEET_IMPORT_PHISH_DOWNLOAD_DIR = "${config.home.homeDirectory}/audio/source/bootleg-phishin";
+  };
 
   # programs.qutebrowser.searchEngines."!beets" = "file:///${beets.doc}/share/doc/beets-${beets.version}/html/search.html?q={}";
 }

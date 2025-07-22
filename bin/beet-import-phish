@@ -4,6 +4,9 @@
 
 set -euo pipefail
 
+: "${XDG_DOWNLOAD_DIR:=$HOME/Downloads}"
+: "${BEET_IMPORT_PHISH_DOWNLOAD_DIR:=$XDG_DOWNLOAD_DIR}"
+
 # shellcheck source=edo
 . edo
 
@@ -20,7 +23,13 @@ with enhanced tagging using \`beet import\`.
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
 
-see also: beet import, phishin-download-show
+environment variables:
+    \$BEET_IMPORT_PHISH_DOWNLOAD_DIR${BEET_IMPORT_PHISH_DOWNLOAD_DIR:+ (current: ${BEET_IMPORT_PHISH_DOWNLOAD_DIR@Q})}
+        The directory to which shows should be downloaded into.
+        If unset, shows will be downloaded into \$XDG_DOWNLOAD_DIR.
+    \$XDG_DOWNLOAD_DIR${XDG_DOWNLOAD_DIR:+ (current: ${XDG_DOWNLOAD_DIR@Q})}
+
+see also: beet import, phishin-download-show.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -32,8 +41,9 @@ phishin() {
     jq -cr "$@" "${download_dir?phishin(): no download_dir set yet}/phishin.json"
 }
 
-mkdir -p ~/audio/source/bootleg-phishin
-cd ~/audio/source/bootleg-phishin
+if ! cd "${BEET_IMPORT_PHISH_DOWNLOAD_DIR}"; then
+    exit $?
+fi
 
 if [[ "$#" -le 0 ]]; then
     usage 'error: must provide at least one argument\n'
