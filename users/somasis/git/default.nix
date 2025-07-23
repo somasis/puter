@@ -35,8 +35,8 @@
         unadd = "reset HEAD --";
 
         com = "commit";
-        amend = "commit --amend";
-        amendall = "!git addall; >/dev/null EDITOR=cat git amend";
+        reword = "commit --amend";
+        amend = "commit -v --amend --no-edit";
 
         commits = "log --reverse --oneline @{upstream}...HEAD";
         patches = "format-patch --stdout origin..HEAD";
@@ -238,7 +238,6 @@
       reset = "git reset";
 
       com = "git commit";
-      amend = "git commit -v --amend";
 
       clone = "git clone -vv";
       push = "git push -vv";
