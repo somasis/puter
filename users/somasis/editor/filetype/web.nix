@@ -99,30 +99,6 @@ let
         '
   '';
 
-  # YAML
-  # (a "web"-related language is not really how I would mentally categorize
-  # YAML, but I don't want to put the prettier function at a higher scope.)
-  formatYAML = formatPrettier { parser = "yaml"; };
-  lintYAML =
-    let
-      yamllintConfig = (pkgs.formats.yaml { }).generate "config.yaml" {
-        extends = "default";
-        rules = {
-          document-start = "disable";
-        };
-      };
-    in
-    pkgs.writeShellScript "lint-yaml" ''
-      PATH=${
-        lib.makeBinPath [
-          pkgs.gnused
-          pkgs.yamllint
-        ]
-      }
-
-      yamllint -c ${lib.escapeShellArg yamllintConfig} -f parsable -s "$1" | sed -E 's/ \[([^\s]+)\] / \1: /'
-    '';
-
   # Jq
   formatJq = "${pkgs.jqfmt}/bin/jqfmt";
 in
@@ -197,16 +173,6 @@ in
       option = "filetype=xml";
       commands = ''
         set-option window formatcmd "run() { ${formatXML}; } && run"
-      '';
-    }
-
-    # Format, lint: YAML
-    {
-      name = "WinSetOption";
-      option = "filetype=yaml";
-      commands = ''
-        set-option window formatcmd "run() { ${formatYAML}; } && run"
-        set-option window lintcmd ${lintYAML}
       '';
     }
   ];
