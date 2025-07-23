@@ -538,6 +538,7 @@ in
             set-option -add buffer lsp_servers %{
                 [yaml-language-server]
                 root_globs = [".git"]
+                args = ["--stdio"]
                 [yaml-language-server.settings.yaml]
                 format.enable = true
                 format.bracketSpacing = true
