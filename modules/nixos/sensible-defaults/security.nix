@@ -7,6 +7,8 @@
   # Allow for users in @wheel to use Nix.
   nix.settings.trusted-users = [ "@wheel" ];
 
+  hardware.gpgSmartcards.enable = true;
+
   security = {
     sudo = {
       enable = lib.mkDefault true;
