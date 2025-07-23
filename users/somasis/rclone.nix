@@ -7,9 +7,10 @@
 }:
 let
   bigCacheOptions = {
+    vfs-refresh = true;
+    vfs-cache-mode = "full";
     vfs-cache-max-size = "4G";
     vfs-cache-max-age = "7d";
-    vfs-cache-mode = "full";
     vfs-fast-fingerprint = true;
     write-back-cache = true;
   };
@@ -46,44 +47,44 @@ in
         sshExe = lib.getExe (osConfig.programs.ssh.package or config.programs.ssh.package);
       in
       {
-        esther.config =
-          if osConfig.networking.fqdnOrHostName == "esther.7596ff.com" then
-            { type = "local"; }
-          else
-            rec {
-              type = "sftp";
-              host = "esther.7596ff.com";
-              user = "somasis";
-              copy_is_hardlink = true;
-              ssh = "${sshExe} ${user}@${host}";
-            };
+        esther.config = {
+          type = "sftp";
+          ssh = "${sshExe} somasis@esther.7596ff.com";
+          # host = "esther.7596ff.com";
+          # user = "somasis";
+          copy_is_hardlink = true;
+        };
 
-        # whatbox-webdav = {
-        #   config = {
-        #     type = "webdav";
-        #     url = "https://webdav.box.somas.is";
-        #     user = "somasis";
-        #   };
-        #   secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
-        # };
+        whatbox-webdav = {
+          config = {
+            type = "webdav";
+            url = "https://webdav.box.somas.is";
+            user = "somasis";
+          };
+          secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
+        };
 
-        # whatbox-sftp.config = rec {
+        whatbox-ftpes = {
+          config = {
+            type = "ftp";
+            host = "ariel.whatbox.ca";
+            explicit_tls = true;
+            user = "somasis";
+          };
+          secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
+        };
+
+        # whatbox-sftp.config = {
         #   type = "sftp";
-        #   host = "ariel.whatbox.ca";
-        #   user = "somasis";
-        #   ssh = "${sshExe} ${user}@${host}";
+        #   ssh = "${sshExe} somassis@ariel.whatbox.ca"
+        #   # host = "ariel.whatbox.ca";
+        #   # user = "somasis";
         # };
 
         whatbox = {
-          config = rec {
-            type = "sftp";
-            host = "ariel.whatbox.ca";
-            user = "somasis";
-            ssh = "${sshExe} ${user}@${host}";
-            # type = "alias";
-            # remote = "whatbox-sftp:files/";
-            # type = "union";
-            # upstreams = "whatbox-sftp:files/ whatbox-webdav:";
+          config = {
+            type = "union";
+            upstreams = ''"whatbox-ftpes:files/" "whatbox-webdav:"''; # "whatbox-sftp:files/"'';
           };
 
           mounts = {
