@@ -1,17 +1,9 @@
 {
   config,
-  osConfig,
   lib,
   ...
 }:
 {
-  sync = with config.lib.somasis; {
-    files = [
-      (xdgConfigDir "konsolerc")
-      (xdgConfigDir "konsolesshconfig")
-    ];
-  };
-
   cache = with config.lib.somasis; {
     files = [
       (xdgDataDir "konsole/konsolestaterc")
@@ -21,6 +13,34 @@
   programs = {
     konsole = {
       enable = true;
+
+      extraConfig = {
+        FileLocation = {
+          scrollbackUseCacheLocation = true;
+          scrollbackUseSystemLocation = false;
+        };
+
+        KonsoleWindow = {
+          FocusFollowsMouse = true;
+          RememberWindowSize = false;
+          ShowWindowTitleOnTitleBar = true;
+          UseSingleInstance = true;
+        };
+
+        MemorySettings.EnableMemoryMonitoring = true;
+
+        "Notification Messages".CloseAllTabs = true;
+
+        SearchSettings.SearchNoWrap = true;
+
+        TabBar = {
+          CloseTabOnMiddleMouseButton = true;
+          ExpandTabWidth = true;
+        };
+
+        ThumbnailsSettings.EnableThumbnails = false;
+      };
+
       defaultProfile = "somasis";
       customColorSchemes.somasis = ./konsole.colorscheme;
       profiles = with lib; rec {
