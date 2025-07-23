@@ -9,10 +9,16 @@
 
     secureSocket = false;
 
+    # Reduce the escape time since we trigger that timeout a lot
+    # due to it also being used by Kakoune for entering normal mode.
+    escapeTime = 25;
+
+    focusEvents = true;
+    mouse = true;
+
     terminal = "tmux-256color";
 
-    historyLimit = 20000;
-    escapeTime = 25;
+    historyLimit = 10000;
 
     plugins = [ pkgs.tmuxPlugins.better-mouse-mode ];
 
@@ -21,16 +27,12 @@
 
       set-option -g display-time 5000
 
-      set-option -g mouse on
       set-option -s extended-keys on
 
       set-option -g allow-rename on
       set-option -g allow-passthrough on
       set-option -g cursor-style blinking-bar
       set-option -g scroll-on-clear on
-
-      # Inform tmux of my terminal emulator's features
-      set-option -sa terminal-features "xterm-kitty:256:extkeys:osc7:hyperlinks:sixel:strikethrough"
 
       # Set terminal (client) titles appropriately.
       set-option -g set-titles on
@@ -60,7 +62,6 @@
       set-option -g monitor-activity on
       set-option -g visual-activity on
       set-option -g renumber-windows on
-      set-option -g focus-events on
 
       set-option -g window-status-style "bg=default,fg=${config.theme.colors.accent}"
       set-option -g window-status-current-style "bg=${config.theme.colors.accentText},fg=${config.theme.colors.accent},bold,reverse"
