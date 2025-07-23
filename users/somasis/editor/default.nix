@@ -666,7 +666,7 @@ in
 
         set-face global Prompt              ${kakColor brightAccent},default,default+b
         set-face global StatusCursor        ${kakColor accentText},${kakColor accent},default+b
-        set-face global StatusLine          ${kakColor toolbarForeground},${kakColor toolbarBackground},default
+        set-face global StatusLine          default,default,default
         set-face global StatusLineInfo      default,default,default
         set-face global StatusLineMode      green,default,default
         set-face global StatusLineValue     green,default,default
