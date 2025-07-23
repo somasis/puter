@@ -26,7 +26,7 @@ stored in the library database for Elisa, the KDE music player.
 Currently, this means
 - Updating the Beets database entries for tracks which have been rated in
   Elisa's database. Tracks rated in Elisa will have their corresponing
-  Beets database entries be updated to have it in their $rating field.
+  Beets database entries be updated to have it in their \$rating field.
 
 Kylie McClain <kylie@somas.is>
 EOF
