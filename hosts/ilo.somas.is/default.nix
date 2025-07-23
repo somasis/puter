@@ -47,25 +47,17 @@
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "24.11";
 
-  persist.hideMounts = true;
-
-  cache = {
+  persist = {
     hideMounts = true;
-
-    directories = [
-      "/var/lib/systemd/timers"
-      "/var/lib/systemd/backlight"
-      "/var/lib/systemd/linger"
-    ];
-    files = [ "/var/lib/systemd/random-seed" ];
+    directories = [ "/var/lib/systemd" ];
   };
+
+  cache.hideMounts = true;
 
   log = {
     hideMounts = true;
 
     directories = [
-      "/var/lib/systemd/catalog"
-      "/var/lib/systemd/coredump"
       {
         directory = "/var/log/journal";
         user = "root";

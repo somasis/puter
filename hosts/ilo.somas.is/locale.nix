@@ -19,11 +19,6 @@
       user = "geoclue";
       group = "geoclue";
     }
-    {
-      directory = "/var/lib/systemd/timesync";
-      user = "systemd-timesync";
-      group = "systemd-timesync";
-    }
   ];
 
   i18n = {
