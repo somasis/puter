@@ -55,6 +55,11 @@ in
           copy_is_hardlink = true;
         };
 
+        whatbox-http = {
+          config.type = "http";
+          secrets.url = config.age.secrets.rclone-whatbox-http-url.path;
+        };
+
         whatbox-webdav = {
           config = {
             type = "webdav";
@@ -64,7 +69,7 @@ in
           secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
         };
 
-        whatbox-ftpes = {
+        whatbox-ftp = {
           config = {
             type = "ftp";
             host = "ariel.whatbox.ca";
@@ -84,7 +89,7 @@ in
         whatbox = {
           config = {
             type = "union";
-            upstreams = ''"whatbox-ftpes:files/" "whatbox-webdav:"''; # "whatbox-sftp:files/"'';
+            upstreams = ''"whatbox-http:files/:ro" "whatbox-ftp:files/"''; # "whatbox-webdav:"''; # "whatbox-sftp:files/"'';
           };
 
           mounts = {
@@ -159,6 +164,7 @@ in
 
   age.secrets = {
     rclone-fastmail-pass.file = "${self}/secrets/somasis-rclone-fastmail-pass.age";
+    rclone-whatbox-http-url.file = "${self}/secrets/somasis-rclone-whatbox-http-url.age";
     rclone-whatbox-webdav-pass.file = "${self}/secrets/somasis-rclone-whatbox-webdav-pass.age";
     rclone-nextcloud-pass.file = "${self}/secrets/somasis-rclone-nextcloud-pass.age";
   };

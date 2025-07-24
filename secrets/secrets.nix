@@ -74,6 +74,10 @@ with users;
     machines.esther
   ];
 
+  "somasis-rclone-whatbox-http-url.age".publicKeys = [
+    somasis.ilo
+  ];
+
   "somasis-rclone-whatbox-webdav-pass.age".publicKeys = [
     somasis.esther
     somasis.ilo
