@@ -25,32 +25,6 @@ in
 #     true
 # );
 {
-  services.tunnels.tunnels = {
-    "somasis@esther.7596ff.com:syncthing" = rec {
-      name = "syncthing";
-      remote = "somasis@esther.7596ff.com";
-      port = syncthingGuiPortFor remote;
-    };
-
-    "somasis@esther.7596ff.com:syncthing-data" = rec {
-      name = "syncthing-data";
-      remote = "somasis@esther.7596ff.com";
-      port = syncthingListenPortFor remote;
-    };
-
-    "somasis@ariel.whatbox.ca:syncthing" = {
-      name = "syncthing";
-      remote = "somasis@ariel.whatbox.ca";
-      port = 10730;
-    };
-
-    "somasis@ariel.whatbox.ca:syncthing-data" = {
-      name = "syncthing-data";
-      remote = "somasis@ariel.whatbox.ca";
-      port = 29581;
-    };
-  };
-
   # NOTE(somasis) services.syncthing will have declarative
   # device and folder settings like NixOS in home-manager >=24.11.
   services.syncthing = {
