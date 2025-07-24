@@ -63,7 +63,7 @@ in
         whatbox-webdav = {
           config = {
             type = "webdav";
-            url = "https://webdav.box.somas.is";
+            url = "https://files.box.somas.is";
             user = "somasis";
           };
           secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
@@ -72,24 +72,24 @@ in
         whatbox-ftp = {
           config = {
             type = "ftp";
-            host = "ariel.whatbox.ca";
+            host = "salak.whatbox.ca";
             explicit_tls = true;
             user = "somasis";
           };
           secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
         };
 
-        # whatbox-sftp.config = {
-        #   type = "sftp";
-        #   ssh = "${sshExe} somasis@ariel.whatbox.ca"
-        #   # host = "ariel.whatbox.ca";
-        #   # user = "somasis";
-        # };
+        whatbox-sftp.config = {
+          type = "sftp";
+          ssh = "${sshExe} whatbox";
+          # host = "salak.whatbox.ca";
+          # user = "somasis";
+        };
 
         whatbox = {
           config = {
             type = "union";
-            upstreams = ''"whatbox-http:files/:ro" "whatbox-ftp:files/"''; # "whatbox-webdav:"''; # "whatbox-sftp:files/"'';
+            upstreams = ''"whatbox-webdav:" "whatbox-sftp:files/" "whatbox-ftp:files/" "whatbox-http:files/:ro"'';
           };
 
           mounts = {

@@ -75,13 +75,13 @@ in
 
     #       "lili.somas.is".id = "ZJ2ZCFK-UYG6BFA-ZYNF4HY-J6NVT25-LKJRV4U-DLM3XRP-LOTQKDW-NZBPOQP";
 
-    #       "somasis@ariel.whatbox.ca" = rec {
+    #       "somasis@salak.whatbox.ca" = rec {
     #         id = "IKC4NUE-OMC5A3L-33SFLBV-PPVO5R6-ETMFVSM-BS62MGQ-7XYB7RL-YCCDJA7";
     #         options.addresses =
     #           let t = config.services.tunnels.tunnels."${name}:syncthing-data"; in [
     #             "dynamic"
-    #             "tcp://ariel.whatbox.ca:${toString t.remotePort}"
-    #             "quic://ariel.whatbox.ca:${toString t.remotePort}"
+    #             "tcp://salak.whatbox.ca:${toString t.remotePort}"
+    #             "quic://salak.whatbox.ca:${toString t.remotePort}"
     #             "tcp://localhost:${toString t.port}"
     #             "quic://localhost:${toString t.port}"
     #           ];

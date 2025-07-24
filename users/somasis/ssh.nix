@@ -89,7 +89,6 @@
         };
       };
 
-      # Trusted hosts
       "esther.7596ff.com" = {
         host = "esther.7596ff.com esther";
         hostname = "esther.7596ff.com";
@@ -97,9 +96,9 @@
         forwardAgent = true;
       };
 
-      "ariel.whatbox.ca" = {
-        host = "ariel.whatbox.ca whatbox genesis";
-        hostname = "ariel.whatbox.ca";
+      "salak.whatbox.ca" = {
+        host = "salak.whatbox.ca salak whatbox";
+        hostname = "salak.whatbox.ca";
       };
 
       # Random hosts
