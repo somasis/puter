@@ -76,7 +76,7 @@ in
 
         # whatbox-sftp.config = {
         #   type = "sftp";
-        #   ssh = "${sshExe} somassis@ariel.whatbox.ca"
+        #   ssh = "${sshExe} somasis@ariel.whatbox.ca"
         #   # host = "ariel.whatbox.ca";
         #   # user = "somasis";
         # };
