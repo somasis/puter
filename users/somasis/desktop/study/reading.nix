@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -21,11 +20,4 @@
 
   # got tired of having to download PDFs just to see if they were worth checking out
   programs.qutebrowser.settings.content.pdfjs = true;
-
-  services.tunnels.tunnels.home-printer = {
-    port = 6631;
-    remote = "somasis@esther.7596ff.com";
-    remoteHost = "BRWD88083FAD788.lan";
-    remotePort = 631;
-  };
 }
