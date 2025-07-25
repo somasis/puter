@@ -89,7 +89,7 @@ in
         whatbox = {
           config = {
             type = "union";
-            upstreams = ''"whatbox-webdav:" "whatbox-sftp:files/" "whatbox-ftp:files/" "whatbox-http:files/:ro"'';
+            upstreams = ''"whatbox-webdav:" "whatbox-ftp:files/" "whatbox-http:files/:ro"'';
           };
 
           mounts = {
