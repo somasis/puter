@@ -51,6 +51,8 @@
         ffmpeg-full
         gucharmap
         hyperfine
+        restic
+        restique
         zenity
         # keep-sorted end
       ];
