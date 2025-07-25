@@ -30,7 +30,7 @@ in
       music = lib.mkDefault "${config.home.homeDirectory}/audio/library";
       pictures = lib.mkDefault "${config.home.homeDirectory}/pictures";
       publicShare = lib.mkDefault "/var/empty";
-      videos = lib.mkDefault "${config.home.homeDirectory}/videos";
+      videos = lib.mkDefault "${config.home.homeDirectory}/video";
     };
 
     # Force replacing mimeapps.list, since it might have been changed
