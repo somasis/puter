@@ -206,8 +206,8 @@ in
 
   persist.directories = [
     {
-      method = "symlink";
-      directory = ".zotero/zotero/default";
+      method = "bindfs";
+      directory = ".zotero";
     }
 
     {
