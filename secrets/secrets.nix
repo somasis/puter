@@ -78,7 +78,7 @@ with users;
     somasis.ilo
   ];
 
-  "somasis-rclone-whatbox-webdav-pass.age".publicKeys = [
+  "somasis-rclone-whatbox-pass.age".publicKeys = [
     somasis.esther
     somasis.ilo
   ];

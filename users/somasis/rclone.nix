@@ -66,7 +66,7 @@ in
             url = "https://files.box.somas.is";
             user = "somasis";
           };
-          secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
+          secrets.pass = config.age.secrets.rclone-whatbox-pass.path;
         };
 
         whatbox-ftp = {
@@ -76,7 +76,7 @@ in
             explicit_tls = true;
             user = "somasis";
           };
-          secrets.pass = config.age.secrets.rclone-whatbox-webdav-pass.path;
+          secrets.pass = config.age.secrets.rclone-whatbox-pass.path;
         };
 
         whatbox-sftp.config = {
@@ -89,7 +89,7 @@ in
         whatbox = {
           config = {
             type = "union";
-            upstreams = ''"whatbox-webdav:" "whatbox-ftp:files/" "whatbox-http:files/:ro"'';
+            upstreams = ''"whatbox-webdav:" "whatbox-http:files/:ro"'';
           };
 
           mounts = {
@@ -163,9 +163,11 @@ in
   };
 
   age.secrets = {
+    # keep-sorted start
     rclone-fastmail-pass.file = "${self}/secrets/somasis-rclone-fastmail-pass.age";
-    rclone-whatbox-http-url.file = "${self}/secrets/somasis-rclone-whatbox-http-url.age";
-    rclone-whatbox-webdav-pass.file = "${self}/secrets/somasis-rclone-whatbox-webdav-pass.age";
     rclone-nextcloud-pass.file = "${self}/secrets/somasis-rclone-nextcloud-pass.age";
+    rclone-whatbox-http-url.file = "${self}/secrets/somasis-rclone-whatbox-http-url.age";
+    rclone-whatbox-pass.file = "${self}/secrets/somasis-rclone-whatbox-pass.age";
+    # keep-sorted end
   };
 }
