@@ -106,13 +106,6 @@
     }
   ];
 
-  log.directories = [
-    {
-      method = "symlink";
-      directory = "logs";
-    }
-  ];
-
   persist.directories = [
     {
       method = "symlink";
@@ -125,6 +118,10 @@
     {
       method = "symlink";
       directory = config.lib.somasis.xdgDataDir "containers";
+    }
+    {
+      method = "symlink";
+      directory = "logs";
     }
   ];
 
