@@ -50,19 +50,6 @@ in
     enable = true;
 
     profiles.default = {
-      # TODO installation seems broken?
-      # extensions = with pkgs.zotero-addons; [
-      #   zotero-abstract-cleaner
-      #   zotero-auto-index
-      #   zotero-ocr
-      #   zotero-open-pdf
-      #   zotero-preview
-      #   zotero-robustlinks
-      #   zotero-storage-scanner
-      #   zotfile
-      #   zotero-delitemwithatt
-      # ];
-
       settings =
         let
           # Chicago Manual of Style [latest] edition (note)
@@ -123,8 +110,6 @@ in
           # Attachment settings
           "extensions.zotero.useDataDir" = true;
           "extensions.zotero.dataDir" = "${config.xdg.dataHome}/zotero";
-          "extensions.zotero.saveRelativeAttachmentPath" = true;
-          "extensions.zotero.baseAttachmentPath" = "${config.xdg.userDirs.documents}/articles";
 
           # Reading settings
           "extensions.zotero.tabs.title.reader" = "filename"; # Show filename in tab title
@@ -219,184 +204,17 @@ in
     };
   };
 
-  persist = {
-    directories = [
-      {
-        method = "bindfs";
-        directory = ".zotero/zotero/default";
-      }
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = ".zotero/zotero/default";
+    }
 
-      {
-        method = "bindfs";
-        directory = config.lib.somasis.xdgDataDir "zotero/styles";
-      }
-      {
-        method = "bindfs";
-        directory = config.lib.somasis.xdgDataDir "zotero/translators";
-      }
-    ];
-    files = [ (config.lib.somasis.xdgDataDir "zotero/zotero.sqlite") ];
-  };
-
-  xdg.dataFile = {
-    "zotero/storage".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.xdg.userDirs.documents}/zotero";
-
-    # "zotero/styles".source = inputs.zotero-styles;
-    # "zotero/translators".source = inputs.zotero-translators;
-
-    "zotero/locate/.keep".source = builtins.toFile "keep" "";
-    "zotero/locate/engines.json".text = builtins.toJSON [
-      {
-        _hidden = false;
-
-        _name = "WorldCat";
-        _alias = "WorldCat";
-        _description = "WorldCat Search";
-        _icon = "https://worldcat.org/favicons/favicon-16x16.png";
-
-        _urlTemplate = "https://worldcat.org/search?q=bn%3A{rft:isbn}+AND+ti%3A{z:title}+AND+au%3A{rft:aufirst?}+{rft:aulast?}";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-          rft = "info:ofi/fmt:kev:mtx:book";
-        };
-      }
-
-      {
-        _hidden = false;
-
-        _name = "CrossRef Lookup";
-        _alias = "CrossRef";
-        _description = "CrossRef Search Engine";
-        _icon = "https://crossref.org/favicon.ico";
-
-        _urlTemplate = "https://crossref.org/openurl?{z:openURL}&pid=zter:zter321";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-        };
-      }
-
-      {
-        _hidden = false;
-
-        _name = "Google Scholar";
-        _alias = "Google Scholar";
-        _description = "Google Scholar Search";
-        _icon = "https://scholar.google.com/favicon.ico";
-
-        _urlTemplate = "https://scholar.google.com/scholar?as_q=&as_epq={z:title}&as_occt=title&as_sauthors={rft:aufirst?}+{rft:aulast?}&as_ylo={z:year?}&as_yhi={z:year?}&as_sdt=1.&as_sdtp=on&as_sdtf=&as_sdts=22&";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-          rft = "info:ofi/fmt:kev:mtx";
-        };
-      }
-      {
-        _hidden = false;
-
-        _name = "Google Scholar (title only)";
-        _alias = "Google Scholar (title)";
-        _description = "Google Scholar Search (title only)";
-        _icon = "https://scholar.google.com/favicon.ico";
-
-        _urlTemplate = "https://scholar.google.com/scholar?as_q=&as_epq={z:title}&as_occt=title&as_sdt=1.&as_sdtp=on&as_sdtf=&as_sdts=22&";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-          rft = "info:ofi/fmt:kev:mtx:book";
-        };
-      }
-
-      {
-        _hidden = false;
-
-        _name = "Thriftbooks";
-        _alias = "Thriftbooks";
-        _description = "Search Thriftbooks";
-        _icon = "https://static.thriftbooks.com/images/favicon.ico";
-
-        _urlTemplate = "https://www.thriftbooks.com/viewDetails.aspx?ASIN={rft:isbn}";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-          rft = "info:ofi/fmt:kev:mtx:book";
-        };
-      }
-
-      {
-        _hidden = false;
-
-        _name = "Abebooks";
-        _alias = "Abebooks";
-        _description = "Search Abebooks";
-        _icon = "https://www.abebooks.com/favicon.ico";
-
-        _urlTemplate = "https://www.abebooks.com/servlet/SearchResults?isbn={rft:isbn}";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-          rft = "info:ofi/fmt:kev:mtx:book";
-        };
-      }
-
-      {
-        _hidden = false;
-
-        _name = "Anna's Archive";
-        _alias = "Anna's";
-        _description = "Search Anna's Archive";
-        _icon = "https://annas-archive.org/favicon-32x32.png";
-
-        _urlTemplate = "https://annas-archive.org/search?index=&q={rft:isbn}+{z:DOI}";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-          rft = "info:ofi/fmt:kev:mtx";
-        };
-      }
-
-      {
-        _hidden = false;
-
-        _name = "Unpaywall";
-        _alias = "Unpaywall";
-        _description = "Unpaywall Lookup";
-        _icon = "https://oadoi.org/static/img/favicon.png";
-
-        _urlTemplate = "https://oadoi.org/{z:DOI}";
-        _urlParams = [ ];
-
-        _urlNamespaces = {
-          "" = "http://a9.com/-/spec/opensearch/1.1/";
-          z = "http://www.zotero.org/namespaces/openSearch#";
-          rft = "info:ofi/fmt:kev:mtx:journal";
-        };
-      }
-    ];
-  };
-
-  xdg.mimeApps.defaultApplications = lib.genAttrs [
-    "application/marc"
-    "application/rdf+xml"
-    "application/x-research-info-systems"
-    "text/x-bibtex"
-  ] (_: [ "zotero.desktop" ]);
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgDataDir "zotero";
+    }
+  ];
 
   programs.qutebrowser = {
     aliases.zotero = "spawn -u ${qutebrowser-zotero}/bin/qute-zotero";
