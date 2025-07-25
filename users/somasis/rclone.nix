@@ -69,15 +69,6 @@ in
           secrets.url = config.age.secrets.rclone-whatbox-http-url.path;
         };
 
-        whatbox-webdav = {
-          config = {
-            type = "webdav";
-            url = "https://files.box.somas.is";
-            user = "somasis";
-          };
-          secrets.pass = config.age.secrets.rclone-whatbox-pass.path;
-        };
-
         whatbox-ftp = {
           config = {
             type = "ftp";
@@ -97,9 +88,11 @@ in
 
         whatbox = {
           config = {
-            type = "union";
-            upstreams = ''"whatbox-webdav:" "whatbox-http:files/:ro"'';
+            type = "webdav";
+            url = "https://files.box.somas.is";
+            user = "somasis";
           };
+          secrets.pass = config.age.secrets.rclone-whatbox-pass.path;
 
           mounts = {
             "" = {
