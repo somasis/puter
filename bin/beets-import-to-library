@@ -91,6 +91,7 @@ library_directory=$(beet config -d | yq -p yaml .library)
 import_errors=()
 for import; do
     error=0
+    export import
     (
         case "${import}" in
             "${library_directory}"/*)
@@ -115,7 +116,7 @@ for import; do
 
         case "${action}" in
             timid-exit)
-                edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
+                edo exec konsole --title "${import} — Importing manually — beets" -e \
                     beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
                 ;;
             skip) exit 0 ;;
@@ -144,7 +145,7 @@ for import; do
 
             case "${action}" in
                 timid-exit)
-                    edo exec konsole --title "${import##*/} — Importing manually — beets" -e \
+                    edo exec konsole --title "${import} — Importing manually — beets" -e \
                         beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
                     ;;
             esac
