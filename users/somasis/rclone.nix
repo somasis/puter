@@ -1,6 +1,7 @@
 {
   self,
   config,
+  pkgs,
   lib,
   osConfig,
   ...
@@ -35,9 +36,17 @@ in
       method = "symlink";
       directory = config.lib.somasis.xdgCacheDir "vfsMeta";
     }
+
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "restic";
+    }
   ];
 
-  home.shellAliases.rclone = "rclone --fast-list --use-mmap --human-readable";
+  home = {
+    packages = [ pkgs.restic ];
+    shellAliases.rclone = "rclone --fast-list --use-mmap --human-readable";
+  };
 
   programs.rclone = {
     enable = true;
