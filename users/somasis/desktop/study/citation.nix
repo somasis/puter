@@ -49,8 +49,6 @@ in
   programs.zotero = {
     enable = true;
 
-    package = pkgs.zotero_7;
-
     profiles.default = {
       # TODO installation seems broken?
       # extensions = with pkgs.zotero-addons; [
@@ -132,7 +130,10 @@ in
           "extensions.zotero.tabs.title.reader" = "filename"; # Show filename in tab title
 
           # Sync settings
-          "extensions.zotero.sync.storage.enabled" = false; # File synchronization is handled by Syncthing.
+          "extensions.zotero.sync.protocol" = "webdav";
+          "extensions.zotero.sync.storage.url" = "files.box.somas.is";
+          "extensions.zotero.sync.storage.username" = "somasis";
+
           # "extensions.zotero.attachmentRenameFormatString" = "{%c - }%t{100}{ (%y)}"; # Set the file name format used by Zotero's internal stuff
 
           "extensions.zotero.autoRenameFiles.fileTypes" = lib.concatStringsSep "," [
@@ -160,118 +161,33 @@ in
           "extensions.zotero.integration.useClassicAddCitationDialog" = true;
           "extensions.zoteroOpenOfficeIntegration.installed" = true;
           "extensions.zoteroOpenOfficeIntegration.skipInstallation" = true;
-        }
 
-        # // {
-        #   # Add-ons > Robust Links (Item adding settings)
-        #   "extensions.robustlinks.archiveonadd" = "yes";
-        #   "extensions.robustlinks.whatarchive" = "random";
+          "extensions.zotero.reader.ebookFontFamily" = "serif";
 
-        #   # Add-ons > Citation settings
-        #   "extensions.zoteropreview.citationstyle" = style; # Zotero Citation Preview
+          # "extensions.zotero.openReaderInNewWindow" = true;
 
-        #   # Add-ons > DOI Manager
-        #   "extensions.shortdoi.tag_invalid" = "#invalid_doi";
-        #   "extensions.shortdoi.tag_multiple" = "#multiple_doi";
-        #   "extensions.shortdoi.tag_nodoi" = "#no_doi";
+          # ouch
+          "extensions.zotero.attachmentRenameTemplate" = ''
+            {{ if {{ creators }} != "" }}{{ if {{ creators max="1" name-part-separator=", " }} == {{ creators max="1" name="family-given" }}, }}{{ creators max="2" name="family-given" join=", " suffix=" - " }}{{ else }}{{ if {{ creators max="1" }} != {{ creators max="2" }} }}{{ creators max="1" name="family-given" name-part-separator=", " join=", " suffix=" et al. - " }}{{ else }}{{ creators max="2" name="family-given" name-part-separator=", " join=", " suffix=" - " }}{{ endif }}{{ endif }}{{ else }}{{ creators max="1" name="family-given" name-part-separator=", " }}{{ endif }}{{ if shortTitle != "" }}{{ shortTitle }}{{ else }}{{ if {{ title truncate="80" }} == {{ title }} }}{{ title }}{{ else }}{{ title truncate="80" suffix="..." }}{{ endif }}{{ endif }}{{ if itemType == "book" }} ({{ year }}{{ publisher truncate="80" prefix=", " }}){{ elseif itemType == "bookSection" }} ({{ year }}{{ bookTitle prefix=", " truncate="80" }}){{ elseif itemType == "blogpost" }} ({{ if year != "" }}{{ year }}{{ blogTitle prefix=", " }}{{ else }}{{ blogTitle }}{{ endif }}){{ elseif itemType == "webpage" }} ({{ year }}{{ websiteTitle prefix=", " }}){{ elseif itemType == "newspaperArticle" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ section truncate="80" prefix=", " }}){{ elseif itemType == "presentation" }} ({{ year }}{{ meetingName truncate="80" prefix=", " }}){{ elseif publicationTitle != "" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ if volume != year }}{{ volume prefix=" "  }}{{ endif }}{{ issue prefix=", no. " }}){{ elseif year != "" }} ({{ year }}){{ endif }}
+          '';
+          "extensions.zotero.autoRenameFiles.linked" = true;
 
-        #   # Add-ons > Zotero PDF Preview
-        #   "extensions.zotero.pdfpreview.previewTabName" = "PDF"; # Default tab name clashes with Zotero Citation Preview
+          # <https://github.com/MuiseDestiny/zotero-attanger>
+          "extensions.zotero.zoteroattanger.sourceDir" = config.xdg.userDirs.download;
+          "extensions.zotero.zoteroattanger.readPDFtitle" = "always";
+          "extensions.zotero.zoteroattanger.attachType" = "importing";
+          "extensions.zotero.zoteroattanger.destDir" = "${config.xdg.userDirs.documents}/articles";
+          "extensions.zotero.zoteroattanger.autoRemoveEmptyFolder" = true;
+          "extensions.zotero.zoteroattanger.fileTypes" = lib.concatStringsSep "," [
+            "pdf"
+            "epub"
+            "docx"
+            "odt"
+          ];
 
-        #   # Add-ons > Zotero AutoIndex
-        #   "extensions.zotero.fulltext.pdfMaxPages" = 1024;
-
-        #   # Add-ons > ZotFile (Attachment settings)
-        #   "extensions.zotfile.dest_dir" = "${study}/doc";
-        #   "extensions.zotfile.useZoteroToRename" = false; # ZotFile > Renaming Rules > "Use Zotero to Rename";
-        #   "extensions.zotfile.pdfExtraction.localeDateInNote" = false;
-        #   "extensions.zotfile.pdfExtraction.isoDate" = true; # Use YYYY-MM-DD in the note titles
-        #   "extensions.zotfile.pdfExtraction.UsePDFJS" = true; # ZotFile > Advanced Settings > "Extract annotations..." > "Use pdf.js to extract annotations"
-
-        #   # [Last, First - ]title[ (volume)][ ([year][, book title/journal/publisher/meeting])]
-        #   "extensions.zotfile.renameFormat" = "{%g - }%t{ (%v)}{ (%y{, %B|, %w})}"; # ZotFile > Renaming Rules > "Format for all Item Types except Patents"
-
-        #   "extensions.zotfile.wildcards.user" = builtins.toString (builtins.toJSON {
-        #     "B" = "bookTitle"; # %B: For book sections.
-        #     "4" = {
-        #       field = "dateAdded";
-        #       operations = [{
-        #         flags = "g";
-        #         function = "replace";
-        #         regex = "(\\d{4})-(\\d{2})-(\\d{2})(.*)";
-        #         replacement = "$1$2$3";
-        #       }];
-        #     };
-        #   });
-
-        #   "extensions.zotfile.authors_delimiter" = ", "; # ZotFile > Renaming Rules > "Delimiter between multiple authors"
-
-        #   "extensions.zotfile.truncate_title" = true; # ZotFile > Renaming Rules > "Truncate title after . or : or ?"
-
-        #   "extensions.zotfile.truncate_title_max" = true; # ZotFile > Renaming Rules > "Maximum length of title"
-        #   "extensions.zotfile.max_titlelength" = 80;
-
-        #   "extensions.zotfile.truncate_authors" = true; # ZotFile > Renaming Rules > "Maximum number of authors"
-        #   "extensions.zotfile.max_authors" = 2; # ZotFile > Renaming Rules > "Maximum number of authors"
-
-        #   "extensions.zotfile.removeDiacritics" = true; # ZotFile > Advanced Settings > "Remove special characters (diacritics) from filename"
-
-        #   "extensions.zotfile.import" = false; # ZotFile > Location of Files > Custom Location
-        #   "extensions.zotero.autoRenameFiles.linked" = true; # ZotFile > General Settings > Location of Files > Custom Location
-
-        #   "extensions.zotfile.useFileTypes" = true; # ZotFile > Advanced Settings > "Only work with the following filetypes"
-        #   "extensions.zotfile.filetypes" = lib.concatStringsSep "," [
-        #     "pdf"
-        #     "epub"
-        #     "docx"
-        #     "odt"
-        #   ];
-
-        #   "extensions.zotfile.confirmation" = false; # ZotFile > Advanced Settings > "Ask user when attaching new files"
-        #   "extensions.zotfile.confirmation_batch" = 0;
-        #   "extensions.zotfile.confirmation_batch_ask" = false; # ZotFile > Advanced Settings > "Ask user to (batch) rename or move [0] or more attachments
-        #   "extensions.zotfile.automatic_renaming" = 3; # ZotFile > Advanced Settigns > "Automatically rename new attachments" > "Always ask (non-disruptive)"
-        # }
-
-        # Configuration options which will only become relevant with Zotero 7.
-        //
-          lib.optionalAttrs
-            (
-              (lib.strings.toInt (lib.versions.major (lib.strings.getVersion config.programs.zotero.package)))
-              >= 7
-            )
-            {
-              "extensions.zotero.reader.ebookFontFamily" = "serif";
-
-              # "extensions.zotero.openReaderInNewWindow" = true;
-
-              # ouch
-              "extensions.zotero.attachmentRenameTemplate" = ''
-                {{ if {{ creators }} != "" }}{{ if {{ creators max="1" name-part-separator=", " }} == {{ creators max="1" name="family-given" }}, }}{{ creators max="2" name="family-given" join=", " suffix=" - " }}{{ else }}{{ if {{ creators max="1" }} != {{ creators max="2" }} }}{{ creators max="1" name="family-given" name-part-separator=", " join=", " suffix=" et al. - " }}{{ else }}{{ creators max="2" name="family-given" name-part-separator=", " join=", " suffix=" - " }}{{ endif }}{{ endif }}{{ else }}{{ creators max="1" name="family-given" name-part-separator=", " }}{{ endif }}{{ if shortTitle != "" }}{{ shortTitle }}{{ else }}{{ if {{ title truncate="80" }} == {{ title }} }}{{ title }}{{ else }}{{ title truncate="80" suffix="..." }}{{ endif }}{{ endif }}{{ if itemType == "book" }} ({{ year }}{{ publisher truncate="80" prefix=", " }}){{ elseif itemType == "bookSection" }} ({{ year }}{{ bookTitle prefix=", " truncate="80" }}){{ elseif itemType == "blogpost" }} ({{ if year != "" }}{{ year }}{{ blogTitle prefix=", " }}{{ else }}{{ blogTitle }}{{ endif }}){{ elseif itemType == "webpage" }} ({{ year }}{{ websiteTitle prefix=", " }}){{ elseif itemType == "newspaperArticle" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ section truncate="80" prefix=", " }}){{ elseif itemType == "presentation" }} ({{ year }}{{ meetingName truncate="80" prefix=", " }}){{ elseif publicationTitle != "" }} ({{ year }}{{ publicationTitle truncate="80" prefix=", " }}{{ if volume != year }}{{ volume prefix=" "  }}{{ endif }}{{ issue prefix=", no. " }}){{ elseif year != "" }} ({{ year }}){{ endif }}
-              '';
-              "extensions.zotero.autoRenameFiles.linked" = true;
-
-              # <https://github.com/wileyyugioh/zotmoov>
-              # "extensions.zotmoov.dst_dir" = "${config.xdg.userDirs.documents}/articles";
-              # "extensions.zotmoov.allowed_fileext" = [ "pdf" "epub" "docx" "odt" ];
-              # "extensions.zotmoov.delete_files" = true;
-
-              # <https://github.com/MuiseDestiny/zotero-attanger>
-              "extensions.zotero.zoteroattanger.sourceDir" = config.xdg.userDirs.download;
-              "extensions.zotero.zoteroattanger.readPDFtitle" = "always";
-              "extensions.zotero.zoteroattanger.attachType" = "linking";
-              "extensions.zotero.zoteroattanger.destDir" = "${config.xdg.userDirs.documents}/articles";
-              "extensions.zotero.zoteroattanger.autoRemoveEmptyFolder" = true;
-              "extensions.zotero.zoteroattanger.fileTypes" = lib.concatStringsSep "," [
-                "pdf"
-                "epub"
-                "docx"
-                "odt"
-              ];
-
-              # Enable userChrome
-              "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-            };
+          # Enable userChrome
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        };
 
       userChrome = ''
         * {
