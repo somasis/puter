@@ -9,6 +9,9 @@
 
     secureSocket = false;
 
+    # Start from 1 to be consistent with my KWin shortcuts.
+    baseIndex = 1;
+
     # Reduce the escape time since we trigger that timeout a lot
     # due to it also being used by Kakoune for entering normal mode.
     escapeTime = 25;
