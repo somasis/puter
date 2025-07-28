@@ -155,4 +155,8 @@
     enable = true;
     algorithm = "lz4";
   };
+
+  environment.systemPackages = [
+    pkgs.httm
+  ];
 }
