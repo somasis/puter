@@ -6,7 +6,7 @@
   imports = [
     ./manage
     ./player.nix
-    ./production.nix
+    # ./production.nix
   ];
 
   persist.directories = [
