@@ -44,15 +44,13 @@
       with exts;
       with pkgs.passExtensions;
       [
-        (pass-audit.overrideAttrs (oldAttrs: {
-          doCheck = false;
-        }))
-        pass-update
-
-        pass-otp
+        # keep-sorted start
         pass-botp
-
+        pass-checkup
         pass-meta
+        pass-otp
+        pass-update
+        # keep-sorted end
       ]
     );
   };
