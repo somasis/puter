@@ -80,10 +80,7 @@
 
         # lanzaboote
         "https://lanzaboote.cachix.org"
-      ]
-      ++
-        # Add each build machine as a substituter
-        (map (m: "${m.protocol}://${m.sshUser}@${m.hostName}") config.nix.buildMachines);
+      ];
 
       trusted-public-keys = [
         "nixpkgs-unfree.cachix.org-1:hqvoInulhbV4nJ9yJOEr+4wxhDV4xq2d1DK7S6Nj6rs="
@@ -118,19 +115,5 @@
     # have priority over `nix` builds, when allocating resources.
     daemonCPUSchedPolicy = lib.mkIf config.meta.desktop "idle";
     daemonIOSchedClass = lib.mkIf config.meta.desktop "idle";
-
-    # NOTE(somasis) Serve the store over ssh so it can be a substituter
-    #               and remote builder for remote machines.
-    sshServe = {
-      enable = true;
-      write = true;
-
-      # Filter out all users that are not in the "nixos" group
-      # and that are allowed to use nix-daemon. Then, get all
-      # their lists of authorized ssh keys, and flatten the
-      # combined list, so that they can access the nix store
-      # with any of their authorized ssh keys.
-      keys = config.lib.somasis.sshKeysForGroups [ "wheel" ];
-    };
   };
 }
