@@ -4,16 +4,21 @@
 
 export PS4='$ '
 
+# shellcheck disable=SC2120
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: filter <command...>
-       stest <test(1) arguments>
+usage: filter [!] <command...>
+       stest [!] <test(1) arguments>
 
 Test each item given on standard input against <command>,
 and print item if <command> exits positively.
+
+If the arguments begin with "!", their result will be
+negated; this means that items will be printed if the
+<command> exited unsuccessfully.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -22,6 +27,17 @@ EOF
 }
 
 set -euo pipefail
+
+sh_conjunct='&&'
+
+# shellcheck disable=SC2119
+case "$1" in
+    --help) usage ;;
+    '!')
+        sh_conjunct='||'
+        shift
+        ;;
+esac
 
 pe() {
     xe -LL -j0 "$@" | sort -snk1 | cut -d' ' -f2-
@@ -43,5 +59,5 @@ esac
 
 set -- "${@@Q}"
 
-# shellcheck disable=SC2145
-exec pe -s "$*"' && printf "%s\n" "$1"'
+# shellcheck disable=SC2016,SC2145
+exec pe -s "$*"' "$1" '"$sh_conjunct"' printf "%s\n" "$1"'
