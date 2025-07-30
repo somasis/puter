@@ -1,14 +1,5 @@
 {
-  pkgs,
-  config,
-  lib,
-  ...
-}:
-{
-  # Automatically update location and timezone when traveling,
-  # with a fallback timezone.
-  services.localtimed.enable = true;
-  environment.etc.localtime.source = "${pkgs.tzdata}/share/zoneinfo/America/New_York";
+  time.timeZone = "America/New_York";
 
   services.geoclue2.enable = true;
   location.provider = "geoclue2";

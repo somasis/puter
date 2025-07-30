@@ -136,7 +136,6 @@
           "dbus-daemon"
 
           "iio-sensor-proxy"
-          "localtimed"
 
           "systemd-logind"
           "systemd-resolved"
