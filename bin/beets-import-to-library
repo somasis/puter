@@ -3,6 +3,7 @@
 # shellcheck shell=bash
 
 set -euo pipefail
+set -x
 
 # If another instance is running, just wait until it's gone.
 if [[ "${FLOCKER:-}" != "${0}" ]]; then
@@ -12,6 +13,12 @@ fi
 
 # shellcheck source=edo
 . edo
+
+notify-send() {
+    command notify-send \
+        --hint='string:desktop-entry:beets-import-to-library.desktop' \
+        "$@"
+}
 
 finish_import() {
     latest_after_import=$(beet ls -p -a 'added-' | head -n 1 || :)
@@ -37,6 +44,7 @@ finish_import() {
     action=$(
         notify-send --wait \
             -t 10000 \
+            --replace-id="$id" \
             -a "${0##*/}" \
             -A 'directory=Open directory' \
             -A 'undo=Undo' \
@@ -103,9 +111,10 @@ for import; do
 
         printf 'importing %s to music library...\n' "${import@Q}" >&2
 
-        action=$(
+        mapfile -t notify_output < <(
             notify-send \
                 -t 10000 \
+                --print-id \
                 --transient \
                 -a "${0##*/}" \
                 -A 'timid-exit=Import manually...' \
@@ -113,6 +122,11 @@ for import; do
                 'Importing...' \
                 "$(basename "${import}")"
         )
+
+        id=${notify_output[0]}
+
+        # shellcheck disable=SC2178
+        action=${notify_output[1]:-}
 
         case "${action}" in
             timid-exit)
@@ -137,6 +151,7 @@ for import; do
                 notify-send --wait \
                     -t 10000 \
                     -u critical \
+                    --replace-id="$id" \
                     -a "${0##*/}" \
                     -A 'timid-exit=Import manually...' \
                     'Failed to import music' \
