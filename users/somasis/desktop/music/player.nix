@@ -5,6 +5,7 @@
   ...
 }:
 let
+  iniFormat = pkgs.formats.iniWithGlobalSection { listsAsDuplicateKeys = true; };
   yamlFormat = pkgs.formats.yaml { };
 in
 {
@@ -59,6 +60,7 @@ in
   };
 
   services = {
+    # I use playerctld rather than Plasma's built-in media controller.
     playerctld.enable = true;
     mpris-proxy.enable = true;
   };
@@ -110,30 +112,27 @@ in
         "listenbrainz"
       ];
 
-      lastfm_api_key = "";
-      lastfm_name = "kyliesomasis";
       listenbrainz_name = "Somasis";
+
+      only_when_playing = true;
 
       small_image = "player";
 
-      allowlist = [
-        "Elisa"
-      ];
+      # Only allow Elisa's now-playing to be broadcast over Discord Rich Presence.
+      allowlist = [ "Elisa" ];
 
       disable_musicbrainz_cover = false;
     };
 
-    "mpris-scrobbler/config".text =
-      lib.generators.toINIWithGlobalSection { listsAsDuplicateKeys = true; }
-        {
-          globalSection.ignore = [
-            "playerctld"
-            "kdeconnect"
-            "mpv"
-            "chromium"
-            "qutebrowser"
-            "firefox"
-          ];
-        };
+    "mpris-scrobbler/config".source = iniFormat.generate "mpris-scrobbler-config.ini" {
+      globalSection.ignore = [
+        "playerctld"
+        "kdeconnect"
+        "mpv"
+        "chromium"
+        "qutebrowser"
+        "firefox"
+      ];
+    };
   };
 }
