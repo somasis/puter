@@ -66,7 +66,7 @@
     systemd = {
       # Fix watchdog delaying reboot
       # https://wiki.archlinux.org/title/Framework_Laptop#ACPI
-      watchdog.rebootTime = "0";
+      settings.Manager.RebootWatchdogSec = "0";
 
       # Only do garbage collection if not on battery,
       # and limit resource usage priorities.

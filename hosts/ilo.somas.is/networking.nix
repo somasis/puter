@@ -65,9 +65,7 @@
 
   # TODO: Track net usage by services
   #       Currently cannot by used for user services...
-  systemd.extraConfig = ''
-    DefaultIPAccounting=true
-  '';
+  systemd.settings.Manager.DefaultIPAccounting = true;
 
   services.tor = {
     enable = false;
