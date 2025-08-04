@@ -75,7 +75,7 @@ in
     user = "sys --user";
 
     journal = "journalctl -e";
-    syslog = "journal -b 0";
+    syslog = "journal -b 0 --system";
 
     # Exclude log level 7 (debug messages) for user journal, since it is usually
     # flooded with debug messages from KDE Plasma or KWin or any of that.
@@ -93,8 +93,6 @@ in
     watch = "watch -n1 -c ";
 
     which = "{ alias; declare -f; } | which --read-functions --read-alias";
-
-    tar = "tar --exclude '.DS_Store' --exclude '__MACOSX/*'";
 
     ",," = "COMMA_PICKER_OVERRIDE=true ,";
   };
