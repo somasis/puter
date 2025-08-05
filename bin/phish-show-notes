@@ -27,6 +27,8 @@ of a jam band.
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
 
+see also: the Phish.net project <https://phish.net>.
+
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
