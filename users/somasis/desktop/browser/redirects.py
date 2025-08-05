@@ -9,12 +9,13 @@ i = interceptor
 
 
 farside_redirects = [
+    # keep-sorted start
+    "fandom.com",
     "imgur.com",
     "medium.com",
     "tiktok.com",
     "www.tiktok.com",
-    "fandom.com",
-    "medium.com",
+    # keep-sorted end
 ]
 
 
