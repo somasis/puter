@@ -109,18 +109,18 @@
       "/share/applications"
     ];
 
-  # nix = {
-  #   distributedBuilds = true;
-  #   buildMachines = [
-  #     {
-  #       hostName = "esther.7596ff.com";
-  #       sshUser = "somasis";
-  #       protocol = "ssh-ng";
-  #       system = "x86_64-linux";
-  #       speedFactor = 2;
-  #     }
-  #   ];
-  # };
+  nix = {
+    distributedBuilds = true;
+    buildMachines = [
+      {
+        hostName = "esther.7596ff.com";
+        sshUser = "somasis";
+        protocol = "ssh-ng";
+        system = "x86_64-linux";
+        speedFactor = 2;
+      }
+    ];
+  };
 
   home-manager = {
     verbose = true;
