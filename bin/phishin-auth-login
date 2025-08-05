@@ -1,0 +1,120 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash curl jq
+
+# shellcheck disable=SC2120
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} [-f]
+
+Authenticate to Phish.in using environment variables, printing a token
+on successful authentication, or a previous successful token from the
+system's secret store.
+
+options:
+    -f      Force authenticating and getting a new token, even if there
+            is already a token in the secret store.
+
+environment variables:
+    \$PHISHIN_USER_EMAIL_COMMAND${PHISHIN_USER_EMAIL_COMMAND:+ [currently: $PHISHIN_USER_EMAIL_COMMAND]}
+    \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ [currently: $PHISHIN_USER_EMAIL]}
+        The email which will be used to authenticate to Phish.in.
+    \$PHISHIN_USER_PASSWORD_COMMAND${PHISHIN_USER_PASSWORD_COMMAND:+ [currently: $PHISHIN_USER_PASSWORD_COMMAND]}
+    \$PHISHIN_USER_PASSWORD
+        The password which will be used to authenticate to Phish.in.
+
+see also: the Phish.in project <https://phish.in>.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 69
+}
+
+curl_authed() {
+    : "${PHISHIN_USER_TOKEN:?error in curl_authed(): no \$PHISHIN_USER_TOKEN set}"
+    curl \
+        --variable %PHISHIN_USER_TOKEN \
+        --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
+        "$@"
+}
+
+phishin_refresh_token() {
+    local -
+    set +x
+
+    : "${PHISHIN_USER_EMAIL:?error in phishin_refresh_token(): no \$PHISHIN_USER_EMAIL set}"
+
+    if [[ -n "${PHISHIN_USER_PASSWORD_COMMAND:-}" ]] && [[ -z "${PHISHIN_USER_PASSWORD:-}" ]]; then
+        PHISHIN_USER_PASSWORD=$(eval "$PHISHIN_USER_PASSWORD_COMMAND")
+    fi
+
+    : "${PHISHIN_USER_PASSWORD:?error: no Phish.in user password provided in \$PHISHIN_USER_PASSWORD or by \$PHISHIN_USER_PASSWORD_COMMAND}"
+
+    export PHISHIN_USER_EMAIL PHISHIN_USER_PASSWORD
+
+    local payload
+    payload=$(jq -nc '
+        {
+            "email": env.PHISHIN_USER_EMAIL,
+            "password": env.PHISHIN_USER_PASSWORD
+        }
+    ')
+
+    if ! curl --no-progress-meter --fail-with-body -X POST --json @- \
+        'https://phish.in/api/v2/auth/login' <<<"$payload"; then
+        printf 'error: failed while fetching token\n' >&2
+        exit 1
+    fi
+}
+
+phishin_auth() {
+    local -
+    set +x
+
+    PHISHIN_USER_TOKEN=$(
+        secret-tool lookup 'phishin-auth-login' \
+            "${PHISHIN_USER_EMAIL:?error: no \$PHISHIN_USER_EMAIL provided}" \
+            || :
+    )
+    export PHISHIN_USER_TOKEN
+
+    if [[ -z "${PHISHIN_USER_TOKEN:-}" ]] \
+        || ! curl_authed -o /dev/null --no-progress-meter --fail-with-body \
+            'https://phish.in/api/v2/auth/user' | jq -c >&2; then
+        # need to reauthenticate, because either there's no token, or the token
+        # is invalid, or the password has changed, or whatever...
+        printf 'refreshing Phish.in token...\n' >&2
+
+        response=$(phishin_refresh_token)
+
+        PHISHIN_USER_TOKEN=$(
+            jq -cre '.jwt' <<<"${response}" \
+                | tr -d '\n' \
+                | secret-tool store \
+                    --label "Phish.in user token (managed by phishin-auth-login)" \
+                    "phishin-auth-login" "$PHISHIN_USER_EMAIL"
+        )
+
+        export PHISHIN_USER_TOKEN
+    fi
+
+    printf '%s' "${PHISHIN_USER_TOKEN}"
+}
+
+while getopts : opt >/dev/null 2>&1; do
+    case "$opt" in
+        *) usage 'error: unknown command: %s\n' "${opt}" ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [[ -n "${PHISHIN_USER_EMAIL_COMMAND:-}" ]] && [[ -z "${PHISHIN_USER_EMAIL:-}" ]]; then
+    PHISHIN_USER_EMAIL=$(eval "$PHISHIN_USER_EMAIL_COMMAND")
+fi
+
+: "${PHISHIN_USER_EMAIL:?error: no Phish.in user email provided in \$PHISHIN_USER_EMAIL or by \$PHISHIN_USER_EMAIL_COMMAND}"
+
+phishin_auth

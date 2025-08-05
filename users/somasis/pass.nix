@@ -96,9 +96,10 @@
     '';
 
   home.sessionVariables = {
-    # Used by `bin/phishin-like-show`, among other things.
+    # Used by `bin/phishin-auth-login`, among other things.
     PHISHIN_USER_EMAIL_COMMAND = "pass meta www/phish.in email";
     PHISHIN_USER_PASSWORD_COMMAND = "pass meta www/phish.in password";
+
     PHISHNET_SECRET_COMMAND = "pass api/phish-cli/phish.net | head -n1";
   };
 }
