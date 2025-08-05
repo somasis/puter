@@ -232,9 +232,11 @@ rec {
   location = callPackage ./location { };
   mail-deduplicate = python3Packages.callPackage ./mail-deduplicate { };
   mimetest = callPackage ./mimetest { };
+  nanoid-cpp = callPackage ./nanoid-cpp { };
   newslinkrss = python3Packages.callPackage ./newslinkrss { };
   nocolor = callPackage ./nocolor { };
   optimize = callPackage ./optimize { };
+  pass-secrets = callPackage ./pass-secrets { };
   plasma-pass-unstable = callPackage ./plasma-pass-unstable { };
   qute-pass = callPackage ./qute-pass { inherit dmenu-pass; };
   scooper = callPackage ./scooper { };
