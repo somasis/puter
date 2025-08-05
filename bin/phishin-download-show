@@ -28,14 +28,12 @@ EOF
 }
 
 curl() {
-    command curl -L -A "${user_agent}" "$@"
+    command curl --location --user-agent 'phish-cli <kylie@somas.is>' "$@"
 }
 
 phishin() {
     jq -cr "$@" <<<"${phishin_show_data}"
 }
-
-user_agent='phish-cli <kylie@somas.is>'
 
 if [[ "$#" -ne 1 ]]; then
     usage 'error: incorrect number of arguments (1 required)\n'

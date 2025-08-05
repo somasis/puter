@@ -34,12 +34,10 @@ EOF
 }
 
 curl() {
-    command curl --no-progress-meter --location -A "${user_agent}" "$@"
+    command curl --no-progress-meter --user-agent 'phish-cli <kylie@somas.is>' "$@"
 }
 
 [[ "$#" -gt 0 ]] || usage 'error: no show provided\n'
-
-user_agent='phish-cli <kylie@somas.is>'
 
 show_data=$(curl --fail-with-body "https://phish.in/api/v2/shows/${1?no show provided}")
 

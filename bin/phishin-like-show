@@ -30,7 +30,7 @@ curl() {
     command curl \
         --no-progress-meter \
         --location \
-        --user-agent "${user_agent}" \
+        --user-agent 'phish-cli <kylie@somas.is>' \
         "$@"
 }
 
@@ -41,15 +41,13 @@ curl_authed() {
         "${@?curl_authed(): no arguments given}"
 }
 
-user_agent='phish-cli <kylie@somas.is>'
-
 PHISHIN_USER_TOKEN=$(phishin-auth-login)
 export PHISHIN_USER_TOKEN
 
 errors=0
 for show; do
     # /likes requires the show ID be given, not a date
-    show_id=$(curl --no-progress-meter --fail-with-body "https://phish.in/api/v2/shows/${1?no show given}")
+    show_id=$(curl --fail-with-body "https://phish.in/api/v2/shows/${1?no show given}")
     show_id=$(jq -ce '.id' <<<"${show_id}")
 
     result=$(
