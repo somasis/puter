@@ -4,7 +4,7 @@ usage() {
     cat >&2 <<EOF
 usage: ${0##*/} [-0] files...
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 filter() {

@@ -32,7 +32,7 @@ usage() {
 usage: ${0##*/} [-i] [-a account] [-c comment] [-d description] [timespec]
        ${0##*/} [-ilr]
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 yesno() {

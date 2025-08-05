@@ -12,7 +12,7 @@ use Getopt::Std;
 
 sub HELP_MESSAGE {
     say STDERR "usage: " . (fileparse($0))[0] . " [-!0v] TYPE FILES...";
-    exit 69;
+    exit 64; # EX_USAGE
 }
 
 sub VERSION_MESSAGE { HELP_MESSAGE; }

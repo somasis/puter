@@ -18,7 +18,7 @@ database by acting as an \$EDITOR for \`beet edit\`. Note that this means the
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 if [[ "${BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT:=0}" -eq 1 ]]; then

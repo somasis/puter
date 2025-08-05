@@ -11,7 +11,7 @@ kepeken: sitelen-lili-nimi [-u] [-l mute] [-L kule] [-p mute] [-P kule]
                            [-n nasin] [-s mute] [-S kule] [-o open_nimi
                            [nimi...]
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 mu() {

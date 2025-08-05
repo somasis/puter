@@ -37,7 +37,7 @@ usage() {
     cat >&2 <<EOF
 usage: list-query [-Uai] [-c context] [-f file] [-p project] [query ...]
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 filter_mode=all

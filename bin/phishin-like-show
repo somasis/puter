@@ -21,7 +21,7 @@ see also: phishin-auth-login, phishin-list-liked-shows.
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 [[ "$#" -gt 0 ]] || usage 'error: no arguments provided\n'

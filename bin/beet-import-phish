@@ -34,7 +34,7 @@ see also: beet import, phishin-download-show.
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 phishin() {

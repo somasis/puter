@@ -60,7 +60,7 @@ run() {
 
 if [[ "$#" -eq 0 ]]; then
     printf 'error: no `hledger` command given\n' >&2
-    exit 69
+    exit 64 # EX_USAGE
 fi
 
 files=()

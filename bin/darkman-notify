@@ -19,7 +19,7 @@ see also: darkman(1)
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
-    exit 69
+    exit 64 # EX_USAGE
 }
 set_variables() {
     before_mode=

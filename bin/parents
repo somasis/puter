@@ -14,7 +14,7 @@ to most distant relative. Requires that the /proc filesystem exists.
 
 Kylie McClain <kylie@somas.is>
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 error() {

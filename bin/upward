@@ -19,7 +19,7 @@ unsuccessfully if no file is found.
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 [[ $# -gt 0 ]] || usage 'error: missing file name\n'

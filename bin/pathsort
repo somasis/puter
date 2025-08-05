@@ -20,7 +20,7 @@ options:
 
 Kylie McClain <kylie@somas.is>
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 delim=/

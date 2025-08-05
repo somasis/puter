@@ -9,7 +9,7 @@ usage() {
 usage: list-add [-v] [-C <date>] [-D <date>] [-P <priority>] [-c <context>]
                 [-f <file>] [-p <project>] task...
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 created_date=$(date +%Y-%m-%d)

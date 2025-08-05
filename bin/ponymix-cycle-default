@@ -6,7 +6,7 @@ usage() {
     cat >&2 <<EOF
 usage: ${0##*/} TYPE
 EOF
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 [[ "$#" -eq 1 ]] || usage

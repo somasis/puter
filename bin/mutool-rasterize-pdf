@@ -19,7 +19,7 @@ variables:
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
-    exit 69
+    exit 64 # EX_USAGE
 }
 
 [[ "$#" -eq 1 ]] || usage 'error: only one PDF file should be provided\n'
