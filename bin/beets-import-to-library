@@ -44,7 +44,18 @@ finish_import() {
             "${latest_after_import}"
     )
 
+    if [[ -n "${WITH_NTFY:-}" ]]; then
+        : "${NTFY_TOPIC:?error: no \$NTFY_TOPIC provided}"
+        : "${NTFY_CONFIG=${XDG_CONFIG_HOME:=$HOME/.config}/ntfy/client.yml}"
 
+        ntfy publish \
+            ${NTFY_CONFIG:+-c "$NTFY_CONFIG"} \
+            --priority 2 \
+            --title 'beets-import-to-library: Imported directory to library' \
+            --message "${format}" \
+            ${artpath:+--file="$artpath"} \
+            &
+    fi
 
     # Fork off here so that the actions are available as long as the
     # notification is.
