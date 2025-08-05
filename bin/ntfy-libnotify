@@ -22,10 +22,14 @@ set -euo pipefail
 
 click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
 
-case "${NTFY_PRIORITY:-0}" in
-    0) priority= ;;
-    1 | 2) priority=low ;;
-    3 | 4) priority=normal ;;
+case "${NTFY_PRIORITY}" in
+    1) priority=low ;;
+    2)
+        priority=low
+        args+=( --transient )
+        ;;
+    3) priority=normal ;;
+    4) priority=normal ;;
     5) priority=critical ;;
 esac
 
