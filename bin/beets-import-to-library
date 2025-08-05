@@ -1,9 +1,8 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash libnotify coreutils xdg-utils yq-go
+#! nix-shell -i bash -p bash coreutils libnotify util-linux yq-go xdg-utils
 # shellcheck shell=bash
 
 set -euo pipefail
-set -x
 
 # If another instance is running, just wait until it's gone.
 if [[ "${FLOCKER:-}" != "${0}" ]]; then
@@ -18,6 +17,10 @@ notify-send() {
     command notify-send \
         --hint='string:desktop-entry:beets-import-to-library.desktop' \
         "$@"
+}
+
+exec-to-terminal() {
+    exec xdg-terminal "${*@Q}"
 }
 
 finish_import() {
@@ -41,41 +44,43 @@ finish_import() {
             "${latest_after_import}"
     )
 
-    action=$(
-        notify-send --wait \
-            -t 10000 \
-            --replace-id="$id" \
-            -a "${0##*/}" \
-            -A 'directory=Open directory' \
-            -A 'undo=Undo' \
-            -A 'redo=Reimport manually...' \
-            ${artpath:+-i "${artpath}"} \
-            'Music imported to library' \
-            "${format}"
-    )
 
-    case "${action}" in
-        directory)
-            edo xdg-open "${latest_after_import}" &
-            disown
-            ;;
-        undo)
-            # edo kitty --title "${latest_after_import##*/} — Undoing import — beets" \
-            #     beet rm -adf "${latest_after_import}"
 
-            edo konsole --title "${latest_after_import##*/} — Undoing import — beets" -e \
-                beet rm -adf "${latest_after_import}"
+    # Fork off here so that the actions are available as long as the
+    # notification is.
+    {
+        action=$(
+            notify-send \
+                --urgency=normal \
+                --replace-id="$id" \
+                -a "${0##*/}" \
+                -A 'directory=Open directory' \
+                -A 'undo=Undo' \
+                -A 'redo=Reimport manually...' \
+                ${artpath:+-i "${artpath}"} \
+                'Music imported to library' \
+                "${format}"
+        )
 
-            # HACK for beets' thumbnails plugin not deleting .directory :/
-            rm -r "${latest_after_import}"
-            ;;
-        redo)
-            # edo kitty --title "${latest_after_import##*/} — Reimporting — beets" \
-            #     beet import "${beet_import_args}" --timid --noincremental -L "${latest_after_import}"
-            edo konsole --title "${latest_after_import##*/} — Reimporting — beets" -e \
-                beet import "${beet_import_args}" --timid --noincremental -L "${latest_after_import}"
-            ;;
-    esac
+        case "${action}" in
+            directory)
+                edo xdg-open "${latest_after_import}" &
+                disown
+                ;;
+            undo)
+                exec-to-terminal beet rm -adf "${latest_after_import}"
+
+                # HACK for beets' thumbnails plugin not deleting .directory :/
+                rm -r "${latest_after_import}"
+                ;;
+            redo)
+                exec-to-terminal beet import "${beet_import_args}" \
+                    --timid --noincremental \
+                    -L "${latest_after_import}"
+                ;;
+        esac
+    } &
+    disown
 
     exit
 }
@@ -130,8 +135,11 @@ for import; do
 
         case "${action}" in
             timid-exit)
-                edo exec konsole --title "${import} — Importing manually — beets" -e \
-                    beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
+                exec-to-terminal \
+                    beet import \
+                    "${beet_import_args[@]}" \
+                    --timid --noincremental \
+                    "${import}"
                 ;;
             skip) exit 0 ;;
         esac
@@ -160,8 +168,9 @@ for import; do
 
             case "${action}" in
                 timid-exit)
-                    edo exec konsole --title "${import} — Importing manually — beets" -e \
-                        beet import "${beet_import_args[@]}" --timid --noincremental "${import}"
+                    exec-to-terminal beet import "${beet_import_args[@]}" \
+                        --timid --noincremental \
+                        "${import}"
                     ;;
             esac
         fi
