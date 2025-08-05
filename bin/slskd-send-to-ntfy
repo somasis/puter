@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# excerpt of usage in slskd.yml:
+# ```yaml
+# integration:
+#   scripts:
+#     slskd-send-to-ntfy:
+#       on:
+#         - DownloadDirectoryComplete
+#       run:
+#         executable: /usr/bin/env
+#         arglist:
+#           - "NTFY_TOKEN=..."
+#           - "NTFY_TOPIC=ntfy.sh/i_did_not_read_the_comments"
+#           - slskd-send-to-ntfy
+# ```
+
+command -v jq 2>/dev/null || exit 64
+command -v curl 2>/dev/null || command -v wget 2>/dev/null || exit 64
+
+: "${SLSKD_SCRIPT_DATA:?error: \$SLSKD_SCRIPT_DATA must be set but is not (it should be, when ran by slskd)}"
+
+event_type=$(jq -rn 'env.SLSKD_SCRIPT_DATA | fromjson.type')
+
+case "${event_type}" in
+    DownloadDirectoryComplete)
+        NTFY_TITLE='Downloaded directory waiting to be imported'
+        NTFY_MESSAGE=$(jq -rn 'env.SLSKD_SCRIPT_DATA | fromjson.localDirectoryName')
+        NTFY_MESSAGE=${NTFY_MESSAGE/"$HOME/files/"/"$HOME"/}
+        ;;
+    *)
+        NTFY_TITLE="unhandled event: $event_type"
+        NTFY_MESSAGE="$SLSKD_SCRIPT_DATA"
+        ;;
+esac
+
+printf 'slskd-send-to-ntfy: debug: %s\n' "${SLSKD_SCRIPT_DATA}" >&2
+
+NTFY_TITLE="beets-import-to-library${NTFY_TITLE:+: $NTFY_TITLE}"
+
+export NTFY_TITLE NTFY_MESSAGE NTFY_TOKEN
+
+: "${NTFY_TOPIC?error: no \$NTFY_TOPIC specified}"
+
+if command -v curl >/dev/null 2>&1; then
+    curl \
+        --variable %NTFY_TITLE \
+        --variable %NTFY_MESSAGE \
+        --variable %NTFY_TOKEN \
+        --expand-header 'Authorization: Bearer {{NTFY_TOKEN}}' \
+        --expand-header 'Title: {{NTFY_TITLE}}' \
+        --expand-data '{{NTFY_MESSAGE}}' \
+        "${NTFY_TOPIC}"
+elif command -v wget >/dev/null 2>&1; then
+    # Wget is supported, but only cause it's in the offical slskd Docker image.
+    printf 'warning: %s\n' \
+        'using wget; depending on your threat model, this is insecure!' >&2
+
+    case "$NTFY_TOPIC" in
+        http://* | https://*) : ;;
+        *) NTFY_TOPIC="https://$NTFY_TOPIC" ;;
+    esac
+
+    wget_conf=$(mktemp)
+    cat >"$wget_conf" <<EOF
+header = Authorization: Bearer ${NTFY_TOKEN?error: no \$NTFY_TOKEN specified}
+header = Title: ${NTFY_TITLE}
+post-data = ${NTFY_MESSAGE}
+EOF
+    wget -O /dev/stderr -q --config="$wget_conf" "$NTFY_TOPIC"
+    rm -f "$wget_conf"
+fi

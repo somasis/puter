@@ -1,0 +1,42 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils findutils jq ntfy-sh
+
+# hint: run with `--since all` to import all notified directories
+
+set -euo pipefail
+
+. edo
+
+: "${SLSKD_DOWNLOAD_DIR:=${XDG_DOWNLOAD_DIR:=$(xdg-user-dir DOWNLOAD)}}"
+
+time_last_ran_file="${XDG_CACHE_HOME:=$HOME/.cache}/beets/beets-import-to-library/utc_last_run_time"
+
+mkdir -p "${time_last_ran_file%/*}"
+touch "${time_last_ran_file}"
+time_last_ran=$(<"${time_last_ran_file}") || :
+
+# -newermt is a GNUism. -since is provided by the bfs implementation.
+# I could also just `touch` a file with the time, but why not use
+# extensions if they're available, if I'm controlling the deps.
+# TZ=UTC find -L "$SLSKD_DOWNLOAD_DIR" \
+#     -mindepth 1 -maxdepth 1 \
+#     -type d \
+#     -newermt @"${time_last_ran}" \
+#     -print0 \
+#     | xargs -0 -op -I{} beets-import-to-library {}
+
+trap 'TZ=UTC date +%s > "${time_last_ran_file}"' HUP INT
+
+if ! [[ -e "${NTFY_CONFIG:=${XDG_CONFIG_HOME:=$HOME/.config}/ntfy/client.yml}" ]]; then
+    unset NTFY_CONFIG
+fi
+
+# shellcheck disable=SC2016
+edo ntfy subscribe \
+    ${NTFY_CONFIG:+-c "$NTFY_CONFIG"} \
+    ${time_last_ran:+--since "${time_last_ran}"} \
+    "$@" \
+    "${NTFY_TOPIC:=slskd}" \
+    'WTIH_NTFY=true beets-import-to-library "$NTFY_MESSAGE"'
+
+TZ=UTC date +%s >"${time_last_ran_file}"

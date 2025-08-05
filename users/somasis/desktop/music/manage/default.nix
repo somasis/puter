@@ -30,6 +30,13 @@
     }
   ];
 
+  cache.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "beets";
+    }
+  ];
+
   xdg.userDirs.music = "${config.home.homeDirectory}/audio/library";
 
   home = {
@@ -39,6 +46,22 @@
     # Used by `bin/beet-import-phish`.
     sessionVariables.BEET_IMPORT_PHISH_DOWNLOAD_DIR = "${config.home.homeDirectory}/audio/source/bootleg-phishin";
   };
+
+  xdg.autostart.entries =
+    let
+      desktopItem = pkgs.makeDesktopItem;
+      autostart = "${desktopItem}/share/applications/${desktopItem.desktopName}.desktop";
+    in
+    [
+      (autostart {
+        desktopName = "beets-import-to-library-from-slskd-ntfy";
+        name = "beets-import-to-library-from-slskd-ntfy";
+        exec = "beets-import-to-library-from-slskd-ntfy";
+        icon = "media-import-audio-cd";
+        comment = "Import new directories via slskd events propagated by slskd-ntfy";
+        genericName = "beets-import-to-library slskd helper";
+      })
+    ];
 
   # programs.qutebrowser.searchEngines."!beets" = "file:///${beets.doc}/share/doc/beets-${beets.version}/html/search.html?q={}";
 }
