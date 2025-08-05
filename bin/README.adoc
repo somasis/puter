@@ -9,6 +9,8 @@ I have a few scripts in here that I think are worth talking about.
 
 upload::
     A script for uploading files to services like 0x0.st (which it defaults to).
+    It was once packaged in nixpkgs, but isn't anymore since the URL to it in my
+    previous dotfiles repository became invalid. Maybe again someday.
 
 == License
 
