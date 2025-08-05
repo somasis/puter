@@ -7,32 +7,18 @@ in
 with flake.inputs;
 with flake.inputs.nixpkgs;
 let
-  # Use publicly-available SSH keys from https://github.com/<user>.keys
-
-  users = {
+  recipients = {
     somasis = {
-      default = lib.fileContents keys-github-somasis;
-      ilo = "ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFIbzmSphq2OTrMGV8TIgpF8zKzQW7Lp7yHFd/I9Esy9fcqXzXtTtFAn2rN/QWwmPXDi5+Icg09GfKAdcUxS+UM= somasis@ilo_tpm";
+      ilo = "age1tpm1qtfwxktsqmuw363sjalejf80qasph0dzawu38rs8h9ah5fqsc0zekwu5ev8";
     };
   };
 in
-with users;
+with recipients;
 {
   # Before committing any modifications to the list of recipients for
   # any file listed here, run `agenix -r` in the development environment.
-  "somasis-rclone-whatbox-http-url.age".publicKeys = [
-    somasis.ilo
-  ];
-
-  "somasis-rclone-whatbox-pass.age".publicKeys = [
-    somasis.ilo
-  ];
-
-  "somasis-rclone-fastmail-pass.age".publicKeys = [
-    somasis.ilo
-  ];
-
-  "somasis-rclone-nextcloud-pass.age".publicKeys = [
-    somasis.ilo
-  ];
+  "somasis-rclone-fastmail-pass.age".publicKeys = [ somasis.ilo ];
+  "somasis-rclone-nextcloud-pass.age".publicKeys = [ somasis.ilo ];
+  "somasis-rclone-whatbox-http-url.age".publicKeys = [ somasis.ilo ];
+  "somasis-rclone-whatbox-pass.age".publicKeys = [ somasis.ilo ];
 }

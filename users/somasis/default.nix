@@ -19,6 +19,7 @@
       ./commands
       ./editor
       ./git
+      ./age.nix
       ./less.nix
       ./locale.nix
       ./man.nix
@@ -34,8 +35,6 @@
       ./xdg.nix
       # keep-sorted end
     ];
-
-  age.identityPaths = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
 
   cache = {
     # defaultDirectoryMethod = "symlink";
