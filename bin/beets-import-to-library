@@ -171,23 +171,27 @@ for import; do
         if grep -q '^skip' "$beets_skipped_log" || [[ "$import_exit" -ne 0 ]]; then
             import_exit=1
 
-            action=$(
-                notify-send --wait \
-                    --urgency=critical \
-                    --replace-id="$id" \
-                    -a "${0##*/}" \
-                    -A 'timid-exit=Import manually...' \
-                    'Failed to import music' \
-                    "Failed to import ${import@Q} (error code: ${import_exit})."
-            )
+            {
+                action=$(
+                    notify-send --wait \
+                        --urgency=critical \
+                        --replace-id="$id" \
+                        -a "${0##*/}" \
+                        -A 'timid-exit=Import manually...' \
+                        'Failed to import music' \
+                        "Failed to import ${import@Q} (error code: ${import_exit})."
+                )
 
-            case "${action}" in
-                timid-exit)
-                    exec-to-terminal beet import "${beet_import_args[@]}" \
-                        --timid --noincremental \
-                        "${import}"
-                    ;;
-            esac
+                case "${action}" in
+                    timid-exit)
+                        exec-to-terminal beet import "${beet_import_args[@]}" \
+                            --timid --noincremental \
+                            "${import}"
+                        ;;
+                esac
+            } &
+
+            exit 1
         fi
 
         rm -f "$beets_skipped_log"
