@@ -65,6 +65,7 @@ finish_import() {
                 --urgency=normal \
                 --replace-id="$id" \
                 -a "${0##*/}" \
+                -A 'play=Play' \
                 -A 'directory=Open directory' \
                 -A 'undo=Undo' \
                 -A 'redo=Reimport manually...' \
@@ -74,6 +75,9 @@ finish_import() {
         )
 
         case "${action}" in
+            play)
+                edo beet play -a path:"${latest_after_import}" &
+                ;;
             directory)
                 edo xdg-open "${latest_after_import}" &
                 disown
@@ -127,11 +131,12 @@ for import; do
 
         printf 'importing %s to music library...\n' "${import@Q}" >&2
 
+        # Wait 15 seconds, then begin importing.
         mapfile -t notify_output < <(
             notify-send \
-                -t 10000 \
+                -t $((15 * 1000)) \
+                --urgency=low \
                 --print-id \
-                --transient \
                 -a "${0##*/}" \
                 -A 'timid-exit=Import manually...' \
                 -A 'skip=Skip' \
@@ -168,8 +173,7 @@ for import; do
 
             action=$(
                 notify-send --wait \
-                    -t 10000 \
-                    -u critical \
+                    --urgency=critical \
                     --replace-id="$id" \
                     -a "${0##*/}" \
                     -A 'timid-exit=Import manually...' \
