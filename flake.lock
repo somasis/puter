@@ -397,18 +397,6 @@
         "type": "github"
       }
     },
-    "keys-github-cassie": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-DcRrFHtXwrw6lmz7F3EDbZU5IgenVIsrg63MAXvkbHo=",
-        "type": "file",
-        "url": "https://github.com/7596ff.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/7596ff.keys"
-      }
-    },
     "keys-github-somasis": {
       "flake": false,
       "locked": {
@@ -765,7 +753,6 @@
         "git-hooks": "git-hooks",
         "home-manager": "home-manager_2",
         "impermanence": "impermanence",
-        "keys-github-cassie": "keys-github-cassie",
         "keys-github-somasis": "keys-github-somasis",
         "lanzaboote": "lanzaboote",
         "lix-module": "lix-module",

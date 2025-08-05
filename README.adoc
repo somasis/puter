@@ -1,9 +1,11 @@
 = puter
 // vim: sw=2 tw=72
 
+Here's how I use the computer.
+
 NixOS and home-manager configurations.
 
-== Usage
+== Hacking
 
 Before creating any commits, ensure that you have `direnv` available and
 loaded in your shell. Then, run
@@ -33,30 +35,6 @@ committing a lock update, if you can.
   $ nix-update <package name> -F --commit --version=branch=master
 
 == Machines
-
-https://pcpartpicker.com/user/7596ff/saved/k8YCrH[esther.7596ff.com]::
-* Etymology: Phish - Esther
-* Built 2024-07-02, first used as a server then TV appliance, then turned into
-  a multi-user workstation.
-* History
-    ** 2024-07-02: original specifications
-        *** AMD Ryzen 9 5900X 3.7 GHz 12-core processor
-        *** be quiet! Pure Loop 240 liquid CPU cooler
-        *** MSI PRO B550M-VC WIFI Micro ATX AM4 motherboard
-            **** MEDIATEK Corp. MT7922 802.11ax PCI Express Wireless Network Adapter
-            **** Realtek Semiconductor Co., Ltd. RTL8111/8168/8211/8411 PCI Express Gigabit Ethernet Controller
-        *** Corsair Vengeance LPX 64 GB (2 × 32 GB) DDR4-3200 CL16 memory
-        *** Samsung 980 Pro 1TB M.2-2280 PCIe 4.0 NVMe solid state drive
-        *** Panasonic UJ267 9.5mm SATA slot-in optical drive
-        *** MSI NVIDIA GeForce RTX 3060 Ventus 12GB GPU
-        *** EVGA SuperNOVA 650 G7 650 W 80+ Fully Modular ATX power supply
-        *** Fractal Design Node 804 MicroATX Mid Tower case
-        *** RAID
-            **** Seagate IronWolf NAS 12 TB 3.5" 7200 RPM internal hard drive
-            **** Seagate IronWolf NAS 12 TB 3.5" 7200 RPM internal hard drive
-            **** Western Digital Red Plus 12 TB 3.5" 7200 RPM internal hard drive
-            **** Western Digital Red Plus 12 TB 3.5" 7200 RPM internal hard drive
-    ** TODO what did we do about the drive replacements?
 
 ilo.somas.is::
 * Etymology: toki pona, meaning tool, machine, device
@@ -92,16 +70,11 @@ ilo.somas.is::
         *** 2024-07-10: Mainboard replacement (again) due to possible lemon
     ** 2024-11-13: International English - Linux input cover kit (incl. keyboard and touchpad) ($99.00)
 
-== Devices
-
-https://openwrt.org/toh/linksys/ea8300[Linksys EA3800]::
-* bobonet router. Runs OpenWrt.
-
 == Implementation details
 
 === Secrets (`./secrets`)
 
-We use <https://github.com/ryantm/agenix> for actually managing the secrets.
+I use <https://github.com/ryantm/agenix> for actually managing the secrets.
 
 ==== Creating and using a secret
 
@@ -112,9 +85,9 @@ We use <https://github.com/ryantm/agenix> for actually managing the secrets.
 ```
 
 ```
-~/src/nixos $ nix develop
-~/src/nixos $ cd secrets/
-~/src/nixos/secrets $ agenix -e my-new-apikey.age
+~/src/puter $ nix develop
+~/src/puter $ cd secrets/
+~/src/puter/secrets $ agenix -e my-new-apikey.age
 ```
 
 ```nix

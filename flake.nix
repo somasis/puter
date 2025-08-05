@@ -2,11 +2,6 @@
   description = "puter";
 
   inputs = {
-    keys-github-cassie = {
-      url = "https://github.com/7596ff.keys";
-      flake = false;
-    };
-
     keys-github-somasis = {
       url = "https://github.com/somasis.keys";
       flake = false;
@@ -242,19 +237,6 @@
       };
 
       nixosConfigurations = {
-        # esther = lib.nixosSystem {
-        #   specialArgs = {
-        #     inherit
-        #       self
-        #       inputs
-        #       nixpkgs
-        #       disko
-        #       ;
-        #   };
-        #   modules = [ ./hosts/esther.7596ff.com ];
-        # };
-        esther = throw "esther is now unsupported 💔";
-
         ilo = lib.nixosSystem {
           specialArgs = {
             inherit
