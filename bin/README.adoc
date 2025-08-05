@@ -7,7 +7,50 @@ Various scripts I use.
 
 I have a few scripts in here that I think are worth talking about.
 
-=== `beet-hook-diff-pluginload` and `beet-hook-diff-cli_exit`
+=== beets tools
+
+Many of the tools I've written recently have been in service of making Beets,
+the command-line music organizer, nicer to use.
+
+=== `beets-import-to-library`
+
+:beets-servicemenu: ../share/kio/servicemenus/beets.desktop
+
+The idea here is to provide a semi-interactive script for importing albums into
+the Beets library, allowing the user to break out into more manual usage of
+`beet import <album>...` when necessary.
+
+I recently started using KDE Plasma as my main desktop environment after years
+of using a `bspwm` based setup, and so I've sought to integrate it into some
+typical use cases. Consequentially, there's a KIO service menu for this tool
+located at link:{beets-servicemenu}[`{beets-servicemenu}`]. It provides a nice
+menu item, and that's the primary way I interact with it.
+
+Here's a thousand words:
+
+.link:{beets-servicemenu}[The menu item], shown in Dolphin
+image::../img/beets-import-to-library%20%28menu%20item%29.png[A popup menu
+created by a right-click action on a directory named "Phish - Slip Stitch and
+Pass (1997)", with the menu item "Import to music library..." highlighted by
+the mouse cursor.]
+
+.Notification of import starting soon
+image::../img/beets-import-to-library%20%28importing%29.png[A desktop
+notification as produced by KDE Plasma, titled "Importing..." and the directory
+name mentioned previously as the notification message content. Two buttons are
+on the notification, one labeled "Import manually..." and the other labeled
+"Skip".]
+
+.Notification of successful import
+image::../img/beets-import-to-library%20%28imported%29.png[A desktop
+notification as produced by KDE Plasma, titled "Music imported to library" with
+the message content "Successfully imported Phish - Slip Stitch and Pass (1997)
+using metadata from MusicBrainz." Four buttons are on the notification, labeled
+respectively from left to right, "Play", "Open directory", "Undo", and "Reimport
+manually..." The notification has an icon on the top right that features the
+album's cover art.]
+
+==== `beet-hook-diff-{pluginload,cli_exit}`
 
 These two scripts work to provide a hook for Beets that shows a diff containing
 all the changes that happened to its `library.db` during its run.
@@ -28,7 +71,6 @@ hook:
       command: beet-hook-diff-pluginload
     - event: cli_exit
       command: beet-hook-diff-cli_exit
-
 ----
 
 === `upload`
