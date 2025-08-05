@@ -29,6 +29,8 @@
       # keep-sorted start
       gnupg
       kleopatra
+      libsecret
+      pass-secrets
       pinentry-qt
       qtpass
       # keep-sorted end
@@ -55,8 +57,11 @@
     );
   };
 
-  # Provide libsecret service for various apps
-  services.pass-secret-service.enable = true;
+  # FIXME Provide libsecret service for various apps
+  # Fails with multiple GPG keys specified in .gpg-id, in part due
+  # to the fact that pass-secret-service isn't using `pass` directly.
+  # `pass-secrets` just uses `pass` which I think is better anyway.
+  # services.pass-secret-service.enable = true;
 
   # programs.qutebrowser = {
   #   aliases.pass = "spawn -u ${lib.getExe qute-pass}";
