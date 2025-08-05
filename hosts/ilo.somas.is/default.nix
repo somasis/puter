@@ -15,7 +15,7 @@
       nixosModules.freedom
       nixos-hardware.nixosModules.framework-12th-gen-intel
 
-      lix-module.nixosModules.default
+      lix-module.nixosModules.lixFromNixpkgs
 
       ./audio.nix
       ./backup.nix
