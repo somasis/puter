@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+: "${TMPDIR:=/tmp}"
+: "${XDG_CONFIG_HOME:=${HOME}/.config}"
+: "${BEETS_LIBRARY=$XDG_CONFIG_HOME/beets/library.db}"
+
+hash=$(env | sha1sum | cut -c1-40)
+session="$TMPDIR/beets/hook-diff-$hash"
+
+if [[ -e "$session" ]]; then
+    printf 'error: session directory already exists, but should be empty\n' >&2
+    exit 127
+fi
+
+mkdir -p "$session"
+sha1sum "$BEETS_LIBRARY" | cut -c1-40 >"$session/before.sha1sum"
+
+sqlite3 -readonly -batch \
+    "$BEETS_LIBRARY" \
+    ".dump" \
+    >"$session/library.sql.before"

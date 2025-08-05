@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+: "${TMPDIR:=/tmp}"
+: "${XDG_CONFIG_HOME:=${HOME}/.config}"
+: "${BEETS_LIBRARY=$XDG_CONFIG_HOME/beets/library.db}"
+: "${DIFF:-}"
+
+: "${DIFF:=diff -u --color}"
+
+hash=$(env | sha1sum | cut -c1-40)
+session="$TMPDIR/beets/hook-diff-$hash"
+
+if ! [[ -e "$session/library.sql.before" ]]; then
+    printf 'error: %s does not exit; was the pluginload hook ran?\n' \
+        "$session/library.sql.before" \
+        >&2
+    exit 127
+fi
+
+sha1sum "$BEETS_LIBRARY" | cut -c1-40 >"$session/after.sha1sum"
+
+e=0
+if [[ "$(<"$session/before.sha1sum")" != "$(<"$session/after.sha1sum")" ]]; then
+    (
+        sqlite3 -readonly -batch \
+            "$BEETS_LIBRARY" \
+            '.dump' \
+            >"$session/library.sql.after"
+
+        eval "${DIFF}" -- "$session/library.sql.before" "$session/library.sql.after" || :
+    ) || e=$?
+fi
+
+rm -rf "$session"
+
+exit "$e"

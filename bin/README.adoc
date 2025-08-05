@@ -7,10 +7,36 @@ Various scripts I use.
 
 I have a few scripts in here that I think are worth talking about.
 
-upload::
-    A script for uploading files to services like 0x0.st (which it defaults to).
-    It was once packaged in nixpkgs, but isn't anymore since the URL to it in my
-    previous dotfiles repository became invalid. Maybe again someday.
+=== `beet-hook-diff-pluginload` and `beet-hook-diff-cli_exit`
+
+These two scripts work to provide a hook for Beets that shows a diff containing
+all the changes that happened to its `library.db` during its run.
+
+They both require that `sqlite3` be present in the `$PATH`.
+
+To use these hooks properly, both need to be declared in Beets' config:
+
+.beets `config.yaml` excerpt
+[source,yaml]
+----
+plugins:
+  - hook
+
+hook:
+  hooks:
+    - event: pluginload
+      command: beet-hook-diff-pluginload
+    - event: cli_exit
+      command: beet-hook-diff-cli_exit
+
+----
+
+=== `upload`
+
+A script for uploading files to services like 0x0.st (which it defaults to).
+
+It was once packaged in nixpkgs, but isn't anymore since the URL to it in my
+previous dotfiles repository became invalid. Maybe again someday.
 
 == License
 
