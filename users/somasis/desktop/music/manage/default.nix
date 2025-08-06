@@ -47,8 +47,7 @@
 
   xdg.autostart.entries =
     let
-      desktopItem = pkgs.makeDesktopItem;
-      autostart = "${desktopItem}/share/applications/${desktopItem.desktopName}.desktop";
+      autostart = args: "${pkgs.makeDesktopItem args}/share/applications/${args.desktopName}.desktop";
     in
     [
       (autostart {
