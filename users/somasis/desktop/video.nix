@@ -326,7 +326,7 @@ in
         # ((pkgs.fetchFromGitHub { owner = "Anarios"; repo = "return-youtube-dislike"; rev = "5c73825aadb81b6bf16cd5dff2b81a88562b6634"; hash = "sha256-+De9Ka9MYsR9az5Zb6w4gAJSKqU9GwqqO286hi9bGYY="; }) + "/Extensions/UserScript/Return Youtube Dislike.user.js")
       ];
 
-      aliases.mpv = "spawn -u ${lib.getExe config.programs.mpv.package}";
+      aliases.mpv = "spawn -u ${config.programs.mpv.package}/bin/umpv";
       keyBindings.normal."zpv" = "mpv --loop=inf {url}";
     };
   };
