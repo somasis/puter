@@ -1,7 +1,7 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash coreutils findutils jq ntfy-sh
 
-# hint: run with `--since all` to import all notified directories
+# hint: run with `--since all` to import all previously-notified directories
 
 set -euo pipefail
 

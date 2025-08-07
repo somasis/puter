@@ -20,17 +20,20 @@ set -euo pipefail
 : "${NTFY_TAGS:=}"
 : "${NTFY_RAW:=}"
 
+args=()
+
 click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
 
-case "${NTFY_PRIORITY}" in
+case "${NTFY_PRIORITY:-3}" in
     1) priority=low ;;
-    2)
-        priority=low
-        args+=( --transient )
-        ;;
+    2) args+=( --transient ); priority=low ;;
     3) priority=normal ;;
     4) priority=normal ;;
     5) priority=critical ;;
+    *)
+        printf 'error: invalid priority: %s\n' "${NTFY_PRIORITY}" >&2
+        exit 64
+        ;;
 esac
 
 case "${NTFY_TITLE}" in
@@ -47,12 +50,10 @@ esac
 
 message="${NTFY_MESSAGE}"
 
-args=()
-
-args+=(-a "${appname:-ntfy.sh}")
-if [[ -n "${priority}" ]]; then
-    args+=(-u "${priority}")
-fi
+args+=(
+    ${priority:+-u "$priority"}
+    -a "${appname:-ntfy.sh}"
+)
 
 mapfile -t urls < <(xurls <<<"${message}")
 
