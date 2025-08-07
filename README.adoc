@@ -1,13 +1,16 @@
 = puter
+// vim: tw=72
 
 Here's how I use the computer.
 
-NixOS and home-manager configurations.
+NixOS and home-manager configurations, xref:bin[scripts].
 
 == Hacking
 
-Before creating any commits, ensure that you have `direnv` available and
-loaded in your shell. Then, run
+:url-direnv: https://github.com/cachix/direnv
+:url-nixos-cli: https://github.com/nix-community/nixos-cli
+
+Before creating any commits, ensure that you have {url-direnv-repo}[`direnv`] available and loaded in your shell. Then, run
 
   $ direnv allow
 
@@ -15,8 +18,8 @@ which will allow you to use the Git hooks and secrets infrastructure
 provided by the flake in `flake.nix`. This will also add some commands
 to the environment; consult the package list in `devShells.default`.
 
-The way I prefer to interface with the NixOS system is through the `nixos` command,
-which comes from the https://github.com/nix-community/nixos-cli[nixos-cli] project.
+The way I prefer to interface with the NixOS system is through the
+`nixos` command, which comes from the {url-nixos-cli}[nixos-cli] project.
 
 .Updating the flake inputs (i.e., the NixOS version used to build system)
 
@@ -33,6 +36,98 @@ committing a lock update, if you can.
 
   $ nix-update <package name> -F --commit --version=branch=master
 
+== `bin`
+
+Heres a little exposition; I have a few scripts in here that I think
+are worth talking about.
+
+=== `beets-import-to-library`
+
+Many of the tools I've written recently have been in service of making
+Beets, the command-line music organizer, nicer to use in a non-terminal
+environment.
+
+:beets-servicemenu: ../share/kio/servicemenus/beets.desktop
+
+The idea here is to provide a semi-interactive script for importing albums into
+the Beets library, allowing the user to break out into more manual usage of
+`beet import <album>...` when necessary.
+
+I recently started using KDE Plasma as my main desktop environment after years
+of using a `bspwm` based setup, and so I've sought to integrate it into some
+typical use cases. Consequentially, there's a KIO service menu for this tool
+located at link:{beets-servicemenu}[`{beets-servicemenu}`]. It provides a nice
+menu item, and that's the primary way I interact with it.
+
+Here's a thousand words:
+
+.link:{beets-servicemenu}[The menu item], as shown in Dolphin
+image:../img/beets-import-to-library%20%28menu%20item%29.png[A popup menu
+created by a right-click action on a directory named "Phish - Slip Stitch and
+Pass (1997)", with the menu item "Import to music library..." highlighted by
+the mouse cursor.]
+
+.Notification of import starting soon
+image:../img/beets-import-to-library%20%28importing%29.png[A desktop
+notification as produced by KDE Plasma, titled "Importing..." and the directory
+name mentioned previously as the notification message content. Two buttons are
+on the notification, one labeled "Import manually..." and the other labeled
+"Skip".]
+
+.Notification of successful import
+image:../img/beets-import-to-library%20%28imported%29.png[A desktop
+notification as produced by KDE Plasma, titled "Music imported to library" with
+the message content "Successfully imported Phish - Slip Stitch and Pass (1997)
+using metadata from MusicBrainz." Four buttons are on the notification, labeled
+respectively from left to right, "Play", "Open directory", "Undo", and "Reimport
+manually..." The notification has an icon on the top right that features the
+album's cover art.]
+
+==== `beet-hook-diff-{pluginload,cli_exit}`
+
+These two scripts work to provide a hook for Beets that shows a diff
+containing all the changes that happened to its `library.db` during
+its run.
+
+They both require that `sqlite3` be present in the `$PATH`. The `diff` is
+calculated using the output of `sqlite3`'s `.dump` command.
+
+To use these hooks properly, both need to be declared in Beets' config:
+
+.beets `config.yaml` excerpt
+[source,yaml]
+----
+plugins:
+  - hook
+
+hook:
+  hooks:
+    - event: pluginload
+      command: beet-hook-diff-pluginload
+    - event: cli_exit
+      command: beet-hook-diff-cli_exit
+----
+
+.Pitfalls
+The `pluginload` hook merely writes the "before"-state of the database,
+and the `cli_exit` one writes the "after"-state. Notably, this means that
+the diff is liable to be inaccurate and show too many changes if you have
+multiple instances of `beet` modifying the database at the same time.
+Future plans include fixing this by making the hooks run closer to the
+database opens and writes, such as running `pluginload` at `library_opened`
+instead. Plus, instead of gathering changes, the `cli_exit` hook could be
+ran at `database_change`, and then the change diffs could be written
+incrementally, being more accurate to changes done by the invoking
+instance of `beet`. If we keep using `.dump` though, that would entail
+all the impediments that incurs (slowing down `beet` by dumping already
+calculated database values, potentially causing lots of churn).
+
+=== `upload`
+
+A script for uploading files to services like 0x0.st (which it defaults to).
+
+It was once packaged in nixpkgs, but isn't anymore since the URL to it in my
+previous dotfiles repository became invalid. Maybe again someday.
 == Machines
 
 ilo.somas.is::
@@ -103,3 +198,4 @@ To the extent possible under law, Kylie McClain <kylie@somas.is>
 has waived all copyright and related or neighboring rights to this work.
 
 http://creativecommons.org/publicdomain/zero/1.0/
+
