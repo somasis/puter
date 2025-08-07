@@ -465,9 +465,9 @@ in
         # Set autowrap highlighters, and update autowrap highlighters when the option changes.
         {
           name = "WinSetOption";
-          option = "autowrap_column=.*";
+          option = "autowrap_column=(.+)";
           commands = ''
-            add-highlighter -override window/column column %opt{autowrap_column} WrapColumn
+            add-highlighter -override window/ column %sh{ echo $(( kak_opt_autowrap_column + 1 )) } default,bright-black
           '';
         }
 

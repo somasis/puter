@@ -1,5 +1,4 @@
 = puter
-// vim: sw=2 tw=72
 
 Here's how I use the computer.
 
