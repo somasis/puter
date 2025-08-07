@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   pkgs,
   ...
 }:
@@ -9,9 +10,28 @@
     pkgs.age-plugin-tpm
   ];
 
-  age.identityPaths = [
-    "${config.xdg.configHome}/age/identity.tpm"
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgConfigDir "age";
+    }
   ];
+
+  age = {
+    identityPaths = [ "${config.xdg.configHome}/age/identity.tpm" ];
+
+    # Workaround use of "${XDG_RUNTIME_DIR}" in the secrets path.
+    # <https://github.com/ryantm/agenix/issues/300>
+    # I first ran into this problem with mounts managed by `programs.rclone` failing
+    # since the secret file they'd be receiving the path of would be...
+    # "${XDG_RUNTIME_DIR}/agenix/file". Which would usually be fine, but it isn't
+    # during activation for the home-manager module, because $XDG_RUNTIME_DIR isn't set
+    # at the time of use, and in fact it's only ever set explicitly in the activation script...
+    secretsDir = "/run/user/${toString osConfig.users.users.${config.home.username}.uid}/agenix";
+    secretsMountPoint = "/run/user/${
+      toString osConfig.users.users.${config.home.username}.uid
+    }/agenix.d";
+  };
 
   systemd.user.services = {
     age-tpm-keygen = {
@@ -41,9 +61,9 @@
     age-keygen = {
       Unit = {
         Description = "Automatically generate an age(1) identity for $USER";
+        After = [ "age-tpm-keygen.service" ];
         Conflicts = [ "age-tpm-keygen.service" ];
-        ConditionSecurity = "!tpm2";
-        ConditionPathExistsGlob = "!%E/age/identity.tpm";
+        ConditionPathExistsGlob = "!%E/age/identity";
       };
       Install.WantedBy = [ "default.target" ];
 
