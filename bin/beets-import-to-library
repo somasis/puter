@@ -172,6 +172,18 @@ for import; do
             import_exit=1
 
             {
+                if [[ -n "${WITH_NTFY:-}" ]]; then
+                    : "${NTFY_TOPIC:?error: no \$NTFY_TOPIC provided}"
+                    : "${NTFY_CONFIG=${XDG_CONFIG_HOME:=$HOME/.config}/ntfy/client.yml}"
+
+                    ntfy publish \
+                        ${NTFY_CONFIG:+-c "$NTFY_CONFIG"} \
+                        --priority 4 \
+                        --title "beets-import-to-library: Failed while importing (error code: ${import_exit})" \
+                        --message "${format}" \
+                        &
+                fi
+
                 action=$(
                     notify-send --wait \
                         --urgency=critical \
@@ -190,6 +202,7 @@ for import; do
                         ;;
                 esac
             } &
+            disown
 
             exit 1
         fi
