@@ -12,6 +12,7 @@
 #         arglist:
 #           - "NTFY_TOKEN=..."
 #           - "NTFY_TOPIC=ntfy.sh/i_did_not_read_the_comments"
+#           - "REMOTE_DIR=/home/user/incoming"
 #           - slskd-send-to-ntfy
 # ```
 
@@ -26,7 +27,12 @@ case "${event_type}" in
     DownloadDirectoryComplete)
         NTFY_TITLE='Downloaded directory waiting to be imported'
         NTFY_MESSAGE=$(jq -rn 'env.SLSKD_SCRIPT_DATA | fromjson.localDirectoryName')
-        NTFY_MESSAGE=${NTFY_MESSAGE/"$HOME/files/"/"$HOME"/}
+
+        LOCAL_DIR=${LOCAL_DIR:="${NTFY_MESSAGE%/*}"}
+
+        if [[ -v REMOTE_DIR ]]; then
+            NTFY_MESSAGE=${NTFY_MESSAGE/"$LOCAL_DIR"/"$REMOTE_DIR"}
+        fi
         ;;
     *)
         NTFY_TITLE="unhandled event: $event_type"
