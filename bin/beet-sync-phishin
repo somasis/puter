@@ -59,7 +59,7 @@ if [[ -e "$BEET_SYNC_PHISHIN_NOTES" ]]; then
     mapfile -t notes_mentioned_shows < <(grep -Eo '[0-9]{4}-[0-9]{2}-[0-9]{2}' "${BEET_SYNC_PHISHIN_NOTES}" | tac)
 fi
 
-mapfile -t phishin_liked_shows < <(phishin-list-liked-shows)
+mapfile -t phishin_liked_shows < <(phishin-list-shows -l)
 
 # mapfile -t shows_to_phishin_like < <(
 #     {
