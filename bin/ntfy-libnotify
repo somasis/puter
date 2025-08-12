@@ -1,5 +1,6 @@
+#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash libnotify jq xurls
+#! nix-shell -i bash -p bash libnotify jq sed xurls
 # shellcheck shell=bash
 # vim: ft=sh
 
@@ -10,6 +11,8 @@
 # notification.
 
 set -euo pipefail
+
+command -V jq notify-send sed xdg-open xurls >/dev/null
 
 : "${NTFY_ID:=}"
 : "${NTFY_TIME:=}"
