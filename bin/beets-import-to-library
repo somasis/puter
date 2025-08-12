@@ -116,6 +116,13 @@ beet_import_args+=(
 
 library_directory=$(beet config -d | yq -p yaml .library)
 
+for import; do
+    if ! [[ -d "$import" ]]; then
+        printf 'error: %s is not a directory\n' >&2
+        exit 64
+    fi
+done
+
 import_errors=()
 for import; do
     error=0
