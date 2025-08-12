@@ -65,10 +65,26 @@ near_show_data=
 
 show_download=$(
     phishin '{
-            album_zip_url,
-            updated_at,
-            filename: "Phish - \(.date) \(.venue_name), \(.venue.location)\(.tags | map(" [\(.name)]") | join("")).zip"
-        }'
+        album_zip_url,
+        updated_at,
+        filename: (
+            [
+                "Phish - \(.date) \(.venue_name), \(.venue.location)",
+                ((
+                    ( .tags | map(.name))
+                        + [
+                            (.audio_status
+                                | (
+                                    (.[0:1] | ascii_upcase)
+                                        + .[1:]
+                                )
+                            )
+                        ]
+                ) | map(" [\(.)]") | join("")),
+                ".zip"
+            ] | join("")
+        )
+    }'
 )
 
 filename=$(jq -r .filename <<<"${show_download}")
