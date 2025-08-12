@@ -29,7 +29,7 @@
 
   systemd.user.services.ntfy-sh = {
     Unit = {
-      Description = "Subscribe to notifications from ntfy.sh";
+      Description = "Subscribe to notifications from ntfy.sh using the user configuration";
       PartOf = [ "graphical-session.target" ];
     };
     Install.WantedBy = [ "graphical-session.target" ];
@@ -38,8 +38,12 @@
       Type = "simple";
       Restart = "on-failure";
 
+      SyslogIdentifier = "ntfy";
+
       ExecStartPre = lib.mkIf osConfig.networking.networkmanager.enable "${pkgs.networkmanager}/bin/nm-online -q";
       ExecStart = pkgs.writeShellScript "ntfy-sh-subscribe-with-since" ''
+        : "''${XDG_CACHE_HOME:=$HOME/.cache}"
+
         PATH="''${PATH:+$PATH:}"${
           lib.escapeShellArg (
             lib.makeBinPath [
@@ -49,7 +53,7 @@
           )
         }
 
-        time_last_ran_file="''${XDG_CACHE_HOME:=$HOME/.cache}/ntfy/utc_last_run_time"
+        time_last_ran_file="$XDG_CACHE_HOME/ntfy/utc_last_run_time"
 
         mkdir -p "''${time_last_ran_file%/*}"
         touch "$time_last_ran_file"
@@ -58,10 +62,10 @@
         trap 'TZ=UTC date +%s > "$time_last_ran_file"' HUP INT
 
         # shellcheck disable=SC2016
-        ntfy subscribe ''${time_last_ran:+--since "$time_last_ran}"} --from-config "$@"
+        ntfy subscribe ''${time_last_ran:+--since "$time_last_ran"} --from-config "$@"
 
         TZ=UTC date +%s > "$time_last_ran_file"
       '';
     };
-};
+  };
 }
