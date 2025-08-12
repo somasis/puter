@@ -15,7 +15,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [show ...]
+usage: ${0##*/}
 
 Synchronize the metadata of Phish.in shows in the Beets library with
 your Phish.in account. This includes doing things like:
@@ -26,14 +26,6 @@ your Phish.in account. This includes doing things like:
 
 Furthermore, it can read a file which is searched for ISO dates, which
 are assumed to be shows.
-
-options:
-    [show ...]          ISO-formatted dates (ex. 1969-12-31) which
-                        correspond to the date of a show performed
-                        by the band Phish. If no shows are provided,
-                        a list of default shows is built up from
-                        available metadata.
-
 
 environment variables:
     \$BEET_SYNC_PHISHIN_NOTES${BEET_SYNC_PHISHIN_NOTES:+ (current: ${BEET_SYNC_PHISHIN_NOTES@Q})}
@@ -55,7 +47,7 @@ case "$1" in
     --help | -h) usage ;;
 esac
 
-shows_to_import=("${@:-}")
+shows_to_import=()
 notes_mentioned_shows=()
 phishin_liked_shows=()
 
