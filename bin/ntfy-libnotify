@@ -4,15 +4,48 @@
 # shellcheck shell=bash
 # vim: ft=sh
 
-# Use notify-send to display notifications from ntfy.sh. To use this, the
-# client.yml used by `ntfy subscribe` should contain
-# "default-command: ntfy-libnotify". xurls is used to extract any URLs from the
-# message, which are made into actions that the user can click on in the
-# notification.
-
 set -euo pipefail
 
+# shellcheck disable=SC2120
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ntfy subscribe <topic> ${0##*/}
+
+Show a desktop notification sent to ntfy.sh, using \`notify-send\`. How this
+differs from just using \`notify-send "\$NTFY_TITLE" "\$NTFY_MESSAGE"\`,
+is that this script takes care to translate the ntfy.sh notification metadata
+to its freedesktop.org notification specification equivalents.
+
+Example usage in ${XDG_CONFIG_HOME:-$HOME/.config}/ntfy/client.yaml:
+\`\`\`yaml
+default-command: ${0##*/}
+
+# and/or
+
+subscribe:
+  - topic: zfs-scrubs
+    command: ${0##*/}
+\`\`\`
+
+environment variables:
+    \$XDG_CONFIG_HOME${XDG_CONFIG_HOME:+ (current: ${XDG_CONFIG_HOME@Q})}
+    \$NTFY_MESSAGE, \$NTFY_PRIORITY, \$NTFY_RAW, \$NTFY_TAGS, \$NTFY_TITLE
+        These variables should be set when invoked by \`ntfy subscribe\`.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 64 # EX_USAGE
+}
+
 command -V jq notify-send sed xdg-open xurls >/dev/null
+
+case "${1:-}" in
+    --help) usage ;;
+esac
 
 : "${NTFY_ID:=}"
 : "${NTFY_TIME:=}"
