@@ -240,7 +240,7 @@ with palette;
   };
 
   xdg.dataFile = {
-    "color-schemes/SomasisDark.colors".source = ./SomasisDark.colors;
-    "color-schemes/SomasisLight.colors".source = ./SomasisLight.colors;
+    "color-schemes/SomasisDark.colors".source = "${self}/share/color-schemes/SomasisDark.colors";
+    "color-schemes/SomasisLight.colors".source = "${self}/share/color-schemes/SomasisLight.colors";
   };
 }
