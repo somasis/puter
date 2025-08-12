@@ -47,14 +47,12 @@ case "${1:-}" in
     --help) usage ;;
 esac
 
+: "${NTFY_RAW?error: \$NTFY_RAW was not set; are you running this script from within \`ntfy subscribe\`?}"
 : "${NTFY_ID:=}"
-: "${NTFY_TIME:=}"
-: "${NTFY_TOPIC:=}"
 : "${NTFY_MESSAGE:=}"
 : "${NTFY_TITLE:=}"
-: "${NTFY_PRIORITY:=}"
 : "${NTFY_TAGS:=}"
-: "${NTFY_RAW:=}"
+: "${NTFY_PRIORITY:=0}"
 
 message_is_markdown=$(
     jq -r '
@@ -68,14 +66,19 @@ message_is_markdown=$(
 
 args=()
 
-click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
+app_name=ntfy
+title=
+urgency=
 
-case "${NTFY_PRIORITY:-3}" in
-    1) priority=low ;;
-    2) args+=( --transient ); priority=low ;;
-    3) priority=normal ;;
-    4) priority=normal ;;
-    5) priority=critical ;;
+case "${NTFY_PRIORITY}" in
+    1) urgency=low ;;
+    2)
+        args+=(--transient)
+        urgency=low
+        ;;
+    0 | 3) urgency=normal ;;
+    4) urgency=normal ;;
+    5) urgency=critical ;;
     *)
         printf 'error: invalid priority: %s\n' "${NTFY_PRIORITY}" >&2
         exit 64
@@ -84,21 +87,19 @@ esac
 
 case "${NTFY_TITLE}" in
     *': '*)
-        appname=${NTFY_TITLE%%: *}
+        app_name=${NTFY_TITLE%%: *}
         title=${NTFY_TITLE#*: }
         ;;
     *' - '*)
-        appname=${NTFY_TITLE%% - *}
+        app_name=${NTFY_TITLE%% - *}
         title=${NTFY_TITLE#* - }
         ;;
     *) title="${NTFY_TITLE:-${NTFY_TAGS%%,*}}" ;;
 esac
 
-message="${NTFY_MESSAGE}"
-
 args+=(
-    ${priority:+-u "$priority"}
-    -a "${appname:-ntfy.sh}"
+    ${urgency:+--urgency="$urgency"}
+    ${app_name:+--app-name="$app_name"}
 )
 
 message="$NTFY_MESSAGE"
@@ -145,9 +146,11 @@ else
     done
 fi
 
+click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
+
 if [[ -n "${click:-}" ]]; then
-    args+=(-A click=Open)
-    args+=(--expire-time $((60 * 1000)))
+    args+=(--action=click=Open)
+    args+=(--expire-time=$((60 * 1000)))
 fi
 
 (
