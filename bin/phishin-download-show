@@ -57,7 +57,7 @@ done
 
 # shellcheck disable=SC2310
 if ! phishin_show_data=$(curl --no-progress-meter --fail "https://phish.in/api/v2/shows/${show}" | jq -c); then
-    printf 'error: failed to download show data for %s\n' "${show}"
+    printf 'error: failed to download show data for %s\n' "${show}" >&2
     exit 1
 fi
 
