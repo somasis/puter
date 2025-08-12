@@ -19,10 +19,10 @@ options:
             is already a token in the secret store.
 
 environment variables:
-    \$PHISHIN_USER_EMAIL_COMMAND${PHISHIN_USER_EMAIL_COMMAND:+ [currently: $PHISHIN_USER_EMAIL_COMMAND]}
-    \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ [currently: $PHISHIN_USER_EMAIL]}
+    \$PHISHIN_USER_EMAIL_COMMAND${PHISHIN_USER_EMAIL_COMMAND:+ (current: $PHISHIN_USER_EMAIL_COMMAND)}
+    \$PHISHIN_USER_EMAIL${PHISHIN_USER_EMAIL:+ (current: $PHISHIN_USER_EMAIL)}
         The email which will be used to authenticate to Phish.in.
-    \$PHISHIN_USER_PASSWORD_COMMAND${PHISHIN_USER_PASSWORD_COMMAND:+ [currently: $PHISHIN_USER_PASSWORD_COMMAND]}
+    \$PHISHIN_USER_PASSWORD_COMMAND${PHISHIN_USER_PASSWORD_COMMAND:+ (current: $PHISHIN_USER_PASSWORD_COMMAND)}
     \$PHISHIN_USER_PASSWORD
         The password which will be used to authenticate to Phish.in.
 
@@ -35,7 +35,8 @@ EOF
 }
 
 curl_authed() {
-    : "${PHISHIN_USER_TOKEN:?error in curl_authed(): no \$PHISHIN_USER_TOKEN set}"
+    [[ -v PHISHIN_USER_TOKEN ]] || usage 'error: no $PHISHIN_USER_TOKEN set\n'
+
     curl \
         --variable %PHISHIN_USER_TOKEN \
         --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
@@ -46,7 +47,11 @@ phishin_refresh_token() {
     local -
     set +x
 
-    : "${PHISHIN_USER_EMAIL:?error in phishin_refresh_token(): no \$PHISHIN_USER_EMAIL set}"
+    if [[ -n "${PHISHIN_USER_EMAIL_COMMAND:-}" ]] && [[ -z "${PHISHIN_USER_EMAIL:-}" ]]; then
+        PHISHIN_USER_EMAIL=$(eval "$PHISHIN_USER_EMAIL_COMMAND")
+    fi
+
+    : "${PHISHIN_USER_EMAIL:?error: no Phish.in user email provided in \$PHISHIN_USER_EMAIL or by \$PHISHIN_USER_EMAIL_COMMAND}"
 
     if [[ -n "${PHISHIN_USER_PASSWORD_COMMAND:-}" ]] && [[ -z "${PHISHIN_USER_PASSWORD:-}" ]]; then
         PHISHIN_USER_PASSWORD=$(eval "$PHISHIN_USER_PASSWORD_COMMAND")
@@ -72,14 +77,11 @@ phishin_refresh_token() {
 }
 
 phishin_auth() {
-    local -
-    set +x
+    local response
 
-    PHISHIN_USER_TOKEN=$(
-        secret-tool lookup 'phishin-auth-login' \
-            "${PHISHIN_USER_EMAIL:?error: no \$PHISHIN_USER_EMAIL provided}" \
-            || :
-    )
+    : "${PHISHIN_USER_TOKEN:=$(
+        secret-tool lookup 'phishin-auth-login' "${PHISHIN_USER_EMAIL}"
+    )}"
     export PHISHIN_USER_TOKEN
 
     if [[ -z "${PHISHIN_USER_TOKEN:-}" ]] \
@@ -113,11 +115,5 @@ while getopts : opt >/dev/null 2>&1; do
     esac
 done
 shift $((OPTIND - 1))
-
-if [[ -n "${PHISHIN_USER_EMAIL_COMMAND:-}" ]] && [[ -z "${PHISHIN_USER_EMAIL:-}" ]]; then
-    PHISHIN_USER_EMAIL=$(eval "$PHISHIN_USER_EMAIL_COMMAND")
-fi
-
-: "${PHISHIN_USER_EMAIL:?error: no Phish.in user email provided in \$PHISHIN_USER_EMAIL or by \$PHISHIN_USER_EMAIL_COMMAND}"
 
 phishin_auth
