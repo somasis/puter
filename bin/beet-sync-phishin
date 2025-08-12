@@ -18,11 +18,13 @@ usage() {
 usage: ${0##*/}
 
 Synchronize the metadata of Phish.in shows in the Beets library with
-your Phish.in account. This includes doing things like:
+your Phish.in account. This entails:
 
-- importing shows using beet-import-phish,
-- using phishin-like-show to like a show that has a rating equal to 10
-  and unlike a show that has a rating less than 10,
+- importing all shows liked using \`phishin-list-shows -l\` and
+  \`beet-import-phish\`,
+- using \`phishin-like-show\` to like shows whose rating has a rating
+  equal to 10, and unlike shows whose rating is less than 10 in the Beets
+  database,
 
 Furthermore, it can read a file which is searched for ISO dates, which
 are assumed to be shows.
