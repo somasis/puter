@@ -1,7 +1,6 @@
 {
-  config,
+  self,
   lib,
-  osConfig,
   ...
 }:
 # Based off GNOME Colors, as always
