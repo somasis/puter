@@ -228,7 +228,7 @@ for import; do
 done
 
 if [[ "${#import_errors[@]}" -gt 0 ]]; then
-    printf '%i import(s) failed for some reason:\n' "${#import_errors[@]}" >&2
+    printf '\n%i import(s) failed for some reason:\n' "${#import_errors[@]}" >&2
     printf '    - %s\n' "${import_errors[@]}" >&2
     exit 2
 fi
