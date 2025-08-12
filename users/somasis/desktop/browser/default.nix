@@ -496,13 +496,13 @@ in
 
             url = {
               fg = tc.toolbarForeground;
-              hover.fg = tc.blue;
+              hover.fg = tc.brightBlue;
 
               error.fg = tc.brightRed;
-              warn.fg = tc.orange;
+              warn.fg = tc.brightOrange;
 
               success.http.fg = tc.brightRed;
-              success.https.fg = tc.brightAccent;
+              success.https.fg = tc.toolbarForeground;
             };
           };
 
