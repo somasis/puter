@@ -56,6 +56,16 @@ esac
 : "${NTFY_TAGS:=}"
 : "${NTFY_RAW:=}"
 
+message_is_markdown=$(
+    jq -r '
+        if .content_type == "text/markdown" then
+            true
+        else
+            false
+        end
+    ' <<<"${NTFY_RAW}"
+)
+
 args=()
 
 click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
@@ -91,12 +101,49 @@ args+=(
     -a "${appname:-ntfy.sh}"
 )
 
-mapfile -t urls < <(xurls <<<"${message}")
+message="$NTFY_MESSAGE"
+if [[ "$message_is_markdown" == true ]]; then
+    # Hastily translate Markdown into Pango markup
+    # TODO there's this tool that would (kinda) fit the job, is it any good?
+    # <https://world.pages.gitlab.gnome.org/html2pango/html2pango/>
+    message=$(
+        # shellcheck disable=SC2016
+        <<<"$message" sed -E \
+            -e '/^# / { s:# :<big><big><big><big>:; s:$:</big></big></big></big>:; }' \
+            -e '/^## / { s:## :<big><big><big>:; s:$:</big></big></big>:; }' \
+            -e '/^### / { s:### :<big><big>:; s:$:</big></big>:; }' \
+            -e '/^#### / { s:#### :<big>:; s:$:</big>:; }' \
+            -e '/^##### / { s:##### :<big>:; s:$:</big>:; }' \
+            -e '/^###### / { s:###### :<big>:; s:$:</big>:; }' \
+            -e 's:\*\*\*(.+)\*\*\*:<i><b>\1</b></i>:g' \
+            -e 's:___(.+)___:<i><b>\1</b></i>:g' \
+            -e 's:\*\*(.+)\*\*:<b>\1</b>:g' \
+            -e 's:__(.+)__:<b>\1</b>:g' \
+            -e 's:\*(.+)\*:<i>\1</i>:g' \
+            -e 's:(\W*)_(.+)_(\W*):\1<i>\2</i>\3:g' \
+            -e 's,([^!]?)\[([^\]]+)\]\((\S+)\),<a href=\3>\2</a>,g' \
+            -e 's,!\[([^\]]+)\]\((\S+)\),<a href=\2>\1 (image)</a>,g' \
+            -e 's:`(.+)`:<tt>\1</tt>:g'
+    )
 
-for url in "${urls[@]}"; do
-    url_hyperlink="<a href=${url}>${url}</a>"
-    message=${message/"$url"/"$url_hyperlink"}
-done
+    # We can't use a Markdown interpreter and just translate it to HTML
+    # and then cull unsupported tags because that'd open an even bigger
+    # can of worms, I guess...
+    # message=$(
+    #     pandoc \
+    #         -f markdown_strict-raw-html \
+    #         -t html-empty_paragraphs-line_blocks-native_divs-native_spans-auto_identifiers \
+    #         -o - \
+    #         <<<"$message"
+    # )
+else
+    mapfile -t urls < <(xurls <<<"${message}")
+
+    for url in "${urls[@]}"; do
+        url_hyperlink="<a href=${url}>${url}</a>"
+        message=${message/"$url"/"$url_hyperlink"}
+    done
+fi
 
 if [[ -n "${click:-}" ]]; then
     args+=(-A click=Open)
@@ -104,7 +151,11 @@ if [[ -n "${click:-}" ]]; then
 fi
 
 (
-    action=$(notify-send "${args[@]}" ${title:+"${title}"} "${message}")
+    action=$(
+        notify-send "${args[@]}" -- \
+            "${title}" \
+            "${message}"
+    )
 
     case "${action}" in
         click)
