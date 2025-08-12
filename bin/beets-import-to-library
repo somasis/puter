@@ -53,6 +53,7 @@ finish_import() {
             --priority 2 \
             --title 'beets-import-to-library: Imported directory to library' \
             --message "${format}" \
+            --tags 'cd' \
             ${artpath:+--file="$artpath"} \
             &
     fi
@@ -188,6 +189,7 @@ for import; do
                         --priority 4 \
                         --title "beets-import-to-library: Failed while importing (error code: ${import_exit})" \
                         --message "${format}" \
+                        --tags 'speech_balloon' \
                         &
                 fi
 
