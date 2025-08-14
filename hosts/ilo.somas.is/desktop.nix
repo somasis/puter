@@ -137,14 +137,25 @@
     usbguard-notifier
   ];
 
-  virtualisation.podman = {
-    enable = true;
+  virtualisation = {
+    containers.enable = true;
 
-    dockerSocket.enable = true;
-    dockerCompat = true;
+    podman = {
+      enable = true;
 
-    autoPrune.enable = true;
+      defaultNetwork.settings.dns_enabled = true;
+
+      dockerSocket.enable = true;
+      dockerCompat = true;
+
+      autoPrune.enable = true;
+    };
   };
+
+  # <https://wiki.archlinux.org/title/Docker#Enable_native_overlay_diff_engine>
+  boot.extraModprobeConfig = ''
+    options overlay metacopy=off redirect_dir=off
+  '';
 
   environment.plasma6.excludePackages =
     with pkgs;
