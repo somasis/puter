@@ -4,6 +4,38 @@
 
 set -euo pipefail
 
+# shellcheck disable=SC2120
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <directory ...>
+
+Import directories into the Beets library, allowing the user to break
+out into more manual usage of \`beet import <album>...\` when desired.
+
+environment variables:
+    \$WITH_NTFY${WITH_NTFY:+ (current: ${WITH_NTFY@Q})}
+    \$NTFY_TOPIC${NTFY_TOPIC:+ (current: ${NTFY_TOPIC@Q})}
+        If \$WITH_NTFY is set, send notifications to \$NTFY_TOPIC
+        using \`ntfy publish\` on failed and successful imports.
+
+see also: beet import, phishin-download-show, beet-import-phish,
+slskd-send-to-ntfy, and the Phish.in project <https://phish.in>.
+
+Kylie McClain <kylie@somas.is>
+EOF
+
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 64 # EX_USAGE
+}
+
+# shellcheck disable=SC2119
+case "$1" in
+    --help | -h) usage ;;
+esac
+
 # If another instance is running, just wait until it's gone.
 if [[ "${FLOCKER:-}" != "${0}" ]]; then
     export FLOCKER="$0"
@@ -119,7 +151,7 @@ library_directory=$(beet config -d | yq -p yaml .library)
 
 for import; do
     if ! [[ -d "$import" ]]; then
-        printf 'error: %s is not a directory\n' >&2
+        printf 'error: %s is not a directory\n' "${import@Q}" >&2
         exit 64
     fi
 done
