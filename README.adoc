@@ -1,5 +1,5 @@
 = puter
-// vim: tw=72
+// vim: tw=80
 
 Here's how I use the computer.
 
@@ -163,25 +163,29 @@ ilo.somas.is::
         *** 2 × USB-A expansion card (2 × $18.00)
         *** 60W Framework power adapter ($49.00)
         *** Clear (transparent) ANSI keyboard ($49.00)
-        *** US English keyboard included (but unused in favor of Clear ANSI keyboard)
+        *** US English keyboard included (but unused in favor of Clear ANSI
+            keyboard)
         *** Black bezel included
         *** Framework screwdriver included
         *** Total: $1,705.89 ($107.39 tax)
     ** 2022-05-13: Blank (unlabeled) ANSI keyboard ($49.00)
     ** 2022-07-29: sent to Framework for repair service after severe water damage
-       during flight to Seattle; same specs but basically refurbished. ($959.00)
+       during flight; same specs but basically refurbished. ($959.00)
     ** 2022-08-05: expansion cards to replace water damaged originals
         *** 2 × USB-C expansion card (aluminum) (2 × $18.00)
         *** USB-A expansion card ($9.00)
         *** HDMI expansion card (1st gen) (19.00)
     ** 2023-01-07: fixing a broken fan module
-        *** Heatsink and fan kit (for Framework Laptop 13, 11th gen Intel) ($39.00)
+        *** Heatsink and fan kit (for Framework Laptop 13, 11th gen Intel)
+            ($39.00)
     ** 2023-11-25: fixing issues related to mainboard
         *** RTC battery - ML1220
-    ** 2024-03-25: Mainboard replacement due to ongoing issues with 11th gen Intel
+    ** 2024-03-25: Mainboard replacement due to ongoing issues with 11th gen.
+       Intel processors, I think
         *** 12th generation Intel i7-1260P mainboard ($549.00)
         *** 2024-07-10: Mainboard replacement (again) due to possible lemon
-    ** 2024-11-13: International English - Linux input cover kit (incl. keyboard and touchpad) ($99.00)
+    ** 2024-11-13: International English - Linux input cover kit (incl. keyboard
+       and touchpad) ($99.00)
 
 == Implementation details
 
