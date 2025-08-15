@@ -1,13 +1,6 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash curl jq coreutils pandoc lowdown
+#! nix-shell -i bash -p bash coreutils curl jq pandoc
 # shellcheck shell=bash
-
-if [[ -n "${PHISHNET_SECRET_COMMAND:-}" ]] && [[ -z "${PHISHNET_SECRET}" ]]; then
-    set +x
-    PHISHNET_SECRET=$(eval "$PHISHNET_SECRET_COMMAND")
-fi
-
-: "${PHISHNET_SECRET:?no API secret for Phish.net provided in \$PHISHNET_SECRET or by \$PHISHNET_SECRET_COMMAND}"
 
 set -euo pipefail
 
@@ -16,16 +9,21 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} <show ...>
+usage: ${0##*/} [-A] <show>
+       ${0##*/} [-j] <show>
 
-Display notes for a Phish show, as provided by Phish.net.
-The output is intended for human usage. It aims to mimic
-a common style of organizing a show, often used by the
-authors of "taper notes" that accompany a fan-made recording
-of a jam band.
+Display notes for a Phish show, as provided by Phish.net. The output
+is intended for human usage. It aims to mimic a common text style used
+by the authors of "taper notes" that accompany fan-made recordings of
+jam bands.
+
+All data output by this program is courtesy of the Phish.net project.
 
 options:
-    <show>          An ISO formatted date (ex. 1969-12-31)
+    -A              Use full names of songs only; disable abbreviations.
+    -j              Instead of displaying show notes, show Phish.net's
+                    JSON data corresponding to <show>.
+    <show>          An ISO formatted date (ex. 1969-12-31).
 
 see also: the Phish.net project <https://phish.net>.
 
@@ -35,40 +33,113 @@ EOF
     exit 69
 }
 
-curl() {
-    command curl --no-progress-meter --user-agent 'phish-cli <kylie@somas.is>' "$@"
+phishnet() {
+    command curl \
+        --no-progress-meter \
+        --user-agent 'phish-cli <kylie@somas.is>' \
+        --variable %PHISHNET_SECRET \
+        --expand-data apikey='{{PHISHNET_SECRET}}' \
+        "$@"
 }
 
-[[ "$#" -gt 0 ]] || usage 'error: no show provided\n'
+command -V curl jq >/dev/null || exit 1
 
-show_data=$(curl --fail-with-body "https://phish.in/api/v2/shows/${1?no show provided}")
+if ! [[ -v PHISHNET_SECRET ]]; then
+    set +x
+    if [[ -n "${PHISHNET_SECRET_COMMAND:-}" ]] && [[ -z "${PHISHNET_SECRET:-}" ]]; then
+        PHISHNET_SECRET=$(eval "$PHISHNET_SECRET_COMMAND")
+        export PHISHNET_SECRET
+    fi
 
-show_date=$(jq -r '.date' <<<"${show_data}")
-show_next_date=$(jq -r '.next_show_date' <<<"${show_data}")
-show_previous_date=$(jq -r '.previous_show_date' <<<"${show_data}")
-show_tour=$(jq -r '.tour_name' <<<"${show_data}")
-show_venue=$(jq -r '"\(.venue_name), \(.venue.location)"' <<<"${show_data}")
-show_data_phishnet=$(
-    curl --fail \
-        -d "apikey=${PHISHNET_SECRET}" \
-        "https://api.phish.net/v5/shows/showdate/${show_date}" \
-        | jq -r '.data[] | select(.artist_name == "Phish")'
+    : "${PHISHNET_SECRET:?no API secret for Phish.net provided in \$PHISHNET_SECRET or by \$PHISHNET_SECRET_COMMAND}"
+fi
+
+BASH_ARGV0="${0##*/}"
+use_abbrev=true
+json_only=false
+while getopts :Aj opt; do
+    case "$opt" in
+        A) use_abbrev=false ;;
+        j) json_only=true ;;
+        ?) usage '' ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [[ "$#" -ne 1 ]]; then
+    usage 'error: only one show argument allowed (%i provided)\n' "$#"
+fi
+
+show_data=$(phishnet "https://api.phish.net/v5/shows/showdate/$1")
+show_setlist_data=$(phishnet "https://api.phish.net/v5/setlists/showdate/$1")
+
+jq_script='
+    .data[] | select(.artist_name == "Phish")
+    | {
+        show_data: tojson,
+        setlist_data: $show_setlist_data.data | tojson,
+        setlist_notes,
+        showdate,
+        permalink,
+        tour_name,
+        show_venue: "\(.venue), \(.city), \(.state), \(.country)",
+    }
+    | .show_data = tojson
+    | to_entries
+    | map("\(.key)=\(.value|@sh)")[]
+'
+show_data_eval=$(
+    jq -r \
+        --argjson show_setlist_data "$show_setlist_data" \
+        "$jq_script" \
+        <<<"$show_data"
 )
-show_notes=$(
-    jq -r '.setlist_notes' <<<"${show_data_phishnet}" \
-        | pandoc -f html -t commonmark \
-        | lowdown -t term | sed 's/^    //'
-)
+eval "$show_data_eval"
 
-printf 'Phish\n%s\n%s\n%s\n\n' "${show_date}" "${show_tour}" "${show_venue}"
-printf '%s\n' "${show_notes}"
+if [[ -z "$show_data" ]]; then
+    printf 'error: %s is not a valid Phish performance date\n' "$1" >&2
+    exit 1
+fi
 
-show_sets=()
-mapfile -t show_sets < <(jq -r '.tracks[].set_name' <<<"${show_data}" | uq)
+if [[ "$json_only" == 'true' ]]; then
+    jq '.show_data |= fromjson | .setlist_data |= fromjson' <<<"${show_data}"
+    exit $?
+fi
+
+printf 'Phish\n%s\n%s\n%s\n\n' "${showdate}" "${tour_name}" "${show_venue}"
+
+mapfile -t show_sets < <(jq '[.data[].set] | unique[]' <<<"$setlist")
 
 for show_set in "${show_sets[@]}"; do
-    printf '\n%s\n' "${show_set}"
-    jq -r --arg show_set "${show_set}" '.tracks[] | select(.set_name == $show_set) | "\(.position). \(.title)"' <<<"${show_data}"
+    set_tracks=$(jq \
+        --argjson use_abbrev "$use_abbrev" \
+        --argjson show_set "${show_set}" \
+        -r '
+        [(.data[] | select(.set == $show_set) | (
+            (if $use_abbrev == true then .nickname // .song else .song end)
+                | gsub("&amp;"; "&")
+        ), .trans_mark)] | join("")
+    ' <<<"${setlist}")
+
+    case "${show_set//\"/}" in
+        e) show_set=Encore ;;
+        *) show_set="Set ${show_set//\"/}" ;;
+    esac
+
+    printf '%s: %s\n\n' "${show_set}" "${set_tracks}" | fmt -t
 done
 
-printf '\n(prev show: %s, next show: %s)\n' "${show_previous_date}" "${show_next_date}"
+if setlist_notes_fixed=$(
+    iconv -t ISO-8859-1 <<<"$setlist_notes" \
+        | iconv -t UTF-8 \
+        | pandoc -f html -t plain
+); then
+    setlist_notes="${setlist_notes_fixed}"
+fi
+
+fmt <<<"$setlist_notes"
+
+# TODO we could ought to print footnotes for songs,
+#      like Phish.net's own show overviews do...
+
+printf '\n<%s>\n' "${permalink}"
