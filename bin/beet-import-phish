@@ -7,9 +7,6 @@ set -euo pipefail
 : "${XDG_DOWNLOAD_DIR:=$HOME/Downloads}"
 : "${BEET_IMPORT_PHISH_DOWNLOAD_DIR:=$XDG_DOWNLOAD_DIR}"
 
-# shellcheck source=edo
-. edo
-
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
@@ -106,7 +103,7 @@ for show; do
 
     touch "${download_dir}"/*
 
-    edo beet import "${beet_import_args[@]}" "${download_dir}"
+    beet import "${beet_import_args[@]}" "${download_dir}" >&2
 done
 
 edo phishin-like-show "$@" >/dev/null
