@@ -1,22 +1,54 @@
+#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash coreutils curl jq
 # shellcheck shell=bash
+
+command -V curl jq shuf >/dev/null || exit 1
 
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [-l]
-       ${0##*/} [-R]
+usage: ${0##*/} [-lrj] [-A <completeness>] [-P <count>] [-S <sort>]
+                [-n <count>] [-s <state>] [-d (<date>[..<end>])]
+       ${0##*/} [-rj] [-A <completeness>] [-D <dayofyear>] [-S <sort>]
 
 List show dates performed by Phish, as catalogued by Phish.in.
 
 options:
-    -R              List just one random show.
-    -l              List shows liked by your authenticated user.
+    -A ("complete" | "partial" | "complete-or-partial" | "missing")
+        Filter shows by the completeness of their audio recording.
 
-see also: phishin-like-show
+    -D <dayofyear>
+        Filter for shows which occurred on a given <dayofyear>.
+
+    -P <count>
+        When paginating results, fetch <count> items per page.
+
+    -S ("date" | "likes_count" | "duration" | "updated_at")[+-]
+        Sort the shows listed in the requested order. If a plus is
+        suffixed (or no symbol is provided), it will be sorted in
+        ascending order. If a minus is suffixed, it will be printed
+        in descending order.
+
+    -d (<year> | <date> | <start>.. | ..<end> | <start>..<end>)
+        Filter for shows which have occurred during <year>, or on
+        <date>, on since <start>, or before <end>, or occurred
+        on and between <start> and <end>. <start> and <end> can
+        be a year or an ISO date.
+
+    -l                  List shows liked by your user.
+    -j                  Output show JSON data instead of listing dates.
+    -n (<count> | all)  List at most <count> shows
+    -r                  List shows randomly.
+
+    -s <stateabbr>
+        Only list shows performed in <state>, USA. <stateabbr> should
+        be formatted as an ISO 3166-2 country code.
+
+see also: phish-show-notes, phishin-like-show,
+          the Phish.in project <https://phish.in>.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -28,52 +60,211 @@ curl() {
     command curl --no-progress-meter --user-agent "${user_agent}" "$@"
 }
 
-fetch_shows_page() {
+shows() {
+    if [[ -n "${day_of_year}" ]]; then
+        curl \
+            --fail-with-body \
+            --get \
+            --variable %PHISHIN_USER_TOKEN \
+            --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
+            ${audio_status:+-d audio_status="${audio_status}"} \
+            -d "page=${page:?no \$page set}" \
+            "https://phish.in/api/v2/shows/day_of_year/1970-${day_of_year:?no \$day_of_year set}"
+    else
+        curl \
+            --fail-with-body \
+            --get \
+            --variable %PHISHIN_USER_TOKEN \
+            --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
+            ${audio_status:+-d audio_status="${audio_status}"} \
+            ${end_date:+-d end_date="${end_date}"} \
+            ${liked_by_user:+-d liked_by_user="${liked_by_user}"} \
+            ${per_page:+-d per_page="${per_page}"} \
+            ${start_date:+-d start_date="${start_date}"} \
+            ${us_state:+-d us_state="${us_state}"} \
+            -d "page=${page:?no \$page set}" \
+            "https://phish.in/api/v2/shows"
+    fi
+}
+
+show() {
+    : "${1:?error in show(): no date provided}"
     curl \
         --fail-with-body \
         --get \
         --variable %PHISHIN_USER_TOKEN \
         --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
-        -d liked_by_user="${liked_by_user}" \
-        -d "page=${1?no page provided}" \
-        "https://phish.in/api/v2/shows"
+        "https://phish.in/api/v2/shows/${1}"
 }
 
 set -euo pipefail
 
 user_agent='phish-cli <kylie@somas.is>'
 mode=list
+random_show=false
+per_page=180
+
+audio_status='complete_or_partial'
+day_of_year=
+end_date=
 liked_by_user=false
-while getopts :Rl opt >/dev/null 2>&1; do
+page=
+per_page=180 # half a year, which is usually the length of a tour
+start_date=
+us_state=
+sort=date:desc
+
+# shellcheck disable=SC2209
+output=date
+
+BASH_ARGV0="${0##*/}"
+
+count=all
+while getopts A:D:P:S:d:jln:rs: opt; do
     case "$opt" in
+        A)
+            case "${OPTARG}" in
+                complete | partial | complete-or-partial | missing | any)
+                    audio_status=${OPTARG/-/_}
+                    ;;
+                # '') usage 'error: no audio status provided\n' ;;
+                *) usage 'error: unknown audio status value: %s\n' "${OPTARG}" ;;
+            esac
+            ;;
+
+        D)
+            day_of_year=${OPTARG:?error: -D: no day of year provided}
+            [[ "${day_of_year}" =~ ^([0-9]{2})-([0-9]{2})$ ]] \
+                || usage 'error: -D: invalid argument\n'
+            ;;
+
+        P)
+            per_page=${OPTARG:?error: -P: no per page count provided}
+            [[ "$per_page" =~ ^[0-9]+$ ]] \
+                || usage 'error: -P: invalid argument\n'
+            ;;
+
+        S)
+            sort="${OPTARG:?error: -S: no sort provided}"
+
+            case "${sort}" in
+                date+ | likes_count+ | duration+ | updated_at+ | \
+                    date | likes_count | duration | updated_at) sort="${sort}:asc" ;;
+                date- | likes_count- | duration- | updated_at-) sort="${sort}:desc" ;;
+                *) usage 'error: -S: invalid argument\n' ;;
+            esac
+            ;;
+
+        d)
+            : "${OPTARG:?error: -d: no date provided}"
+
+            if [[ "${OPTARG}" =~ ^([0-9]{4}-[0-9]{2}-[0-9]{2}|)..([0-9]{4}-[0-9]{2}-[0-9]{2}|)$ ]]; then
+                start_date=${BASH_REMATCH[1]}
+                end_date=${BASH_REMATCH[2]}
+                unset day_of_year
+            elif [[ "${OPTARG}" =~ ^([0-9]{4}-[0-9]{2}-[0-9]{2})$ ]]; then
+                start_date=${BASH_REMATCH[0]}
+                unset end_date day_of_year
+            elif [[ "${OPTARG}" =~ ^([0-9]{4}|)..([0-9]{4}|)?$ ]]; then
+                start_date=${BASH_REMATCH[1]:+${BASH_REMATCH[1]}-01-01}
+                end_date=${BASH_REMATCH[2]:+${BASH_REMATCH[2]}-01-01}
+                unset day_of_year
+            elif [[ "${OPTARG}" =~ ^([0-9]{4})$ ]]; then
+                start_date=${BASH_REMATCH[1]}-01-01
+                end_date=${BASH_REMATCH[1]}-12-31
+                unset day_of_year
+            else
+                usage 'error: -d: invalid argument format: %s\n' "${OPTARG}"
+            fi
+            ;;
+
+        j) output=json ;;
+
         l) liked_by_user=true ;;
-        R) mode=one_random_show ;;
-        *) usage 'error: unknown command: %s\n' "${opt}" ;;
+
+        n)
+            count=${OPTARG:?error: -n: a count must be provided}
+            [[ "$count" =~ ^[0-9]+$ ]] \
+                || usage 'error: -n: invalid argument\n'
+            ;;
+
+        r)
+            count=1
+            random_show=true
+            ;;
+        s)
+            us_state="${OPTARG:?error: -s: no state abbreviation provided}"
+            us_state="${us_state^^}"
+            ;;
+
+        ?) usage '' ;;
     esac
 done
 shift $((OPTIND - 1))
 
-PHISHIN_USER_TOKEN=$(phishin-auth-login)
+if [[ "$#" -gt 0 ]]; then
+    mode=show
+fi
+
+: "${PHISHIN_USER_TOKEN:=$(phishin-auth-login)}"
 export PHISHIN_USER_TOKEN
 
 case "$mode" in
+    show)
+        for show; do
+            if [[ "$output" == 'date' ]]; then
+                phish-show-notes "$show"
+            elif [[ "$output" == 'json' ]]; then
+                show "$show" | jq
+            fi
+        done
+        ;;
+
     list)
-        i=0
-        pages=("$(fetch_shows_page 1)")
-        total_pages=$(jq -cre '.total_pages' <<<"${pages[0]}")
-        for i in $(seq 2 "${total_pages}"); do
-            if ! page=$(fetch_shows_page "${i}") || [[ -z "${page}" ]]; then
-                printf 'error getting shows (page %i/%i): %s\n' \
-                    "${i}" "${total_pages}" "${page}" >&2
+        page=1
+        # total_pages=
+        response=
+        entries_on_page=
+        entries=
+        entries_expected=
+        while :; do
+            # printf '[retrieving page %s/%s; %s/%s entries]\n' \
+            #     "${page}" \
+            #     "${total_pages:-${pages_expected:-?}}" \
+            #     "${entries:-?}" \
+            #     "${entries_expected:-?}" \
+            #     >&2
+
+            if ! response=$(shows "${page}") || [[ -z "$response" ]]; then
+                printf 'error getting shows (page %i): %s\n' \
+                    "${page}" "$(jq -cr . <<<"$response")"
                 exit 1
             fi
-            pages+=("${page}")
-        done
 
-        jq -cr '.shows[].date' <<<"${pages[*]}"
-        ;;
-    one_random_show)
-        curl --fail-with-body "https://phish.in/api/v2/shows/random" \
-            | jq -r '.date'
+            page=$(jq -er '.current_page // 1' <<<"$response")
+
+            entries_on_page=$(jq -er '.shows | length' <<<"$response")
+            entries_expected=$(
+                jq -er \
+                    --arg entries_on_page "$entries_on_page" \
+                    '.total_entries // $entries_on_page' \
+                    <<<"$response"
+            )
+
+            [[ "$entries_on_page" -gt 0 ]] || break
+            if [[ "$output" == 'date' ]]; then
+                jq -cr '.shows[].date' <<<"${response}"
+            elif [[ "$output" == 'json' ]]; then
+                jq -er '.shows[]' <<<"${response}"
+            fi
+
+            entries=$((entries + entries_on_page))
+            [[ "$entries" -eq "$entries_expected" ]] && break
+
+            page=$((page + 1))
+        done \
+            | if [[ "$output" == 'json' ]]; then jq -c; fi \
+            | if [[ "${random_show}" == true ]]; then shuf -n "$count"; else cat; fi \
+            | if [[ "$output" == 'json' ]]; then jq -c; fi
         ;;
 esac
