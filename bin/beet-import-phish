@@ -14,8 +14,9 @@ usage() {
     cat >&2 <<EOF
 usage: ${0##*/} <show ...>
 
-Download a show using \`phishin-download-show\`, and then import it
-with enhanced tagging using \`beet import --noautotag\`.
+Download a Phish show from Phish.in's database of recordings, using
+\`phishin-download-show\`, and then import it with enhanced tagging
+using \`beet import --noautotag\`.
 
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
