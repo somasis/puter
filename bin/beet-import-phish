@@ -106,5 +106,3 @@ for show; do
 
     beet import "${beet_import_args[@]}" "${download_dir}" >&2
 done
-
-edo phishin-like-show "$@" >/dev/null
