@@ -1,11 +1,18 @@
+#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive tageditor
+#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive rsync tageditor
 # shellcheck shell=bash
 
 set -euo pipefail
 
-# shellcheck source=edo
-. edo
+command -V \
+    bsdtar \
+    cmp \
+    curl \
+    jq \
+    rsync \
+    tageditor \
+    >/dev/null || exit 1
 
 usage() {
     # shellcheck disable=SC2059
@@ -19,7 +26,7 @@ Download a show from Phish.in to the current directory.
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
 
-see also: beet-import-phish
+see also: the Phish.in project <https://phish.in>.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -35,9 +42,7 @@ phishin() {
     jq -cr "$@" <<<"${phishin_show_data}"
 }
 
-if [[ "$#" -ne 1 ]]; then
-    usage 'error: incorrect number of arguments (1 required)\n'
-fi
+[[ "$#" -eq 1 ]] || usage 'error: incorrect number of arguments (1 required)\n'
 
 show=${1?no show provided}
 
@@ -104,10 +109,10 @@ near_show_data=$(
 extract_to_temp=$(mktemp -d)
 if ! [[ -d "${directory}" ]]; then
     if ! [[ -f "${zip}" ]]; then
-        edo curl --location --fail -# --remote-time -o "${zip}" "${album_zip_url}"
+        curl --location --fail -# --remote-time -o "${zip}" "${album_zip_url}"
     fi
     mkdir -p "${directory}"
-    edo bsdtar -C "${extract_to_temp}" -xf "${zip}"
+    bsdtar -C "${extract_to_temp}" -xf "${zip}"
 
     rm -f "${extract_to_temp}"/cover_art.jpg
     mv "${extract_to_temp}"/album_cover.jpg "${extract_to_temp}"/cover.jpg
@@ -131,33 +136,53 @@ then
 fi
 
 # Go through the files and actually enhance the tagging ourselves
+set_name=
 file_i=0
 disc=1
+
+# shellcheck disable=SC2016
+jq_script='
+    .tracks[$file_i]
+        | {
+            phishin_track: .,
+            album: "\(.show_date): \(.venue_name), \(.venue_location)",
+            show_date,
+            title,
+            set_name,
+            track_url: "https://phish.in/\(.show_date)/\(.slug)",
+            comments: (
+                [ (.tags[] | select(.notes != null) | .notes) ] | join("\n")
+            )
+
+        }
+'
 for file in "${directory}"/*.mp3; do
-    phishin_track=$(jq ".tracks[${file_i}]" <<<"${phishin_show_data}")
-    album=$(jq -r '"\(.show_date): \(.venue_name), \(.venue_location)"' <<<"${phishin_track}")
-
-    title=$(jq -r .title <<<"${phishin_track}")
-    date=$(jq -r .show_date <<<"${phishin_track}")
-    year=${date%%-*}
-
-    set_name=$(jq -r .set_name <<<"${phishin_track}")
     last_set_name="${last_set_name:-${set_name}}"
 
-    comments=$(jq -r '[ (.tags[] | select(.notes != null) | .notes) ] | join("\n")' <<<"${phishin_track}")
+    jq_eval=$(jq --arg file_i "$file_i" "$jq_script" <<<"${phishin_show_data}")
+    eval "$jq_eval"
+
+    # year=${date%%-*}
 
     if [[ "${set_name}" != "${last_set_name}" ]]; then
         disc=$((disc + 1))
     fi
 
+    : "${album:?}"
+    : "${title:?}"
+    : "${show_date:?}"
+    : "${set_name:?}"
+    : "${track_url:?}"
+    : "${comments:?}"
+
     # Tageditor yaps a lot
     {
         # Tageditor doesn't know about TSST, the disc subtitle tag in ID3.
-        edo tageditor set \
+        tageditor set \
             album="${album}" title="${title}" \
-            year="${year}" recorddate="${date}" \
+            year="${show_date:0:4}" recorddate="${show_date}" \
             disk="${disc}" id3:TSST="${set_name}" \
-            comment="${comments}" \
+            comment="${comments}" publisherwebpage="${track_url}" \
             --quiet \
             --id3v1-usage never \
             --id3v2-version 4 \

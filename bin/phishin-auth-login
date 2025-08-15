@@ -35,6 +35,7 @@ EOF
 }
 
 curl_authed() {
+    # shellcheck disable=SC2016
     [[ -v PHISHIN_USER_TOKEN ]] || usage 'error: no $PHISHIN_USER_TOKEN set\n'
 
     curl \
