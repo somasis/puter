@@ -7,8 +7,11 @@
 
 : "${DIFF:=diff -u --color}"
 
-hash=$(env | sha1sum | cut -c1-40)
-session="$TMPDIR/beets/hook-diff-$hash"
+set -euo pipefail
+
+command -V diff pgrep sqlite3 >/dev/null || exit 1
+
+session="$TMPDIR/beets/hook-diff-$PPID"
 
 if ! [[ -e "$session/library.sql.before" ]]; then
     printf 'error: %s does not exit; was the pluginload hook ran?\n' \
@@ -31,6 +34,13 @@ if [[ "$(<"$session/before.sha1sum")" != "$(<"$session/after.sha1sum")" ]]; then
     ) || e=$?
 fi
 
-rm -rf "$session"
+beets_sessions_count=$(pgrep -c beet)
+
+sessions=("${session%/*}"/hook-diff-*)
+if [[ "${#sessions[@]}" -ne "$beets_sessions_count" ]]; then
+    rm -rf "${sessions[@]}"
+else
+    rm -rf "$session"
+fi
 
 exit "$e"

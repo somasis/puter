@@ -4,8 +4,7 @@
 : "${XDG_CONFIG_HOME:=${HOME}/.config}"
 : "${BEETS_LIBRARY=$XDG_CONFIG_HOME/beets/library.db}"
 
-hash=$(env | sha1sum | cut -c1-40)
-session="$TMPDIR/beets/hook-diff-$hash"
+session="$TMPDIR/beets/hook-diff-$PPID"
 
 if [[ -e "$session" ]]; then
     printf 'error: session directory already exists, but should be empty\n' >&2
