@@ -42,8 +42,20 @@ if [[ "${FLOCKER:-}" != "${0}" ]]; then
     exec flock -e "$0" "$0" "$@"
 fi
 
-# shellcheck source=edo
-. edo
+edo() {
+    local arg string
+    string="$"
+    for arg; do
+        if [[ "${arg@Q}" == "'$arg'" ]] && ! [[ "${arg}" =~ [[:blank:]] ]]; then
+            string+=" $arg"
+        else
+            string+=" ${arg@Q}"
+        fi
+    done
+
+    printf '%s\n' "$string" >&2 || :
+    "$@"
+}
 
 notify-send() {
     command notify-send \
