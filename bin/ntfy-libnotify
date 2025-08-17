@@ -55,13 +55,7 @@ esac
 : "${NTFY_PRIORITY:=0}"
 
 message_is_markdown=$(
-    jq -r '
-        if .content_type == "text/markdown" then
-            true
-        else
-            false
-        end
-    ' <<<"${NTFY_RAW}"
+    jq -re '.content_type == "text/markdown"' <<<"${NTFY_RAW}"
 )
 
 args=()
