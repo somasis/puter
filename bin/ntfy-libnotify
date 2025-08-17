@@ -88,8 +88,12 @@ case "${NTFY_TITLE}" in
         app_name=${NTFY_TITLE%% - *}
         title=${NTFY_TITLE#* - }
         ;;
-    *) title="${NTFY_TITLE:-${NTFY_TAGS%%,*}}" ;;
+    *)
+        title="${NTFY_TITLE:-${NTFY_TAGS%%,*}}"
+        ;;
 esac
+
+: "${app_name:=${NTFY_TOPIC}}"
 
 args+=(
     ${urgency:+--urgency="$urgency"}
