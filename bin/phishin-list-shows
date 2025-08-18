@@ -39,7 +39,7 @@ options:
         on and between <start> and <end>. <start> and <end> can
         be a year or an ISO date.
 
-    -l                  List shows liked by your user.
+    -l                  List shows liked by your (authenticated) user.
     -j                  Output show JSON data instead of listing dates.
     -n (<count> | all)  List at most <count> shows
     -r                  List shows randomly.
@@ -48,13 +48,20 @@ options:
         Only list shows performed in <state>, USA. <stateabbr> should
         be formatted as an ISO 3166-2 country code.
 
-see also: phish-show-notes, phishin-like-show,
+see also: phish-show-notes, phishin-auth-login, phishin-like-show,
           the Phish.in project <https://phish.in>.
 
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
     exit 64 # EX_USAGE
+}
+
+phishin_auth() {
+    local -
+    set +x
+    : "${PHISHIN_USER_TOKEN:=$(phishin-auth-login)}" || exit 1
+    export PHISHIN_USER_TOKEN
 }
 
 curl() {
@@ -209,9 +216,6 @@ if [[ "$#" -gt 0 ]]; then
     mode=show
 fi
 
-: "${PHISHIN_USER_TOKEN:=$(phishin-auth-login)}"
-export PHISHIN_USER_TOKEN
-
 case "$mode" in
     show)
         for show; do
@@ -224,6 +228,10 @@ case "$mode" in
         ;;
 
     list)
+        if [[ "$liked_by_user" == true ]]; then
+            phishin_auth
+        fi
+
         page=1
         # total_pages=
         response=
