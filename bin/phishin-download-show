@@ -34,6 +34,21 @@ EOF
     exit 64 # EX_USAGE
 }
 
+edo() {
+    local arg string
+    string="$"
+    for arg; do
+        if [[ "${arg@Q}" == "'$arg'" ]] && ! [[ "${arg}" =~ [[:blank:]] ]]; then
+            string+=" $arg"
+        else
+            string+=" ${arg@Q}"
+        fi
+    done
+
+    printf '%s\n' "$string" >&2 || :
+    "$@"
+}
+
 curl() {
     command curl --location --user-agent 'phish-cli <kylie@somas.is>' "$@"
 }
@@ -109,7 +124,7 @@ near_show_data=$(
 extract_to_temp=$(mktemp -d)
 if ! [[ -d "${directory}" ]]; then
     if ! [[ -f "${zip}" ]]; then
-        curl --location --fail -# --remote-time -o "${zip}" "${album_zip_url}"
+        edo curl --location --fail -# --remote-time -o "${zip}" "${album_zip_url}"
     fi
     mkdir -p "${directory}"
     bsdtar -C "${extract_to_temp}" -xf "${zip}"
@@ -117,7 +132,7 @@ if ! [[ -d "${directory}" ]]; then
     rm -f "${extract_to_temp}"/cover_art.jpg
     mv "${extract_to_temp}"/album_cover.jpg "${extract_to_temp}"/cover.jpg
 
-    rsync --remove-source-files --delete -ru "${extract_to_temp}"/ "${directory}"/
+    edo rsync --remove-source-files --delete -ru "${extract_to_temp}"/ "${directory}"/
     rm -rf "${extract_to_temp}"
 fi
 
