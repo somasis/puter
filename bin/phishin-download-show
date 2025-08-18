@@ -133,12 +133,23 @@ if ! [[ -d "${directory}" ]]; then
             --location \
             --fail \
             -# \
+            -o "${zip}".part.zip \
+            --continue-at - \
             --remote-time \
-            -o "${zip}" \
             "${album_zip_url}" || exit 1
+
+        temp=$(mktemp -d)
+        printf '%s' "${phishin_show_data:?}" >"$temp"/phishin.json
+        edo bsdtar -C "$temp" -acf - @"$zip".part.zip phishin.json \
+            | edo sponge "$zip".part.zip
+        edo rm -rf "$temp"
+        edo mv "$zip".part.zip "$zip"
     fi
-    mkdir -p "${directory}"
-    bsdtar -C "${extract_to_temp}" -xf "${zip}"
+    edo mkdir -p "${directory}"
+    if ! edo bsdtar -C "${extract_to_temp}" -xf "${zip}"; then
+        printf 'error: failed while extracting downloaded album (%s)\n' "${zip@Q}" >&2
+        exit 1
+    fi
 
     rm -f "${extract_to_temp}"/cover_art.jpg
     mv "${extract_to_temp}"/album_cover.jpg "${extract_to_temp}"/cover.jpg
@@ -188,8 +199,6 @@ for file in "${directory}"/*.mp3; do
     jq_eval=$(jq --arg file_i "$file_i" "$jq_script" <<<"${phishin_show_data}")
     eval "$jq_eval"
 
-    # year=${date%%-*}
-
     if [[ "${set_name}" != "${last_set_name}" ]]; then
         disc=$((disc + 1))
     fi
@@ -219,14 +228,6 @@ for file in "${directory}"/*.mp3; do
     last_set_name="${set_name}"
     file_i=$((file_i + 1))
 done
-
-if ! [[ -s "${directory}"/phishin.json ]]; then
-    phishin >"${directory}"/phishin.json
-    if ! [[ -s "${directory}"/phishin.json ]]; then
-        printf 'error: failed to write show data to %s/phishin.json\n' "${directory}" >&2
-        exit 1
-    fi
-fi
 
 rm -f "${zip}"
 
