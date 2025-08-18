@@ -4,9 +4,6 @@
 
 set -euo pipefail
 
-# shellcheck source=edo
-. edo
-
 : "${XDG_CONFIG_HOME:=${HOME}/.config}"
 : "${XDG_DATA_HOME:=${HOME}/.local/share}"
 
@@ -33,6 +30,21 @@ EOF
     exit 64 # EX_USAGE
 }
 
+edo() {
+    local arg string
+    string="$"
+    for arg; do
+        if [[ "${arg@Q}" == "'$arg'" ]] && ! [[ "${arg}" =~ [[:blank:]] ]]; then
+            string+=" $arg"
+        else
+            string+=" ${arg@Q}"
+        fi
+    done
+
+    printf '%s\n' "$string" >&2 || :
+    "$@"
+}
+
 urldecode() {
     # Based off <https://stackoverflow.com/a/37840948>, but modified
     # to get rid of the expectation that spaces are escaped with '+',
@@ -42,7 +54,9 @@ urldecode() {
 }
 
 if [[ -z "${BEETS_DIRECTORY}" ]]; then
-    BEETS_DIRECTORY=$(beet config -d | yq -o json | jq -r .directory)
+    # NOTE Special quoting is necessary because yq (v4.47.1 at writing) sloppily
+    # tries to access ./.directory if it exists, instead of stdin as expected.
+    BEETS_DIRECTORY=$(beet config -d | yq -o json -r '."directory"')
 
     # shellcheck disable=SC2088
     case "${BEETS_DIRECTORY}" in
