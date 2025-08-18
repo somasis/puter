@@ -16,7 +16,7 @@ Like a given show on Phish.in.
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
 
-see also: phishin-auth-login, phishin-list-liked-shows.
+see also: phishin-auth-login, phishin-list-shows.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -25,6 +25,13 @@ EOF
 }
 
 [[ "$#" -gt 0 ]] || usage 'error: no arguments provided\n'
+
+phishin_auth() {
+    local -
+    set +x
+    : "${PHISHIN_USER_TOKEN:=$(phishin-auth-login)}" || exit 1
+    export PHISHIN_USER_TOKEN
+}
 
 curl() {
     command curl \
@@ -35,14 +42,16 @@ curl() {
 }
 
 curl_authed() {
+    # shellcheck disable=SC2016
+    [[ -v PHISHIN_USER_TOKEN ]] || usage 'error: no $PHISHIN_USER_TOKEN set\n'
+
     curl \
         --variable %PHISHIN_USER_TOKEN \
         --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
         "${@?curl_authed(): no arguments given}"
 }
 
-PHISHIN_USER_TOKEN=$(phishin-auth-login)
-export PHISHIN_USER_TOKEN
+phishin_auth
 
 errors=0
 for show; do
@@ -56,7 +65,7 @@ for show; do
             | curl_authed -X POST --json @- "https://phish.in/api/v2/likes"
     )
 
-    if jq -cre --arg show "$show" '.id | $show' <<<"$result"; then
+    if jq -cre --arg show "$show" '.id' <<<"$result" >/dev/null; then
         printf '%s\n' "$show"
     else
         errors=$((errors + 1))
