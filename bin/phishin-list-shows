@@ -3,8 +3,6 @@
 #! nix-shell -i bash -p bash coreutils curl jq
 # shellcheck shell=bash
 
-command -V curl jq shuf >/dev/null || exit 1
-
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2

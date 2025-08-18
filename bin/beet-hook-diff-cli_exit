@@ -9,8 +9,6 @@
 
 set -euo pipefail
 
-command -V diff pgrep sqlite3 >/dev/null || exit 1
-
 session="$TMPDIR/beets/hook-diff-$PPID"
 
 if ! [[ -e "$session/library.sql.before" ]]; then

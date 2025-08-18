@@ -108,8 +108,6 @@ phishin_auth() {
     printf '%s' "${PHISHIN_USER_TOKEN}"
 }
 
-command -V curl jq secret-tool >/dev/null || usage
-
 force=false
 while getopts :f opt >/dev/null 2>&1; do
     case "$opt" in

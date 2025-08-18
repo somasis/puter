@@ -41,8 +41,6 @@ EOF
     exit 64 # EX_USAGE
 }
 
-command -V jq notify-send sed xdg-open xurls >/dev/null
-
 case "${1:-}" in
     --help) usage ;;
 esac

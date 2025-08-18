@@ -53,8 +53,6 @@ phishin_auth() {
     export PHISHIN_USER_TOKEN
 }
 
-command -V curl jq >/dev/null || exit 1
-
 if ! [[ -v PHISHNET_SECRET ]]; then
     set +x
     if [[ -n "${PHISHNET_SECRET_COMMAND:-}" ]] && [[ -z "${PHISHNET_SECRET:-}" ]]; then
