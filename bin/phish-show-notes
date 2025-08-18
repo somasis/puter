@@ -134,7 +134,7 @@ eval "$show_data_eval"
 
 : "${show_data:?}"
 : "${setlist_data:?}"
-: "${setlist_notes:?}"
+: "${setlist_notes?}"
 : "${showdate:?}"
 : "${permalink:?}"
 : "${tour_name:?}"
