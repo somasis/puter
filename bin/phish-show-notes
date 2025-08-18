@@ -10,22 +10,26 @@ usage() {
 
     cat >&2 <<EOF
 usage: ${0##*/} [-A] <show>
-       ${0##*/} [-j] <show>
+       ${0##*/} [-jt] <show>
 
 Display notes for a Phish show, as provided by Phish.net. The output
 is intended for human usage. It aims to mimic a common text style used
 by the authors of "taper notes" that accompany fan-made recordings of
 jam bands.
 
-All data output by this program is courtesy of the Phish.net project.
+All data output by this program is courtesy of the Phish.net project,
+with exception of taper notes provided by the Phish.in project.
 
 options:
     -A              Use full names of songs only; disable abbreviations.
     -j              Instead of displaying show notes, show Phish.net's
                     JSON data corresponding to <show>.
+    -t              Output the taper notes for the show as corresponds
+                    to Phish.in's recording.
     <show>          An ISO formatted date (ex. 1969-12-31).
 
-see also: the Phish.net project <https://phish.net>.
+see also: the Phish.net project <https://phish.net>,
+          the Phish.in project <https://phish.in>.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -42,6 +46,13 @@ phishnet() {
         "$@"
 }
 
+phishin_auth() {
+    local -
+    set +x
+    [[ -v PHISHIN_USER_TOKEN ]] || PHISHIN_USER_TOKEN=$(phishin-auth-login)
+    export PHISHIN_USER_TOKEN
+}
+
 command -V curl jq >/dev/null || exit 1
 
 if ! [[ -v PHISHNET_SECRET ]]; then
@@ -56,11 +67,12 @@ fi
 
 BASH_ARGV0="${0##*/}"
 use_abbrev=true
-json_only=false
-while getopts :Aj opt; do
+mode=notes
+while getopts :Ajt opt; do
     case "$opt" in
         A) use_abbrev=false ;;
-        j) json_only=true ;;
+        j) mode=json ;;
+        t) mode=tapernotes ;;
         ?) usage '' ;;
     esac
 done
@@ -68,13 +80,35 @@ shift $((OPTIND - 1))
 
 if [[ "$#" -ne 1 ]]; then
     usage 'error: only one show argument allowed (%i provided)\n' "$#"
+elif ! [[ "${1}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+    usage 'error: show argument is not an ISO format date\n'
+fi
+
+if [[ "$mode" == 'tapernotes' ]]; then
+    phishin_auth
+    curl \
+        --fail-with-body \
+        --no-progress-meter \
+        --get \
+        --variable %PHISHIN_USER_TOKEN \
+        --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
+        "https://phish.in/api/v2/shows/${1}" \
+        | jq -er .taper_notes
+    exit $?
 fi
 
 show_data=$(phishnet "https://api.phish.net/v5/shows/showdate/$1")
+
+if [[ -z "$show_data" ]]; then
+    printf 'error: %s is not a valid Phish performance date\n' "$1" >&2
+    exit 1
+fi
+
 show_setlist_data=$(phishnet "https://api.phish.net/v5/setlists/showdate/$1")
 
 jq_script='
-    .data[] | select(.artist_name == "Phish")
+    .[1] as $show_setlist_data
+    | .[0].data[] | select(.artist_name == "Phish")
     | {
         show_data: tojson,
         setlist_data: $show_setlist_data.data | tojson,
@@ -89,41 +123,44 @@ jq_script='
     | map("\(.key)=\(.value|@sh)")[]
 '
 show_data_eval=$(
-    jq -r \
-        --argjson show_setlist_data "$show_setlist_data" \
-        "$jq_script" \
-        <<<"$show_data"
+    jq -rs "$jq_script" <<EOF
+$show_data
+$show_setlist_data
+EOF
 )
 eval "$show_data_eval"
 
-if [[ -z "$show_data" ]]; then
-    printf 'error: %s is not a valid Phish performance date\n' "$1" >&2
-    exit 1
-fi
+: "${show_data:?}"
+: "${setlist_data:?}"
+: "${setlist_notes:?}"
+: "${showdate:?}"
+: "${permalink:?}"
+: "${tour_name:?}"
+: "${show_venue:?}"
 
-if [[ "$json_only" == 'true' ]]; then
+if [[ "$mode" == 'json' ]]; then
     jq '.show_data |= fromjson | .setlist_data |= fromjson' <<<"${show_data}"
     exit $?
 fi
 
 printf 'Phish\n%s\n%s\n%s\n\n' "${showdate}" "${tour_name}" "${show_venue}"
 
-mapfile -t show_sets < <(jq '[.data[].set] | unique[]' <<<"$setlist")
+mapfile -t show_sets < <(jq -r '[.[].set] | unique[]' <<<"$setlist_data")
 
 for show_set in "${show_sets[@]}"; do
     set_tracks=$(jq \
         --argjson use_abbrev "$use_abbrev" \
-        --argjson show_set "${show_set}" \
+        --arg show_set "${show_set}" \
         -r '
-        [(.data[] | select(.set == $show_set) | (
+        [(.[]|select((.set|tostring) == $show_set) | (
             (if $use_abbrev == true then .nickname // .song else .song end)
                 | gsub("&amp;"; "&")
         ), .trans_mark)] | join("")
-    ' <<<"${setlist}")
+    ' <<<"${setlist_data}")
 
-    case "${show_set//\"/}" in
+    case "${show_set}" in
         e) show_set=Encore ;;
-        *) show_set="Set ${show_set//\"/}" ;;
+        *) show_set="Set ${show_set}" ;;
     esac
 
     printf '%s: %s\n\n' "${show_set}" "${set_tracks}" | fmt -t
