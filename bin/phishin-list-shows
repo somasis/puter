@@ -30,7 +30,8 @@ options:
         Sort the shows listed in the requested order. If a plus is
         suffixed (or no symbol is provided), it will be sorted in
         ascending order. If a minus is suffixed, it will be printed
-        in descending order.
+        in descending order. If no sort order is specified, the
+        default order is determined by Phish.in's API defaults.
 
     -d (<year> | <date> | <start>.. | ..<end> | <start>..<end>)
         Filter for shows which have occurred during <year>, or on
@@ -68,6 +69,7 @@ shows() {
             --variable %PHISHIN_USER_TOKEN \
             --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
             ${audio_status:+-d audio_status="${audio_status}"} \
+            ${sort:+-d sort="${sort}"} \
             -d "page=${page:?no \$page set}" \
             "https://phish.in/api/v2/shows/day_of_year/1970-${day_of_year:?no \$day_of_year set}"
     else
@@ -77,6 +79,7 @@ shows() {
             --variable %PHISHIN_USER_TOKEN \
             --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
             ${audio_status:+-d audio_status="${audio_status}"} \
+            ${sort:+-d sort="${sort}"} \
             ${end_date:+-d end_date="${end_date}"} \
             ${liked_by_user:+-d liked_by_user="${liked_by_user}"} \
             ${per_page:+-d per_page="${per_page}"} \
@@ -112,7 +115,7 @@ page=
 per_page=180 # half a year, which is usually the length of a tour
 start_date=
 us_state=
-sort=date:desc
+sort=
 
 # shellcheck disable=SC2209
 output=date
@@ -149,8 +152,8 @@ while getopts A:D:P:S:d:jln:rs: opt; do
 
             case "${sort}" in
                 date+ | likes_count+ | duration+ | updated_at+ | \
-                    date | likes_count | duration | updated_at) sort="${sort}:asc" ;;
-                date- | likes_count- | duration- | updated_at-) sort="${sort}:desc" ;;
+                    date | likes_count | duration | updated_at) sort="${sort%+}:asc" ;;
+                date- | likes_count- | duration- | updated_at-) sort="${sort%-}:desc" ;;
                 *) usage 'error: -S: invalid argument\n' ;;
             esac
             ;;
