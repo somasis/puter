@@ -4,9 +4,6 @@
 
 set -euo pipefail
 
-# shellcheck source=edo
-. edo
-
 : "${BEET_SYNC_PHISHIN_NOTES:=${HOME}/notes/phish.txt}"
 
 # shellcheck disable=SC2120
@@ -81,4 +78,4 @@ mapfile -t shows_to_import < <(printf '%s\n' "${notes_mentioned_shows[@]}" "${ph
 #     printf '%s\n' "${shows_in_library[@]}" | uq
 # )
 
-edo beet-import-phish "${shows_to_import[@]}"
+beet-import-phish "${shows_to_import[@]}"
