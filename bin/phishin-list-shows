@@ -220,7 +220,7 @@ case "$mode" in
     show)
         for show; do
             if [[ "$output" == 'date' ]]; then
-                phish-show-notes "$show"
+                show "$show" | jq -r .date
             elif [[ "$output" == 'json' ]]; then
                 show "$show" | jq
             fi
@@ -274,8 +274,8 @@ case "$mode" in
 
             page=$((page + 1))
         done \
-            | if [[ "$output" == 'json' ]]; then jq -c; fi \
+            | if [[ "$output" == 'json' ]]; then jq -c; else cat; fi \
             | if [[ "${random_show}" == true ]]; then shuf -n "$count"; else cat; fi \
-            | if [[ "$output" == 'json' ]]; then jq -c; fi
+            | if [[ "$output" == 'json' ]]; then jq -c; else cat; fi
         ;;
 esac
