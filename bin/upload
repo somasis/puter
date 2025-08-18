@@ -16,9 +16,9 @@ usage() {
 usage: ${0##*/} [-cnv] [-h <host>] [-m (file | url)] [item...]
 
 A simple client for uploading files to services in the style of
-sprunge.us, 0x0.st, and workalikes. Generally, these services
-will have a minimal, plain text HTTP homepage, prescribing that
-those wishing to use the service use curl(1) to perform a POST
+sprunge.us (RIP), 0x0.st, and their workalikes. Generally, these
+services will have a minimal, plain text HTTP homepage, prescribing
+that those wishing to use the service use curl(1) to perform a POST
 to upload the file.
 
 options:
@@ -47,10 +47,12 @@ EOF
 }
 
 clip() {
-    if [[ -v DISPLAY ]]; then
-        xclip -in -selection clipboard <<<"$1"
-    else
+    : "${1:?no input given}"
+
+    if [[ -v WAYLAND_DISPLAY ]]; then
         wl-copy -n <<<"$1"
+    else
+        xclip -in -selection clipboard <<<"$1"
     fi
 }
 
