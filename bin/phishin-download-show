@@ -5,15 +5,6 @@
 
 set -euo pipefail
 
-command -V \
-    bsdtar \
-    cmp \
-    curl \
-    jq \
-    rsync \
-    tageditor \
-    >/dev/null || exit 1
-
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
