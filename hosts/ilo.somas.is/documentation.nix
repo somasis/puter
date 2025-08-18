@@ -1,6 +1,5 @@
 {
   pkgs,
-  nixpkgs,
   ...
 }:
 {
@@ -10,4 +9,6 @@
     man-db.enable = false;
     mandoc.enable = true;
   };
+
+  environment.systemPackages = [ pkgs.qman ];
 }
