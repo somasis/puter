@@ -117,8 +117,10 @@ zip="${PWD}/${filename}"
 album_zip_url=$(jq -r .album_zip_url <<<"${show_download}")
 
 near_show_data=$(
-    if [[ -f "${zip}" ]] && bsdtar -tf "${zip}" | grep -Fq phishin.json; then
-        bsdtar -Oxf "${zip}" phishin.json
+    if [[ -f "${zip}" ]]; then
+        if bsdtar -tf "${zip}" | grep -Fq phishin.json; then
+            bsdtar -Oxf "${zip}" phishin.json
+        fi
     elif [[ -f "${directory}"/phishin.json ]]; then
         cat "${directory}"/phishin.json
     fi
