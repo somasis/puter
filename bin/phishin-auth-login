@@ -85,7 +85,7 @@ phishin_auth() {
     )}"
     export PHISHIN_USER_TOKEN
 
-    if [[ -z "${PHISHIN_USER_TOKEN:-}" ]] \
+    if [[ "$force" == true ]] || [[ -z "${PHISHIN_USER_TOKEN:-}" ]] \
         || ! curl_authed -o /dev/null --no-progress-meter --fail-with-body \
             'https://phish.in/api/v2/auth/user' | jq -c >&2; then
         # need to reauthenticate, because either there's no token, or the token
@@ -110,8 +110,10 @@ phishin_auth() {
 
 command -V curl jq secret-tool >/dev/null || usage
 
-while getopts : opt >/dev/null 2>&1; do
+force=false
+while getopts :f opt >/dev/null 2>&1; do
     case "$opt" in
+        f) force=true ;;
         *) usage 'error: unknown command: %s\n' "${opt}" ;;
     esac
 done
