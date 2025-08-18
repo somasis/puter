@@ -19,6 +19,7 @@
     })
     rsgain
     unflac
+    tageditor
   ];
 
   sync.directories = [
