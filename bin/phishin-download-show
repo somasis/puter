@@ -135,7 +135,7 @@ if ! [[ -d "${directory}" ]]; then
             -# \
             --remote-time \
             -o "${zip}" \
-            "${album_zip_url}"
+            "${album_zip_url}" || exit 1
     fi
     mkdir -p "${directory}"
     bsdtar -C "${extract_to_temp}" -xf "${zip}"
