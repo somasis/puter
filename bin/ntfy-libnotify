@@ -146,7 +146,8 @@ click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
 
 if [[ -n "${click:-}" ]]; then
     args+=(--action=click=Open)
-    args+=(--expire-time=$((60 * 1000)))
+    # feels like the wrong way to make the actions persist for longer
+    # args+=(--expire-time=$((60 * 1000)))
 fi
 
 (
