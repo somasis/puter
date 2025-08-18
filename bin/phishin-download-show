@@ -59,7 +59,7 @@ phishin() {
 
 [[ "$#" -eq 1 ]] || usage 'error: incorrect number of arguments (1 required)\n'
 
-show=${1?no show provided}
+show=${1:?error: no show provided}
 
 while :; do
     request_album_zip=$(
