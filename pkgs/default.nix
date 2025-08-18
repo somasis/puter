@@ -207,6 +207,7 @@ rec {
   beets-noimport = callPackage ./beets-noimport { };
   beets-originquery = callPackage ./beets-originquery { };
   borg-takeout = callPackage ./borg-takeout { };
+  cogapp = callPackage ./cogapp { };
   dates = callPackage ./dates { inherit table; };
   dmenu = callPackage ./dmenu { };
   dmenu-emoji = callPackage ./dmenu-emoji { inherit wrapCommand; };
@@ -237,7 +238,9 @@ rec {
   nocolor = callPackage ./nocolor { };
   optimize = callPackage ./optimize { };
   pass-secrets = callPackage ./pass-secrets { };
+  phish-cli = callPackage ./phish-cli { };
   plasma-pass-unstable = callPackage ./plasma-pass-unstable { };
+  qman = callPackage ./qman { inherit cogapp; };
   qute-pass = callPackage ./qute-pass { inherit dmenu-pass; };
   scooper = callPackage ./scooper { };
   signal-desktop-patched = callPackage ./signal-desktop-patched { };
