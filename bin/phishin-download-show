@@ -181,22 +181,27 @@ disc=1
 jq_script='
     .tracks[$file_i]
         | {
-            phishin_track: .,
+            phishin_track: tojson,
             album: "\(.show_date): \(.venue_name), \(.venue_location)",
             show_date,
             title,
             set_name,
             track_url: "https://phish.in/\(.show_date)/\(.slug)",
-            comments: (
-                [ (.tags[] | select(.notes != null) | .notes) ] | join("\n")
-            )
-
+            comments: [ (.tags[] | select(.notes != null) | .notes) ] | join("\n")
         }
+        | to_entries
+        | map("\(.key)=\(.value|@sh)")[]
+
 '
 for file in "${directory}"/*.mp3; do
-    last_set_name="${last_set_name:-${set_name}}"
+    if ! [[ -e "$file" ]]; then
+        printf 'error: file %s does not exist\n' "${file@Q}" >&2
+        exit 1
+    fi
 
-    jq_eval=$(jq --arg file_i "$file_i" "$jq_script" <<<"${phishin_show_data}")
+    last_set_name="${last_set_name:-${set_name:-}}"
+
+    jq_eval=$(jq -r --argjson file_i "$file_i" "$jq_script" <<<"${phishin_show_data}")
     eval "$jq_eval"
 
     if [[ "${set_name}" != "${last_set_name}" ]]; then
