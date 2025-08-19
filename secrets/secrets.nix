@@ -8,9 +8,8 @@ with flake.inputs;
 with flake.inputs.nixpkgs;
 let
   recipients = {
-    somasis = {
-      ilo = "age1tpm1qtfwxktsqmuw363sjalejf80qasph0dzawu38rs8h9ah5fqsc0zekwu5ev8";
-    };
+    ilo = "age1tpm1qtfwxktsqmuw363sjalejf80qasph0dzawu38rs8h9ah5fqsc0zekwu5ev8";
+    somasis.ilo = "age1tpm1qd0gxkaj69v6s44khyfrdkqry4tvs3gm0rjl6m74fmys37q0dfk3szkxadd";
   };
 in
 with recipients;
@@ -21,6 +20,12 @@ with recipients;
   "somasis-rclone-nextcloud-pass.age".publicKeys = [ somasis.ilo ];
   "somasis-rclone-whatbox-http-url.age".publicKeys = [ somasis.ilo ];
   "somasis-rclone-whatbox-pass.age".publicKeys = [ somasis.ilo ];
-  "somasis-restic-ilo.age".publicKeys = [ somasis.ilo ];
-  "somasis-restic-rclone-whatbox.age".publicKeys = [ somasis.ilo ];
+  "somasis-restic-ilo.age".publicKeys = [
+    ilo
+    somasis.ilo
+  ];
+  "somasis-restic-rclone-whatbox.age".publicKeys = [
+    ilo
+    somasis.ilo
+  ];
 }
