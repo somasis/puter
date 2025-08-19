@@ -52,9 +52,7 @@ esac
 : "${NTFY_TAGS:=}"
 : "${NTFY_PRIORITY:=0}"
 
-message_is_markdown=$(
-    jq -re '.content_type == "text/markdown"' <<<"${NTFY_RAW}"
-)
+message_is_markdown=$(jq -r '.content_type == "text/markdown"' <<<"${NTFY_RAW}")
 
 args=()
 
