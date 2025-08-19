@@ -21,4 +21,6 @@ with recipients;
   "somasis-rclone-nextcloud-pass.age".publicKeys = [ somasis.ilo ];
   "somasis-rclone-whatbox-http-url.age".publicKeys = [ somasis.ilo ];
   "somasis-rclone-whatbox-pass.age".publicKeys = [ somasis.ilo ];
+  "somasis-restic-ilo.age".publicKeys = [ somasis.ilo ];
+  "somasis-restic-rclone-whatbox.age".publicKeys = [ somasis.ilo ];
 }
