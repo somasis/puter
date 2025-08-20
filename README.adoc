@@ -1,5 +1,6 @@
 = puter
 // vim: tw=80
+:imagesdir: ./img
 
 Here's how I use the computer.
 
@@ -62,7 +63,7 @@ Many of the tools I've written recently have been in service of
 making Beets, the command-line music organizer, nicer to use in a
 non-terminal environment.
 
-:beets-servicemenu: ../share/kio/servicemenus/beets.desktop
+:beets-servicemenu: ./share/kio/servicemenus/beets.desktop
 
 The idea here is to provide a semi-interactive script for importing
 albums into the Beets library, allowing the user to break out into
@@ -78,20 +79,20 @@ menu item, and that's the primary way I interact with it.
 Here's a thousand words:
 
 .link:{beets-servicemenu}[The menu item], as shown in Dolphin
-image:../img/beets-import-to-library%20%28menu%20item%29.png[A popup
+image::beets-import-to-library%20%28menu%20item%29.png[A popup
 menu created by a right-click action on a directory named "Phish -
 Slip Stitch and Pass (1997)", with the menu item "Import to music
 library..." highlighted by the mouse cursor.]
 
 .Notification of import starting soon
-image:../img/beets-import-to-library%20%28importing%29.png[A desktop
+image::beets-import-to-library%20%28importing%29.png[A desktop
 notification as produced by KDE Plasma, titled "Importing..." and
 the directory name mentioned previously as the notification message
 content. Two buttons are on the notification, one labeled "Import
 manually..." and the other labeled "Skip".]
 
 .Notification of successful import
-image:../img/beets-import-to-library%20%28imported%29.png[A desktop
+image::beets-import-to-library%20%28imported%29.png[A desktop
 notification as produced by KDE Plasma, titled "Music imported to
 library" with the message content "Successfully imported Phish - Slip
 Stitch and Pass (1997) using metadata from MusicBrainz." Four buttons
@@ -141,25 +142,154 @@ calculated database values, potentially causing lots of churn).
 
 === phish-cli
 
-* link:bin/beet-import-phish[`beet-import-phish`]
-* link:bin/beet-sync-phishin[`beet-sync-phishin`]
-* link:bin/phishin-auth-login[`phishin-auth-login`]
-* link:bin/phishin-download-show[`phishin-download-show`]
-* link:bin/phishin-like-show[`phishin-like-show`]
-* link:bin/phishin-like-track[`phishin-like-track`]
-* link:bin/phishin-list-shows[`phishin-list-shows`]
-* link:bin/phish-show-notes[`phish-show-notes`]
+* link:./bin/beet-import-phish[`beet-import-phish`]
+// * link:./bin/beet-sync-phishin[`beet-sync-phishin`]
+* link:./bin/phishin-auth-login[`phishin-auth-login`]
+* link:./bin/phishin-download-show[`phishin-download-show`]
+* link:./bin/phishin-like-show[`phishin-like-show`]
+* link:./bin/phishin-like-track[`phishin-like-track`]
+* link:./bin/phishin-list-shows[`phishin-list-shows`]
+* link:./bin/phish-show-notes[`phish-show-notes`]
 
-I got really into listening to Phish over the last year or so, and I wanted
-something that would let me put audience recordings from
-link:https://phish.in[Phish.in] into my music library without much effort.
-Naturally, it turned into a lot of effort because I was having fun with the
-design of the tools. Here's the idea:
+So here's the idea. Let's say you're a fan of the jam band
+link:https://phish.com[Phish]; it could happen to you! In the last year or so
+after leaving college, I got really into Phish, and I wanted to write something
+that would let me listen to shows on link:https://phish.in[Phish.in] without
+using the website. I wrote some initial versions that used `mpv` to play them,
+mostly fumbling around with trying to get `mpv` to do gapless playback of the MP3
+files being streamed directly from Phish.in, because I thought that if I had to
+download them to get it to play gaplessly (because no matter what I did, it
+seemed like I would need to reencode them to actually make them play gaplessly),
+then I might as well put them in my library and simply _play them with my music
+player_ instead of using `mpv`, and well, I guess I should just make something
+to automate downloading and importing the audience recordings into my
+music library without much effort. Naturally, it turned into a lot of effort
+because I was having fun with figuring out the most ergonomic design for the
+tools.
 
-----
-$ phishin-list-shows -y 
-$ phish-show-notes 
-----
+.A typical session
+....
+~ ∴ phishin-list-shows -d 1998 | shuf -n 1
+1998-11-04
+~ ∴ phish-show-notes 1998-11-04
+Phish
+1998-11-04
+1998 Fall Tour
+McNichols Arena, Denver, CO, USA
+
+Set 1: Buried Alive > Character Zero, Guyute > Gin > Ya Mar, BOAF,
+   Brian and Robert, Frankie Says -> Bowie
+
+Set 2: Runaway Jim > Moma > Piper -> 2001 > CDT, Loving Cup
+
+Encore: Coil
+
+Bowie included Stash teases.
+
+<https://phish.net/setlists/phish-november-04-1998-mcnichols-arena-denver-co-usa.html>
+~ ∴ phishin-download-show 1998-11-04
+DL% UL%  Dled  Uled  Xfers  Live Total     Current  Left    Speed
+100 --   259M     0     1     0   0:00:33  0:00:38 --:--:-- 8036k
+$ ls
+~ ∴ ls
+total 8.5K
+drwxr-xr-x 2 somasis users 22 08-20 02:22 'Phish - 1998-11-04 McNichols Arena, Denver, CO [Complete]'/
+~ ∴ ls Phish\ -\ 1998-11-04\ McNichols\ Arena\,\ Denver\,\ CO\ \[Complete\]/
+total 267M
+-rw-r--r-- 1 somasis users 6.6M 08-20 02:22 '01 Buried Alive.mp3'
+-rw-r--r-- 1 somasis users  14M 07-14 14:44 '02 Character Zero.mp3'
+-rw-r--r-- 1 somasis users  18M 07-14 14:44 '03 Guyute.mp3'
+-rw-r--r-- 1 somasis users  24M 07-14 14:44 '04 Bathtub Gin.mp3'
+-rw-r--r-- 1 somasis users  17M 07-14 14:44 '05 Ya Mar.mp3'
+-rw-r--r-- 1 somasis users  12M 07-14 14:44 '06 Birds of a Feather.mp3'
+-rw-r--r-- 1 somasis users 6.5M 07-14 14:44 '07 Brian and Robert.mp3'
+-rw-r--r-- 1 somasis users  18M 07-14 14:44 '08 Frankie Says.mp3'
+-rw-r--r-- 1 somasis users  25M 07-14 14:44 '09 David Bowie.mp3'
+-rw-r--r-- 1 somasis users  21M 07-14 14:44 '10 Runaway Jim.mp3'
+-rw-r--r-- 1 somasis users  16M 07-14 14:44 '11 The Moma Dance.mp3'
+-rw-r--r-- 1 somasis users  30M 07-14 14:44 '12 Piper.mp3'
+-rw-r--r-- 1 somasis users  16M 07-14 14:44 '13 Also Sprach Zarathustra.mp3'
+-rw-r--r-- 1 somasis users  12M 07-14 14:44 '14 Chalk Dust Torture.mp3'
+-rw-r--r-- 1 somasis users  11M 07-14 14:44 '15 Loving Cup.mp3'
+-rw-r--r-- 1 somasis users  20M 07-14 14:44 '16 The Squirming Coil.mp3'
+-rw-r--r-- 1 somasis users 575K 07-14 14:44  cover.jpg
+-rw-r--r-- 1 somasis users  27K 08-20 02:22  phishin.json
+-rw-r--r-- 1 somasis users  766 07-14 14:44  taper_notes.txt
+....
+
+Or, let's say you want to download the ten most liked shows that Phish played
+during the years 1995 to 2008, and then import those shows into your Beets
+library:
+
+    $ phishin-list-shows -d 1995..2008 -S likes_count -n 10 \
+        | xargs beet-import-phish
+
+The most complex script is probably `phishin-list-shows`, mostly because I had
+to account for the Phish.in API's pagination, and pagination feels kinda funny
+to deal with using only `curl` and `jq`. But all the tools are pretty simple
+and basic and not more than 300 lines.
+
+:example-show: https://phish.net/setlists/phish-may-07-1994-the-bomb-factory-dallas-tx-usa.html
+
+`phish-show-notes` is a nice one, which uses the link:http://phish.net[Phish.net]
+API to get display a show's setlist notes. It's modeled after the layout of
+Phish.net's own webpages for notes (link:{example-show}[example]).
+
+....
+~ main ∴ phish-show-notes 1994-05-07
+Phish
+1994-05-07
+1994 Spring Tour
+The Bomb Factory, Dallas, TX, USA
+
+Set 1: Llama, Horn > Divided, Mound, FEFY > SOAMule, SOAMelt, If I
+   Could, Suzy
+
+Set 2: Loving Cup > Sparkle > Tweezer -> Mind Left Body Jam -> Sparks ->
+   Makisupa -> Digital Delay Loop Jam -> Sweet Emotion -> Walk Away ->
+   Cannonball -> Purple Rain > HYHU -> Tweeprise
+
+Encore: Amazing Grace, Sample
+
+Horn ended with a brief, atypical jam. The jam out of Walk Away included
+a Page solo, teases of It’s Ice and McGrupp, and a Simpsons signal.
+Tweezer was teased in the Sweet Emotion Jam. Amazing Grace was performed
+without microphones. This show was officially released as Live Phish 18.
+
+<https://phish.net/setlists/phish-may-07-1994-the-bomb-factory-dallas-tx-usa.html>
+....
+
+You can also show the taper notes for the show's matching recording on Phish.in:
+
+....
+~/src/puter main ∴ phish-show-notes -t 1994-05-07
+PHiSH
+05-07-94
+The Bomb Factory, Dallas, TX
+
+Set I Source: ? > cassette (unknown gen) > SoundBlaster > WAV > CDwave > SHN
+Tracks 7-9 were on side 2 of the cassette and at much lower level.
+I boosted them to 170% ampl. The results are far from perfect but
+this will have to do until someone finds a DAT copy and transfers.
+
+Set II Source: DSBD > cass0 > DAT
+Transfer: Sony R300 DAT > Zoltrix Nightingale @ 48 kHz > Samplitude 2496 (resampled to 44.1 kHz) > Sound Forge (normalize) > CD Wave > mkwACT 0.97 w/ seeking.  Performed by Rob Garland (rob@allstarupgrades.com)
+
+Note: The first set and encore of this show do not circulate to the best of my knowledge.
+
+Set 1
+1.  Llama
+2.  Horn >
+3.  Divided Sky
+4.  Mound
+5.  Fast Enough For You >
+6.  Scent of a Mule
+7.  Split Open and Melt
+8.  If I Could
+9.  Suzie Greenberg
+....
+
+Behold the untapped power of the unemployed music-listening Linux user.
 
 === `upload`
 
@@ -214,7 +344,8 @@ ilo.somas.is::
 === Secrets (`./secrets`)
 
 I use <https://github.com/ryantm/agenix> for actually managing the
-secrets.
+secrets. Ideally, `age-plugin-tpm` is what provides the machine and
+user identities which the secrets are encrypted, too.
 
 ==== Creating and using a secret
 
