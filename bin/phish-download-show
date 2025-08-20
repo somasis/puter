@@ -3,6 +3,18 @@
 #! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive tageditor
 # shellcheck shell=bash
 
+# keep-sorted start skip_lines=1 prefix_order=type,,>,||
+type \
+    bsdtar \
+    cmp \
+    curl \
+    jq \
+    mktemp \
+    tageditor \
+    >/dev/null \
+    || exit 1
+# keep-sorted end
+
 set -euo pipefail
 
 usage() {
@@ -71,6 +83,8 @@ while getopts :Zvz opt; do
     esac
 done
 shift $((OPTIND - 1))
+
+[[ "${1:-}" == --help ]] && usage
 
 [[ "$#" -eq 1 ]] || usage 'error: incorrect number of arguments (1 required)\n'
 

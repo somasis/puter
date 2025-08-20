@@ -1,6 +1,17 @@
+#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash coreutils curl jq
 # shellcheck shell=bash
+
+# keep-sorted start skip_lines=1 prefix_order=type,,>,||
+type \
+    cat \
+    curl \
+    jq \
+    phishin-auth-token \
+    >/dev/null \
+    || exit 1
+# keep-sorted end
 
 set -euo pipefail
 
@@ -16,15 +27,13 @@ Like a given show on Phish.in.
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
 
-see also: phishin-auth-token, phish-list-shows.
+see also: phishin-like-show, phishin-auth-token, phish-list-shows.
 
 Kylie McClain <kylie@somas.is>
 EOF
     [[ "$#" -eq 0 ]] || exit 1
     exit 64 # EX_USAGE
 }
-
-[[ "$#" -gt 0 ]] || usage 'error: no arguments provided\n'
 
 phishin_auth() {
     local -
@@ -50,6 +59,15 @@ curl_authed() {
         --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
         "${@?curl_authed(): no arguments given}"
 }
+
+[[ "${1:-}" == --help ]] && usage
+
+[[ "$#" -gt 0 ]] || usage 'error: no arguments provided\n'
+
+for show; do
+    [[ "$show" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
+        || usage 'error: show argument is not an ISO format date: %s\n' "$show"
+done
 
 phishin_auth
 

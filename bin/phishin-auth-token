@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash coreutils curl jq libsecret
+#! nix-shell -i bash -p bash curl jq libsecret
+
+# keep-sorted start skip_lines=1 prefix_order=type,,>,||
+type \
+    curl \
+    jq \
+    secret-tool \
+    >/dev/null \
+    || exit 1
+# keep-sorted end
 
 # shellcheck disable=SC2120
 usage() {

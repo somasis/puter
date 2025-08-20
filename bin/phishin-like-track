@@ -1,6 +1,16 @@
+#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash coreutils curl jq
 # shellcheck shell=bash
+
+# keep-sorted start skip_lines=1 prefix_order=type,,>,||
+type \
+    curl \
+    jq \
+    phishin-auth-token \
+    >/dev/null \
+    || exit 1
+# keep-sorted end
 
 set -euo pipefail
 
@@ -19,7 +29,7 @@ options:
                     If prefixed with an exclamation point, the track
                     will be unliked instead.
 
-see also: phishin-auth-login, phishin-list-shows.
+see also: phishin-auth-token, phishin-list-shows.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -32,7 +42,7 @@ EOF
 phishin_auth() {
     local -
     set +x
-    : "${PHISHIN_USER_TOKEN:=$(phishin-auth-login)}" || exit 1
+    : "${PHISHIN_USER_TOKEN:=$(phishin-auth-token)}" || exit 1
     export PHISHIN_USER_TOKEN
 }
 

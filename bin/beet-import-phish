@@ -1,6 +1,17 @@
+#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash jq dateutils
+#! nix-shell -i bash -p bash coreutils jq
 # shellcheck shell=bash
+
+# keep-sorted start skip_lines=1 prefix_order=type,,>,||
+type \
+    cat \
+    jq \
+    phish-download-show \
+    phish-show-notes \
+    >/dev/null \
+    || exit 1
+# keep-sorted end
 
 set -euo pipefail
 
@@ -15,9 +26,10 @@ usage() {
 usage: ${0##*/} <show ...>
 
 Download a Phish show from Phish.in's database of recordings into a
-predetermined download directory using \`phishin-download-show\`.
-Then import it into the Beets library using \`beet import --noautotag\`,
-enhancing the album tags in the process.
+predetermined download directory using \`phish-download-show\`.
+Display its setlist notes from Phish.net using \`phish-show-notes\`.
+Then, import the show recording into the Beets library using
+\`beet import --noautotag\`, enhancing the album tags in the process.
 
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
@@ -28,7 +40,7 @@ environment variables:
         If unset, shows will be downloaded into \$XDG_DOWNLOAD_DIR.
     \$XDG_DOWNLOAD_DIR${XDG_DOWNLOAD_DIR:+ (current: ${XDG_DOWNLOAD_DIR@Q})}
 
-see also: beet import, phishin-download-show.
+see also: beet import, phish-download-show.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -40,7 +52,7 @@ phishin() {
     jq -cr "$@" "${download_dir?phishin(): no download_dir set yet}/phishin.json"
 }
 
-[[ "$1" == --help ]] && usage
+[[ "${1:-}" == --help ]] && usage
 
 if [[ "$#" -le 0 ]]; then
     usage 'error: must provide at least one argument\n'
@@ -61,7 +73,7 @@ for show; do
 
     phish-show-notes "${show}"
 
-    download_dir=$(phishin-download-show "${show}")
+    download_dir=$(phish-download-show "${show}")
 
     phishin_id=$(phishin '.id')
 

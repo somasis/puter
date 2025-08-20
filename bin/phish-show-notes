@@ -1,6 +1,20 @@
+#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash -p bash coreutils curl jq pandoc
 # shellcheck shell=bash
+
+# keep-sorted start skip_lines=1 prefix_order=type,,>,||
+type \
+    cat \
+    curl \
+    fmt \
+    iconv \
+    jq \
+    pandoc \
+    phishin-auth-token \
+    >/dev/null \
+    || exit 1
+# keep-sorted end
 
 set -euo pipefail
 
@@ -40,7 +54,7 @@ EOF
 phishin_auth() {
     local -
     set +x
-    [[ -v PHISHIN_USER_TOKEN ]] || PHISHIN_USER_TOKEN=$(phishin-auth-login)
+    [[ -v PHISHIN_USER_TOKEN ]] || PHISHIN_USER_TOKEN=$(phishin-auth-token)
     export PHISHIN_USER_TOKEN
 }
 
@@ -79,6 +93,8 @@ while getopts :Ajt opt; do
     esac
 done
 shift $((OPTIND - 1))
+
+[[ "${1:-}" == --help ]] && usage
 
 if [[ "$#" -ne 1 ]]; then
     usage 'error: only one show argument allowed (%i provided)\n' "$#"
