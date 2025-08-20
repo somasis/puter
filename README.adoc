@@ -142,14 +142,16 @@ calculated database values, potentially causing lots of churn).
 
 === phish-cli
 
+// keep-sorted start
 * link:./bin/beet-import-phish[`beet-import-phish`]
 // * link:./bin/beet-sync-phishin[`beet-sync-phishin`]
 * link:./bin/phish-download-show[`phish-download-show`]
-* link:./bin/phishin-auth-token[`phishin-auth-token`]
 * link:./bin/phish-like-show[`phish-like-show`]
 * link:./bin/phish-like-track[`phish-like-track`]
 * link:./bin/phish-list-shows[`phish-list-shows`]
 * link:./bin/phish-show-notes[`phish-show-notes`]
+* link:./bin/phishin-auth-token[`phishin-auth-token`]
+// keep-sorted end
 
 So here's the idea. Let's say you're a fan of the jam band
 link:https://phish.com[Phish]; it could happen to you! In the last year or so

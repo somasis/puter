@@ -16,10 +16,10 @@
       plasma-manager.homeManagerModules.plasma-manager
 
       # keep-sorted start
+      ./age.nix
       ./commands
       ./editor
       ./git
-      ./age.nix
       ./less.nix
       ./locale.nix
       ./man.nix

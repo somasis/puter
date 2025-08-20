@@ -15,7 +15,7 @@ edo() {
     local arg string
     string="$"
     for arg; do
-        if [[ "${arg@Q}" == "'$arg'" ]] && ! [[ "${arg}" =~ [[:blank:]] ]]; then
+        if [[ ${arg@Q} == "'$arg'" ]] && ! [[ ${arg} =~ [[:blank:]] ]]; then
             string+=" $arg"
         else
             string+=" ${arg@Q}"
@@ -29,7 +29,7 @@ edo() {
 # usage: usage [<printf(1) arguments>]
 usage() {
     # shellcheck disable=SC2059
-    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    [[ $# -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
 usage: ${0##*/} <show>
@@ -52,7 +52,7 @@ see also: related programs, perhaps.
 
 Kylie McClain <kylie@somas.is>
 EOF
-    [[ "$#" -eq 0 ]] || exit 1
+    [[ $# -eq 0 ]] || exit 1
     exit 64 # EX_USAGE
 }
 
