@@ -79,20 +79,20 @@ menu item, and that's the primary way I interact with it.
 Here's a thousand words:
 
 .link:{beets-servicemenu}[The menu item], as shown in Dolphin
-image::beets-import-to-library%20%28menu%20item%29.png[A popup
+image:beets-import-to-library%20%28menu%20item%29.png[A popup
 menu created by a right-click action on a directory named "Phish -
 Slip Stitch and Pass (1997)", with the menu item "Import to music
 library..." highlighted by the mouse cursor.]
 
 .Notification of import starting soon
-image::beets-import-to-library%20%28importing%29.png[A desktop
+image:beets-import-to-library%20%28importing%29.png[A desktop
 notification as produced by KDE Plasma, titled "Importing..." and
 the directory name mentioned previously as the notification message
 content. Two buttons are on the notification, one labeled "Import
 manually..." and the other labeled "Skip".]
 
 .Notification of successful import
-image::beets-import-to-library%20%28imported%29.png[A desktop
+image:beets-import-to-library%20%28imported%29.png[A desktop
 notification as produced by KDE Plasma, titled "Music imported to
 library" with the message content "Successfully imported Phish - Slip
 Stitch and Pass (1997) using metadata from MusicBrainz." Four buttons
@@ -144,11 +144,11 @@ calculated database values, potentially causing lots of churn).
 
 * link:./bin/beet-import-phish[`beet-import-phish`]
 // * link:./bin/beet-sync-phishin[`beet-sync-phishin`]
-* link:./bin/phishin-auth-login[`phishin-auth-login`]
-* link:./bin/phishin-download-show[`phishin-download-show`]
-* link:./bin/phishin-like-show[`phishin-like-show`]
-* link:./bin/phishin-like-track[`phishin-like-track`]
-* link:./bin/phishin-list-shows[`phishin-list-shows`]
+* link:./bin/phish-download-show[`phish-download-show`]
+* link:./bin/phishin-auth-token[`phishin-auth-token`]
+* link:./bin/phish-like-show[`phish-like-show`]
+* link:./bin/phish-like-track[`phish-like-track`]
+* link:./bin/phish-list-shows[`phish-list-shows`]
 * link:./bin/phish-show-notes[`phish-show-notes`]
 
 So here's the idea. Let's say you're a fan of the jam band
@@ -169,7 +169,7 @@ tools.
 
 .A typical session
 ....
-~ ∴ phishin-list-shows -d 1998 | shuf -n 1
+~ ∴ phish-list-shows -d 1998 | shuf -n 1
 1998-11-04
 ~ ∴ phish-show-notes 1998-11-04
 Phish
@@ -187,7 +187,7 @@ Encore: Coil
 Bowie included Stash teases.
 
 <https://phish.net/setlists/phish-november-04-1998-mcnichols-arena-denver-co-usa.html>
-~ ∴ phishin-download-show 1998-11-04
+~ ∴ phish-download-show 1998-11-04
 DL% UL%  Dled  Uled  Xfers  Live Total     Current  Left    Speed
 100 --   259M     0     1     0   0:00:33  0:00:38 --:--:-- 8036k
 $ ls
@@ -221,10 +221,12 @@ Or, let's say you want to download the ten most liked shows that Phish played
 during the years 1995 to 2008, and then import those shows into your Beets
 library:
 
-    $ phishin-list-shows -d 1995..2008 -S likes_count -n 10 \
+....
+
+    $ phish-list-shows -d 1995..2008 -S likes_count -n 10 \
         | xargs beet-import-phish
 
-The most complex script is probably `phishin-list-shows`, mostly because I had
+The most complex script is probably `phish-list-shows`, mostly because I had
 to account for the Phish.in API's pagination, and pagination feels kinda funny
 to deal with using only `curl` and `jq`. But all the tools are pretty simple
 and basic and not more than 300 lines.
@@ -236,7 +238,7 @@ API to get display a show's setlist notes. It's modeled after the layout of
 Phish.net's own webpages for notes (link:{example-show}[example]).
 
 ....
-~ main ∴ phish-show-notes 1994-05-07
+~ ∴ phish-show-notes 1994-05-07
 Phish
 1994-05-07
 1994 Spring Tour
@@ -259,10 +261,10 @@ without microphones. This show was officially released as Live Phish 18.
 <https://phish.net/setlists/phish-may-07-1994-the-bomb-factory-dallas-tx-usa.html>
 ....
 
-You can also show the taper notes for the show's matching recording on Phish.in:
+You can also show the taper notes for the show's recording provided by Phish.in:
 
 ....
-~/src/puter main ∴ phish-show-notes -t 1994-05-07
+~ ∴ phish-show-notes -t 1994-05-07
 PHiSH
 05-07-94
 The Bomb Factory, Dallas, TX

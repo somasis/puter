@@ -81,13 +81,13 @@ phishin_auth() {
     local response
 
     : "${PHISHIN_USER_TOKEN:=$(
-        secret-tool lookup 'phishin-auth-login' "${PHISHIN_USER_EMAIL}"
+        secret-tool lookup 'phishin-auth-token' "${PHISHIN_USER_EMAIL}"
     )}"
     export PHISHIN_USER_TOKEN
 
     if [[ "$force" == true ]] || [[ -z "${PHISHIN_USER_TOKEN:-}" ]] \
-        || ! curl_authed -o /dev/null --no-progress-meter --fail-with-body \
-            'https://phish.in/api/v2/auth/user' | jq -c >&2; then
+        || ! curl_authed --no-progress-meter --fail-with-body \
+            'https://phish.in/api/v2/auth/user' >/dev/null; then
         # need to reauthenticate, because either there's no token, or the token
         # is invalid, or the password has changed, or whatever...
         printf 'refreshing Phish.in token...\n' >&2
@@ -98,8 +98,8 @@ phishin_auth() {
             jq -cre '.jwt' <<<"${response}" \
                 | tr -d '\n' \
                 | secret-tool store \
-                    --label "Phish.in user token (managed by phishin-auth-login)" \
-                    "phishin-auth-login" "$PHISHIN_USER_EMAIL"
+                    --label "Phish.in user token (managed by phishin-auth-token)" \
+                    "phishin-auth-token" "$PHISHIN_USER_EMAIL"
         )
 
         export PHISHIN_USER_TOKEN
@@ -109,12 +109,24 @@ phishin_auth() {
 }
 
 force=false
-while getopts :f opt >/dev/null 2>&1; do
+while getopts :f opt; do
     case "$opt" in
         f) force=true ;;
-        *) usage 'error: unknown command: %s\n' "${opt}" ;;
+        *) usage 'error: invalid argument -- %s\n' "${opt}" ;;
     esac
 done
 shift $((OPTIND - 1))
+
+if ! [[ -v PHISHIN_USER_TOKEN ]]; then
+    if ! [[ -v PHISHIN_USER_EMAIL ]] && ! [[ -v PHISHIN_USER_EMAIL_COMMAND ]]; then
+        printf 'error: one of $PHISHIN_USER_EMAIL or $PHISHIN_USER_EMAIL_COMMAND should be set\n' >&2
+        exit 1
+    fi
+
+    if ! [[ -v PHISHIN_USER_PASSWORD ]] && ! [[ -v PHISHIN_USER_PASSWORD_COMMAND ]]; then
+        printf 'error: one of $PHISHIN_USER_PASSWORD or $PHISHIN_USER_PASSWORD_COMMAND should be set\n' >&2
+        exit 1
+    fi
+fi
 
 phishin_auth

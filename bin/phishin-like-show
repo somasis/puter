@@ -16,7 +16,7 @@ Like a given show on Phish.in.
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
 
-see also: phishin-auth-login, phishin-list-shows.
+see also: phishin-auth-token, phish-list-shows.
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -29,7 +29,7 @@ EOF
 phishin_auth() {
     local -
     set +x
-    : "${PHISHIN_USER_TOKEN:=$(phishin-auth-login)}" || exit 1
+    : "${PHISHIN_USER_TOKEN:=$(phishin-auth-token)}" || exit 1
     export PHISHIN_USER_TOKEN
 }
 
