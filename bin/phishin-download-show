@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive rsync tageditor
+#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive tageditor
 # shellcheck shell=bash
 
 set -euo pipefail
@@ -10,12 +10,20 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} <show>
+usage: ${0##*/} [-Zvz] <show>
 
-Download a show from Phish.in to the current directory.
+Download a show from Phish.in to the working directory, improving the
+downloaded ZIP archive with better tagging, and extracting it to an
+appropriately named subdirectory of the working directory. After
+downloading, improving tags, and extracting the archive, print the
+extracted directory path on standard output.
 
 options:
-    <show>          An ISO formatted date (ex. 1969-12-31)
+    -Z              Keep downloaded archive, don't delete it after
+                    extracting it to the working directory.
+    -v              Be more verbose, showing commands being ran.
+    -z              Do not extract the archive; download it and exit.
+    <show>          An ISO formatted date (ex. 1983-12-02).
 
 see also: the Phish.in project <https://phish.in>.
 
@@ -36,7 +44,10 @@ edo() {
         fi
     done
 
-    printf '%s\n' "$string" >&2 || :
+    if [[ "${verbosity}" -ge 1 ]]; then
+        printf '%s\n' "$string" >&2 || :
+    fi
+
     "$@"
 }
 
@@ -48,13 +59,32 @@ phishin() {
     jq -cr "$@" <<<"${phishin_show_data}"
 }
 
+keep_archive=false
+only_download=false
+verbosity=0
+while getopts :Zvz opt; do
+    case "$opt" in
+        Z) keep_archive=true ;;
+        v) verbosity=$((verbosity + 1)) ;;
+        z) only_download=true ;;
+        ?) usage '' ;;
+    esac
+done
+shift $((OPTIND - 1))
+
 [[ "$#" -eq 1 ]] || usage 'error: incorrect number of arguments (1 required)\n'
 
-show=${1:?error: no show provided}
+[[ "$1" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
+    || usage 'error: invalid show argument format (YYYY-MM-DD required)\n'
 
+show="$1"
+shift
+
+# Request that Phish.in generate a ZIP archive of the album, polling until it
+# is actually made available to download if we end up making it generate one.
 while :; do
     request_album_zip=$(
-        jq -nc '{date:$show}' --arg show "${show}" \
+        jq -nc '{date:$show}' --arg show "$show" \
             | curl --no-progress-meter --json @- \
                 'https://phish.in/api/v2/shows/request_album_zip'
     )
@@ -67,16 +97,15 @@ while :; do
 done
 
 # shellcheck disable=SC2310
-if ! phishin_show_data=$(
-    curl --no-progress-meter --fail "https://phish.in/api/v2/shows/${show}" \
-        | jq -c
-); then
+if ! phishin_show_data=$(curl --no-progress-meter --fail "https://phish.in/api/v2/shows/$show"); then
     printf 'error: failed to download show data for %s\n' "${show}" >&2
     exit 1
 fi
 
 near_show_data=
 
+# Collapse the data a bit and create a nice filename
+# ex. Phish - 2000-05-23 Roseland Ballroom, New York, NY [SBD] [Complete]
 show_download=$(
     phishin '{
         album_zip_url,
@@ -94,60 +123,89 @@ show_download=$(
                                 )
                             )
                         ]
-                ) | map(" [\(.)]") | join("")),
-                ".zip"
+                ) | map(" [\(.)]") | join(""))
             ] | join("")
         )
     }'
 )
 
 filename=$(jq -r .filename <<<"${show_download}")
-directory="${PWD}/${filename%.zip}"
-zip="${PWD}/${filename}"
+directory="${PWD}/${filename}"
+zip="${directory}.zip"
 
 album_zip_url=$(jq -r .album_zip_url <<<"${show_download}")
 
 near_show_data=$(
-    if [[ -f "${zip}" ]]; then
-        if bsdtar -tf "${zip}" | grep -Fq phishin.json; then
-            bsdtar -Oxf "${zip}" phishin.json
-        fi
-    elif [[ -f "${directory}"/phishin.json ]]; then
+    if [[ -f "${directory}"/phishin.json ]]; then
         cat "${directory}"/phishin.json
+    elif [[ -f "${zip}" ]]; then
+        # Get downloaded ZIP's phishin.json and output to stdout
+        bsdtar -Oxf "${zip}" phishin.json
     fi
 )
 
-extract_to_temp=$(mktemp -d)
-if ! [[ -d "${directory}" ]]; then
-    if ! [[ -f "${zip}" ]]; then
-        edo curl \
-            --location \
-            --fail \
-            -# \
-            -o "${zip}".part.zip \
-            --continue-at - \
-            --remote-time \
-            "${album_zip_url}" || exit 1
+# Download the album, continuing an unfinished previous download if it exists.
+zip_raw="${zip%.zip}.raw.zip"
+if ! [[ -s "${zip_raw}" ]] && ! [[ -s "${zip}" ]]; then
+    # Fetch the ZIP from Phish.in, with progress, and continuing if
+    # an unfinished download exists.
 
-        temp=$(mktemp -d)
-        printf '%s' "${phishin_show_data:?}" >"$temp"/phishin.json
-        edo bsdtar -C "$temp" -acf - @"$zip".part.zip phishin.json \
-            | edo sponge "$zip".part.zip
-        edo rm -rf "$temp"
-        edo mv "$zip".part.zip "$zip"
-    fi
-    edo mkdir -p "${directory}"
-    if ! edo bsdtar -C "${extract_to_temp}" -xf "${zip}"; then
-        printf 'error: failed while extracting downloaded album (%s)\n' "${zip@Q}" >&2
-        exit 1
-    fi
+    edo curl \
+        --location \
+        --fail \
+        -# \
+        -o "${zip_raw}".part \
+        --continue-at - \
+        "${album_zip_url}" || exit 1
 
-    rm -f "${extract_to_temp}"/cover_art.jpg
-    mv "${extract_to_temp}"/album_cover.jpg "${extract_to_temp}"/cover.jpg
-
-    edo rsync --remove-source-files --delete -ru "${extract_to_temp}"/ "${directory}"/
-    rm -rf "${extract_to_temp}"
+    edo mv "${zip_raw}.part" "${zip_raw}"
 fi
+
+[[ "$only_download" == false ]] || exit
+
+# Take time to re-create the ZIP archive generated by Phish.in, and slip in a
+# phishin.json data file that contains the show data from the API while we're
+# at it.
+if [[ -s "$zip_raw" ]] && ! [[ -s "${zip}" ]]; then
+    repack=$(mktemp -d)
+    repack_album="${repack}/${filename}"
+    edo mkdir -p "$repack_album"
+
+    # This is done before extracting in hopes that maybe some day Phish.in
+    # will slip a phishin.json into the show archive itself.
+    printf '%s' "${phishin_show_data:?}" >"$repack_album"/phishin.json
+
+    # Extract the unedited archive into the album directory,
+    # and then remove the archive from the working directory.
+    edo bsdtar -C "$repack_album" -xf "${zip_raw}"
+
+    # Use a more default cover filename, and don't include the captionless
+    # version of the AI slop art.
+    edo rm -f "$repack_album"/cover_art.jpg
+    edo mv "$repack_album"/album_cover.jpg "$repack_album"/cover.jpg
+
+    # Repack it, with a leading subdirectory
+    edo bsdtar -C "$repack" -cf "${zip}".part "${filename}"/
+    edo mv "${zip}".part "${zip}"
+
+    edo rm -rf "$repack"
+fi
+
+[[ -e "$zip" ]] || exit 1
+
+edo rm -f "$zip_raw"
+
+if ! edo bsdtar -xf "${zip}"; then
+    printf 'error: failed while extracting downloaded album (%s)\n' "${zip@Q}" >&2
+    exit 1
+fi
+
+if ! [[ -d "${directory}" ]]; then
+    printf 'error: extracted archive, but %s does not exist\n' "${directory}" >&2
+    exit 1
+fi
+
+[[ "$keep_archive" == true ]] || edo rm -f "${zip}"
 
 # If the far and near show data differs (either $near_show_data is empty and
 # far is not or whatever) then we need to download the show again.
@@ -163,11 +221,8 @@ then
     exit 0
 fi
 
-# Go through the files and actually enhance the tagging ourselves
-set_name=
-file_i=0
-disc=1
-
+# Process the show data to get data pertaining to the track file in question,
+# and output it all in format suitable for `eval`.
 # shellcheck disable=SC2016
 jq_script='
     .tracks[$file_i]
@@ -184,6 +239,16 @@ jq_script='
         | map("\(.key)=\(.value|@sh)")[]
 
 '
+
+# Work through the downloaded MP3s in the archive, and modify the tags
+# given to be nicer and more informative by default; set disc numbers to be
+# the show set number; set the recording date to be correct; set a disc subtitle
+# to the set name; set the publisher webpage to the track's Phish.in permalink;
+# put Phish.in track tags (Jamcharts, Teases, etc.) in the comments.
+set_name=
+file_i=0
+disc=1
+
 for file in "${directory}"/*.mp3; do
     if ! [[ -e "$file" ]]; then
         printf 'error: file %s does not exist\n' "${file@Q}" >&2
@@ -209,14 +274,16 @@ for file in "${directory}"/*.mp3; do
     # Tageditor yaps a lot
     {
         # Tageditor doesn't know about TSST, the disc subtitle tag in ID3.
-        tageditor set \
+        edo tageditor set \
             album="${album}" title="${title}" \
             year="${show_date:0:4}" recorddate="${show_date}" \
             disk="${disc}" id3:TSST="${set_name}" \
             comment="${comments}" publisherwebpage="${track_url}" \
-            --quiet \
             --id3v1-usage never \
             --id3v2-version 4 \
+            --encoding utf8 \
+            --pedantic critical \
+            --quiet \
             --files "${file}"
         rm -f "${file}".bak
     } >/dev/null
@@ -225,8 +292,8 @@ for file in "${directory}"/*.mp3; do
     file_i=$((file_i + 1))
 done
 
-rm -f "${zip}"
+[[ "$keep_archive" == true ]] || edo rm -f "${zip}"
 
-# Everything went fine so now print the downloaded show on stdout to indicate to any other tools
-# that the show in question has been downloaded.
+# Everything went fine so now print the downloaded show on stdout to indicate
+# to any other tools listening that the show in question has been downloaded.
 printf '%s\n' "${directory}"
