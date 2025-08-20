@@ -14,9 +14,10 @@ usage() {
     cat >&2 <<EOF
 usage: ${0##*/} <show ...>
 
-Download a Phish show from Phish.in's database of recordings, using
-\`phishin-download-show\`, and then import it with enhanced tagging
-using \`beet import --noautotag\`.
+Download a Phish show from Phish.in's database of recordings into a
+predetermined download directory using \`phishin-download-show\`.
+Then import it into the Beets library using \`beet import --noautotag\`,
+enhancing the album tags in the process.
 
 options:
     <show>          An ISO formatted date (ex. 1969-12-31)
