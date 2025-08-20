@@ -1,0 +1,130 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils curl jq
+# shellcheck shell=bash
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <show> [!][<set>:]<track>
+
+Like tracks of a given show on Phish.in.
+
+options:
+    <show>          An ISO formatted date (ex. 1969-12-31)
+    [!]<track>      The number of the track in question.
+                    If prefixed with an exclamation point, the track
+                    will be unliked instead.
+
+see also: phishin-auth-login, phishin-list-shows.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 64 # EX_USAGE
+}
+
+[[ "$#" -gt 0 ]] || usage 'error: no arguments provided\n'
+
+phishin_auth() {
+    local -
+    set +x
+    : "${PHISHIN_USER_TOKEN:=$(phishin-auth-login)}" || exit 1
+    export PHISHIN_USER_TOKEN
+}
+
+curl() {
+    command curl \
+        --no-progress-meter \
+        --location \
+        --user-agent 'phish-cli <kylie@somas.is>' \
+        "$@"
+}
+
+curl_authed() {
+    # shellcheck disable=SC2016
+    [[ -v PHISHIN_USER_TOKEN ]] || usage 'error: no $PHISHIN_USER_TOKEN set\n'
+
+    curl \
+        --variable %PHISHIN_USER_TOKEN \
+        --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
+        "${@?curl_authed(): no arguments given}"
+}
+
+phishin_auth
+
+errors=0
+show="$1"
+shift
+
+attempt_unlike=false
+
+track=
+track_set=
+for track; do
+    attempt_unlike=false
+    if [[ "${track:0:1}" == '!' ]]; then
+        attempt_unlike=true
+    fi
+
+    case "$track" in
+        *:*)
+            track_set=${track%%:*}
+            track=${track##*:}
+            ;;
+        *)
+            track_set=
+            ;;
+    esac
+
+    track=${track/#0/}
+    [[ -n "${track_set:-}" ]] && track_set=${track_set/#0/}
+
+    # /likes requires the show ID be given, not a date
+    show_data=$(
+        curl --fail-with-body "https://phish.in/api/v2/shows/${show}"
+    )
+
+    track_id=$(
+        jq -r \
+            --argjson track "$((track - 1))" \
+            '.tracks[$track] | .id' \
+            <<<"$show_data"
+    )
+
+    track_liked=$(
+        jq -r \
+            --argjson track "$((track - 1))" \
+            '.tracks[$track].liked_by_user' \
+            <<<"$show_data"
+    )
+
+    if [[ "$track_liked" == true ]] && [[ "$attempt_unlike" == true ]]; then
+        method=DELETE
+        verb=unliking
+    else
+        method=POST
+        verb=liking
+    fi
+
+    result=$(
+        jq -nc --argjson track_id "${track_id}" \
+            '{"likable_type": "Track", "likable_id": $track_id}' \
+            | curl_authed -X "${method}" --json @- "https://phish.in/api/v2/likes"
+    )
+
+    if jq -cre --arg track "$track" '.id' <<<"$result" >/dev/null; then
+        printf '%s\n' "$track"
+    else
+        errors=$((errors + 1))
+        printf 'error: failed while %s track %s (id: %i, show: %s)\n' \
+            "$verb" "$track" "$track_id" "$show" >&2
+    fi
+done
+
+if [[ "$errors" -gt 0 ]]; then
+    exit 1
+fi
