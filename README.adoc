@@ -190,7 +190,6 @@ Bowie included Stash teases.
 ~ ∴ phish-download-show 1998-11-04
 DL% UL%  Dled  Uled  Xfers  Live Total     Current  Left    Speed
 100 --   259M     0     1     0   0:00:33  0:00:38 --:--:-- 8036k
-$ ls
 ~ ∴ ls
 total 8.5K
 drwxr-xr-x 2 somasis users 22 08-20 02:22 'Phish - 1998-11-04 McNichols Arena, Denver, CO [Complete]'/
@@ -222,9 +221,9 @@ during the years 1995 to 2008, and then import those shows into your Beets
 library:
 
 ....
-
-    $ phish-list-shows -d 1995..2008 -S likes_count -n 10 \
-        | xargs beet-import-phish
+~ ∴ phish-list-shows -d 1995..2008 -S likes_count -n 10 \
+    | xargs beet-import-phish
+....
 
 The most complex script is probably `phish-list-shows`, mostly because I had
 to account for the Phish.in API's pagination, and pagination feels kinda funny
