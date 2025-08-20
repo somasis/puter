@@ -139,6 +139,28 @@ instance of `beet`. If we keep using `.dump` though, that would entail
 all the impediments that incurs (slowing down `beet` by dumping already
 calculated database values, potentially causing lots of churn).
 
+=== phish-cli
+
+* link:bin/beet-import-phish[`beet-import-phish`]
+* link:bin/beet-sync-phishin[`beet-sync-phishin`]
+* link:bin/phishin-auth-login[`phishin-auth-login`]
+* link:bin/phishin-download-show[`phishin-download-show`]
+* link:bin/phishin-like-show[`phishin-like-show`]
+* link:bin/phishin-like-track[`phishin-like-track`]
+* link:bin/phishin-list-shows[`phishin-list-shows`]
+* link:bin/phish-show-notes[`phish-show-notes`]
+
+I got really into listening to Phish over the last year or so, and I wanted
+something that would let me put audience recordings from
+link:https://phish.in[Phish.in] into my music library without much effort.
+Naturally, it turned into a lot of effort because I was having fun with the
+design of the tools. Here's the idea:
+
+----
+$ phishin-list-shows -y 
+$ phish-show-notes 
+----
+
 === `upload`
 
 A script for uploading files to services like 0x0.st (which it
