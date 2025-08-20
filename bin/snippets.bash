@@ -55,3 +55,9 @@ EOF
     [[ "$#" -eq 0 ]] || exit 1
     exit 64 # EX_USAGE
 }
+
+and() {
+    tee >("$@" >&2)
+}
+
+peek() { tee /dev/stderr; }

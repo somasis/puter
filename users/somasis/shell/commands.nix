@@ -163,17 +163,6 @@ in
   ];
 
   programs.bash.initExtra = ''
-    . edo
-
-    # ... | peek [COMMAND...] | ...
-    peek() {
-        if [[ "$#" -eq 0 ]]; then
-            tee /dev/stderr
-        else
-            tee >("$@" >&2)
-        fi
-    }
-
     # Spawn a new terminal, detached from the current one, inheriting environment and working directory.
     newt() (
         nohup terminal "$@" >/dev/null 2>&1 &
