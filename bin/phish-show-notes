@@ -5,7 +5,6 @@
 
 # keep-sorted start skip_lines=1 prefix_order=type,,>,||
 type \
-    cat \
     curl \
     fmt \
     iconv \
