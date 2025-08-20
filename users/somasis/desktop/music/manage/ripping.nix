@@ -1,29 +1,12 @@
 {
   pkgs,
-  # config,
   lib,
   ...
 }:
 {
   home.packages = [
     pkgs.whipper
-    # pkgs.nicotine-plus
   ];
-
-  # persist.directories = [
-  #   {
-  #     method = "bindfs";
-  #     directory = config.lib.somasis.xdgConfigDir "nicotine";
-  #   }
-  #   {
-  #     method = "bindfs";
-  #     directory = config.lib.somasis.xdgDataDir "nicotine";
-  #   }
-  # ];
-
-  # xdg.autostart.entries = [
-  #   "${pkgs.nicotine-plus}/share/applications/org.nicotine_plus.Nicotine.desktop"
-  # ];
 
   xdg.configFile."whipper/whipper.conf".text =
     lib.generators.toINI
@@ -56,8 +39,8 @@
         "whipper.cd.rip" = {
           working_directory = "~/audio/source/rip";
 
-          track_template = "%A - %d (%y)/%t - %a - %n";
-          disc_template = "%A - %d (%y)/%A - %d (%y) (disc %N)";
+          disc_template = "%A - %d (%y) [%C]/%A - %D (%y) [%C] (disc %N)";
+          track_template = "%A - %d (%y) [%C]/%t - %a - %n";
 
           cover_art = "file";
           cdr = true;
