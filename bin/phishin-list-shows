@@ -8,21 +8,20 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [-lrj] [-A <completeness>] [-P <count>] [-S <sort>]
-                [-n <count>] [-s <state>] [-d (<date>[..<end>])]
-       ${0##*/} [-rj] [-A <completeness>] [-D <dayofyear>] [-S <sort>]
+usage: ${0##*/} [-lrj] [-A <completeness>] [-S <sort>] [-n <count>]
+                [-s <state>] [-d (<date>[..<end>])]
+       ${0##*/} [-j] [-A <completeness>] [-D <dayofyear>] [-S <sort>]
 
 List show dates performed by Phish, as catalogued by Phish.in.
 
 options:
-    -A ("complete" | "partial" | "complete-or-partial" | "missing")
+    -A <completeness>
         Filter shows by the completeness of their audio recording.
+        Valid completeness values are "complete", "partial",
+        "complete-or-partial" (the default), "missing", and "any".
 
     -D <dayofyear>
         Filter for shows which occurred on a given <dayofyear>.
-
-    -P <count>
-        When paginating results, fetch <count> items per page.
 
     -S ("date" | "likes_count" | "duration" | "updated_at")[+-]
         Sort the shows listed in the requested order. If a plus is
@@ -40,7 +39,6 @@ options:
     -l                  List shows liked by your (authenticated) user.
     -j                  Output show JSON data instead of listing dates.
     -n (<count> | all)  List at most <count> shows
-    -r                  List shows randomly.
 
     -s <stateabbr>
         Only list shows performed in <state>, USA. <stateabbr> should
@@ -72,7 +70,7 @@ curl() {
 }
 
 shows() {
-    if [[ -n "${day_of_year}" ]]; then
+    if [[ -n "${day_of_year:-}" ]]; then
         curl \
             --fail-with-body \
             --get \
@@ -105,26 +103,23 @@ set -euo pipefail
 
 user_agent='phish-cli <kylie@somas.is>'
 mode=list
-random_show=false
-per_page=180
 
-audio_status='complete_or_partial'
+audio_status=complete_or_partial
 day_of_year=
 end_date=
 liked_by_user=false
 page=
-per_page=180 # half a year, which is usually the length of a tour
 start_date=
 us_state=
 sort=
 
 # shellcheck disable=SC2209
 output=date
+max_entries=all
 
 BASH_ARGV0="${0##*/}"
 
-count=all
-while getopts A:D:P:S:d:jln:rs: opt; do
+while getopts A:D:S:d:jln:rs: opt; do
     case "$opt" in
         A)
             case "${OPTARG}" in
@@ -140,12 +135,6 @@ while getopts A:D:P:S:d:jln:rs: opt; do
             day_of_year=${OPTARG:?error: -D: no day of year provided}
             [[ "${day_of_year}" =~ ^([0-9]{2})-([0-9]{2})$ ]] \
                 || usage 'error: -D: invalid argument\n'
-            ;;
-
-        P)
-            per_page=${OPTARG:?error: -P: no per page count provided}
-            [[ "$per_page" =~ ^[0-9]+$ ]] \
-                || usage 'error: -P: invalid argument\n'
             ;;
 
         S)
@@ -187,15 +176,13 @@ while getopts A:D:P:S:d:jln:rs: opt; do
         l) liked_by_user=true ;;
 
         n)
-            count=${OPTARG:?error: -n: a count must be provided}
-            [[ "$count" =~ ^[0-9]+$ ]] \
-                || usage 'error: -n: invalid argument\n'
+            if ! [[ "${OPTARG:?error: -n: no number argument provided}" =~ ^[0-9]+$ ]]; then
+                usage 'error: -n: invalid argument\n'
+            fi
+
+            max_entries="${OPTARG}"
             ;;
 
-        r)
-            count=1
-            random_show=true
-            ;;
         s)
             us_state="${OPTARG:?error: -s: no state abbreviation provided}"
             us_state="${us_state^^}"
@@ -205,6 +192,14 @@ while getopts A:D:P:S:d:jln:rs: opt; do
     esac
 done
 shift $((OPTIND - 1))
+
+per_page=180 # half a year, which is roughly the length of a single tour
+if [[ "$max_entries" == 'all' ]]; then
+    : use defaults
+elif [[ "$max_entries" -le 1000 ]]; then
+    per_page="${max_entries}"
+    max_pages=1
+fi
 
 if [[ "$#" -gt 0 ]]; then
     mode=show
@@ -227,7 +222,6 @@ case "$mode" in
         fi
 
         page=1
-        # total_pages=
         response=
         entries_on_page=
         entries=
@@ -266,10 +260,10 @@ case "$mode" in
             entries=$((entries + entries_on_page))
             [[ "$entries" -eq "$entries_expected" ]] && break
 
+            [[ -v max_pages ]] && [[ "$page" -ge "$max_pages" ]] && break
+
             page=$((page + 1))
         done \
-            | if [[ "$output" == 'json' ]]; then jq -c; else cat; fi \
-            | if [[ "${random_show}" == true ]]; then shuf -n "$count"; else cat; fi \
             | if [[ "$output" == 'json' ]]; then jq -c; else cat; fi
         ;;
 esac
