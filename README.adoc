@@ -157,15 +157,13 @@ after leaving college, I got really into Phish, and I wanted to write something
 that would let me listen to shows on link:https://phish.in[Phish.in] without
 using the website. I wrote some initial versions that used `mpv` to play them,
 mostly fumbling around with trying to get `mpv` to do gapless playback of the MP3
-files being streamed directly from Phish.in, because I thought that if I had to
-download them to get it to play gaplessly (because no matter what I did, it
-seemed like I would need to reencode them to actually make them play gaplessly),
-then I might as well put them in my library and simply _play them with my music
-player_ instead of using `mpv`, and well, I guess I should just make something
-to automate downloading and importing the audience recordings into my
-music library without much effort. Naturally, it turned into a lot of effort
-because I was having fun with figuring out the most ergonomic design for the
-tools.
+files being streamed directly from Phish.in. Eventually, it seemed that I would
+need to reencode the MP3 files in order to get it to play gaplessly, if I need to
+download them just to get gapless playback, then I might as well automate the
+process of downloading shows and importing them into in my music library
+properly, and simply _play them with my music player_ instead of using `mpv`.
+Naturally, it turned into a lot of effort because I was having fun with figuring
+out the most ergonomic design for the tools.
 
 .A typical session
 ....
@@ -291,7 +289,7 @@ Set 1
 9.  Suzie Greenberg
 ....
 
-Behold the untapped power of the unemployed music-listening Linux user.
+Behold the untapped power of an unemployed music-listening Linux user.
 
 === `upload`
 
