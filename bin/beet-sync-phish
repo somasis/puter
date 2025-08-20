@@ -45,7 +45,7 @@ environment variables:
         and the dates it finds are used for building the default list
         of shows to run on.
 
-see also: beet import, phishin-download-show, beet-import-phish,
+see also: beet import, phish-download-show, beet-import-phish,
 and the Phish.in project <https://phish.in>.
 
 Kylie McClain <kylie@somas.is>

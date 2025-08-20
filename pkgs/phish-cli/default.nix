@@ -7,11 +7,11 @@
 let
   bins = [
     ../../bin/beet-import-phish
-    ../../bin/phishin-auth-login
-    ../../bin/phishin-download-show
-    ../../bin/phishin-like-show
-    ../../bin/phishin-list-shows
+    ../../bin/phish-download-show
+    ../../bin/phish-list-shows
     ../../bin/phish-show-notes
+    ../../bin/phishin-auth-login
+    ../../bin/phishin-like-show
   ];
 
   mans = [ ];

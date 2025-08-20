@@ -21,8 +21,7 @@ environment variables:
         If \$WITH_NTFY is set, send notifications to \$NTFY_TOPIC
         using \`ntfy publish\` on failed and successful imports.
 
-see also: beet import, phishin-download-show, beet-import-phish,
-slskd-send-to-ntfy, and the Phish.in project <https://phish.in>.
+see also: beet import.
 
 Kylie McClain <kylie@somas.is>
 EOF
