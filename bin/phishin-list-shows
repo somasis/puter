@@ -63,7 +63,12 @@ phishin_auth() {
 }
 
 curl() {
-    command curl --no-progress-meter --user-agent "${user_agent}" "$@"
+    set -- \
+        --no-progress-meter --user-agent "${user_agent}" \
+        ${PHISHIN_USER_TOKEN:+--variable %PHISHIN_USER_TOKEN} \
+        ${PHISHIN_USER_TOKEN:+--expand-header X-Auth-Token:\ \{\{PHISHIN_USER_TOKEN\}\}} \
+        "$@"
+    command curl "$@"
 }
 
 shows() {
@@ -71,8 +76,6 @@ shows() {
         curl \
             --fail-with-body \
             --get \
-            --variable %PHISHIN_USER_TOKEN \
-            --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
             ${audio_status:+-d audio_status="${audio_status}"} \
             ${sort:+-d sort="${sort}"} \
             -d "page=${page:?no \$page set}" \
@@ -81,8 +84,6 @@ shows() {
         curl \
             --fail-with-body \
             --get \
-            --variable %PHISHIN_USER_TOKEN \
-            --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
             ${audio_status:+-d audio_status="${audio_status}"} \
             ${sort:+-d sort="${sort}"} \
             ${end_date:+-d end_date="${end_date}"} \
@@ -97,12 +98,7 @@ shows() {
 
 show() {
     : "${1:?error in show(): no date provided}"
-    curl \
-        --fail-with-body \
-        --get \
-        --variable %PHISHIN_USER_TOKEN \
-        --expand-header 'X-Auth-Token: {{PHISHIN_USER_TOKEN}}' \
-        "https://phish.in/api/v2/shows/${1}"
+    curl --fail-with-body --get "https://phish.in/api/v2/shows/${1}"
 }
 
 set -euo pipefail
