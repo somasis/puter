@@ -244,6 +244,8 @@ in
   xdg.configFile."curlrc".text = ''
     show-error
 
+    xattr
+
     disallow-username-in-url
 
     compressed
