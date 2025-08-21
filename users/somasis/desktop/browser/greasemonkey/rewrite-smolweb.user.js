@@ -42,7 +42,9 @@
       after.pathname = `${protocol.proxy.pathname}${before.host}${before.pathname}`;
 
       before.href = after.href;
-      console.log(`${protocol.protocol}: rewrote '${before.href}' -> '${after.href}'`);
+      console.log(
+        `${protocol.protocol}: rewrote '${before.href}' -> '${after.href}'`,
+      );
     }
   }
 })();

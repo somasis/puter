@@ -79,12 +79,16 @@
 
   /* github.com: redirect .patch URLs to the actual pull request */
   if (matchURL({ hostname: "github.com", pathname: "*/pull/*.patch" })) {
-    const parts = document.location.pathname.match("/([^/]+/[^/]+)/pull/([0-9]+)\.patch");
+    const parts = document.location.pathname.match(
+      "/([^/]+/[^/]+)/pull/([0-9]+)\.patch",
+    );
     document.location = `https://github.com/${parts[1]}/pull/${parts[2]}`;
   }
 
   /* nytimes.com: Hide Wordle ad container */
-  if (matchURL({ hostname: "{www.}?nytimes.com", pathname: "*/games/wordle/*" }))
+  if (
+    matchURL({ hostname: "{www.}?nytimes.com", pathname: "*/games/wordle/*" })
+  )
     style += `
       [class*="Ad-module_adContainer"] {
           display: none !important;

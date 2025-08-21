@@ -10,7 +10,7 @@ let
     ../../bin/phish-download-show
     ../../bin/phish-list-shows
     ../../bin/phish-show-notes
-    ../../bin/phishin-auth-login
+    ../../bin/phishin-auth-token
     ../../bin/phishin-like-show
   ];
 

@@ -39,7 +39,8 @@ function createLink(href) {
 
   for (var elem of anchors) {
     // Only add anchor links to anchors that don't already have them.
-    var elemHasLinks = elem.querySelectorAll(`a:link[href="#${elem.id}"]`).length > 0;
+    var elemHasLinks =
+      elem.querySelectorAll(`a:link[href="#${elem.id}"]`).length > 0;
     if (!elemHasLinks) elem.prepend(createLink("#" + elem.id));
   }
 })();

@@ -279,7 +279,11 @@
 
             # Ensure we don't have commit anything bad
             check-added-large-files.enable = true; # avoid committing binaries when possible
-            check-executables-have-shebangs.enable = true;
+            check-executables-have-shebangs = {
+              enable = true;
+              excludes = [ ".+.desktop$" ];
+            };
+
             check-shebang-scripts-are-executable.enable = true;
             check-vcs-permalinks.enable = true; # don't use version control links that could rot
             check-symlinks.enable = true; # dead symlinks specifically
