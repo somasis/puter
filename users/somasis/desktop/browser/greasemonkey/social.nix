@@ -12,6 +12,10 @@
       hash = "sha256-JKOu+pG8rjUTCriwMxn8fNVYtMDGiSeA97oA2iKIfp0="; # 1.2.0
       url = "https://greasyfork.org/scripts/39312-reddit-highlighter/code/Reddit%20Highlighter.user.js";
     })
+    (pkgs.fetchurl {
+      hash = "sha256-SdJ8a8eus2+/oSP6MnNgfURK+DQsbJJVbCLSxZU7baY=";
+      url = "https://update.greasyfork.org/scripts/546618/Reddit%20Comment%20Auto-Expander%20%28Smooth%29%3A.user.js";
+    })
 
     # Lobsters
     (pkgs.fetchurl {
