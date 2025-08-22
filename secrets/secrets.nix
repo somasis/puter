@@ -16,15 +16,19 @@ with recipients;
 {
   # Before committing any modifications to the list of recipients for
   # any file listed here, run `agenix -r` in the development environment.
-  "somasis-rclone-fastmail-pass.age".publicKeys = [ somasis.ilo ];
-  "somasis-rclone-nextcloud-pass.age".publicKeys = [ somasis.ilo ];
-  "somasis-rclone-whatbox-http-url.age".publicKeys = [ somasis.ilo ];
-  "somasis-rclone-whatbox-pass.age".publicKeys = [ somasis.ilo ];
-  "somasis-restic-ilo.age".publicKeys = [
+  "rclone-fastmail-pass.age".publicKeys = [ somasis.ilo ];
+  "rclone-nextcloud-pass.age".publicKeys = [ somasis.ilo ];
+  "rclone-whatbox-http-url.age".publicKeys = [ somasis.ilo ];
+  "rclone-whatbox-pass.age".publicKeys = [ somasis.ilo ];
+  "rclone-vault-password.age".publicKeys = [ somasis.ilo ];
+  "rclone-vault-password2.age".publicKeys = [ somasis.ilo ];
+
+  # Used by host, not by a specific user on the host.
+  "restic-ilo.age".publicKeys = [
     ilo
     somasis.ilo
   ];
-  "somasis-restic-rclone-whatbox.age".publicKeys = [
+  "restic-rclone-whatbox.age".publicKeys = [
     ilo
     somasis.ilo
   ];

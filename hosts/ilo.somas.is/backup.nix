@@ -48,8 +48,8 @@
   ];
 
   age.secrets = {
-    restic-ilo.file = "${self}/secrets/somasis-restic-ilo.age";
-    restic-rclone-whatbox.file = "${self}/secrets/somasis-restic-rclone-whatbox.age";
+    restic-ilo.file = "${self}/secrets/restic-ilo.age";
+    restic-rclone-whatbox.file = "${self}/secrets/restic-rclone-whatbox.age";
   };
 
   services.restic.backups.ilo = {

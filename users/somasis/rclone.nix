@@ -124,6 +124,24 @@ in
           };
         };
 
+        vault = {
+          config = {
+            type = "crypt";
+            remote = "whatbox:backups/vault";
+            filename_encoding = "base64";
+            suffix = "none";
+          };
+          secrets = {
+            password = config.age.secrets.rclone-vault-password.path;
+            password2 = config.age.secrets.rclone-vault-password2.path;
+          };
+
+          mounts."" = {
+            enable = true;
+            mountPoint = "${config.xdg.userDirs.documents}/vault";
+          };
+        };
+
         raid = {
           config = {
             type = "alias";
@@ -167,10 +185,12 @@ in
 
   age.secrets = {
     # keep-sorted start
-    rclone-fastmail-pass.file = "${self}/secrets/somasis-rclone-fastmail-pass.age";
-    rclone-nextcloud-pass.file = "${self}/secrets/somasis-rclone-nextcloud-pass.age";
-    rclone-whatbox-http-url.file = "${self}/secrets/somasis-rclone-whatbox-http-url.age";
-    rclone-whatbox-pass.file = "${self}/secrets/somasis-rclone-whatbox-pass.age";
+    rclone-fastmail-pass.file = "${self}/secrets/rclone-fastmail-pass.age";
+    rclone-nextcloud-pass.file = "${self}/secrets/rclone-nextcloud-pass.age";
+    rclone-vault-password.file = "${self}/secrets/rclone-vault-password.age";
+    rclone-vault-password2.file = "${self}/secrets/rclone-vault-password2.age";
+    rclone-whatbox-http-url.file = "${self}/secrets/rclone-whatbox-http-url.age";
+    rclone-whatbox-pass.file = "${self}/secrets/rclone-whatbox-pass.age";
     # keep-sorted end
   };
 }
