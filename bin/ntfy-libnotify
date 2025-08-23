@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash libnotify jq sed xurls
+#! nix-shell -i bash -p bash curl libnotify jq pup sed xurls
 # shellcheck shell=bash
 # vim: ft=sh
 
@@ -51,6 +51,9 @@ esac
 : "${NTFY_TITLE:=}"
 : "${NTFY_TAGS:=}"
 : "${NTFY_PRIORITY:=0}"
+
+: "${NTFY_CLICK:=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)}"
+: "${NTFY_ICON:=$(jq -rc '.icon // ""' <<<"${NTFY_RAW}" || :)}"
 
 message_is_markdown=$(jq -r '.content_type == "text/markdown"' <<<"${NTFY_RAW}")
 
@@ -140,9 +143,24 @@ else
     done
 fi
 
-click=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)
+if [[ -z "$NTFY_ICON" ]] && [[ -n "$NTFY_CLICK" ]]; then
+    NTFY_ICON=$(
+        curl -A '' -L --globoff --url "$NTFY_CLICK" \
+            | pup 'head meta[property$=:image] attr{content}' \
+            | head -n1
+    )
+fi
 
-if [[ -n "${click:-}" ]]; then
+if [[ -n "${NTFY_ICON:-}" ]]; then
+    icon_file=$(mktemp)
+    curl -Ls -o "${icon_file}" "${NTFY_ICON}"
+    if [[ -s "${icon_file}" ]]; then
+        args+=(--icon="${icon_file}")
+        trap 'rm -f "$icon_file"' EXIT
+    fi
+fi
+
+if [[ -n "${NTFY_CLICK:-}" ]]; then
     args+=(--action=click=Open)
     # feels like the wrong way to make the actions persist for longer
     # args+=(--expire-time=$((60 * 1000)))
@@ -157,7 +175,7 @@ fi
 
     case "${action}" in
         click)
-            xdg-open "${click}" &
+            xdg-open "${NTFY_CLICK}" &
             disown
             ;;
     esac
