@@ -39,6 +39,7 @@
     ncdu
     nq
     pastel
+    pandoc
     patchutils
     pigz
     pup
@@ -130,4 +131,13 @@
       }
     '')
   ];
+
+  home.shellAliases.mdcat = ''
+    lowdown -t term \
+        --term-all-metadata \
+        --term-hpadding 0 \
+        --parse-hilite \
+        --parse-math \
+        | less -R
+  '';
 }
