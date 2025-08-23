@@ -135,7 +135,7 @@ else
     mapfile -t urls < <(xurls <<<"${message}")
 
     for url in "${urls[@]}"; do
-        url_hyperlink="<a href=${url}>${url}</a>"
+        url_hyperlink="<a href=\"${url}\">${url}</a>"
         message=${message/"$url"/"$url_hyperlink"}
     done
 fi
