@@ -85,8 +85,6 @@ let
 in
 {
   programs.qutebrowser = {
-    extraConfig = lib.fileContents ./redirects.py;
-
     aliases =
       let
         search-with-selection = pkgs.writeShellScript "search-with-selection" ''

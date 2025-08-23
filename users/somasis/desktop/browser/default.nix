@@ -149,7 +149,6 @@ in
     ./greasemonkey
     ./blocking.nix
     ./reader.nix
-    ./redirects.nix
     ./search.nix
   ];
 
