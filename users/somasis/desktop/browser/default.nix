@@ -132,17 +132,11 @@ let
     printf 'yank -q inline "%s" ;; message-info "Yanked URL of highlighted text to clipboard: %s"\n' "''${url}" "''${url}"
   '';
 
-  inherit (osConfig.services) tor;
-
-  proxies =
-    lib.optional (
-      tor.enable && tor.client.enable
-    ) "socks://${tor.client.socksListenAddress.addr}:${toString tor.client.socksListenAddress.port}"
-    ++ lib.optionals config.services.tunnels.enable (
-      lib.mapAttrsToList (_: tunnel: "socks://127.0.0.1:${toString tunnel.port}") (
-        lib.filterAttrs (_: tunnel: tunnel.type == "dynamic") config.services.tunnels.tunnels
-      )
-    );
+  proxies = lib.optionals config.services.tunnels.enable (
+    lib.mapAttrsToList (_: tunnel: "socks://127.0.0.1:${toString tunnel.port}") (
+      lib.filterAttrs (_: tunnel: tunnel.type == "dynamic") config.services.tunnels.tunnels
+    )
+  );
 in
 {
   imports = [
@@ -713,39 +707,6 @@ in
 
           normal."bl" = "cmd-set-text -s :bookmark-load";
           normal."bL" = "bookmark-list -j";
-          # normal."ba" =
-          #   let
-          #     escape-command =
-          #       pkgs.writeShellScript "escape-command" ''
-          #         command="''${1?no command given}"
-          #         shift
-
-          #         escape() {
-          #             local escape="$1"
-          #             local unescaped="$2"
-          #             local escaped="$unescaped"
-          #             local final
-          #             escaped=''${escaped//$escape/\\$escape}
-          #             final="$escaped"
-          #             [[ "$escaped" == "$unescaped" ]] || final="\"$unescaped\""
-          #             printf '%s' "$final"
-          #         }
-
-          #         : "''${QUTE_FIFO:?}"
-          #         : "''${QUTE_URL:?}"
-
-          #         args=( "$@" )
-          #         escaped_args=()
-          #         for arg in "''${args[@]}"; do
-          #             arg=$(escape '"' "$arg")
-          #             escaped_args+=( "$arg" )
-          #         done
-
-          #         printf "$command\n" "''${escaped_args[@]}" > "$QUTE_FIFO"
-          #       '';
-          #   in
-          #   "spawn -u ${escape-command} 'cmd-set-text -s :bookmark-add %s %s' {url} {title}"
-          # ;
           normal."ba" = "cmd-set-text -s :bookmark-add {url} \"{title}\"";
           normal."bd" = lib.mkMerge [
             "cmd-set-text :bookmark-del {url:domain}"
@@ -787,19 +748,6 @@ in
 
           normal."zsm" = "open -rt https://mastodon.social/authorize_interaction?uri={url}";
           normal."zst" = "open -rt https://twitter.com/share?url={url}";
-
-          # normal."tdh" = ''config-cycle -p -t -u *://{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
-          # normal."tdu" = ''config-cycle -p -t -u {url} colors.webpage.darkmode.enabled ;; reload'';
-          # normal."tdH" =
-          #   ''config-cycle -p -t -u *://*.{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
-
-          normal."cnt" =
-            if
-              (with tor; enable && client.enable && settings.ControlPort != [ ] && settings.ControlPort != null)
-            then
-              "spawn --userscript tor_identity"
-            else
-              "nop";
 
           prompt."<Alt+Up>" = "rl-filename-rubout";
         }
