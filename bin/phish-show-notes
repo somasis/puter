@@ -133,7 +133,12 @@ jq_script='
         showdate,
         permalink,
         tour_name,
-        show_venue: "\(.venue), \(.city), \(.state), \(.country)",
+        show_venue: [
+            (.venue // ""),
+            (.city // ""),
+            (.state // ""),
+            (.country // "")
+        ] | map(select(. != "")) | join(", ")
     }
     | .show_data = tojson
     | to_entries
