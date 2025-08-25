@@ -296,7 +296,6 @@ for file in "${directory}"/*.mp3; do
             --id3v1-usage never \
             --id3v2-version 4 \
             --encoding utf8 \
-            --pedantic critical \
             --quiet \
             --files "${file}"
         rm -f "${file}".bak
