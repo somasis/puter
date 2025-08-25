@@ -196,7 +196,7 @@ done
 if setlist_notes_fixed=$(
     iconv -t ISO-8859-1 <<<"$setlist_notes" \
         | iconv -t UTF-8 \
-        | pandoc -f html -t markdown
+        | pandoc -f html+smart -t markdown-smart
 ); then
     setlist_notes="${setlist_notes_fixed}"
 fi
