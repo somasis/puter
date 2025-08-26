@@ -5,17 +5,15 @@
   ...
 }:
 {
-  services.logind = {
-    lidSwitch = "suspend";
-    lidSwitchExternalPower = "lock";
-    lidSwitchDocked = "ignore";
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "lock";
+    HandleLidSwitchDocked = "ignore";
 
-    powerKey = "suspend";
-    powerKeyLongPress = "poweroff";
+    HandlePowerKey = "sleep";
+    HandlePowerKeyLongPress = "poweroff";
 
-    extraConfig = ''
-      PowerKeyIgnoreInhibited=yes
-    '';
+    PowerKeyIgnoreInhibited = "yes";
   };
 
   services.upower = {
