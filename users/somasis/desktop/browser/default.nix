@@ -219,7 +219,7 @@ in
     # ;
   };
 
-  nixpkgs.allowUnfreePackages = [ "widevine-cdm" ];
+  # nixpkgs.allowUnfreePackages = [ "widevine-cdm" ];
 
   programs = {
     qutebrowser = {
@@ -227,7 +227,7 @@ in
 
       package = pkgs.qutebrowser.override {
         withPdfReader = config.programs.qutebrowser.settings.content.pdfjs;
-        enableWideVine = true;
+        # enableWideVine = true;
       };
 
       loadAutoconfig = true;
@@ -792,7 +792,9 @@ in
 
     chromium = {
       enable = false;
-      package = pkgs.ungoogled-chromium.override { enableWideVine = true; };
+      package = pkgs.ungoogled-chromium.override {
+        # enableWideVine = true;
+      };
 
       dictionaries = with pkgs.hunspellDictsChromium; [
         en-us
