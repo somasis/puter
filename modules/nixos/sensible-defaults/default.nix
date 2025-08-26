@@ -48,7 +48,10 @@
       uefiCapsuleSettings.DisableCapsuleUpdateOnDisk = true;
     };
 
-    persist.directories = [ "/var/lib/fwupd" ];
+    persist.directories = [
+      "/var/log/lastlog"
+      "/var/lib/fwupd"
+    ];
     cache.directories = [ "/var/cache/fwupd" ];
 
     # Use a deterministic host ID, generated from the FQDN of the machine.

@@ -67,7 +67,6 @@
     ];
     files = [
       "/var/log/btmp"
-      "/var/log/lastlog"
       "/var/log/wtmp"
       "/etc/machine-id"
     ];
