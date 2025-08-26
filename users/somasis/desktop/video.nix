@@ -111,10 +111,10 @@ in
     }
   ];
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim";
-    }
+    # {
+    #   method = "symlink";
+    #   directory = config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim";
+    # }
     {
       method = "symlink";
       directory = config.lib.somasis.xdgConfigDir "jellyfin.org";
@@ -333,7 +333,7 @@ in
 
   home = {
     packages = [
-      pkgs.jellyfin-mpv-shim
+      # pkgs.jellyfin-mpv-shim
       pkgs.jellyfin-media-player
     ];
 
