@@ -40,8 +40,6 @@
       tetrio-desktop
       zaz
 
-      itch
-
       pcsx2 # Sony - PlayStation 2
       crispy-doom
       (
