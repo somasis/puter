@@ -149,38 +149,24 @@ in
   persist = {
     directories = [
       (xdgConfigDir "qutebrowser")
-      (xdgConfigDir "chromium")
-    ];
-
-    # files = [
-    #   # BUG(?): Can't make autoconfig.yml an impermanent file; I think qutebrowser
-    #   #         modifies it atomically (write new file -> rename to replace) so I
-    #   #         think that it gets upset when a bind mount is used.
-    #   # (xdgConfigDir "qutebrowser/autoconfig.yml")
-    #   # (xdgConfigDir "qutebrowser/bookmarks/urls")
-    #   # (xdgConfigDir "qutebrowser/quickmarks")
-    # ];
-  };
-
-  cache = {
-    directories = [
-      (xdgCacheDir "chromium")
       (xdgCacheDir "qutebrowser")
-      (xdgDataDir "qutebrowser/greasemonkey/requires")
-      (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
 
-      # WebEngine's Local storage, I think.
-      # I think it also has cookies stored in it.
+      (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
       (xdgDataDir "qutebrowser/webengine")
+
+      (xdgConfigDir "chromium")
+      (xdgCacheDir "chromium")
     ];
+
     files = [
+      #   # BUG(?): Can't make autoconfig.yml an impermanent file; I think qutebrowser
+      #   #         modifies it atomically (write new file -> rename to replace) so I
+      #   #         think that it gets upset when a bind mount is used.
+      #   # (xdgConfigDir "qutebrowser/autoconfig.yml")
+      #   # (xdgConfigDir "qutebrowser/bookmarks/urls")
+      #   # (xdgConfigDir "qutebrowser/quickmarks")
       (xdgDataDir "qutebrowser/adblock-cache.dat")
       (xdgDataDir "qutebrowser/blocked-hosts")
-    ];
-  };
-
-  log = {
-    files = [
       (xdgDataDir "qutebrowser/cmd-history")
       (xdgDataDir "qutebrowser/history.sqlite")
       (xdgDataDir "qutebrowser/state")
@@ -205,7 +191,7 @@ in
     "f ${config.xdg.dataHome}/qutebrowser/sessions/.stignore - - - - _autosave.yml"
   ];
 
-  home.sessionVariables."BROWSER" = lib.mkIf config.programs.qutebrowser.enable "qutebrowser";
+  home.sessionVariables.BROWSER = lib.mkIf config.programs.qutebrowser.enable "qutebrowser";
   xdg.mimeApps = {
     defaultApplications = lib.mkIf config.programs.qutebrowser.enable (
       lib.genAttrs [
@@ -246,7 +232,7 @@ in
 
       loadAutoconfig = true;
 
-      settings = rec {
+      settings = {
         changelog_after_upgrade = "patch";
 
         logging.level.console = "error";
@@ -258,10 +244,13 @@ in
         # Equivalent of Firefox's "Restore previous session" setting.
         auto_save.session = true;
 
-        # Load a restored tab as soon as it takes focus.
-        session.lazy_restore = true;
+        session = {
+          # Load a restored tab as soon as it takes focus.
+          lazy_restore = true;
 
-        session.default_name = "${config.home.username}@${osConfig.networking.fqdnOrHostName}";
+          # Use a default session name derived from the host.
+          default_name = osConfig.networking.fqdnOrHostName;
+        };
 
         # Unlimited tab focus switching history.
         tabs = {
@@ -307,6 +296,24 @@ in
         };
 
         content = {
+          headers.accept_language =
+            with builtins;
+            with lib;
+            concatStringsSep "," (
+              reverseList (
+                imap1 (i: v: ''${v};q=${substring 0 5 (toString (i * .001))}'') (reverseList [
+                  "en-US"
+                  "en"
+                  "tok"
+                  "es"
+                ])
+              )
+            );
+
+          # Use the actual title for notification titles, rather
+          # than the site's URL of origin.
+          notifications.show_origin = false;
+
           proxy = "system";
 
           webrtc_ip_handling_policy = "default-public-interface-only";
@@ -380,22 +387,6 @@ in
           "en-GB"
           "es-ES"
         ];
-        content.headers.accept_language = lib.concatStringsSep "," (
-          lib.reverseList (
-            lib.imap1 (i: v: ''${v};q=${lib.substring 0 5 (builtins.toString (i * .001))}'') (
-              lib.reverseList [
-                "en-US"
-                "en"
-                "tok"
-                "es"
-              ]
-            )
-          )
-        );
-
-        # Use the actual title for notification titles, rather
-        # than the site's URL of origin.
-        content.notifications.show_origin = false;
 
         confirm_quit = [ "downloads" ];
 
@@ -441,15 +432,17 @@ in
         downloads.position = "bottom";
 
         # Statusbar.
-        statusbar.position = "top";
-        statusbar.widgets = [
-          "keypress"
-          "url"
-          "scroll"
-          "history"
-          "tabs"
-          "progress"
-        ];
+        statusbar = {
+          position = "top";
+          widgets = [
+            "keypress"
+            "url"
+            "scroll"
+            "history"
+            "tabs"
+            "progress"
+          ];
+        };
 
         completion.open_categories = [
           "quickmarks"
@@ -804,15 +797,6 @@ in
       dictionaries = with pkgs.hunspellDictsChromium; [
         en-us
         en-gb
-      ];
-
-      extensions = [
-        # { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; } # uBlock Origin
-        # { id = "naepdomgkenhinolocfifgehidddafch"; } # Browserpass
-      ];
-
-      commandLineArgs = [
-        "--homepage=${config.programs.qutebrowser.settings.url.default_page}"
       ];
     };
 

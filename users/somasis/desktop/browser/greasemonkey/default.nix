@@ -5,7 +5,7 @@
   ...
 }:
 {
-  cache.directories = [ (config.lib.somasis.xdgDataDir "qutebrowser/greasemonkey/requires") ];
+  persist.directories = [ (config.lib.somasis.xdgDataDir "qutebrowser/greasemonkey/requires") ];
 
   imports = [
     ./social.nix
