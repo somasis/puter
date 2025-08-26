@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   ...
 }:
 {
@@ -30,7 +29,7 @@
 
   programs.less = {
     enable = true;
-    keys = ''
+    config = ''
       #command
       /   forw-search
       ^F  forw-search
