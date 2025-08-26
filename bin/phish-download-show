@@ -244,7 +244,7 @@ jq_script='
             title,
             set_name,
             track_url: "https://phish.in/\(.show_date)/\(.slug)",
-            comments: [ (.tags[] | select(.notes != null) | .notes) ] | join("\n")
+            comments: [ (.tags[] | select(.notes != null) | "\(.name): \(.notes)") ] | join("\n")
         }
         | to_entries
         | map("\(.key)=\(.value|@sh)")[]
