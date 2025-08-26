@@ -26,7 +26,6 @@
       "checkjobs" # warn when trying to quit a shell with jobs running
       "globstar" # allow for using ** for recursive globbing
       "lithist" # save multi-line commands to the history with their newlines
-      "progcomp_alias" # adds automatic completion for aliases
     ];
   };
 
@@ -34,6 +33,11 @@
 
   programs.bash.initExtra = ''
     command -v snippets.bash >/dev/null && . snippets.bash || :
+  ''
+  # Add automatic completion for aliases.
+  + ''
+    . ${pkgs.complete-alias}/bin/complete_alias
+    complete -F _complete_alias ''${!BASH_ALIASES[@]}
   ''
   # s6/s6-rc bash completion.
   + ''
