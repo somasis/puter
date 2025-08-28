@@ -70,8 +70,8 @@
       Service = {
         Type = "oneshot";
         ExecStart = [
-          "${pkgs.age}/bin/age-keygen -o %C/age/identity"
-          "${pkgs.age}/bin/age-keygen -y -o %C/age/recipient %C/age/identity"
+          "${pkgs.age}/bin/age-keygen -o %E/age/identity"
+          "${pkgs.age}/bin/age-keygen -y -o %E/age/recipient %E/age/identity"
         ];
       };
     };
