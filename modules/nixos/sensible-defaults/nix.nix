@@ -27,7 +27,7 @@
   # System should automatically upgrade according to the canonical version
   # of the flake repository.
   system.autoUpgrade = {
-    enable = config.system.autoUpgrade.flake != null;
+    enable = lib.mkDefault (config.system.autoUpgrade.flake != null);
 
     # Allow automatic reboots only if it is not a user-interfacing
     # machine, and it is between 2am and 5:30am. Check for updates
