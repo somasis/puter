@@ -22,7 +22,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [-Zvz] <show>
+usage: ${0##*/} [-kvz] <show>
 
 Download a show from Phish.in to the working directory, improving the
 downloaded ZIP archive with better tagging, and extracting it to an
@@ -31,7 +31,7 @@ downloading, improving tags, and extracting the archive, print the
 extracted directory path on standard output.
 
 options:
-    -Z              Keep downloaded archive, don't delete it after
+    -k              Keep downloaded archive, don't delete it after
                     extracting it to the working directory.
     -v              Be more verbose, showing commands being ran.
     -z              Do not extract the archive; download it and exit.
@@ -74,9 +74,9 @@ phishin() {
 keep_archive=false
 only_download=false
 verbosity=0
-while getopts :Zvz opt; do
+while getopts :kvz opt; do
     case "$opt" in
-        Z) keep_archive=true ;;
+        k) keep_archive=true ;;
         v) verbosity=$((verbosity + 1)) ;;
         z) only_download=true ;;
         ?) usage '' ;;
