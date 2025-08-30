@@ -31,23 +31,26 @@
 
   programs.nix-index.enable = true;
 
-  programs.bash.initExtra = ''
-    command -v snippets.bash >/dev/null && . snippets.bash || :
-  ''
-  # Add automatic completion for aliases.
-  + ''
-    . ${pkgs.complete-alias}/bin/complete_alias
-    complete -F _complete_alias ''${!BASH_ALIASES[@]}
-  ''
-  # s6/s6-rc bash completion.
-  + ''
-    . ${
-      pkgs.fetchurl {
-        url = "https://gist.githubusercontent.com/capezotte/45d9d5ebad50aa7419f632a43dad604e/raw/ad60df4d5bcb704a9b90ed9ed23a146d385c2b35/s6-comp.bash";
-        hash = "sha256-DQySJr2Ci28RGFBH5VHSk1go7MCP/IhS8yHWOdTB4sI=";
+  programs.bash.initExtra = lib.mkAfter (
+    ''
+      command -v snippets.bash >/dev/null && . snippets.bash || :
+    ''
+    # s6/s6-rc bash completion.
+    + ''
+      . ${
+        pkgs.fetchurl {
+          url = "https://gist.githubusercontent.com/capezotte/45d9d5ebad50aa7419f632a43dad604e/raw/ad60df4d5bcb704a9b90ed9ed23a146d385c2b35/s6-comp.bash";
+          hash = "sha256-DQySJr2Ci28RGFBH5VHSk1go7MCP/IhS8yHWOdTB4sI=";
+        }
       }
-    }
-  '';
+    ''
+    # Add automatic completion for aliases.
+    # This needs to be done as late as possible in the script, thus `lib.mkAfter`.
+    + ''
+      . ${pkgs.complete-alias}/bin/complete_alias
+      complete -F _complete_alias ''${!BASH_ALIASES[@]}
+    ''
+  );
 
   # TODO: integrate system clipboard into bash readline yank/paste?
   # programs.bash.initExtra =
