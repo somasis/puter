@@ -226,9 +226,8 @@ library:
 ....
 
 The most complex script is probably `phish-list-shows`, mostly because I had
-to account for the Phish.in API's pagination, and pagination feels kinda funny
-to deal with using only `curl` and `jq`. But all the tools are pretty simple
-and basic and not more than 300 lines.
+to figure out how to structure its usage for the Phish.in API. But all the
+tools are pretty simple and basic and hopefully are easy to understand.
 
 :example-show: https://phish.net/setlists/phish-may-07-1994-the-bomb-factory-dallas-tx-usa.html
 
