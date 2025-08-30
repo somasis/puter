@@ -157,7 +157,7 @@ near_show_data=$(
         cat "${directory}"/phishin.json
     elif [[ -f "${zip}" ]]; then
         # Get downloaded ZIP's phishin.json and output to stdout
-        bsdtar -Oxf "${zip}" phishin.json
+        edo bsdtar -Oxf "${zip}" '*/phishin.json'
     fi
 )
 
