@@ -218,6 +218,7 @@ rec {
   execshell = callPackage ./execshell { };
   fcitx5-ilo-sitelen = callPackage ./fcitx5-ilo-sitelen { };
   ffsclient = callPackage ./ffsclient { };
+  greybeard = callPackage ./greybeard { };
   hledger-fmt = callPackage ./hledger-fmt { };
   ini2nix = callPackage ./ini2nix { inherit json2nix; };
   jhide = callPackage ./jhide { };
