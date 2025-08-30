@@ -47,6 +47,8 @@
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "24.11";
 
+  system.autoUpgrade.enable = false;
+
   persist = {
     hideMounts = true;
     directories = [ "/var/lib/systemd" ];
