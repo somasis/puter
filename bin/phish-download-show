@@ -22,7 +22,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [-kvz] <show>
+usage: ${0##*/} [-Tkvz] <show>
 
 Download a show from Phish.in to the working directory, improving the
 downloaded ZIP archive with better tagging, and extracting it to an
@@ -31,6 +31,7 @@ downloading, improving tags, and extracting the archive, print the
 extracted directory path on standard output.
 
 options:
+    -T              Don't do any automatic tag editing.
     -k              Keep downloaded archive, don't delete it after
                     extracting it to the working directory.
     -v              Be more verbose, printing commands as they are ran.
@@ -71,11 +72,13 @@ phishin() {
     jq -cr "$@" <<<"${phishin_show_data}"
 }
 
+edit_tags=true
 keep_archive=false
 only_download=false
 verbosity=0
-while getopts :kvz opt; do
+while getopts :Tkvz opt; do
     case "$opt" in
+        T) edit_tags=false ;;
         k) keep_archive=true ;;
         v) verbosity=$((verbosity + 1)) ;;
         z) only_download=true ;;
@@ -262,47 +265,76 @@ set_name=
 file_i=0
 disc=1
 
-for file in "${directory}"/*.mp3; do
-    if ! [[ -e "$file" ]]; then
-        printf 'error: file %s does not exist\n' "${file@Q}" >&2
-        exit 1
-    fi
+if [[ "$edit_tags" == true ]]; then
+    for file in "${directory}"/*.mp3; do
+        if ! [[ -e "$file" ]]; then
+            printf 'error: file %s does not exist\n' "${file@Q}" >&2
+            exit 1
+        fi
 
-    last_set_name="${last_set_name:-${set_name:-}}"
+        jq_eval=$(jq -r --argjson file_i "$file_i" "$jq_script" <<<"${phishin_show_data}")
+        eval "$jq_eval"
 
-    jq_eval=$(jq -r --argjson file_i "$file_i" "$jq_script" <<<"${phishin_show_data}")
-    eval "$jq_eval"
+        : "${album:?}"
+        : "${title:?}"
+        : "${show_date:?}"
+        : "${set_name:?}"
+        : "${track_url:?}"
+        : "${comments?}"
 
-    if [[ "${set_name}" != "${last_set_name}" ]]; then
-        disc=$((disc + 1))
-    fi
+        last_set_name="${last_set_name:-${set_name:-}}"
 
-    : "${album:?}"
-    : "${title:?}"
-    : "${show_date:?}"
-    : "${set_name:?}"
-    : "${track_url:?}"
-    : "${comments?}"
+        if [[ "${set_name}" != "${last_set_name}" ]]; then
+            disc=$((disc + 1))
+        fi
 
-    # Tageditor yaps a lot
-    {
-        # Tageditor doesn't know about TSST, the disc subtitle tag in ID3.
-        edo tageditor set \
-            album="${album}" title="${title}" \
-            year="${show_date:0:4}" recorddate="${show_date}" \
-            disk="${disc}" id3:TSST="${set_name}" \
-            comment="${comments}" publisherwebpage="${track_url}" \
-            --id3v1-usage never \
-            --id3v2-version 4 \
-            --encoding utf8 \
-            --quiet \
-            --files "${file}"
-        rm -f "${file}".bak
-    } >/dev/null
+        {
+            # What do we actually do to the tags compared to Phish.in?
+            #
+            # Phish.in includes ID3v1 tags, which have enough drawbacks that I
+            # don't want anything trying to use them (such as the tag value's
+            # fifteen character limit). So we remove those, and also upgrade
+            # the ID3v2.3 tags to 2.4 while we're at it.
+            #
+            # Given the file "Phish - 2012-08-24 Oak Mountain Amphitheatre,
+            # Pelham, AL [Complete]/14 Rock and Roll.mp3", the tag changes are:
+            # album="2012-08-24 Oak Mountain Amphitheatre"
+            #   -> album="2012-08-24: Oak Mountain Amphitheatre, Pelham, AL"
+            # comment="https://phish.in for more"
+            #   -> comment="Jamcharts: Very good, multi-part jam. Begins in a
+            #      snappy, rocking mode with a good \"Live And Let Die\" tease,
+            #      grows in power, then mellows with a -> to \"Lizards.\"\n
+            #      Tease: Live and Let Die by Paul McCartney and Wings\n
+            #      Tease: Twenty Years Later"
+            # recorddate=2012
+            #   -> recorddate=2012-08-24
+            # !publisherwebpage
+            #   -> publisherwebpage="https://phish.in/2012-08-24/rock-and-roll"
+            # !disc                  [Phish.in's MP3s in fact have no information
+            #   -> disc=2             pertaining to which set they are part of]
+            # !discname (id3:TSST)   [tageditor doesn't seem to know about TSST,
+            #   -> discname="Set 2"   the disc subtitle tag in ID3.]
+            edo tageditor set \
+                album="${album}" \
+                title="${title}" \
+                track=$((file_i + 1)) \
+                comment="${comments}" \
+                recorddate="${show_date}" \
+                publisherwebpage="${track_url}" \
+                disk="${disc}" \
+                id3:TSST="${set_name}" \
+                --id3v1-usage never \
+                --id3v2-version 4 \
+                --encoding utf8 \
+                --quiet \
+                --files "${file}" \
+                && rm -f "${file}".bak
+        } >/dev/null
 
-    last_set_name="${set_name}"
-    file_i=$((file_i + 1))
-done
+        last_set_name="${set_name}"
+        file_i=$((file_i + 1))
+    done
+fi
 
 [[ "$keep_archive" == true ]] || edo rm -f "${zip}"
 
