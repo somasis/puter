@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash coreutils curl jq
+#! nix-shell -i bash -p bash coreutils curl dateutils jq
 # shellcheck shell=bash
 
 # keep-sorted start skip_lines=1 prefix_order=type,,>,||
 type \
     curl \
+    dateadd \
     jq \
     phishin-auth-token \
     >/dev/null \
@@ -20,6 +21,7 @@ usage() {
 usage: ${0##*/} [-lrj] [-A <completeness>] [-S <sort>] [-n <count>]
                 [-s <state>] [-d (<date>[..<end>])]
        ${0##*/} [-j] [-A <completeness>] [-D <dayofyear>] [-S <sort>]
+       ${0##*/} [-Rj] <show>
 
 List show dates performed by Phish, as catalogued by Phish.in.
 
@@ -31,6 +33,12 @@ options:
 
     -D <dayofyear>
         Filter for shows which occurred on a given <dayofyear>.
+
+    -R
+        Get all shows in a run; a run, being shows performed multiple
+        days in a row potentially preceding or following the given
+        <show> date. For example, given the show date 2009-03-06, the
+        shows 2009-03-07, and 2009-03-08 will also be printed.
 
     -S ("date" | "likes_count" | "duration" | "updated_at")[+-]
         Sort the shows listed in the requested order. If a plus is
@@ -52,6 +60,8 @@ options:
     -s <stateabbr>
         Only list shows performed in <state>, USA. <stateabbr> should
         be formatted as an ISO 3166-2 country code.
+
+    <show>              An ISO formatted date (ex. 1969-12-31)
 
 see also: phish-show-notes, phishin-auth-token, phishin-like-show,
           the Phish.in project <https://phish.in>.
@@ -108,10 +118,59 @@ show() {
     curl --fail-with-body --get "https://phish.in/api/v2/shows/${1}"
 }
 
+fetch_run() {
+    : "${anchor_show_date:?error in fetch_run(): \$anchor_show_date is unset}"
+    : "${anchor_show_data:?error in fetch_run(): \$anchor_show_data is unset}"
+
+    : "${1:?error in fetch_run(): no direction provided}"
+
+    local expected_show_date
+    local next_show_date next_show_data
+
+    local direction direction_node
+
+    case "$1" in
+        prev)
+            direction=-1d
+            direction_node=.previous_show_date
+            ;;
+        next)
+            direction=+1d
+            direction_node=.next_show_date
+            ;;
+        *) return 1 ;;
+    esac
+
+    case "$audio_status" in
+        complete | partial | complete-or-partial) direction_node+=_with_audio ;;
+    esac
+
+    while :; do
+        expected_show_date=$(dateadd "${anchor_show_date}" "${direction}")
+
+        # >&2 echo "expected ${1} of ${anchor_show_date}: $expected_show_date"
+
+        next_show_date=$(jq -r "${direction_node}" <<<"${anchor_show_data}")
+        next_show_data=$(show "${next_show_date}")
+
+        if [[ "$next_show_date" == "$expected_show_date" ]]; then
+            # >&2 echo "show ${1} of ${anchor_show_date}: $next_show_date"
+            printf '%s\n' "${next_show_data}"
+        else
+            # >&2 echo "break; show ${1} was not $expected_show_date (got ${next_show_date})"
+            break
+        fi
+
+        anchor_show_data="${next_show_data}"
+        anchor_show_date="${next_show_date}"
+    done
+}
+
 set -euo pipefail
 
 user_agent='phish-cli <kylie@somas.is>'
 mode=list
+list_run=false
 
 audio_status=complete_or_partial
 day_of_year=
@@ -128,7 +187,7 @@ max_entries=all
 
 BASH_ARGV0="${0##*/}"
 
-while getopts A:D:S:d:jln:rs: opt; do
+while getopts A:D:S:d:Rjln:rs: opt; do
     case "$opt" in
         A)
             case "${OPTARG}" in
@@ -148,6 +207,10 @@ while getopts A:D:S:d:jln:rs: opt; do
 
         S)
             sort="${OPTARG:?error: -S: no sort provided}"
+
+        R)
+            list_run=true
+            ;;
 
             case "${sort}" in
                 date+ | likes_count+ | duration+ | updated_at+ | \
@@ -212,19 +275,40 @@ fi
 
 [[ "${1:-}" == --help ]] && usage
 
-if [[ "$#" -gt 0 ]]; then
+if [[ "$#" -gt 1 ]]; then
+    usage 'error: only one show may be provided\n'
+elif [[ "$#" -eq 1 ]]; then
     mode=show
 fi
 
 case "$mode" in
     show)
-        for show; do
+        if [[ "$list_run" == true ]]; then
+            anchor_show_data=$(show "${1:?error: no show date provided}")
+            anchor_show_date=$(jq -r .date <<<"$anchor_show_data")
+
+            mapfile -t run_data < <(
+                {
+                    fetch_run prev
+                    printf '%s\n' "${anchor_show_data}"
+                    fetch_run next
+                } | sort -u
+            )
+
             if [[ "$output" == 'date' ]]; then
-                show "$show" | jq -r .date
+                jq -r .date <<<"${run_data[*]}"
             elif [[ "$output" == 'json' ]]; then
-                show "$show" | jq
+                jq -r <<<"${run_data[*]}"
             fi
-        done
+        else
+            show_data=$(show "${1:?error: no show date provided}")
+
+            if [[ "$output" == 'date' ]]; then
+                jq -r .date <<<"$show_data"
+            elif [[ "$output" == 'json' ]]; then
+                jq -r <<<"$show_data"
+            fi
+        fi
         ;;
 
     list)
