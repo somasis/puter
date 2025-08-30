@@ -200,22 +200,20 @@ while getopts A:D:S:d:Rjln:rs: opt; do
             ;;
 
         D)
-            day_of_year=${OPTARG:?error: -D: no day of year provided}
+            day_of_year="${OPTARG:?error: -D: no day of year provided}"
             [[ "${day_of_year}" =~ ^([0-9]{2})-([0-9]{2})$ ]] \
                 || usage 'error: -D: invalid argument\n'
             ;;
-
-        S)
-            sort="${OPTARG:?error: -S: no sort provided}"
 
         R)
             list_run=true
             ;;
 
-            case "${sort}" in
+        S)
+            case "${OPTARG:?error: -S: no sort provided}" in
                 date+ | likes_count+ | duration+ | updated_at+ | \
-                    date | likes_count | duration | updated_at) sort="${sort%+}:asc" ;;
-                date- | likes_count- | duration- | updated_at-) sort="${sort%-}:desc" ;;
+                    date | likes_count | duration | updated_at) sort="${OPTARG%+}:asc" ;;
+                date- | likes_count- | duration- | updated_at-) sort="${OPTARG%-}:desc" ;;
                 *) usage 'error: -S: invalid argument\n' ;;
             esac
             ;;
@@ -256,8 +254,8 @@ while getopts A:D:S:d:Rjln:rs: opt; do
             ;;
 
         s)
-            us_state="${OPTARG:?error: -s: no state abbreviation provided}"
-            us_state="${us_state^^}"
+            : "${OPTARG:?error: -s: no state abbreviation provided}"
+            us_state="${OPTARG^^}"
             ;;
 
         ?) usage '' ;;
