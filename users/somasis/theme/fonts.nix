@@ -31,6 +31,8 @@
     sitelen-seli-kiwen
 
     spleen
+
+    greybeard
   ];
 
   fonts.fontconfig = {
