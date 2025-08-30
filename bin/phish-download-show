@@ -33,7 +33,7 @@ extracted directory path on standard output.
 options:
     -k              Keep downloaded archive, don't delete it after
                     extracting it to the working directory.
-    -v              Be more verbose, showing commands being ran.
+    -v              Be more verbose, printing commands as they are ran.
     -z              Do not extract the archive; download it and exit.
     <show>          An ISO formatted date (ex. 1983-12-02).
 
