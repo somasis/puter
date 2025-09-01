@@ -18,7 +18,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [-lrj] [-A <completeness>] [-S <sort>] [-n <count>]
+usage: ${0##*/} [-lj] [-A <completeness>] [-S <sort>] [-n <count>]
                 [-s <state>] [-d (<date>[..<end>])]
        ${0##*/} [-j] [-A <completeness>] [-D <dayofyear>] [-S <sort>]
        ${0##*/} [-Rj] <show>
