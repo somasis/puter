@@ -52,7 +52,8 @@ esac
 : "${NTFY_TAGS:=}"
 : "${NTFY_PRIORITY:=0}"
 
-: "${NTFY_CLICK:=$(jq -rc '.click // ""' <<<"${NTFY_RAW}" || :)}"
+NTFY_TOPIC=$(jq -rc '.topic // ""' <<<"${NTFY_RAW}")
+NTFY_CLICK=$(jq -rc '.click // ""' <<<"${NTFY_RAW}")
 : "${NTFY_ICON:=$(jq -rc '.icon // ""' <<<"${NTFY_RAW}" || :)}"
 
 message_is_markdown=$(jq -r '.content_type == "text/markdown"' <<<"${NTFY_RAW}")
@@ -92,7 +93,7 @@ case "${NTFY_TITLE}" in
         ;;
 esac
 
-: "${app_name:=${NTFY_TOPIC}}"
+app_name=${NTFY_TOPIC:-ntfy}
 
 args+=(
     ${urgency:+--urgency="$urgency"}
