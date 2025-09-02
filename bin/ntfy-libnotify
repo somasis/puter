@@ -52,9 +52,11 @@ esac
 : "${NTFY_TAGS:=}"
 : "${NTFY_PRIORITY:=0}"
 
+: "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
+
 NTFY_TOPIC=$(jq -rc '.topic // ""' <<<"${NTFY_RAW}")
 NTFY_CLICK=$(jq -rc '.click // ""' <<<"${NTFY_RAW}")
-: "${NTFY_ICON:=$(jq -rc '.icon // ""' <<<"${NTFY_RAW}" || :)}"
+NTFY_ICON=$(jq -rc '.icon // ""' <<<"${NTFY_RAW}")
 
 message_is_markdown=$(jq -r '.content_type == "text/markdown"' <<<"${NTFY_RAW}")
 
@@ -153,8 +155,8 @@ if [[ -z "$NTFY_ICON" ]] && [[ -n "$NTFY_CLICK" ]]; then
 fi
 
 if [[ -n "${NTFY_ICON:-}" ]]; then
-    icon_file=$(mktemp)
-    curl -Ls -o "${icon_file}" "${NTFY_ICON}"
+    icon_file="${XDG_RUNTIME_DIR}/ntfy-libnotify/$(sha1sum <<<"$NTFY_ICON" | cut -d ' ' -f1).${NTFY_ICON##*.}"
+    curl -L -o "${icon_file}" "${NTFY_ICON}"
     if [[ -s "${icon_file}" ]]; then
         args+=(--icon="${icon_file}")
         trap 'rm -f "$icon_file"' EXIT
