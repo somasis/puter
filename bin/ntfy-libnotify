@@ -56,14 +56,14 @@ esac
 
 NTFY_TOPIC=$(jq -rc '.topic // ""' <<<"${NTFY_RAW}")
 NTFY_CLICK=$(jq -rc '.click // ""' <<<"${NTFY_RAW}")
-NTFY_ICON=$(jq -rc '.icon // ""' <<<"${NTFY_RAW}")
+NTFY_ICON=$(jq -rc '.icon // .attachment.url' <<<"${NTFY_RAW}")
 
 message_is_markdown=$(jq -r '.content_type == "text/markdown"' <<<"${NTFY_RAW}")
 
 args=()
 
-app_name=ntfy
-title=
+app_name="${NTFY_TOPIC:-ntfy}"
+title="$NTFY_TITLE"
 urgency=
 
 case "${NTFY_PRIORITY}" in
@@ -81,21 +81,14 @@ case "${NTFY_PRIORITY}" in
         ;;
 esac
 
-case "${NTFY_TITLE}" in
-    *': '*)
-        app_name=${NTFY_TITLE%%: *}
-        title=${NTFY_TITLE#*: }
+case "${title,,}" in
+    "${app_name,,}: "*)
+        title=${title#*: }
         ;;
-    *' - '*)
-        app_name=${NTFY_TITLE%% - *}
-        title=${NTFY_TITLE#* - }
-        ;;
-    *)
-        title="${NTFY_TITLE:-${NTFY_TAGS%%,*}}"
+    "${app_name,,} - "*)
+        title=${title#* - }
         ;;
 esac
-
-app_name=${NTFY_TOPIC:-ntfy}
 
 args+=(
     ${urgency:+--urgency="$urgency"}
@@ -149,17 +142,35 @@ fi
 if [[ -z "$NTFY_ICON" ]] && [[ -n "$NTFY_CLICK" ]]; then
     NTFY_ICON=$(
         curl -A '' -L --globoff --url "$NTFY_CLICK" \
-            | pup 'head meta[property$=:image] attr{content}' \
+            | {
+                pup '
+                    head meta[property$=:image] attr{content},
+                    head link[type^="image/"] attr{href}
+                '
+            } \
+            | while IFS= read -r url; do
+                case "$url" in
+                    /*) url="${NTFY_CLICK}/${url}" ;;
+                esac
+
+                curl -A '' -Ls \
+                    --globoff --url "$url" \
+                    -I -o /dev/stderr \
+                    --write-out '%{url}\n' \
+                    2>/dev/null
+            done \
             | head -n1
     )
 fi
 
-if [[ -n "${NTFY_ICON:-}" ]]; then
+if [[ -n "${NTFY_ICON:-}" ]] && [[ "${NTFY_ICON:0:1}" == '/' ]]; then
+    mkdir -p "$XDG_RUNTIME_DIR/ntfy-libnotify"
     icon_file="${XDG_RUNTIME_DIR}/ntfy-libnotify/$(sha1sum <<<"$NTFY_ICON" | cut -d ' ' -f1).${NTFY_ICON##*.}"
     curl -L -o "${icon_file}" "${NTFY_ICON}"
+    magick convert "${icon_file}" "${icon_file%.*}.png"
+    icon_file="${icon_file%.*}.png"
     if [[ -s "${icon_file}" ]]; then
         args+=(--icon="${icon_file}")
-        trap 'rm -f "$icon_file"' EXIT
     fi
 fi
 
