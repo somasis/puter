@@ -140,7 +140,6 @@ let
 in
 {
   imports = [
-    ./greasemonkey
     ./blocking.nix
     ./reader.nix
     ./search.nix
@@ -152,6 +151,7 @@ in
       (xdgCacheDir "qutebrowser")
 
       (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
+      (xdgDataDir "qutebrowser/greasemonkey/requires")
       (xdgDataDir "qutebrowser/webengine")
 
       (xdgConfigDir "chromium")
@@ -231,6 +231,72 @@ in
       };
 
       loadAutoconfig = true;
+
+      greasemonkey = with pkgs.greasemonkeyScripts; [
+        adguard-extra
+        always-on-focus
+        anchor-links
+        bandcamp-extended-album-history
+        bandcamp-volume-bar
+        collapse-hackernews-parent-comments
+        ctrl-enter-is-submit-everywhere
+        disable-amp
+        fb-clean-my-feeds
+        hacker-news-date-tooltips
+        hacker-news-highlighter
+        imdb-full-summary
+        instagram-video-controls
+        lobsters-highlighter
+        lobsters-open-in-new-tab
+        quirks
+        recaptcha-unpaid-labor
+        reddit-comment-auto-expander
+        reddit-highlighter
+        rewrite-smolweb
+        roughscroll
+        select-text-inside-a-link-like-opera
+        show-password-onmouseover
+        speed-up-google-captcha
+        substack-popup-dismisser
+        twitter-direct
+        video-quality-fixer-for-twitter
+        youtube-autoskip
+
+        (iso-8601-dates.override { matches = [ "https://phish.net/*" ]; })
+        (control-panel-for-twitter.override {
+          settings = {
+            defaultToLatestSearch = true;
+            disableTweetTextFormatting = true;
+            dontUseChirpFont = true;
+            fastBlock = false;
+            followButtonStyle = "themed";
+            fullWidthMedia = false;
+            hideBookmarkMetrics = false;
+            hideCommunitiesNav = true;
+            hideExploreNav = false;
+            hideExploreNavWithSidebar = false;
+            hideExplorePageContents = false;
+            hideFollowingMetrics = false;
+            hideForYouTimeline = false;
+            hideLikeMetrics = false;
+            hideQuoteTweetMetrics = false;
+            hideReplyMetrics = false;
+            hideRetweetMetrics = false;
+            hideSeeNewTweets = true;
+            hideSidebarContent = false;
+            hideSpacesNav = true;
+            hideTotalTweetsMetrics = false;
+            hideTweetAnalyticsLinks = true;
+            hideTwitterBlueReplies = true;
+            hideViews = false;
+            hideWhoToFollowEtc = false;
+            restoreOtherInteractionLinks = true;
+            retweets = "ignore";
+            showBlueReplyFollowersCount = true;
+            tweakQuoteTweetsPage = false;
+          };
+        })
+      ];
 
       settings = {
         changelog_after_upgrade = "patch";

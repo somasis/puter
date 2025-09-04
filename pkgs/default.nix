@@ -254,6 +254,7 @@ rec {
   # keep-sorted end
 
   # keep-sorted start
+  greasemonkeyScripts = import ./greasemonkey-userscripts args;
   kakounePlugins = import ./kakoune-plugins args;
   nodePackages.stylelint-config-standard = nodePackages.callPackage ./stylelint-config-standard { };
   passExtensions = import ./pass-extensions args;

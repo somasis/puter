@@ -67,22 +67,6 @@
         "url": "https://www.gravatar.com/avatar/a187e38560bb56f5231cd19e45ad80f6?s=512"
       }
     },
-    "control-panel-for-twitter": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1755157159,
-        "narHash": "sha256-N2N/wUdCTCaeos4CPmRe7HihUeOlXQG+KwAzD7gwf9k=",
-        "owner": "insin",
-        "repo": "control-panel-for-twitter",
-        "rev": "19ca25c13dafabc58c34a21a6412b8dc8ed77f7c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "insin",
-        "repo": "control-panel-for-twitter",
-        "type": "github"
-      }
-    },
     "crane": {
       "locked": {
         "lastModified": 1731098351,
@@ -747,7 +731,6 @@
         "adblockHosts": "adblockHosts",
         "agenix": "agenix",
         "avatarSomasis": "avatarSomasis",
-        "control-panel-for-twitter": "control-panel-for-twitter",
         "disko": "disko",
         "flake-compat": "flake-compat",
         "git-hooks": "git-hooks",

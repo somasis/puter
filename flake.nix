@@ -96,9 +96,6 @@
     plasma-pass.flake = false;
     plasma-pass.url = "git+https://invent.kde.org/plasma/plasma-pass.git";
 
-    control-panel-for-twitter.flake = false;
-    control-panel-for-twitter.url = "github:insin/control-panel-for-twitter";
-
     # Ad blocking lists
     adblockEasyList.flake = false;
     adblockEasyList.url = "github:thedoggybrad/easylist-mirror";
