@@ -38,8 +38,8 @@
     ltrace
     ncdu
     nq
-    pastel
     pandoc
+    pastel
     patchutils
     pigz
     pup

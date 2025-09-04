@@ -224,19 +224,11 @@ assert osConfig.services.desktopManager.plasma6.enable;
 
       plasma-applet-commandoutput
 
-      application-title-bar
       plasma-panel-colorizer
       glib.bin # Used by plasma-panel-colorizer
 
       plasma-panel-spacer-extended
       kconfig # Used by plasma-panel-spacer-extended
-
-      plasma-plugin-blurredwallpaper
-
-      (plasma-pass-unstable.overrideAttrs (oldAttrs: {
-        version = config.lib.somasis.flakeModifiedDateToVersion inputs.plasma-pass;
-        src = inputs.plasma-pass;
-      }))
 
       qtbase # qdbus, among other things
 
@@ -245,6 +237,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       waypipe
       wl-clipboard
 
+      krunner-pass
       emojirunner
     ];
 
