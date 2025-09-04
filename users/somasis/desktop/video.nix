@@ -249,10 +249,10 @@ in
   };
 
   home = {
-    packages = [
-      # pkgs.jellyfin-mpv-shim
-      pkgs.jellyfin-media-player
-    ];
+    # packages = [
+    #   pkgs.jellyfin-mpv-shim
+    #   pkgs.jellyfin-media-player
+    # ];
 
     shellAliases.ytaudio = "yt-dlp --format bestaudio --extract-audio --audio-format wav";
   };
