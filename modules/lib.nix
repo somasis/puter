@@ -10,6 +10,14 @@ with lib;
   config.lib.nixos = import (nixpkgs + "/nixos/lib/utils.nix") { inherit lib config pkgs; };
 
   config.lib.somasis = rec {
+    nixShellPkgsToDrvs = pipe (readFile textPath) [
+      (splitString "\n")
+      (x: filter (hasPrefix "#! nix-shell") x)
+      (x: concatStrings (map (replaceStrings [ ''#! nix-shell -i bash -p '' ] [ "" ]) x))
+      (splitString " ")
+      (map (pkgAttr: getAttrFromPath ([ "pkgs" ] ++ (splitString "." pkgAttr)) pkgs))
+    ];
+
     sshKeysForGroups =
       groups:
       assert (isList groups);
