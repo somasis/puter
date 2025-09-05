@@ -23,7 +23,7 @@ writeShellApplication {
     jpegoptim
   ];
 
-  text = builtins.readFile ./optimize.bash;
+  text = builtins.readFile ../../bin/optimize;
 
   meta = with lib; {
     description = "Losslessly optimize a file";
