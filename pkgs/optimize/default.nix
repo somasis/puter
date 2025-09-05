@@ -1,6 +1,7 @@
 {
   lib,
   writeShellApplication,
+  # pkgs,
   coreutils,
   file,
   gnugrep,
@@ -11,6 +12,7 @@
 writeShellApplication {
   name = "optimize";
 
+  # TODO runtimeInputs = lib.somasis.nixShellPkgsToDrv ./optimize.bash pkgs;
   runtimeInputs = [
     coreutils
     file

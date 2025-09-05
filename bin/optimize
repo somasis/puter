@@ -1,13 +1,34 @@
+#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils file flac grep jpegoptim optipng oxipng
 # shellcheck shell=bash
+
+# keep-sorted start skip_lines=1 prefix_order=type,,>,||
+type \
+    file \
+    stat \
+    flac \
+    jpegoptim \
+    oxipng \
+    optipng \
+    grep \
+    realpath \
+    sha512sum \
+    >/dev/null \
+    || exit 1
+# keep-sorted end
+
+set -euo pipefail
 
 : "${XDG_CACHE_HOME:=${HOME}/.cache}"
 set -euo pipefail
 
 usage() {
     # shellcheck disable=SC2059
-    [[ $# -eq 0 ]] || printf "$@" >&2
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
     cat >&2 <<EOF
-usage: ${0##*/} [-qv] file...
+usage: ${0##*/} [-qv] <file>...
 
 Losslessly optimize/transparently compress a given file, in-place, using the
 appropriate tool for its format.
@@ -21,6 +42,7 @@ options:
     -q              decrement verbosity level
     -v              increment verbosity level
 EOF
+    [[ "$#" -eq 0 ]] || exit 1
     exit 69
 }
 
@@ -69,14 +91,11 @@ for file; do
 
     file_type=$(file -L -b --mime-type "${file}")
 
-    # file_size_before_pretty=$(du -h "${file}" | cut -f1)
-
     file_optimized=false
     write_file_to_cache=true
 
     case "${file_type}" in
         audio/flac)
-            # output="${file%.*}.optimized.${file##*.}"
             if edo flac --best --keep-foreign-metadata-if-present --silent "${file}"; then
                 file_optimized=true
             else
@@ -119,7 +138,6 @@ for file; do
     fi
 
     file_size_after=$(stat -c '%s' "${file}")
-    # file_size_after_pretty=$(du -h "${file}" | cut -f1)
 
     if [[ ${verbosity} -ge 0 ]] && [[ ${file_size_before} -ne ${file_size_after} ]]; then
         if [[ ${files_total} -gt 1 ]]; then
