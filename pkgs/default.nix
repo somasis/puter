@@ -225,6 +225,7 @@ rec {
   jqfmt = callPackage ./jqfmt { };
   json2nix = callPackage ./json2nix { };
   krunner-zotero-unstable = callPackage ./krunner-zotero-unstable { };
+  krunner-pass-unstable = callPackage ./krunner-pass-unstable { };
   linja-luka = callPackage ./linja-luka { };
   linja-namako = callPackage ./linja-namako { };
   linja-pi-tomo-lipu = callPackage ./linja-pi-tomo-lipu { };
