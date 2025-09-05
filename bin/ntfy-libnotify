@@ -95,7 +95,7 @@ args+=(
     ${app_name:+--app-name="$app_name"}
 )
 
-message="$NTFY_MESSAGE"
+message="${NTFY_MESSAGE:-}"
 if [[ "$message_is_markdown" == true ]]; then
     # Hastily translate Markdown into Pango markup
     # TODO there's this tool that would (kinda) fit the job, is it any good?
@@ -179,6 +179,8 @@ if [[ -n "${NTFY_CLICK:-}" ]]; then
     # feels like the wrong way to make the actions persist for longer
     # args+=(--expire-time=$((60 * 1000)))
 fi
+
+[[ "${title:-$NTFY_MESSAGE}" != "$message" ]] || title=
 
 (
     action=$(
