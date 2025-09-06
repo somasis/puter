@@ -90,15 +90,16 @@ finish_import() {
     if [[ -n "${WITH_NTFY:-}" ]]; then
         : "${NTFY_TOPIC:?error: no \$NTFY_TOPIC provided}"
         : "${NTFY_CONFIG=${XDG_CONFIG_HOME:=$HOME/.config}/ntfy/client.yml}"
+        : "${NTFY_FILE:=${artpath:-}}"
 
-        ntfy publish \
-            ${NTFY_CONFIG:+-c "$NTFY_CONFIG"} \
-            --priority 2 \
-            --title 'beets-import-to-library: Imported directory to library' \
-            --message "${format}" \
-            --tags 'cd' \
-            ${artpath:+--file="$artpath"} \
-            &
+        export NTFY_TOPIC NTFY_CONFIG NTFY_FILE
+
+        export NTFY_TITLE="beets-import-to-library: Imported directory to library"
+        export NTFY_MESSAGE="${format}"
+        export NTFY_TAGS="${NTFY_TAGS:+$NTFY_TAGS,}cd"
+        export NTFY_PRIORITY="${NTFY_PRIORITY:-2}"
+
+        ntfy publish "${NTFY_TOPIC}" &
     fi
 
     # Fork off here so that the actions are available as long as the
@@ -226,14 +227,16 @@ for import; do
                 if [[ -n "${WITH_NTFY:-}" ]]; then
                     : "${NTFY_TOPIC:?error: no \$NTFY_TOPIC provided}"
                     : "${NTFY_CONFIG=${XDG_CONFIG_HOME:=$HOME/.config}/ntfy/client.yml}"
+                    : "${NTFY_FILE:=${artpath:-}}"
 
-                    ntfy publish \
-                        ${NTFY_CONFIG:+-c "$NTFY_CONFIG"} \
-                        --priority 4 \
-                        --title "beets-import-to-library: Failed while importing (error code: ${import_exit})" \
-                        --message "${format}" \
-                        --tags 'speech_balloon' \
-                        &
+                    export NTFY_TOPIC NTFY_CONFIG NTFY_FILE
+
+                    export NTFY_TITLE="beets-import-to-library: Failed while importing (error code: ${import_exit})"
+                    export NTFY_MESSAGE="${format}"
+                    export NTFY_TAGS="${NTFY_TAGS:+$NTFY_TAGS,}speech_balloon"
+                    export NTFY_PRIORITY="${NTFY_PRIORITY:-4}"
+
+                    ntfy publish "${NTFY_TOPIC}" &
                 fi
 
                 action=$(
