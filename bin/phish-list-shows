@@ -35,10 +35,11 @@ options:
         Filter for shows which occurred on a given <dayofyear>.
 
     -R
-        Get all shows in a run; a run, being shows performed multiple
-        days in a row potentially preceding or following the given
-        <show> date. For example, given the show date 2009-03-06, the
-        shows 2009-03-07, and 2009-03-08 will also be printed.
+        Get all shows in a run; a run, being shows performed at the
+        same venue, multiple days in a row, preceding or following
+        the given <show> date. For example, given the show date
+        2009-03-06, the shows 2009-03-07, and 2009-03-08 would also
+        be printed.
 
     -S ("date" | "likes_count" | "duration" | "updated_at")[+-]
         Sort the shows listed in the requested order. If a plus is
@@ -147,13 +148,16 @@ fetch_run() {
 
     while :; do
         expected_show_date=$(dateadd "${anchor_show_date}" "${direction}")
+        expected_show_venue=$(jq -r '.venue_name' <<<"${anchor_show_data}")
 
         # >&2 echo "expected ${1} of ${anchor_show_date}: $expected_show_date"
 
         next_show_date=$(jq -r "${direction_node}" <<<"${anchor_show_data}")
         next_show_data=$(show "${next_show_date}")
+        next_show_venue=$(jq -r '.venue_name' <<<"${next_show_data}")
 
-        if [[ "$next_show_date" == "$expected_show_date" ]]; then
+        if [[ "$next_show_venue" == "$expected_show_venue" ]] \
+            && [[ "$next_show_date" == "$expected_show_date" ]]; then
             # >&2 echo "show ${1} of ${anchor_show_date}: $next_show_date"
             printf '%s\n' "${next_show_data}"
         else
