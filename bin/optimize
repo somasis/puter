@@ -6,14 +6,14 @@
 # keep-sorted start skip_lines=1 prefix_order=type,,>,||
 type \
     file \
-    stat \
     flac \
-    jpegoptim \
-    oxipng \
-    optipng \
     grep \
+    jpegoptim \
+    optipng \
+    oxipng \
     realpath \
     sha512sum \
+    stat \
     >/dev/null \
     || exit 1
 # keep-sorted end
