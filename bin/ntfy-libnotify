@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash curl libnotify jq pup sed xurls
+#! nix-shell -i bash -p bash curl imagemagick jq libnotify pup sed xurls
 # shellcheck shell=bash
 # vim: ft=sh
 
