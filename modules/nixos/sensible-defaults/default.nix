@@ -111,7 +111,7 @@
         with inputs;
         [
           impermanence.nixosModules.home-manager.impermanence
-          nix-index-database.hmModules.nix-index
+          nix-index-database.homeModules.nix-index
           homeManagerModules.lib
           homeManagerModules.default
         ];

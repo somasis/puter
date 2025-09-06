@@ -59,17 +59,17 @@
   programs.ssh = {
     enable = true;
 
-    addKeysToAgent = "yes";
-
-    # ssh_config(5): ControlPath supports environemnt variable expansion.
-    controlPersist = "5m";
-    compression = true;
-
-    # Send an in-band keep-alive every 30 seconds.
-    serverAliveInterval = 30;
-
     matchBlocks = {
       "*" = {
+        addKeysToAgent = "yes";
+
+        # ssh_config(5): ControlPath supports environemnt variable expansion.
+        controlPersist = "5m";
+        compression = true;
+
+        # Send an in-band keep-alive every 30 seconds.
+        serverAliveInterval = 30;
+
         # Too often, IPv6 is broken on the wifi I'm on.
         # addressFamily = "inet";
 

@@ -13,7 +13,7 @@
     with self.homeManagerModules;
     [
       agenix.homeManagerModules.default
-      plasma-manager.homeManagerModules.plasma-manager
+      plasma-manager.homeModules.plasma-manager
 
       # keep-sorted start
       ./age.nix
