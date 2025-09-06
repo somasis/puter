@@ -80,6 +80,9 @@ done
 
 : "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
 
+NTFY_TAGS=()
+mapfile -t NTFY_TAGS < <(jq -r '.tags // ""' <<<"${NTFY_RAW}")
+
 NTFY_TOPIC=$(jq -rc '.topic // ""' <<<"${NTFY_RAW}")
 NTFY_CLICK=$(jq -rc '.click // ""' <<<"${NTFY_RAW}")
 NTFY_ICON=$(jq -rc '.icon // .attachment.url // ""' <<<"${NTFY_RAW}")
@@ -115,6 +118,15 @@ case "${title,,}" in
         title=${title#* - }
         ;;
 esac
+
+for tag in "${NTFY_TAGS[@]}"; do
+    case "${tag}" in
+        origin:*)
+            # Put the origin of the notification in the appname, if available
+            app_name=${app_name:+"$app_name · ${tag#origin:}"}
+            ;;
+    esac
+done
 
 args+=(
     ${urgency:+--urgency="$urgency"}
