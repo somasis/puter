@@ -233,6 +233,7 @@ in
       loadAutoconfig = true;
 
       greasemonkey = with pkgs.greasemonkeyScripts; [
+        # keep-sorted start
         adguard-extra
         always-on-focus
         anchor-links
@@ -241,6 +242,7 @@ in
         collapse-hackernews-parent-comments
         ctrl-enter-is-submit-everywhere
         disable-amp
+        fastmail-without-bevels
         fb-clean-my-feeds
         hacker-news-date-tooltips
         hacker-news-highlighter
@@ -261,6 +263,7 @@ in
         twitter-direct
         video-quality-fixer-for-twitter
         youtube-autoskip
+        # keep-sorted end
 
         (iso-8601-dates.override { matches = [ "https://phish.net/*" ]; })
         (control-panel-for-twitter.override {

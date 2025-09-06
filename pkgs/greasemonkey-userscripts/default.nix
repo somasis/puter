@@ -11,9 +11,125 @@ let
     callPackage
     ;
 
+  userstyleToGreasemonkeyScript =
+    {
+      src,
+
+      # Some styles are dependent on their script loading order,
+      # and since we don't really have much control over the
+      # script loading order, this is an easy workaround.
+      cssForceImportant ? false,
+      ...
+    }@args:
+    let
+      code_header = ''
+        (function () {
+          "use strict";
+
+          function domain(domain) {
+            return new URLPattern({ domain: domain }).test(document.location);
+          }
+
+          var style = "";
+      '';
+
+      code_footer = ''
+          if (style != "") {
+            document.addEventListener("DOMContentLoaded", (event) => {
+              GM_addStyle(style);
+            });
+          };
+        })();
+      '';
+
+      cssForceImportantSed = lib.optionalString cssForceImportant "-e '/.*:.*;$/ s/;/!important;/'";
+
+      stem = lib.removeSuffix ".user.css" (lib.getName args.src);
+    in
+    assert (lib.isStorePath args.src);
+    pkgs.runCommandNoCC "${stem}.user.js"
+      (
+        {
+          inherit code_header code_footer;
+          nativeBuildInputs = [
+            pkgs.gnused
+            pkgs.nodePackages.prettier
+          ];
+        }
+        // args
+      )
+      ''
+        matches=$(
+            sed -En \
+                -e '/^@-moz-document\s+domain\(".+"\)/ {
+                    s|@-moz-document\s+domain\("(.+)"\).*|// @match *://\1/*|
+                    p
+                }' \
+                "$src"
+        )
+
+        original_header=$(
+            sed -E '/\/\*\s+==UserStyle==/,/==\/UserStyle==\s+\*\//!d' "$src"
+        )
+        [ -n "$original_header" ] || exit 1
+
+        edited_header=$(
+            sed -E \
+                -e '/^@/ s|^|// |' \
+                -e 's|^\/\* |// |' \
+                -e '/^==\/UserStyle== \*\// {
+                    s| \*/||
+                    s|^|// |
+                }' \
+                -e '/\/\/ ==\/?UserStyle==/ s/UserStyle/UserScript/' \
+                -e '/\/\/ ==\/UserScript==/ d' \
+                <<<"$original_header"
+
+            # '// @run-at document-start' cannot be used with GM_addStyle :(
+            # <https://github.com/qutebrowser/qutebrowser/issues/4322>
+            printf '%s\n' \
+                "$matches" \
+                '// @grant GM_addStyle' \
+                '// @run-at document-start' \
+                '// ==/UserScript=='
+        )
+
+        original_code=$(
+            sed -E '/\/\*\s+==UserStyle==/,/==\/UserStyle==\s+\*\//d' "$src" \
+                | prettier --stdin-filepath "$src"
+        )
+        [ -n "$original_code" ] || exit 1
+
+        edited_code=$(
+            sed -E \
+                -e '/^@-moz-document\s+domain\("?/,/^\}$/ {
+                    s|@-moz-document\s+(.+)\s+\{|if (\1) {\nstyle +=`|
+                    s|^\}|`;\n};|
+                }' ${cssForceImportantSed} \
+                <<<"$original_code"
+        )
+        edited_code=$(
+            printf '%s\n' \
+                "$code_header" \
+                "$edited_code" \
+                "$code_footer"
+        )
+        [ -n "$edited_code" ] || exit 1
+
+        printf '%s\n' "$edited_header" "$edited_code" > "$out"
+        prettier --write "$out" || exit 1
+      '';
+
+  mkUserstyle =
+    { src, ... }@args:
+    let
+      src' = userstyleToGreasemonkeyScript args;
+    in
+    mkGreasemonkeyScript (args // { src = src'; });
+
   mkGreasemonkeyScript = lib.makeOverridable (
     {
-      pname,
+      pname ? null,
       version ? null,
       src ? null,
       file ? null,
@@ -36,9 +152,7 @@ let
             "${pname}.user.js";
 
         src =
-          if args ? "file" then
-            args.file
-          else if args ? "src" then
+          if args ? "src" then
             args.src
           else if args ? "url" && args ? "hash" then
             if args.url != null && args.hash != null then
@@ -50,7 +164,12 @@ let
                   # most userscript sites don't let use get versioned script URLs,
                   # so this is to prevent us from downloading the wrong version.
                   script_version=$(
-                      sed -n '/\/\/.*@version.*/ { s/.*@version\s\s*//; p; }' "$downloadedFile" \
+                      sed -n \
+                          -e '/\/\/.*@version.*/ {
+                              s/.*@version\s\s*//
+                              p
+                          }' \
+                          "$downloadedFile" \
                           | tr -cd '[0-9.A-Za-z-]'
                   )
 
@@ -99,21 +218,31 @@ in
 {
   inherit mkGreasemonkeyScript;
 
+  fastmail-without-bevels = mkUserstyle {
+    pname = "fastmail-without-bevels";
+    version = "20250805.14.44";
+    src = fetchurl {
+      url = "https://userstyles.world/api/style/23557.user.css";
+      hash = "sha256-nw5eGInimsa5zB3ZrhnU3QgA3YCy6xdgEEDSdHjD9Uc=";
+    };
+    cssForceImportant = true;
+  };
+
   anchor-links = mkGreasemonkeyScript {
     pname = "anchor-links";
-    file = ./anchor-links.user.js;
+    src = ./anchor-links.user.js;
   };
   quirks = mkGreasemonkeyScript {
     pname = "quirks";
-    file = ./quirks.user.js;
+    src = ./quirks.user.js;
   };
   recaptcha-unpaid-labor = mkGreasemonkeyScript {
     pname = "recaptcha-unpaid-labor";
-    file = ./recaptcha-unpaid-labor.user.js;
+    src = ./recaptcha-unpaid-labor.user.js;
   };
   rewrite-smolweb = mkGreasemonkeyScript {
     pname = "rewrite-smolweb";
-    file = ./rewrite-smolweb.user.js;
+    src = ./rewrite-smolweb.user.js;
   };
 
   reddit-comment-auto-expander = mkGreasemonkeyScript {
