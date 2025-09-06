@@ -82,7 +82,7 @@ done
 
 NTFY_TOPIC=$(jq -rc '.topic // ""' <<<"${NTFY_RAW}")
 NTFY_CLICK=$(jq -rc '.click // ""' <<<"${NTFY_RAW}")
-NTFY_ICON=$(jq -rc '.icon // .attachment.url' <<<"${NTFY_RAW}")
+NTFY_ICON=$(jq -rc '.icon // .attachment.url // ""' <<<"${NTFY_RAW}")
 
 message_is_markdown=$(jq -r '.content_type == "text/markdown"' <<<"${NTFY_RAW}")
 
@@ -167,21 +167,28 @@ fi
 
 if [[ -z "$NTFY_ICON" ]] && [[ -n "$NTFY_CLICK" ]]; then
     NTFY_ICON=$(
-        edo curl -A '' -L --globoff --url "$NTFY_CLICK" \
-            | {
-                pup '
-                    head meta[property$=:image] attr{content},
-                    head link[type^="image/"] attr{href}
-                '
-            } \
+        edo curl \
+            --user-agent 'ntfy-libnotify <kylie@somas.is>' \
+            --location \
+            --globoff \
+            --url "$NTFY_CLICK" \
+            | pup '
+                head meta[property$=:image] attr{content},
+                head link[type^="image/"] attr{href}
+            ' \
             | while IFS= read -r url; do
                 case "$url" in
                     /*) url="${NTFY_CLICK}/${url}" ;;
                 esac
 
-                edo curl -A '' -Ls \
-                    --globoff --url "$url" \
-                    -I -o /dev/stderr \
+                edo curl \
+                    --user-agent '' \
+                    --location \
+                    --silent \
+                    --globoff \
+                    --url "$url" \
+                    --head \
+                    --output /dev/stderr \
                     --write-out '%{url}\n' \
                     2>/dev/null
             done \
@@ -189,15 +196,29 @@ if [[ -z "$NTFY_ICON" ]] && [[ -n "$NTFY_CLICK" ]]; then
     )
 fi
 
-if [[ -n "${NTFY_ICON:-}" ]] && [[ "${NTFY_ICON:0:1}" == '/' ]]; then
+icon_url=
+icon_file=
+if [[ -n "${NTFY_ICON:-}" ]] && [[ "${NTFY_ICON:0:1}" != '/' ]]; then
+    icon_url="$NTFY_ICON"
+
     mkdir -p "$XDG_RUNTIME_DIR/ntfy-libnotify"
-    icon_file="${XDG_RUNTIME_DIR}/ntfy-libnotify/$(sha1sum <<<"$NTFY_ICON" | cut -d ' ' -f1).${NTFY_ICON##*.}"
-    edo curl -L -o "${icon_file}" "${NTFY_ICON}"
+    icon_file="${XDG_RUNTIME_DIR}/ntfy-libnotify/${icon_url##*/}"
+
+    edo curl --silent \
+        --user-agent 'ntfy-libnotify <kylie@somas.is>' \
+        --globoff \
+        --location \
+        --fail \
+        --compressed \
+        --output "${icon_file}" \
+        --url "${icon_url}"
+
     edo magick convert "${icon_file}" "${icon_file%.*}.png"
     icon_file="${icon_file%.*}.png"
-    if [[ -s "${icon_file}" ]]; then
-        args+=(--icon="${icon_file}")
-    fi
+fi
+
+if [[ -n "${icon_file}" ]]; then
+    args+=(--icon="${icon_file}")
 fi
 
 if [[ -n "${NTFY_CLICK:-}" ]]; then
@@ -221,5 +242,7 @@ fi
             disown
             ;;
     esac
+
+    [[ -n "$icon_file" ]] && rm -f "$icon_file"
 ) &
 disown
