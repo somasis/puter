@@ -12,7 +12,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ntfy subscribe <topic> ${0##*/}
+usage: ntfy subscribe <topic> ${0##*/} [-v]
 
 Show a desktop notification sent to ntfy.sh, using \`notify-send\`. How this
 differs from just using \`notify-send "\$NTFY_TITLE" "\$NTFY_MESSAGE"\`,
@@ -30,6 +30,9 @@ subscribe:
     command: ${0##*/}
 \`\`\`
 
+options:
+    -v              Be more verbose, printing commands as they are ran.
+
 environment variables:
     \$XDG_CONFIG_HOME${XDG_CONFIG_HOME:+ (current: ${XDG_CONFIG_HOME@Q})}
     \$NTFY_MESSAGE, \$NTFY_PRIORITY, \$NTFY_RAW, \$NTFY_TAGS, \$NTFY_TITLE
@@ -41,9 +44,32 @@ EOF
     exit 64 # EX_USAGE
 }
 
-case "${1:-}" in
-    --help) usage ;;
-esac
+edo() {
+    local arg string
+    string="$"
+    for arg; do
+        if [[ "${arg@Q}" == "'$arg'" ]] && ! [[ "${arg}" =~ [[:blank:]] ]]; then
+            string+=" $arg"
+        else
+            string+=" ${arg@Q}"
+        fi
+    done
+
+    if [[ "${verbosity}" -ge 1 ]]; then
+        printf '%s\n' "$string" >&2 || :
+    fi
+
+    "$@"
+}
+
+verbosity=0
+while [[ "$#" -gt 0 ]]; do
+    case "${1}" in
+        --help) usage ;;
+        -v) verbosity=$((verbosity + 1)) ;;
+    esac
+    shift
+done
 
 : "${NTFY_RAW?error: \$NTFY_RAW was not set; are you running this script from within \`ntfy subscribe\`?}"
 : "${NTFY_ID:=}"
@@ -141,7 +167,7 @@ fi
 
 if [[ -z "$NTFY_ICON" ]] && [[ -n "$NTFY_CLICK" ]]; then
     NTFY_ICON=$(
-        curl -A '' -L --globoff --url "$NTFY_CLICK" \
+        edo curl -A '' -L --globoff --url "$NTFY_CLICK" \
             | {
                 pup '
                     head meta[property$=:image] attr{content},
@@ -153,7 +179,7 @@ if [[ -z "$NTFY_ICON" ]] && [[ -n "$NTFY_CLICK" ]]; then
                     /*) url="${NTFY_CLICK}/${url}" ;;
                 esac
 
-                curl -A '' -Ls \
+                edo curl -A '' -Ls \
                     --globoff --url "$url" \
                     -I -o /dev/stderr \
                     --write-out '%{url}\n' \
@@ -166,8 +192,8 @@ fi
 if [[ -n "${NTFY_ICON:-}" ]] && [[ "${NTFY_ICON:0:1}" == '/' ]]; then
     mkdir -p "$XDG_RUNTIME_DIR/ntfy-libnotify"
     icon_file="${XDG_RUNTIME_DIR}/ntfy-libnotify/$(sha1sum <<<"$NTFY_ICON" | cut -d ' ' -f1).${NTFY_ICON##*.}"
-    curl -L -o "${icon_file}" "${NTFY_ICON}"
-    magick convert "${icon_file}" "${icon_file%.*}.png"
+    edo curl -L -o "${icon_file}" "${NTFY_ICON}"
+    edo magick convert "${icon_file}" "${icon_file%.*}.png"
     icon_file="${icon_file%.*}.png"
     if [[ -s "${icon_file}" ]]; then
         args+=(--icon="${icon_file}")
@@ -184,14 +210,14 @@ fi
 
 (
     action=$(
-        notify-send "${args[@]}" -- \
+        edo notify-send "${args[@]}" -- \
             "${title}" \
             "${message}"
     )
 
     case "${action}" in
         click)
-            xdg-open "${NTFY_CLICK}" &
+            edo xdg-open "${NTFY_CLICK}" &
             disown
             ;;
     esac
