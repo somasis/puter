@@ -19,6 +19,9 @@ differs from just using \`notify-send "\$NTFY_TITLE" "\$NTFY_MESSAGE"\`,
 is that this script takes care to translate the ntfy.sh notification metadata
 to its freedesktop.org notification specification equivalents.
 
+Notifications tagged with origin:<current machine FQDN or hostname> will not
+have desktop notifications shown.
+
 Example usage in ${XDG_CONFIG_HOME:-$HOME/.config}/ntfy/client.yaml:
 \`\`\`yaml
 default-command: ${0##*/}
@@ -71,18 +74,32 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
+fqdn=$({
+    hostname -f 2>/dev/null \
+        || hostname 2>/dev/null \
+        || echo "${HOSTNAME}"
+} | tail -n1)
+
 : "${NTFY_RAW?error: \$NTFY_RAW was not set; are you running this script from within \`ntfy subscribe\`?}"
 : "${NTFY_ID:=}"
 : "${NTFY_MESSAGE:=}"
 : "${NTFY_TITLE:=}"
-: "${NTFY_TAGS:=}"
 : "${NTFY_PRIORITY:=0}"
 
 : "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
 
 NTFY_TAGS=()
-mapfile -t NTFY_TAGS < <(jq -r '.tags // ""' <<<"${NTFY_RAW}")
+mapfile -t NTFY_TAGS < <(jq -r '.tags[] // ""' <<<"${NTFY_RAW}")
 
+for tag in "${NTFY_TAGS[@]}"; do
+    case "${tag}" in
+        origin:"${fqdn}")
+            printf 'Not acting on notification from %s (same as current machine)\n' "${fqdn}" >&2
+            exit 0
+            ;;
+    esac
+done
+set +x
 NTFY_TOPIC=$(jq -rc '.topic // ""' <<<"${NTFY_RAW}")
 NTFY_CLICK=$(jq -rc '.click // ""' <<<"${NTFY_RAW}")
 NTFY_ICON=$(jq -rc '.icon // .attachment.url // ""' <<<"${NTFY_RAW}")
@@ -119,11 +136,16 @@ case "${title,,}" in
         ;;
 esac
 
+notification_has_origin=false
 for tag in "${NTFY_TAGS[@]}"; do
     case "${tag}" in
         origin:*)
-            # Put the origin of the notification in the appname, if available
-            app_name=${app_name:+"$app_name · ${tag#origin:}"}
+            # Only use the first origin tag existing.
+            if [[ "$notification_has_origin" == false ]]; then
+                notification_has_origin=true
+                # Put the origin of the notification in the appname, if available
+                app_name=${app_name:+"$app_name · ${tag#origin:}"}
+            fi
             ;;
     esac
 done
