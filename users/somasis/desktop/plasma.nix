@@ -230,6 +230,9 @@ assert osConfig.services.desktopManager.plasma6.enable;
       plasma-panel-spacer-extended
       kconfig # Used by plasma-panel-spacer-extended
 
+      kurve
+      cava
+
       qtbase # qdbus, among other things
 
       syncplay
