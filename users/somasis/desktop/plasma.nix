@@ -237,7 +237,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       waypipe
       wl-clipboard
 
-      krunner-pass
+      krunner-pass-unstable
       emojirunner
     ];
 
