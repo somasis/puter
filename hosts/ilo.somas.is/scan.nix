@@ -9,5 +9,7 @@
     ];
   };
 
-  environment.systemPackages = [ pkgs.simple-scan ];
+  environment.systemPackages = with pkgs.kdePackages; [
+    skanpage
+  ];
 }
