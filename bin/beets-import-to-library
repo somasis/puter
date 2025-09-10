@@ -159,7 +159,14 @@ beet_import_args+=(
     --noincremental
 )
 
-library_directory=$(beet config -d | yq -p yaml .library)
+beet_config=$(beet config -d)
+library_directory=$(<<<"$beet_config" yq '.library')
+
+cover_names=()
+mapfile -t cover_names < <(
+    yq -r '.fetchart.cover_names[]' <<<"$beet_config" \
+        || echo 'cover'
+)
 
 for import; do
     if ! [[ -d "$import" ]]; then
@@ -185,6 +192,13 @@ for import; do
 
         # Wait 15 seconds, then begin importing.
         mapfile -t notify_output < <(
+            artpath=
+            for cover_name in "${cover_names[@]}"; do
+                for icon in "$import/$cover_name".*; do
+                    [ -e "$icon" ] && artpath="$icon"
+                done
+            done
+
             notify-send \
                 -t $((15 * 1000)) \
                 --urgency=low \
@@ -192,6 +206,7 @@ for import; do
                 -a "${0##*/}" \
                 -A 'timid-exit=Import manually...' \
                 -A 'skip=Skip' \
+                ${artpath:+"--icon=${artpath}"} \
                 'Importing...' \
                 "$(basename "${import}")"
         )
