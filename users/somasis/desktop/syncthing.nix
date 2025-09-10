@@ -32,7 +32,7 @@ in
     # guiAddress = "https://0.0.0.0:${toString syncthingGuiPort}";
     extraOptions = [
       "--gui-address=http://127.0.0.1:${toString syncthingGuiPort}"
-      "--skip-port-probing"
+      "--no-port-probing"
     ];
 
     # settings = {
