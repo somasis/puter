@@ -7,7 +7,6 @@
 {
   imports = [
     # keep-sorted start
-    ./activity.nix
     ./audio.nix
     ./browser
     ./chat
