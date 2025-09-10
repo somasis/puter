@@ -73,7 +73,7 @@ phishin() {
 verbosity=
 while getopts :v opt; do
     case "$opt" in
-        v) verbosity=$((${verbosity:=0} + 1)) ;;
+        v) verbosity=$((${verbosity:-0} + 1)) ;;
         ?) usage '' ;;
     esac
 done
@@ -96,7 +96,7 @@ if ! cd "${BEET_IMPORT_PHISH_DOWNLOAD_DIR}"; then
 fi
 
 beet_args=(
-    $(for _ in $(seq 1 "${verbosity}"); do printf -- '-v\n'; done)
+    $(for _ in $(seq 1 "${verbosity:-0}"); do printf -- '-v\n'; done)
 )
 
 for show; do
