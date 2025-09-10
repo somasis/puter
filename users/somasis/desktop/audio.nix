@@ -6,19 +6,7 @@
 {
   home.packages = with pkgs; [
     jamesdsp
-
     ponymix
-    (writeShellScriptBin "ponymix-snap" ''
-      snap=5
-      [ "$FLOCKER" != "$0" ] \
-          && export FLOCKER="$0" \
-          && exec flock -n "$0" "$0" "$@"
-
-      ${ponymix}/bin/ponymix "$@"
-      b=$(${ponymix}/bin/ponymix --short get-volume)
-      c=$((b - $((b % snap))))
-      ${ponymix}/bin/ponymix --short set-volume "$c" >/dev/null
-    '')
   ];
 
   cache.directories = [
