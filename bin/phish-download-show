@@ -314,19 +314,23 @@ if [[ "$edit_tags" == true ]]; then
             #   -> disc=2             pertaining to which set they are part of]
             # !discname (id3:TSST)   [tageditor doesn't seem to know about TSST,
             #   -> discname="Set 2"   the disc subtitle tag in ID3.]
-            edo tageditor set \
-                album="${album}" \
-                title="${title}" \
-                track=$((file_i + 1)) \
-                comment="${comments}" \
-                recorddate="${show_date}" \
-                publisherwebpage="${track_url}" \
-                disk="${disc}" \
-                id3:TSST="${set_name}" \
+            tags=(
+                album="${album}"
+                title="${title}"
+                track=$((file_i + 1))
+                comment="${comments}"
+                recorddate="${show_date}"
+                publisherwebpage="${track_url}"
+                disk="${disc}"
+                id3:TSST="${set_name}"
+            )
+
+            edo tageditor set "${tags[@]}" \
                 --id3v1-usage never \
                 --id3v2-version 4 \
-                --encoding utf8 \
                 --quiet \
+                --treat-unknown-as-mp3 \
+                --verbose \
                 --files "${file}" \
                 && rm -f "${file}".bak
         } >/dev/null
