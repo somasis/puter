@@ -8,7 +8,6 @@
   services.syncthing = {
     enable = true;
     extraOptions = [
-      "--no-default-folder"
       "--logflags=0" # Don't prefix log lines with date and time, since systemd does
     ];
   };
