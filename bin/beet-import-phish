@@ -96,7 +96,8 @@ if ! cd "${BEET_IMPORT_PHISH_DOWNLOAD_DIR}"; then
 fi
 
 beet_args=(
-    $(for _ in $(seq 1 "${verbosity:-0}"); do printf -- '-v\n'; done)
+    # Require -vv for `beet` verbosity
+    $(for _ in $(seq 2 "${verbosity:-0}"); do printf -- '-v\n'; done)
 )
 
 for show; do
