@@ -4,6 +4,11 @@
 
 set -euo pipefail
 
+if [[ -v WITH_NTFY ]]; then
+    # Make sure `beet-hook-ntfy-*` doesn't cause duplicated notifications.
+    export BEET_HOOK_NTFY_DISABLE=1
+fi
+
 # shellcheck disable=SC2120
 usage() {
     # shellcheck disable=SC2059
@@ -239,7 +244,7 @@ for import; do
             import_exit=1
 
             {
-                if [[ -n "${WITH_NTFY:-}" ]]; then
+                if [[ -v WITH_NTFY ]]; then
                     : "${NTFY_TOPIC:?error: no \$NTFY_TOPIC provided}"
                     : "${NTFY_CONFIG=${XDG_CONFIG_HOME:=$HOME/.config}/ntfy/client.yml}"
                     : "${NTFY_FILE:=${artpath:-}}"
