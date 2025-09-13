@@ -5,26 +5,30 @@
   ...
 }:
 {
-  home.packages = [
-    # PDF manipulation tools
-    (pkgs.mupdf.override {
-      # MuPDF with just the command line tools
-      enableX11 = false;
-      enableCurl = false;
-      enableGL = false;
-    })
+  home.packages =
+    with pkgs;
+    with kdePackages;
+    [
+      # PDF manipulation tools
+      (mupdf.override {
+        # MuPDF with just the command line tools
+        enableX11 = false;
+        enableCurl = false;
+        enableGL = false;
+      })
 
-    # PDF editing tools
-    pkgs.ocrmypdf
-    pkgs.tesseract
-    pkgs.pdfarranger
+      # PDF editing tools
+      ocrmypdf
+      tesseract
+      pdfarranger
 
-    # Scan editing tools
-    pkgs.deskew
-    pkgs.scantailor-advanced
+      # Scanning tools
+      skanpage
+      deskew
+      scantailor-advanced
 
-    pkgs.pdfgrep
-  ];
+      pdfgrep
+    ];
 
   xdg.configFile = {
     "pdfarranger/config.ini".text =
@@ -59,12 +63,18 @@
     ocrmypdf = ''ocrmypdf --user-words "$XDG_DATA_HOME"/tesseract/eng.user-words --sidecar "$XDG_CACHE_HOME"/ocrmypdf/sidecar.txt'';
   };
 
-  persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "tesseract";
-    }
-  ];
+  persist = {
+    directories = [
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgDataDir "tesseract";
+      }
+    ];
+    files = [
+      (config.lib.somasis.xdgConfigDir "skanpagerc")
+    ];
+  };
+
   cache.directories = [
     {
       method = "symlink";
@@ -73,6 +83,10 @@
     {
       method = "symlink";
       directory = config.lib.somasis.xdgCacheDir "ocrmypdf";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgCacheDir "skanpage";
     }
   ];
 }

@@ -6,26 +6,26 @@
 }:
 {
   imports = [
-    # keep-sorted start
-    ./audio.nix
+    # keep-sorted start by_regex=['^./.*[^(\.nix)]$', '.*\.nix$']
     ./browser
     ./chat
+    ./documents
+    ./games
+    ./music
+    ./audio.nix
     ./diary.nix
     ./email.nix
     ./feeds.nix
     ./file-manager.nix
-    ./games
     ./konsole.nix
     ./ledger.nix
     ./mess.nix
-    ./music
     ./notes.nix
     ./notifications.nix
     ./phone.nix
     ./photo.nix
     ./plasma.nix
     ./radio.nix
-    ./study
     ./syncplay.nix
     ./syncthing.nix
     ./torrent.nix
