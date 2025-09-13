@@ -277,6 +277,6 @@ fi
             ;;
     esac
 
-    [[ -n "$icon_file" ]] && rm -f "$icon_file"
+    [[ -f "$icon_file" ]] && rm -f "$icon_file"
 ) &
 disown
