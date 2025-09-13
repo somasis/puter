@@ -24,6 +24,10 @@ with recipients;
   "rclone-vault-password2.age".publicKeys = [ somasis.ilo ];
 
   # Used by host, not by a specific user on the host.
+  "ntfy-token-ilo.somas.is.age".publicKeys = [
+    ilo
+    somasis.ilo
+  ];
   "restic-ilo.age".publicKeys = [
     ilo
     somasis.ilo
