@@ -209,7 +209,7 @@ in
 
         # Embed video metadata as much as possible
         embed-subs = true;
-        # write-auto-subs = true;
+        write-auto-subs = true;
         sub-langs = commaList [
           "en-US"
           "en.*"
