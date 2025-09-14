@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+MimeType=application/pdf;
+Actions=ocrmypdf
+
+[Desktop Action ocrmypdf]
+Name=Perform OCR...
+Name[en]=Perform OCR...
+Name[tok]=o awen e sitelen nimi lon lipu...
+Icon=document-scan
+Exec=ocrmypdf-interactive %f

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if [[ -z "${in_xdg_terminal:-}" ]]; then
+    export in_xdg_terminal=true
+    exec xdg-terminal "${0} ${@@Q}"
+fi
+
+ocrmypdf --skip-text "$1" "$1"
+read -n1 -r -s -p "[exited $?; press any key to exit]"
