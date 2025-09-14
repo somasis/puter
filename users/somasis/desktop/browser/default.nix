@@ -241,7 +241,6 @@ in
         bandcamp-volume-bar
         collapse-hackernews-parent-comments
         ctrl-enter-is-submit-everywhere
-        disable-amp
         fastmail-without-bevels
         fb-clean-my-feeds
         hacker-news-date-tooltips

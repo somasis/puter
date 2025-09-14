@@ -378,13 +378,6 @@ in
     hash = "sha256-FshnFfKDwdCAam4Ikq0GlYcoJ0/a7B5vs8QMytLTqig=";
   };
 
-  disable-amp = mkGreasemonkeyScript {
-    pname = "disable-amp";
-    version = "1.0.66";
-    url = "https://userscripts.adtidy.org/release/disable-amp/1.0/disable-amp.user.js";
-    hash = "sha256-pMN7pxfaCD4gg4AdPUzR6WssVa5Kiln3zP9odvkRUes=";
-  };
-
   adguard-extra = mkGreasemonkeyScript {
     pname = "adguard-extra";
     version = "1.1.1";
