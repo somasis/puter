@@ -32,7 +32,6 @@
       libsecret
       pass-secrets
       pinentry-qt
-      qtpass
       # keep-sorted end
     ];
 
