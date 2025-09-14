@@ -176,8 +176,9 @@ let
                   expected_version=${lib.escapeShellArg version}
 
                   if [[ "$script_version" != "$expected_version" ]]; then
-                      printf 'Version mismatch between downloaded script and expected version (%s vs. %s)\n' \
-                          "$script_version" "$expected_version" \
+                      printf 'Version mismatch between expected version and downloaded version (%s vs. %s)\n' \
+                          "$expected_version" \
+                          "$script_version" \
                           >&2
                       exit 1
                   fi
