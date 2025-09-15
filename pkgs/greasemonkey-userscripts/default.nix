@@ -161,7 +161,7 @@ let
                 downloadToTemp = true;
                 postFetch = lib.optionalString (version != null) ''
                   # Ensure that the script's version matches the derivation $version;
-                  # most userscript sites don't let use get versioned script URLs,
+                  # most userscript sites don't let us get versioned script URLs,
                   # so this is to prevent us from downloading the wrong version.
                   script_version=$(
                       sed -n \
@@ -182,6 +182,8 @@ let
                           >&2
                       exit 1
                   fi
+
+                  cat "$downloadedFile" > "$out"
                 '';
               }
             else
