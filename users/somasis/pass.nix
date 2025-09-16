@@ -7,16 +7,18 @@
 {
   persist = {
     directories = [
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "password-store";
-      }
+      (config.lib.somasis.xdgDataDir "password-store")
+      (config.lib.somasis.xdgConfigDir "keepassxc")
     ];
 
     files = [
       (config.lib.somasis.xdgConfigDir "kleopatrarc")
     ];
   };
+
+  cache.directories = [
+    (config.lib.somasis.xdgCacheDir "keepassxc")
+  ];
 
   sync.directories = [
     ".gnupg"
@@ -28,6 +30,7 @@
     [
       # keep-sorted start
       gnupg
+      keepassxc
       kleopatra
       libsecret
       pass-secrets
