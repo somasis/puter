@@ -13,7 +13,7 @@ let
   };
 in
 with recipients;
-{
+builtins.mapAttrs (n: v: v // { armor = true; }) {
   # Before committing any modifications to the list of recipients for
   # any file listed here, run `agenix -r` in the development environment.
   "rclone-fastmail-pass.age".publicKeys = [ somasis.ilo ];
