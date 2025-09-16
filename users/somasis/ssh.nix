@@ -7,7 +7,12 @@
 }:
 {
   # Exception to the rule: ~/.ssh is used instead of ~/etc/ssh.
-  persist.directories = [ ".ssh" ];
+  persist.directories = [
+    {
+      method = "bindfs";
+      directory = ".ssh";
+    }
+  ];
 
   systemd.user.services = {
     ssh-tpm-keygen = {

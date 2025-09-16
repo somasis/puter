@@ -69,8 +69,8 @@ in
     # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
     # (config.lib.somasis.relativeToHome config.xdg.stateHome)
     {
-      method = "bindfs";
-      directory = "var/lib";
+      method = "symlink";
+      directory = relativeToHome config.xdg.stateHome;
     }
   ];
 

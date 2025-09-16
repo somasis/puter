@@ -37,17 +37,17 @@
     ];
 
   cache = {
-    # defaultDirectoryMethod = "symlink";
+    defaultDirectoryMethod = "symlink";
     allowOther = true;
   };
 
   log = {
-    # defaultDirectoryMethod = "symlink";
+    defaultDirectoryMethod = "symlink";
     allowOther = true;
   };
 
   persist = {
-    # defaultDirectoryMethod = "symlink";
+    defaultDirectoryMethod = "symlink";
     allowOther = true;
 
     directories = [
