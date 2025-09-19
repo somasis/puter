@@ -25,6 +25,8 @@ Currently, this means
   Elisa's database. Tracks rated in Elisa will have their corresponing
   Beets database entries be updated to have it in their \$rating field.
 
+See also: beet-write-to-elisa
+
 Kylie McClain <kylie@somas.is>
 EOF
     exit 64 # EX_USAGE

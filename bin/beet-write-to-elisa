@@ -1,0 +1,61 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash sqlite gnused coreutils
+
+set -euo pipefail
+
+usage() {
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+    cat >&2 <<EOF
+usage: ${0##*/} [--verbose]
+
+Synchronize rated tracks from the ratings tag stored in Beets, the
+music organizer, to the rating tags stored in Elisa, the KDE music player.
+
+Currently, it is only possible to copy ratings to tracks that already
+exist within the Elisa library. Thus, you need to run Elisa and rescan
+its library before running this tool, if any paths have changed in
+the Beets library.
+EOF
+    exit 69
+}
+
+pe() {
+    xe -LL -j0 "$@" | sort -snk1 | cut -d' ' -f2-
+}
+
+: "${XDG_DATA_HOME:=${HOME}/.local/share}"
+: "${ELISA_DATABASE:=${XDG_DATA_HOME}/elisa/elisaDatabase.db}"
+
+verbosity=0
+
+while [[ "$#" -gt 0 ]]; do
+    case "${1:-}" in
+        --help) usage ;;
+        --verbose) verbosity=$((verbosity + 1)) ;;
+        *) usage 'unknown argument: %s' "$1" ;;
+    esac
+    shift
+done
+
+old=$(mktemp)
+
+cp "$ELISA_DATABASE" "$old"
+
+{
+    # echo 'BEGIN TRANSACTION;'
+    for beets_rating in {0..10}; do
+        beet ls -p rating:"$beets_rating" \
+            | pe -N0 readlink -f \
+            | sed \
+                -e 's|^|file://|' \
+                -e "s|'|''|g; s|^|'|;s|$|'|" \
+            | while IFS= read -r filename; do
+                printf 'UPDATE Tracks SET Rating = %i WHERE FileName == %s;\n' \
+                    "$beets_rating" "${filename}"
+            done
+    done
+    # echo 'COMMIT;'
+    # echo "SELECT CONCAT('applied ', changes(), ' changes to the Elisa database') AS '';"
+} | { if [[ "${verbosity}" -gt 0 ]]; then tee /dev/stderr; else cat; fi; } | sqlite3 -safe -batch "$ELISA_DATABASE"
+
+diff -u --color <(sqlite3 -readonly -safe -batch "$old" '.dump') <(sqlite3 -readonly -safe -batch "$ELISA_DATABASE" '.dump')
