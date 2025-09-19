@@ -625,26 +625,39 @@ in
         hash = "sha256-RFUdmn08H/gJ2PXWbCQYkzjgwrbKLmnCSGbBGl2W/lU=";
       };
 
-      nativeBuildInputs = lib.optionals (settings != { }) [
-        jq
+      nativeBuildInputs = [
         prettier
+      ]
+      ++ lib.optionals (settings != { }) [
+        jq
       ];
 
-      installPhase = lib.optionalString (settings != { }) ''
+      installPhase = ''
         set -x
-        sb_userscript_header="$src/build/header.user.js"
-        sb_nosettings="$src/docs/sb-nosettings.min.js"
-        sb_user="$src/docs/sb.user.js"
+        script="$src/docs/sb-loader.user.js"
 
+        script_header=$(
+            grep -Pzo \
+                '(?s)// ==UserScript==.*// ==/UserScript==' \
+                "$script"
+        )
+
+        script_without_header=$(
+            sed \
+                '/\/\/ ==UserScript==/,/\/\/ ==\/UserScript==/d' \
+                "$script"
+        )
+      ''
+      + lib.optionalString (settings != { }) ''
         default_settings_js=$(
             grep -Pzo \
                 '(?s)/\* START OF SETTINGS \*/.*/\* END OF SETTINGS \*/' \
-                "$sb_user" \
+                "$script" \
                 | tr -d '\0' \
         )
 
         default_settings_json=$(
-            prettier --stdin-filepath ".js" <<<"$default_settings_block" \
+            prettier --stdin-filepath ".js" <<<"$default_settings_js" \
                 | sed -E \
                     -e '/^\/\/\s*/d' \
                     -e 's,\s+// .+|/\*.*\*/,,g' \
@@ -661,12 +674,12 @@ in
                 <(printf '%s' "$default_settings_json") \
                 <(printf '%s' ${lib.escapeShellArg (builtins.toJSON settings)})
         )
-
-        cat \
-            "$sb_userscript_header" \
-            <(printf '%s\n' "''${merged_settings_js:-}") \
-            "$sb_nosettings" \
-            > "$out"
+      ''
+      + ''
+        printf '%s\n' \
+            "$script_header" \
+            "''${merged_settings_js:-$script_without_header}" \
+            | prettier --stdin-filepath "sb.user.js" > "$out"
 
         set +x
       '';
