@@ -14,7 +14,7 @@ in
     with kdePackages;
     [
       config.services.playerctld.package
-      mpris-discord-rpc
+      music-discord-rpc
       mpris-scrobbler
     ];
 
@@ -87,25 +87,25 @@ in
 
   systemd.user = {
     targets.graphical-session.Unit.Wants = [
-      "mpris-discord-rpc.service"
+      "music-discord-rpc.service"
       "mpris-scrobbler.service"
     ];
 
-    services.mpris-discord-rpc = {
+    services.music-discord-rpc = {
       Unit = {
-        Description = pkgs.mpris-discord-rpc.meta.description;
+        Description = pkgs.music-discord-rpc.meta.description;
         After = [ "network.target" ];
       };
       Install.WantedBy = [ "default.target" ];
       Service = {
         Type = "simple";
-        ExecStart = lib.getExe pkgs.mpris-discord-rpc;
+        ExecStart = lib.getExe pkgs.music-discord-rpc;
       };
     };
   };
 
   xdg.configFile = {
-    "mpris-discord-rpc/config.yaml".source = yamlFormat.generate "mpris-discord-rpc-config.yaml" {
+    "music-discord-rpc/config.yaml".source = yamlFormat.generate "music-discord-rpc-config.yaml" {
       interval = 10;
       button = [
         "yt"
