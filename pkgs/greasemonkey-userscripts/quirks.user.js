@@ -44,6 +44,7 @@
   if (
     !(
       matchURL({ hostname: "{www.}?paypal.com" }) ||
+      matchURL({ hostname: "payments.ncdot.gov" }) ||
       matchURL({ hostname: "{*.}?nytimes.com", pathname: "*/games/*" })
     )
   )
