@@ -1,5 +1,5 @@
-#!/bin/sh
-# shellcheck shell=sh
+#!/usr/bin/env bash
+# shellcheck shell=bash
 
 # shellcheck disable=SC2016
 format='$artist - $title\n'
@@ -17,8 +17,14 @@ done
 shift $((OPTIND - 1))
 
 # format=$(printf '%s' "${format}" | sed -E 's/%([a-z0-9_]+)%/\$\1/g)
+format=${format//\\/\\\\}
 while [ $# -gt 0 ]; do
     # shellcheck disable=SC2086
-    envtag "${1}" | sh -c 'eval "$(cat)"; eval "printf \"${1}\""' -- "${format}"
+    if tags=$(envtag "${1}"); then
+        printf '%s' "${tags:-:}" \
+            | (eval "$(cat); echo -en ${format}")
+    else
+        exit 1
+    fi
     shift
 done

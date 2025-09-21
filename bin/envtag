@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# shellcheck shell=bash
 
 usage() {
     cat >&2 <<EOF
@@ -8,15 +9,7 @@ EOF
 }
 
 filter() {
-    sed -E \
-        -e '/^stream_[0-9]+_tags/ s/^stream_[0-9]+_tags_//' \
-        -e '/^format_tags_/ s/^format_tags_//   #format tags = ID3, stream_tags = else' \
-        -e 's/^([^=]+)=/\L\1=\$\(printf -- /    #lowercase variable names, escape for printf' \
-        -e 's/$/\)/                             #complete for printf' \
-        -e '/^musicbrainz_([^=]+)/ {            #homogenize musicbrainz variables across ID3/Ogg
-                s/^musicbrainz_(album|artist|release)_/musicbrainz_\1/
-                s/^musicbrainz_([a-z]+)_(country|id)/musicbrainz_\1\2/
-            }' \
+    cat \
         | if [ "${list}" -eq 1 ]; then sed 's/=.*//'; else cat; fi \
         | if [ "${null}" -eq 1 ]; then xe -j0 -N0 printf '%s\0'; else cat; fi
 }
@@ -37,11 +30,17 @@ shift $((OPTIND - 1))
 for f; do
     ffprobe \
         -loglevel -32 \
-        -of flat=sep_char=_:hierarchical=0 \
+        -of json \
         -select_streams a \
         -show_entries stream_tags:format_tags \
         -i "${f}" \
+        | jq -r '
+            .format.tags
+                | with_entries(.key |= ascii_downcase)
+                | to_entries[]
+                | "\(.key | gsub("[^A-Za-z0-9_]"; "_"))=\(.value | @sh)"
+        ' \
         | filter
 done
-            # -e 's/^([^=]+)=(.*)/&; printf "%s: %s\n" "\1" "$\1"/' \
-            # -e 's/\\n/\n/g                  #lastly we unescape the newlines and nothing else' \
+# -e 's/^([^=]+)=(.*)/&; printf "%s: %s\n" "\1" "$\1"/' \
+# -e 's/\\n/\n/g                  #lastly we unescape the newlines and nothing else' \
