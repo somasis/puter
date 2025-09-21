@@ -4,6 +4,39 @@
   lib,
   ...
 }:
+let
+  keepassKeyFile = "${config.xdg.configHome}/keepassxc/keepassxc.keyx";
+  keepassDatabaseFile = "${config.home.homeDirectory}/sync/keepassxc.kdbx";
+
+  keepass =
+    subcommand:
+    {
+      database ? keepassDatabaseFile,
+      extraArgs ? [ ],
+      ...
+    }@args:
+    lib.concatStringsSep " " (
+      [
+        "keepassxc-cli"
+        subcommand
+      ]
+      ++ lib.cli.toGNUCommandLine { } (
+        {
+          key-file = keepassKeyFile;
+          no-password = true;
+        }
+        // lib.removeAttrs args [
+          "database"
+          "extraArgs"
+        ]
+      )
+      ++ [
+        (lib.escapeShellArg database)
+        (lib.escapeShellArgs extraArgs)
+      ]
+    );
+
+in
 {
   persist = {
     directories = [
@@ -99,9 +132,18 @@
 
   home.sessionVariables = {
     # Used by `bin/phishin-auth-login`, among other things.
-    PHISHIN_USER_EMAIL_COMMAND = "pass meta www/phish.in email";
-    PHISHIN_USER_PASSWORD_COMMAND = "pass meta www/phish.in password";
+    PHISHIN_USER_EMAIL_COMMAND = keepass "show" {
+      attributes = "username";
+      extraArgs = [ "/www/Phish.in" ];
+    };
+    PHISHIN_USER_PASSWORD_COMMAND = keepass "show" {
+      attributes = "password";
+      extraArgs = [ "/www/Phish.in" ];
+    };
 
-    PHISHNET_SECRET_COMMAND = "pass api/phish-cli/phish.net | head -n1";
+    PHISHNET_SECRET_COMMAND = keepass "show" {
+      attributes = "password";
+      extraArgs = [ "/API keys/Phish.net" ];
+    };
   };
 }
