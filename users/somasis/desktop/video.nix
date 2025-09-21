@@ -211,12 +211,10 @@ in
         embed-subs = true;
         write-auto-subs = true;
         sub-langs = commaList [
-          "en-US"
+          "en-orig"
+          "en"
           "en.*"
           "tok"
-          "es-en.*"
-          "es-MX"
-          "es.*"
         ];
 
         # embed-chapters = true;
