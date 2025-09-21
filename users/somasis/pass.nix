@@ -66,8 +66,9 @@ in
       keepassxc
       kleopatra
       libsecret
-      pass-secrets
+      # pass-secrets
       pinentry-qt
+      rofi # used by qute-keepassxc
       # keep-sorted end
     ];
 
@@ -98,27 +99,14 @@ in
   # `pass-secrets` just uses `pass` which I think is better anyway.
   # services.pass-secret-service.enable = true;
 
-  # programs.qutebrowser = {
-  #   aliases.pass = "spawn -u ${lib.getExe qute-pass}";
+  programs.qutebrowser = {
+    aliases.keepassxc = "spawn -u qute-keepassxc --insecure";
 
-  #   keyBindings.normal = {
-  #     # Login
-  #     "zll" = "pass -H";
-  #     "zlL" = "pass -H -d <Enter>";
-  #     "zlz" = "pass -H -S";
-
-  #     "zlZ" = "pass -m fields";
-
-  #     # Specific fills
-  #     "zlu" = "pass -m username";
-  #     "zle" = "pass -m email";
-  #     "zlp" = "pass -m password";
-  #     "zlo" = "pass -m otp";
-
-  #     "zlg" = "pass -m generate-for-url {url:host}";
-  #     "zlG" = "pass -m generate-for-url -n {url:host}";
-  #   };
-  # };
+    keyBindings.normal = {
+      zl = "keepassxc";
+      zL = "keepassxc --totp";
+    };
+  };
 
   # NOTE Workaround <https://github.com/NixOS/nixpkgs/issues/183604>
   programs.bash.initExtra =
