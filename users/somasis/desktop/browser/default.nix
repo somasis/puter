@@ -869,11 +869,6 @@ in
         en-gb
       ];
     };
-
-    browserpass = {
-      inherit (config.programs.chromium) enable;
-      browsers = [ "chromium" ];
-    };
   };
 
   systemd.user = {
@@ -977,7 +972,10 @@ in
     with pkgs;
     with kdePackages;
     (
-      (lib.optional config.programs.qutebrowser.enable somasis-qutebrowser-tools)
+      [
+        ungoogled-chromium
+      ]
+      ++ (lib.optional config.programs.qutebrowser.enable somasis-qutebrowser-tools)
       ++ (lib.optional config.programs.chromium.enable plasma-browser-integration)
     );
 
