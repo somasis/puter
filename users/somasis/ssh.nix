@@ -101,9 +101,9 @@
         forwardAgent = true;
       };
 
-      "salak.whatbox.ca" = {
-        host = "salak.whatbox.ca salak whatbox";
-        hostname = "salak.whatbox.ca";
+      "box.somas.is" = {
+        host = "whatbox box";
+        hostname = "box.somas.is";
       };
 
       # Random hosts
