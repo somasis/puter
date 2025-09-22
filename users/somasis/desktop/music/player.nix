@@ -19,7 +19,7 @@ in
     ];
 
   # Elisa is my music player of choice. I use it to play music from ~/audio/library.
-  # Metadata from Elisa is propagated to beets using `~/bin/elisa-to-beets`,
+  # Metadata from Elisa is propagated to beets using `beet-update-from-elisa`,
   # which is only ran manually right now.
   programs.elisa = {
     enable = true;
