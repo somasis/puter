@@ -52,10 +52,11 @@ in
   # but it can happen in other applications, like KDE's systemsettings.
   # Necessary as of 2025-03-13 NixOS 24.11.
   environment.sessionVariables.QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
-}
-// lib.optionalAttrs (patches != [ ]) {
+
   nixpkgs.overlays = [ overlay ];
   home-manager.sharedModules = [
-    (lib.optionalAttrs (!config.home-manager.useGlobalPkgs) { nixpkgs.overlays = [ overlay ]; })
+    (lib.optionalAttrs (!config.home-manager.useGlobalPkgs) {
+      nixpkgs.overlays = [ overlay ];
+    })
   ];
 }
