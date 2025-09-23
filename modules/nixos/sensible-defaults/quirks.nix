@@ -42,8 +42,7 @@ let
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
 
-    # Added 2025-07-16: doesn't currently work on nixos-unstable
-    inherit (final.stable) darktable gimp;
+    inherit (final.master) beets beets-unstable beetsPackages;
   };
 in
 {
