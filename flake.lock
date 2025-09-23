@@ -381,18 +381,6 @@
         "type": "github"
       }
     },
-    "keys-github-somasis": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-kB0mEZxv+BTeIEiNNbe83PX/jYP9Zk5Xdyj3UBKy2jw=",
-        "type": "file",
-        "url": "https://github.com/somasis.keys"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/somasis.keys"
-      }
-    },
     "lanzaboote": {
       "inputs": {
         "crane": "crane",
@@ -548,13 +536,13 @@
         "type": "github"
       }
     },
-    "nixpkgs-master": {
+    "nixpkgs-dev": {
       "locked": {
-        "lastModified": 1758597290,
-        "narHash": "sha256-k8k268GP2UP4j+Kpskc4Zc/dYmIT/jis8eNEB2b7Blw=",
+        "lastModified": 1758658419,
+        "narHash": "sha256-oZWgVbWWJyYF79VL18vqz9tH6g8dPamHrJklYnWrPLM=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bd8736b95b1a9170a7dcfd1c39e6bb3348f9c357",
+        "rev": "4e57849f1d5e9a167ae7932ea65e64922c288829",
         "type": "github"
       },
       "original": {
@@ -591,22 +579,6 @@
       "original": {
         "owner": "nixos",
         "ref": "nixos-25.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-unstable": {
-      "locked": {
-        "lastModified": 1758277210,
-        "narHash": "sha256-iCGWf/LTy+aY0zFu8q12lK8KuZp7yvdhStehhyX1v8w=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "8eaee110344796db060382e15d3af0a9fc396e0e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -666,22 +638,6 @@
         "type": "github"
       }
     },
-    "plasma-pass": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1757383812,
-        "narHash": "sha256-M/3fkMqmcPLatHeRCL6Iv8MhQuBn32p+vrlipBKzJ5g=",
-        "ref": "refs/heads/master",
-        "rev": "8b41ba799bbdb2210889a5ba8c3087758ebf312e",
-        "revCount": 361,
-        "type": "git",
-        "url": "https://invent.kde.org/plasma/plasma-pass.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://invent.kde.org/plasma/plasma-pass.git"
-      }
-    },
     "pre-commit-hooks-nix": {
       "inputs": {
         "flake-compat": [
@@ -736,18 +692,15 @@
         "git-hooks": "git-hooks",
         "home-manager": "home-manager_2",
         "impermanence": "impermanence",
-        "keys-github-somasis": "keys-github-somasis",
         "lanzaboote": "lanzaboote",
         "lix-module": "lix-module",
         "nix-index-database": "nix-index-database",
         "nixos-cli": "nixos-cli",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
-        "nixpkgs-master": "nixpkgs-master",
+        "nixpkgs-dev": "nixpkgs-dev",
         "nixpkgs-stable": "nixpkgs-stable_2",
-        "nixpkgs-unstable": "nixpkgs-unstable",
         "plasma-manager": "plasma-manager",
-        "plasma-pass": "plasma-pass",
         "qutebrowser-zotero": "qutebrowser-zotero",
         "treefmt-nix": "treefmt-nix",
         "uAssets": "uAssets"

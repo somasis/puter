@@ -2,17 +2,11 @@
   description = "puter";
 
   inputs = {
-    keys-github-somasis = {
-      url = "https://github.com/somasis.keys";
-      flake = false;
-    };
-
     # NOTE Make sure to change on new releases!
     # See <https://nixos.org/manual/nixos/unstable/#sec-upgrading> for details
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-master.url = "github:nixos/nixpkgs";
+    nixpkgs-dev.url = "github:nixos/nixpkgs";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -93,10 +87,9 @@
 
     qutebrowser-zotero.flake = false;
     qutebrowser-zotero.url = "github:parchd-1/qutebrowser-zotero";
-    plasma-pass.flake = false;
-    plasma-pass.url = "git+https://invent.kde.org/plasma/plasma-pass.git";
 
-    # Ad blocking lists
+    # Ad blocking lists; these are used by `jhide`+qutebrowser for faking
+    # cosmetic blocking functionality.
     adblockEasyList.flake = false;
     adblockEasyList.url = "github:thedoggybrad/easylist-mirror";
     adblockHosts.flake = false;
@@ -113,7 +106,7 @@
 
       nixpkgs,
       nixpkgs-stable,
-      nixpkgs-master,
+      nixpkgs-dev,
       home-manager,
       nixos-hardware,
 
@@ -128,9 +121,21 @@
       inherit (nixpkgs) lib;
 
       forAllSystems = lib.genAttrs lib.systems.flakeExposed;
+
+      system = builtins.currentSystem or "x86_64-linux";
+
+      # config.allowUnfree is set primarily so `nix flake check` doesn't get tripped up.
+      pkgsFor = forAllSystems (
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        }
+      );
+
       treefmt = forAllSystems (
         system:
-        treefmt-nix.lib.evalModule nixpkgsFor.${system}.pkgs {
+        treefmt-nix.lib.evalModule pkgsFor.${system}.pkgs {
           # See also <https://github.com/numtide/treefmt-nix/tree/main/programs>
           projectRootFile = "flake.nix";
 
@@ -182,16 +187,6 @@
           };
         }
       );
-      system = builtins.currentSystem or "x86_64-linux";
-
-      # config.allowUnfree is set primarily so `nix flake check` doesn't get tripped up.
-      nixpkgsFor = forAllSystems (
-        system:
-        import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-        }
-      );
     in
     {
       nixosModules = {
@@ -214,9 +209,9 @@
         default = final: prev: lib.recursiveUpdate prev (import ./pkgs { pkgs = final; });
 
         nixpkgsVersions = final: prev: {
+          unstable = inputs.nixpkgs.legacyPackages.${system};
           stable = inputs.nixpkgs-stable.legacyPackages.${system};
-          unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-          master = inputs.nixpkgs-master.legacyPackages.${system};
+          dev = inputs.nixpkgs-dev.legacyPackages.${system};
         };
 
         # Create an overlay from all flake inputs with packages.
@@ -247,14 +242,14 @@
       };
 
       homeConfigurations.somasis = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgsFor.${system};
+        pkgs = pkgsFor.${system};
         modules = [ ./users/somasis ];
       };
 
       packages = forAllSystems (
         system:
         nixpkgs.lib.filterAttrs (_: v: nixpkgs.lib.isDerivation v) (
-          import ./pkgs { pkgs = nixpkgsFor.${system}; }
+          import ./pkgs { pkgs = pkgsFor.${system}; }
         )
       );
 
@@ -311,7 +306,7 @@
       });
 
       devShells = forAllSystems (
-        system: with nixpkgsFor.${system}.pkgs; {
+        system: with pkgsFor.${system}.pkgs; {
           default = mkShell {
             shellHook = self.checks.${system}.git-hooks.shellHook + ''
               # Used by nixos-cli.
