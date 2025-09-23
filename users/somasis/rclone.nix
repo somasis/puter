@@ -7,6 +7,8 @@
   ...
 }:
 let
+  inherit (osConfig.networking) hostName;
+
   bigCacheOptions = {
     vfs-refresh = true;
     vfs-cache-mode = "full";
@@ -59,8 +61,6 @@ in
         esther.config = {
           type = "sftp";
           ssh = "${sshExe} somasis@esther.7596ff.com";
-          # host = "esther.7596ff.com";
-          # user = "somasis";
           copy_is_hardlink = true;
         };
 
@@ -69,21 +69,9 @@ in
           secrets.url = config.age.secrets.rclone-whatbox-http-url.path;
         };
 
-        whatbox-ftp = {
-          config = {
-            type = "ftp";
-            host = "salak.whatbox.ca";
-            explicit_tls = true;
-            user = "somasis";
-          };
-          secrets.pass = config.age.secrets.rclone-whatbox-pass.path;
-        };
-
         whatbox-sftp.config = {
           type = "sftp";
           ssh = "${sshExe} whatbox";
-          # host = "salak.whatbox.ca";
-          # user = "somasis";
         };
 
         whatbox = {
@@ -91,7 +79,7 @@ in
             type = "webdav";
             url = "https://files.box.somas.is";
             vendor = "rclone";
-            user = "somasis";
+            user = "ilo";
           };
           secrets.pass = config.age.secrets.rclone-whatbox-pass.path;
 
@@ -185,12 +173,12 @@ in
 
   age.secrets = {
     # keep-sorted start
+    "rclone-whatbox-${hostName}-pass".file = "${self}/secrets/rclone-whatbox-${hostName}-pass.age";
     rclone-fastmail-pass.file = "${self}/secrets/rclone-fastmail-pass.age";
     rclone-nextcloud-pass.file = "${self}/secrets/rclone-nextcloud-pass.age";
     rclone-vault-password.file = "${self}/secrets/rclone-vault-password.age";
     rclone-vault-password2.file = "${self}/secrets/rclone-vault-password2.age";
     rclone-whatbox-http-url.file = "${self}/secrets/rclone-whatbox-http-url.age";
-    rclone-whatbox-pass.file = "${self}/secrets/rclone-whatbox-pass.age";
     # keep-sorted end
   };
 }
