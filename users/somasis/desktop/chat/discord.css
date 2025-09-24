@@ -1,0 +1,121 @@
+/* Disable animations */
+* {
+  animation-duration: 0s !important;
+  transition-duration: 0s !important;
+}
+
+/* Friends > Active Now sidebar */
+main[class*="container__"] div[class*="nowPlayingColumn_"] {
+  display: none !important;
+}
+
+/* Hide profile effects */
+[class*="profileEffects"] {
+  display: none !important;
+}
+
+/* 2025-03-27 hide top bar and put Inbox button on header
+ * from Violet's CSS 
+ */
+:root {
+  --custom-app-top-bar-height: 0px !important;
+  --somasis-inbox-icon-area-size: 2.5rem;
+  --somasis-inbox-icon-bottom-position: -2.5rem;
+  --somasis-inbox-icon-right-position: -0.125rem;
+}
+
+/* Hide the Help button. My keyboard has an F1 key */
+div[class*="bar_"] div[class*="trailing_"] a[href*="support.discord.com"] {
+  display: none;
+}
+
+/* Shift the Inbox button down into the channel header */
+div[class*="bar_"] div[class*="trailing_"] div[class*="recentsIcon_"] {
+  position: absolute;
+  bottom: var(--somasis-inbox-icon-bottom-position);
+  right: var(--somasis-inbox-icon-right-position);
+}
+
+/* Allow the Inbox button to stack above the channel header in a new space */
+div[class*="subtitleContainer_"] section[class*="title_"] {
+  z-index: 0;
+}
+
+div[class*="subtitleContainer_"] section[class*="title_"] > div {
+  margin-right: var(--somasis-inbox-icon-area-size);
+}
+
+/* Apply it on the Friends page as well */
+main[class*="container__"] section[role="navigation"] {
+  z-index: 0;
+}
+
+main[class*="container__"] section[role="navigation"] > div {
+  margin-right: var(--somasis-inbox-icon-area-size);
+}
+
+/* 2025-03-27 Channel text box styling to make it more compact */
+form[class*="form_"][class*="formWithLoadedChatInput_"] {
+  padding: 0rem 0rem 0rem 0rem;
+}
+
+form[class*="form_"][class*="formWithLoadedChatInput_"]
+  div[class*="channelTextArea_"] {
+  border-radius: 0 !important;
+}
+
+section[class*="panels_"] {
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Increase user box height */
+section[class*="panels_"] div[class*="container__"] {
+  height: 4rem !important;
+  padding: 1rem;
+}
+
+/* Remove chat box gaps */
+form div[class*="channelBottomBarArea_"] div[class*="channelTextArea_"] {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0.45rem;
+  /* align with user box */
+  border-top-color: var(--border-faint);
+  border-left-width: 0rem;
+  border-right-width: 0rem;
+  border-bottom-width: 0rem;
+  /* changes color on active state */
+}
+
+form
+  div[class*="channelBottomBarArea_"]
+  div[class*="channelTextArea_"]:focus-within {
+  border-top-color: none;
+}
+
+.visual-refresh .scroller_ef3116 {
+  padding-top: 0.5rem;
+}
+
+/* 2025-03-27 New style */
+:root,
+.visual-refresh,
+.theme-light,
+:where(.visual-refresh) .menu_c1e9c4,
+[class*="tooltip__"],
+[class*="page_"],
+[class*="button__"] {
+  --font-primary: "Inter";
+  --font-code: "Iosevka";
+
+  --radius-xs: 5px;
+  --radius-sm: 5px;
+  --radius-md: 5px;
+  --radius-lg: 5px;
+  --radius-xl: 5px;
+  --radius-xxl: 5px;
+}

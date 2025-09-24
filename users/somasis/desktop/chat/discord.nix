@@ -2,12 +2,9 @@
   config,
   pkgs,
   lib,
-  inputs,
-  osConfig,
   ...
 }:
 let
-
   mkIcon =
     icon:
     pkgs.runCommand "discord-tray.png" { inherit icon; } ''
@@ -19,238 +16,24 @@ let
           "$icon"
     '';
 
-  # discord =
-  #   if config.programs.nixcord.discord.enable then
-  #     config.programs.nixcord.discord.package.override
-  #       {
-  #         withVencord = config.programs.nixcord.discord.vencord.enable;
-  #         withOpenASAR = config.programs.nixcord.discord.openASAR.enable;
-  #       }
-  #   else
-  #     null
-  # ;
+  json = lib.generators.toJSON { };
 in
 {
-  # imports = [ inputs.nixcord.homeManagerModules.nixcord ];
-
-  # programs.nixcord = {
-  #   enable = true;
-
-  #   discord.enable = true;
-  #   # vesktop = {
-  #   #   enable = true;
-
-  #   #   # settings = {
-  #   #   #   arRPC = "on";
-  #   #   #   checkUpdates = false;
-  #   #   #   clickTrayToShowHide = true;
-  #   #   #   disableSmoothScroll = true;
-  #   #   #   discordBranch = "stable";
-  #   #   #   minimizeToTray = "on";
-  #   #   #   splashTheme = true;
-  #   #   # };
-  #   #   # state.firstLaunch = false;
-  #   # };
-
-  #   quickCss = lib.fileContents discord-css;
-  #   config = {
-  #     useQuickCss = true;
-  #     enableReactDevtools = true;
-
-  #     plugins = {
-  #       # Global
-  #       roleColorEverywhere = { enable = true; chatMentions = true; memberList = true; reactorsList = true; voiceUsers = true; };
-
-  #       # Conversation view
-  #       blurNSFW.enable = true;
-  #       dontRoundMyTimestamps.enable = true;
-  #       fixCodeblockGap.enable = true;
-  #       keepCurrentChannel.enable = true;
-  #       mentionAvatars.enable = true;
-  #       messageClickActions = { enable = true; requireModifier = false; };
-  #       messageLatency = { enable = true; showMillis = false; };
-  #       messageLinkEmbeds = { enable = true; automodEmbeds = "prefer"; };
-  #       messageLogger = {
-  #         enable = true;
-  #         collapseDeleted = false;
-  #         ignoreBots = true;
-  #         ignoreSelf = true;
-  #       };
-  #       noUnblockToJump.enable = true;
-  #       nsfwGateBypass.enable = true;
-  #       quickReply.enable = true;
-  #       revealAllSpoilers.enable = true;
-  #       sendTimestamps = { enable = true; replaceMessageContents = true; };
-  #       showAllMessageButtons.enable = true;
-  #       silentMessageToggle = { enable = true; autoDisable = true; persistState = false; };
-  #       fixYoutubeEmbeds.enable = true;
-  #       youtubeAdblock.enable = true;
-
-  #       validReply.enable = true;
-  #       validUser.enable = true;
-
-  #       # Servers
-  #       serverInfo.enable = true;
-
-  #       # Emoji/sticker/GIF picker
-  #       betterGifAltText.enable = true;
-  #       betterGifPicker.enable = true;
-  #       gifPaste.enable = true;
-  #       stickerPaste.enable = true;
-
-  #       # Calls
-  #       callTimer = { enable = true; format = "human"; };
-  #       disableCallIdle.enable = true;
-
-  #       clearURLs.enable = true;
-
-  #       copyEmojiMarkdown = { enable = true; copyUnicode = true; };
-  #       copyUserURLs.enable = true;
-  #       emoteCloner.enable = true;
-  #       friendsSince.enable = true;
-
-  #       # Channel list
-  #       typingIndicator = {
-  #         enable = true;
-  #         includeBlockedUsers = false;
-  #         includeMutedChannels = false;
-  #       };
-  #       voiceChatDoubleClick.enable = true;
-
-  #       # Member list
-  #       colorSighted.enable = true;
-  #       forceOwnerCrown.enable = true;
-  #       # platformIndicators.enable = true;
-  #       typingTweaks = { enable = true; alternativeFormatting = false; };
-
-  #       # Search
-  #       fullSearchContext.enable = true;
-
-  #       # Friends list / profile view
-  #       implicitRelationships = { enable = true; sortByAffinity = true; };
-  #       mutualGroupDMs.enable = true;
-  #       noPendingCount = {
-  #         enable = true;
-  #         hideFriendRequestsCount = false;
-  #         # hideMessageRequestsCount = false;
-  #         hidePremiumOffersCount = true;
-  #       };
-  #       showConnections = {
-  #         enable = true;
-  #         iconSize = 32;
-  #         iconSpacing = "cozy";
-  #       };
-  #       sortFriendRequests = { enable = true; showDates = true; };
-  #       userVoiceShow.enable = true;
-  #       viewIcons.enable = true;
-
-  #       # Links
-  #       alwaysTrust = { enable = true; file = true; };
-  #       textReplace.enable = true;
-  #       normalizeMessageLinks.enable = true;
-  #       # noCanaryMessageLinks = { enable = true; alwaysUseDiscordHost = true; linkPrefix = ""; };
-
-  #       # Miscellaneous
-  #       betterSettings.enable = true;
-  #       consoleJanitor.enable = true;
-  #       crashHandler.attemptToNavigateToHome = true;
-  #       experiments = { enable = true; toolbarDevMenu = true; };
-  #       noDevtoolsWarning.enable = true;
-  #       noF1.enable = true;
-  #       noMosaic = {
-  #         enable = true;
-  #         # mediaLayoutType = "static";
-  #       };
-  #       noOnboardingDelay.enable = true;
-  #       noTrack = { enable = true; disableAnalytics = true; };
-  #       noTypingAnimation.enable = true;
-  #       reactErrorDecoder.enable = true;
-  #       replyTimestamp.enable = true;
-  #       settings = { enable = true; settingsLocation = "aboveActivity"; };
-  #       themeAttributes.enable = true;
-  #     };
-  #   };
-
-  #   vencordConfig.plugins.fixImagesQuality.enable = true;
-  #   vesktopConfig.plugins = {
-  #     webKeybinds.enable = true;
-  #     webRichPresence.enable = true;
-  #     webScreenShareFixes.enable = true;
-  #   };
-  # };
-
-  # xdg.configFile = let json = lib.generators.toJSON { }; in
-  # # Discord
-  #   {
-  #     "${discordWindowClassName}/settings.json".text = json ({
-  #       SKIP_HOST_UPDATE = true;
-  #       DANGEROUS_ENABLE_DEVTOOLS_ONLY_ENABLE_IF_YOU_KNOW_WHAT_YOURE_DOING = true;
-  #       trayBalloonShown = true;
-  #     } // lib.optionalAttrs (discordArgs ? withOpenASAR && discordArgs.withOpenASAR) {
-  #       openasar = {
-  #         setup = true;
-  #         quickstart = true;
-  #       };
-  #     } // lib.optionalAttrs ((discordArgs ? withOpenASAR && discordArgs.withOpenASAR) && (!(discordArgs ? withVencord) || !discordArgs.withVencord)) {
-  #       css = lib.fileContents discord-css;
-  #     });
-  #   } // lib.optionalAttrs (discord.pname == "legcord") {
-  #     "${discordWindowClassName}/storage/lang.json".text = json { lang = "en-US"; };
-
-  #     # this makes things break
-  #     "${discordWindowClassName}/storage/settings.json".text = json {
-  #       doneSetup = true;
-  #       multiInstance = false;
-
-  #       alternativePaste = false;
-  #       disableAutogain = false;
-
-  #       channel = "canary";
-  #       automaticPatches = true;
-
-  #       legcordCSP = true;
-  #       mods = "vencord";
-  #       inviteWebsocket = true;
-  #       spellcheck = true;
-
-  #       skipSplash = true;
-  #       startMinimized = true;
-  #       minimizeToTray = true;
-  #       windowStyle = "native";
-  #       mobileMode = false;
-
-  #       tray = true;
-  #       trayIcon = "dsc-tray";
-  #       dynamicIcon = true;
-
-  #       performanceMode = "vaapi";
-
-  #       useLegacyCapturer = true;
-  #     };
-
-  #     "${discordWindowClassName}/themes/theme".source = discord-theme;
-  #   }
-  #   // lib.optionalAttrs (discordArgs ? withVencord && discordArgs.withVencord) {
-  #     "Vencord/themes/theme".source = discord-theme;
-  #     # "Vencord/settings/quickCss.css".source = discord-css;
-  #   }
-  #   # // {
-  #   #   "discord/tray.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus/24x24/panel/discord-tray.svg";
-  #   #   "discord/tray-unread.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus/24x24/panel/discord-tray-unread.svg";
-  #   #   "discord/tray-connected.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus/24x24/panel/discord-tray-connected.svg";
-  #   #   "discord/tray-deafened.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus/24x24/panel/discord-tray-deafened.svg";
-  #   #   "discord/tray-muted.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus/24x24/panel/discord-tray-muted.svg";
-  #   #   "discord/tray-speaking.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus/24x24/panel/discord-tray-speaking.svg";
-  #   # }
-  # ;
-
   home.packages = [
     pkgs.discordchatexporter-cli
     pkgs.equibop
   ];
 
   xdg.autostart.entries = [
-    "${pkgs.equibop}/share/applications/equibop.desktop"
+    (
+      pkgs.makeDesktopItem {
+        name = "equibop";
+        desktopName = "Equibop";
+        icon = "discord";
+        exec = "/usr/bin/env equibop --start-minimized";
+      }
+      + "/share/applications/equibop.desktop"
+    )
   ];
 
   cache = {
@@ -259,31 +42,251 @@ in
     ];
   };
 
-  sync = {
+  persist = {
     directories = [
-      (config.lib.somasis.xdgConfigDir "equibop/themes")
       (config.lib.somasis.xdgConfigDir "equibop/settings")
-      (config.lib.somasis.xdgConfigDir "equibop/TrayIcons")
-      (config.lib.somasis.xdgConfigDir "equibop/MessageLoggerData")
     ];
 
     files = [
-      (config.lib.somasis.xdgConfigDir "equibop/settings.json")
       (config.lib.somasis.xdgConfigDir "equibop/state.json")
     ];
   };
 
   xdg.configFile = {
-    "equibop/TrayIcons/deafened_nixos.png".source =
+    "equibop/settings.json".text = json {
+      discordBranch = "stable";
+
+      disableMinSize = true;
+      disableSmoothScroll = false;
+      enableMenu = false;
+      hardwareVideoAcceleration = true;
+      spellCheckLanguages = [
+        "en-US"
+        "tok"
+        "en"
+      ];
+
+      arRPC = true;
+
+      enableSplashScreen = true;
+      splashAnimationPath =
+        # Use an empty splash GIF.
+        pkgs.runCommandLocal "empty.gif" {
+          b64 = "R0lGODlhAQABAIABAAAAACEmLSH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+        } ''base64 -d <<<"$b64" > $out'';
+
+      staticTitle = false;
+
+      tray = true;
+      minimizeToTray = true;
+      clickTrayToShowHide = true;
+
+      trayColorType = "custom";
+      trayColor = lib.replaceStrings [ "#" ] [ "" ] config.theme.colors.accent;
+      trayAutoFill = "black";
+
+      trayIdleOverride = true;
+      trayDeafenedOverride = true;
+      trayMainOverride = true;
+      trayMutedOverride = true;
+      traySpeakingOverride = true;
+    };
+
+    "equibop/TrayIcons/deafened.png".source =
       mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-deafened.svg";
-    "equibop/TrayIcons/icon_nixos.png".source =
+    "equibop/TrayIcons/icon.png".source =
       mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray.svg";
-    # "equibop/TrayIcons/unread.png".source = mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-unread.svg";
-    "equibop/TrayIcons/idle_nixos.png".source =
+    "equibop/TrayIcons/idle.png".source =
       mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-connected.svg";
-    "equibop/TrayIcons/muted_nixos.png".source =
+    "equibop/TrayIcons/muted.png".source =
       mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-muted.svg";
-    "equibop/TrayIcons/speaking_nixos.png".source =
+    "equibop/TrayIcons/speaking.png".source =
       mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-speaking.svg";
+
+    "equibop/settings/quickCss.css".source = ./discord.css;
+
+    "equibop/settings/settings.json".text = json {
+      disableMinSize = false;
+      notifications = {
+        useNative = "always";
+        missed = true;
+        logLimit = 0;
+      };
+
+      useQuickCss = true;
+      winCtrlQ = false;
+      winNativeTitleBar = false;
+
+      plugins = {
+        AlwaysTrust = {
+          enabled = true;
+          domain = true;
+          file = true;
+        };
+        Anammox = {
+          enabled = true;
+          billing = false;
+          dms = true;
+          emojiList = true;
+          gift = true;
+        };
+        BetterBlockedUsers = {
+          enabled = true;
+          hideBlockedWarning = false;
+          showUnblockConfirmationEverywhere = false;
+        };
+        BetterGifAltText.enabled = true;
+        BetterGifPicker.enabled = true;
+        BetterPlusReacts.enabled = true;
+        BetterSessions = {
+          enabled = true;
+          backgroundCheck = true;
+          checkInterval = 30;
+        };
+        BetterSettings = {
+          enabled = true;
+          disableFade = true;
+          eagerLoad = true;
+          organizeMenu = true;
+        };
+        BlurNSFW = {
+          enabled = true;
+          blurAllChannels = false;
+          blurAmount = 15;
+        };
+        CallTimer = {
+          enabled = true;
+          format = "human";
+        };
+        ClearURLs.enabled = true;
+        ConsoleJanitor.enabled = true;
+        CrashHandler = {
+          enabled = true;
+          attemptToNavigateToHome = true;
+          attemptToPreventCrashes = true;
+        };
+        DontRoundMyTimestamps.enabled = true;
+        Downloadify = {
+          enabled = true;
+          defaultDirectory = config.xdg.userDirs.download;
+        };
+        FixImagesQuality.enabled = true;
+        ForceOwnerCrown.enabled = true;
+        FrequentQuickSwitcher.enabled = true;
+        FriendsSince.enabled = true;
+        FullSearchContext.enabled = true;
+        FullUserInChatbox.enabled = true;
+        FullVCPFP.enabled = true;
+        GameActivityToggle = {
+          enabled = true;
+          oldIcon = false;
+        };
+        GuildPickerDumper.enabled = true;
+        HomeTyping.enabled = true;
+        ImageFilename = {
+          enabled = true;
+          showFullUrl = false;
+        };
+        IrcColors = {
+          enabled = true;
+          applyColorOnlyInDms = true;
+          applyColorOnlyToUsersWithoutColor = true;
+          lightness = 65;
+          memberListColors = true;
+        };
+        LimitMiddleClickPaste = {
+          enabled = true;
+          limitTo = "direct";
+          reenableDelay = 500;
+        };
+        MentionAvatars = {
+          enabled = true;
+          showAtSymbol = true;
+        };
+        NSFWGateBypass.enabled = true;
+        NoDevtoolsWarning.enabled = true;
+        NoF1.enabled = true;
+        NoModalAnimation.enabled = true;
+        NoTrack.disableAnalytics = true;
+        NoUnblockToJump.enabled = true;
+        NormalizeMessageLinks.enabled = true;
+        PinIcon.enabled = true;
+        ReactErrorDecoder.enabled = true;
+        ReplaceGoogleSearch = {
+          enabled = true;
+          customEngineName = "DuckDuckGo";
+          customEngineURL = "https://duckduckgo.com/?q=";
+        };
+        SearchFix.enabled = true;
+        ServerSearch.enabled = true;
+        Settings.settingsLocation = "aboveActivity";
+        ShikiCodeblocks.enabled = true;
+        ShowAllMessageButtons = {
+          enabled = true;
+          noShiftDelete = false;
+          noShiftPin = false;
+        };
+        ShowConnections = {
+          enabled = true;
+          iconSize = 32;
+          iconSpacing = 1;
+        };
+        SilentMessageToggle = {
+          enabled = true;
+          autoDisable = true;
+          persistState = "none";
+        };
+        SortFriends = {
+          enabled = true;
+          showDates = true;
+        };
+        TextReplace = {
+          enabled = true;
+          regexRules = [ ];
+          stringRules = [
+            {
+              find = "https://x.com";
+              onlyIfIncludes = "/status/";
+              replace = "https://fxtwitter.com";
+              scope = "myMessages";
+            }
+            {
+              find = "https://twitter.com";
+              onlyIfIncludes = "/status/";
+              replace = "https://fxtwitter.com";
+              scope = "myMessages";
+            }
+          ];
+        };
+        ThemeAttributes.enabled = true;
+        Title = {
+          enabled = true;
+          title = "Discord";
+        };
+        UnreadCountBadge = {
+          enabled = true;
+          notificationCountLimit = false;
+          replaceWhiteDot = false;
+          showOnMutedChannels = false;
+        };
+        UserVoiceShow = {
+          enabled = true;
+          showInMemberList = true;
+          showInMessages = true;
+          showInUserProfileModal = true;
+        };
+        ValidReply.enabled = true;
+        ValidUser.enabled = true;
+        ViewIcons = {
+          enabled = true;
+          format = "webp";
+          imgSize = "1024";
+        };
+        VoiceChatDoubleClick.enabled = true;
+        WebKeybinds.enabled = true;
+        WebScreenShareFixes.enabled = true;
+        YoutubeAdblock.enabled = true;
+      };
+    };
   };
 }
