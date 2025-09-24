@@ -44,22 +44,22 @@ in
     }
   ];
   persist.directories = [
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim";
+    }
     # {
     #   method = "symlink";
-    #   directory = config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim";
+    #   directory = config.lib.somasis.xdgConfigDir "jellyfin.org";
     # }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "jellyfin.org";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "jellyfinmediaplayer";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "Jellyfin Media Player";
-    }
+    # {
+    #   method = "symlink";
+    #   directory = config.lib.somasis.xdgDataDir "jellyfinmediaplayer";
+    # }
+    # {
+    #   method = "symlink";
+    #   directory = config.lib.somasis.xdgDataDir "Jellyfin Media Player";
+    # }
   ];
 
   programs = {
@@ -247,10 +247,10 @@ in
   };
 
   home = {
-    # packages = [
-    #   pkgs.jellyfin-mpv-shim
-    #   pkgs.jellyfin-media-player
-    # ];
+    packages = [
+      pkgs.jellyfin-mpv-shim
+      #   pkgs.jellyfin-media-player
+    ];
 
     shellAliases.ytaudio = "yt-dlp --format bestaudio --extract-audio --audio-format wav";
   };
