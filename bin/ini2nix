@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils jc jq json2nix nixfmt
 # shellcheck shell=bash disable=SC2016
 
 usage() {
@@ -109,15 +112,12 @@ while getopts :CFdr opt >/dev/null 2>&1; do
 done
 shift $((OPTIND - 1))
 
+# Default to standard input.
 [[ $# -gt 0 ]] || set -- -
 
-for path; do
+for given_path; do
     jc_args=()
     jc_error=0
-
-    case "${path}" in
-        -) path=/dev/stdin ;;
-    esac
 
     nixpkgs_function_args='{}'
     if [[ ${lists_as_duplicate_keys} == false ]]; then
@@ -131,12 +131,12 @@ for path; do
         jc_args+=(--raw)
     fi
 
-    ini_as_json=$(jc "${jc_args[@]}" <"${path}") || jc_error=$?
+    ini_as_json=$(jc "${jc_args[@]}" <"${given_path}") || jc_error=$?
 
     if [[ ${jc_error} -ne 0 ]]; then
         # shellcheck disable=SC2016
         usage 'error: `jc` failed while converting %s to JSON (error code: %i)\n' \
-            "${path@Q}" \
+            "${given_path@Q}" \
             "${jc_error}"
     fi
 

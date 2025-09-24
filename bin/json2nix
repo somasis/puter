@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash coreutils nix nixfmt
 # shellcheck shell=bash disable=SC2016
 
 usage() {
@@ -35,33 +38,45 @@ while getopts : opt >/dev/null 2>&1; do
 done
 shift $((OPTIND - 1))
 
+# Default to standard input.
 [[ $# -gt 0 ]] || set -- -
 
-for path; do
-    case "${path}" in
-        /*) : ;;
+for given_path; do
+    real_path="$given_path"
 
-        -) path=/dev/stdin ;;
+    if [[ "$given_path" == '-' ]] || [[ "$given_path" == '/dev/stdin' ]]; then
+        given_path=-
+    fi
 
-        # `builtins.readFile` only wants absolute paths
-        *) path=$(readlink -f -- "${path}") ;;
-    esac
+    if [[ "$given_path" == '-' ]] || [[ -p "$given_path" ]]; then
+        # Write standard input to a temporary file.
+        real_path=$(mktemp) || exit 1
+        cat >"$real_path"
+    fi
+
+    # `builtins.readFile` only wants absolute paths
+    real_path=$(readlink -f -- "$real_path")
 
     error=0
 
     output=$(
         nix-instantiate --eval \
             --readonly-mode \
-            --argstr path "${path}" \
-            --expr '{ path }: builtins.fromJSON (builtins.readFile path)'
+            --strict \
+            --argstr realPath "${real_path}" \
+            --expr '{ realPath }: builtins.fromJSON (builtins.readFile realPath)'
     ) || error=$?
 
     if [[ ${error} -ne 0 ]]; then
         # shellcheck disable=SC2016
         usage 'error: `nix-instantiate` failed while converting %s from JSON (error code: %i)\n' \
-            "${path@Q}" \
+            "${given_path@Q}" \
             "${error}"
     fi
 
     format <<<"${output}"
+
+    case "${given_path}" in
+        '-') rm -f "$real_path" ;;
+    esac
 done

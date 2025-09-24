@@ -1,46 +1,81 @@
 {
   lib,
   writeShellApplication,
-  json2nix,
+  coreutils,
   jc,
-  nixfmt-rfc-style,
-  coreutils, # , diffutils
+  jq,
+  json2nix,
+  nixfmt,
+
+  diffutils,
+  writeText,
 }:
+let
+  checkINI = writeText "check.ini" ''
+    FirstKeyInGlobalSection=first key
+    SecondKeyInGlobalSection=second key
+    ThirdKeyInGlobalSectionAlsoANumber=3
+    FourthKeyInGlobalSectionAlsoABoolean=true
+
+    [General]
+    String = "it's a string"
+    HasTwoDuplicateKeys=1
+    HasTwoDuplicateKeys=2
+    CoerceToTrueBoolean=true
+    AlsoCoerceToTrueBoolean=True
+    CoerceToFalseBoolean=false
+    AlsoCoerceToFalseBoolean=False
+  '';
+
+  checkExpectedOutput = writeText "expected.nix" ''
+    lib.generators.toINI { } {
+      General = {
+        AlsoCoerceToFalseBoolean = false;
+        AlsoCoerceToTrueBoolean = true;
+        CoerceToFalseBoolean = false;
+        CoerceToTrueBoolean = true;
+        HasTwoDuplicateKeys = 2;
+        String = "it's a string";
+      };
+      globalSection = {
+        FirstKeyInGlobalSection = "first key";
+        FourthKeyInGlobalSectionAlsoABoolean = true;
+        SecondKeyInGlobalSection = "second key";
+        ThirdKeyInGlobalSectionAlsoANumber = 3;
+      };
+    }
+  '';
+in
 writeShellApplication {
   name = "ini2nix";
 
   runtimeInputs = [
     coreutils
-    json2nix
     jc
-    nixfmt-rfc-style
+    json2nix
+    jq
+    nixfmt
   ];
 
-  # checkINI = ''
-  #   FirstKeyInGlobalSection=first key
-  #   SecondKeyInGlobalSection=second key
-  #   ThirdKeyInGlobalSectionAlsoANumber=3
-  #   FourthKeyInGlobalSectionAlsoABoolean=true
+  checkPhase = ''
+    PATH=${
+      lib.makeBinPath [
+        diffutils
+        nixfmt
+      ]
+    }:$PATH
 
-  #   [General]
-  #   String = "it's a string"
-  #   HasTwoDuplicateKeys=1
-  #   HasTwoDuplicateKeys=2
-  #   CoerceToTrueBoolean=true
-  #   AlsoCoerceToTrueBoolean=True
-  #   CoerceToFalseBoolean=false
-  #   AlsoCoerceToFalseBoolean=False
-  # '';
+    NIX_REMOTE=daemon $out/bin/ini2nix ${checkINI} \
+        | nixfmt \
+        > ./check.nix
 
-  # checkExpectedOutput = ''
-  #   { General = { AlsoCoerceToFalseBoolean = false; AlsoCoerceToTrueBoolean = true; CoerceToFalseBoolean = false; CoerceToTrueBoolean = true; HasTwoDuplicateKeys = [ 1 2 ]; String = "it's a string"; }; globalSection = { FirstKeyInGlobalSection = "first key"; FourthKeyInGlobalSectionAlsoABoolean = true; SecondKeyInGlobalSection = "second key"; ThirdKeyInGlobalSectionAlsoANumber = 3; }; }
-  # '';
+    diff -u \
+        ./check.nix \
+        ${lib.escapeShellArg checkExpectedOutput} \
+        || exit $?
+  '';
 
-  # checkPhase = prev.checkPhase + ''
-  #   ${diffutils}/bin/diff -u <($out/bin/ini2nix ${checkIni}) <(printf '%s' ${lib.toShellVar checkExpectedOutput})
-  # '';
-
-  text = builtins.readFile ./ini2nix.bash;
+  text = builtins.readFile ../../bin/ini2nix;
 
   meta = with lib; {
     description = "Convert INI to Nix expressions";
