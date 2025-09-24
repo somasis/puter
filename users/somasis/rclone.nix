@@ -81,7 +81,7 @@ in
             vendor = "rclone";
             user = "ilo";
           };
-          secrets.pass = config.age.secrets.rclone-whatbox-pass.path;
+          secrets.pass = config.age.secrets."rclone-whatbox-${hostName}-pass".path;
 
           mounts = {
             "" = {
