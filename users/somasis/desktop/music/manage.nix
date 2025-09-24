@@ -6,7 +6,7 @@
 }:
 {
   home.packages = with pkgs; [
-    (beets-unstable.override {
+    (beets.override {
       pluginOverrides.alias = {
         enable = true;
         propagatedBuildInputs = [ beets-alias ];
