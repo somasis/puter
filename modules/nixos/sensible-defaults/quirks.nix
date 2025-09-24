@@ -41,8 +41,6 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
-
-    inherit (final.master) beets beets-unstable beetsPackages;
   };
 in
 {
