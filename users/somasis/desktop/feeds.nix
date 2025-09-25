@@ -27,4 +27,9 @@
       }
     ];
   };
+
+  programs.qutebrowser = {
+    aliases.news-add = "open -rt https://nxc.journcy.net/apps/news/#?subscribe_to={url}";
+    keyBindings.normal.zr = "news-add";
+  };
 }

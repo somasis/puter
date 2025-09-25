@@ -133,9 +133,7 @@ in
     };
 
     keyBindings.normal = {
-      # pp = "print --pdf ${config.xdg.userDirs.download}/{title}.pdf";
       pr = "rdrview";
-
       zpr = "rdrview";
       zpR = "render";
     };
