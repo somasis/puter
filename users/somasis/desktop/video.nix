@@ -254,4 +254,8 @@ in
 
     shellAliases.ytaudio = "yt-dlp --format bestaudio --extract-audio --audio-format wav";
   };
+
+  xdg.autostart.entries = [
+    "${pkgs.jellyfin-mpv-shim}/share/applications/jellyfin-mpv-shim.desktop"
+  ];
 }
