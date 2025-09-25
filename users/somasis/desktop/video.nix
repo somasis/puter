@@ -174,6 +174,7 @@ in
         # pkgs.mpvScripts.autoload
         pkgs.mpvScripts.mpris
         pkgs.mpvScripts.sponsorblock
+        pkgs.mpvScripts.mpv-webm
         # pkgs.mpvScripts.thumbnail
 
         # Conflicts with mpvScripts.thumbnail
