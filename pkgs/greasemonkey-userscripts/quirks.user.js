@@ -86,6 +86,12 @@
     document.location = `https://github.com/${parts[1]}/pull/${parts[2]}`;
   }
 
+  /* coursera.org: remove the AI Coach nonsense */
+  if (matchURL({ hostname: "{www.}?coursera.org", pathname: "*/learn/*" })) {
+    style+= `
+      div.css-1ga2wwn { display: none; }
+    `;
+
   /* nytimes.com: Hide Wordle ad container */
   if (
     matchURL({ hostname: "{www.}?nytimes.com", pathname: "*/games/wordle/*" })
