@@ -5,7 +5,6 @@
   ...
 }:
 let
-  inherit (config.lib.somasis) feeds;
 
   philpapers =
     {
