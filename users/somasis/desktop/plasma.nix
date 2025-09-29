@@ -33,6 +33,10 @@ assert osConfig.services.desktopManager.plasma6.enable;
           method = "symlink";
         })
         [
+          # NOTE this is just where I've chosen to store my monitor
+          # color profiles, nothing official about this
+          "color-profiles"
+
           "baloo"
           "dbus-1"
           "dolphin"
