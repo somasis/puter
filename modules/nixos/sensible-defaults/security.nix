@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -37,11 +38,17 @@
         });
       '');
     };
+
+    apparmor = {
+      enable = true;
+      enableCache = true;
+      packages = [ pkgs.roddhjav-apparmor-rules ];
+    };
   };
 
-  boot.initrd.network.ssh = {
-    # Add the SSH keys of all users in the wheel group to the initrd
-    # SSH server's authorized keys as well.
-    authorizedKeys = config.lib.somasis.sshKeysForGroups [ "wheel" ];
-  };
+  services.dbus.apparmor = "enabled";
+
+  # Add the SSH keys of all users in the wheel group to the initrd
+  # SSH server's authorized keys as well.
+  boot.initrd.network.ssh.authorizedKeys = config.lib.somasis.sshKeysForGroups [ "wheel" ];
 }
