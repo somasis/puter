@@ -27,7 +27,6 @@
       ./pass.nix
       ./rclone.nix
       ./shell
-      ./skim.nix
       ./ssh.nix
       ./syncthing.nix
       ./theme

@@ -5,45 +5,6 @@
   osConfig,
   ...
 }:
-let
-  commaPicker = lib.optionalString config.programs.skim.enable (
-    pkgs.writeShellScript "comma-picker" ''
-      : "''${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
-
-      items=$(</dev/stdin)
-      case "$(wc -l <<<"$items")" in
-          1)
-              printf '%s\n' "$items"
-              printf '%s%s\n' "''${PS4:-$ }" "$items" >&2
-              exit
-              ;;
-          0) exit 1 ;;
-      esac
-
-      hash=$(
-          printf '%s\0' "$(tty)" "$items" "$PPID" \
-              | sha256sum \
-              | cut -d ' ' -f1
-      )
-
-      last_choice_file="$XDG_RUNTIME_DIR"/comma."$hash"
-
-      choice=$(
-          if [ -z "''${COMMA_PICKER_OVERRIDE:-}" ] && [ -s "$last_choice_file" ]; then
-              printf '%s\n' "$last_choice"
-              printf 'using last choice (%s); run again with ,, to override\n' "''${last_choice@Q}" >&2
-          else
-              sk -p ', ' --no-sort --reverse <<< "$items"
-              exit $?
-          fi
-      )
-
-      if [ -n "$choice" ]; then
-          printf '%s\n' "$choice" | tee "$last_choice_file"
-      fi
-    ''
-  );
-in
 {
   home.shellAliases = rec {
     # LC_COLLATE=C sorts uppercase before lowercase.
@@ -93,8 +54,6 @@ in
     watch = "watch -n1 -c ";
 
     which = "{ alias; declare -f; } | which --read-functions --read-alias";
-
-    ",," = "COMMA_PICKER_OVERRIDE=true ,";
   };
 
   home.packages = [
@@ -146,20 +105,7 @@ in
       exit "$error_code"
     '')
 
-    (
-      if commaPicker != "" then
-        (pkgs.wrapCommand {
-          package = pkgs.comma;
-          wrappers = [
-            {
-              command = "/bin/,";
-              setEnvironmentDefault.COMMA_PICKER = commaPicker;
-            }
-          ];
-        })
-      else
-        pkgs.comma
-    )
+    pkgs.comma
   ];
 
   programs.bash.initExtra = ''
@@ -171,9 +117,8 @@ in
     man() {
         local man_args=( "$@" )
 
-        local COMMA_NIXPKGS_FLAKE COMMA_PICKER
+        local COMMA_NIXPKGS_FLAKE
         : "''${COMMA_NIXPKGS_FLAKE:=nixpkgs}"
-        : "''${COMMA_PICKER:=${lib.escapeShellArg commaPicker}}"
 
         local MANPATH="$MANPATH"
         local old_MANPATH="$MANPATH"
@@ -253,4 +198,27 @@ in
     parallel
     parallel-max = 4
   '';
+
+  programs.fzf = {
+    enable = true;
+    colors = {
+      bg = "-1";
+      fg = "-1";
+      "bg+" = config.theme.colors.accent;
+      "fg+" = "-1";
+
+      hl = "1";
+
+      gutter = "-1";
+      prompt = config.theme.colors.brightAccent;
+      pointer = config.theme.colors.brightAccent;
+      info = "7";
+    };
+
+    defaultOptions = [
+      "--height=~50%"
+      "--info=inline"
+      "--prompt=∴ "
+    ];
+  };
 }
