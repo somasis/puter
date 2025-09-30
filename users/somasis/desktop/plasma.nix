@@ -41,7 +41,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
           "dbus-1"
           "dolphin"
           "drkonqirc"
-          "icons"
           "kactivitymanagerd"
           "klipper"
           "knewstuff3"

@@ -117,12 +117,12 @@
       directory = config.lib.somasis.xdgDataDir "applications";
     }
     {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "containers";
+      method = "bindfs";
+      directory = config.lib.somasis.xdgDataDir "icons";
     }
     {
       method = "symlink";
-      directory = "logs";
+      directory = config.lib.somasis.xdgDataDir "containers";
     }
   ];
 
