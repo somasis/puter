@@ -1,6 +1,7 @@
 {
   config,
   osConfig,
+  lib,
   pkgs,
   ...
 }:
@@ -24,6 +25,9 @@ in
       package = pkgs.syncthingtray-qt6;
     };
   };
+
+  # The service conflicts with the Plasma applet.
+  systemd.user.services.syncthingtray.Install.WantedBy = lib.mkForce [ ];
 
   persist.files = [
     (config.lib.somasis.xdgConfigDir "syncthingtray.ini")
