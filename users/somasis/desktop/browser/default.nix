@@ -37,7 +37,7 @@ let
       case "''${1:-$(darkman get)}" in
           light)
               settings=(
-                  # 'colors.webpage.darkmode.enabled:false'
+                  'colors.webpage.darkmode.enabled:false'
                   'colors.tabs.bar.bg:"${settings.colors.tabs.bar.bg}"'
                   'colors.completion.even.bg:"${settings.colors.completion.even.bg}"'
                   'colors.completion.odd.bg:"${settings.colors.completion.odd.bg}"'
@@ -46,7 +46,7 @@ let
           ;;
           dark)
               settings=(
-                  # 'colors.webpage.darkmode.enabled:true'
+                  'colors.webpage.darkmode.enabled:true'
                   'colors.tabs.bar.bg:"${colors.darkWindowBackground}"'
                   'colors.completion.even.bg:"${colors.menuLightBackground}"'
                   'colors.completion.odd.bg:"${colors.menuLightBackground}"'
@@ -807,6 +807,11 @@ in
 
           normal."zsm" = "open -rt https://mastodon.social/authorize_interaction?uri={url}";
           normal."zst" = "open -rt https://twitter.com/share?url={url}";
+
+          normal."tdh" = ''config-cycle -p -t -u *://{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
+          normal."tdu" = ''config-cycle -p -t -u {url} colors.webpage.darkmode.enabled ;; reload'';
+          normal."tdH" =
+            ''config-cycle -p -t -u *://*.{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
 
           prompt."<Alt+Up>" = "rl-filename-rubout";
         }
