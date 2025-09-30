@@ -11,10 +11,10 @@
       method = "symlink";
       directory = "sync";
     }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgStateDir "syncthing";
-    }
+    # {
+    #   method = "symlink";
+    #   directory = config.lib.somasis.xdgStateDir "syncthing";
+    # }
   ];
 
   systemd.user.services.syncthing = {

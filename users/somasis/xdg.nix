@@ -51,6 +51,8 @@ in
           run ln -Tsf ${lib.escapeShellArg config.xdg.configHome} ~/.config
           if ! [ -L ~/.cache ] && [ -d ~/.cache ]; then run mv ~/.cache ~/.cache.bak; fi
           run ln -Tsf ${lib.escapeShellArg config.xdg.cacheHome} ~/.cache
+          if ! [ -L ~/.local/state ] && [ -d ~/.local/state ]; then run mv ~/.local/state ~/.local/state.bak; fi
+          run ln -Tsf ${lib.escapeShellArg config.xdg.stateHome} ~/.local/state
         '';
 
     preferXdgDirectories = true;
@@ -67,9 +69,8 @@ in
     # > but that is not important or portable enough to the user that it should be stored in
     # > $XDG_DATA_HOME.
     # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
-    # (config.lib.somasis.relativeToHome config.xdg.stateHome)
     {
-      method = "symlink";
+      method = "bindfs";
       directory = relativeToHome config.xdg.stateHome;
     }
 
