@@ -127,7 +127,11 @@ rec {
         directory = xdgConfigDir "libreoffice/4";
       }
     ];
-    files = [ (xdgConfigDir "LanguageTool/LibreOffice/Languagetool.cfg") ];
+
+    files = [
+      (xdgConfigDir "LanguageTool/LibreOffice/Languagetool.cfg")
+      (xdgConfigDir "LanguageTool/LibreOffice/LanguageTool.log")
+    ];
   };
 
   cache.directories = [
@@ -140,7 +144,6 @@ rec {
       directory = xdgCacheDir "libreoffice/backups";
     }
   ];
-  log.files = [ (xdgConfigDir "LanguageTool/LibreOffice/LanguageTool.log") ];
 
   xdg = {
     configFile = {

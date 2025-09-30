@@ -35,11 +35,6 @@ let
         This directory is used for less permanent data, such as what would go in
         $XDG_CACHE_HOME.
       '';
-      log = mkPath "/log/${config.home.homeDirectory}" ''
-        The system's default log directory.
-        This directory is used for somewhat permanent data, such as what would go in
-        $XDG_CACHE_HOME.
-      '';
       sync = mkPath "/persist/sync/${config.home.homeDirectory}" ''
         The system's default synchronized persist directory.
         This directory is used for more permanent data, such as what would go in
@@ -51,7 +46,6 @@ let
     imports = [
       (mkAliasOptionModule [ "persist" ] [ "home" "persistence" config.persistence.persist ])
       (mkAliasOptionModule [ "cache" ] [ "home" "persistence" config.persistence.cache ])
-      (mkAliasOptionModule [ "log" ] [ "home" "persistence" config.persistence.log ])
       (mkAliasOptionModule [ "sync" ] [ "home" "persistence" config.persistence.sync ])
     ];
   };

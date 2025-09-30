@@ -51,15 +51,9 @@
 
   persist = {
     hideMounts = true;
-    directories = [ "/var/lib/systemd" ];
-  };
-
-  cache.hideMounts = true;
-
-  log = {
-    hideMounts = true;
-
     directories = [
+      "/var/lib/systemd"
+
       {
         directory = "/var/log/journal";
         user = "root";
@@ -67,12 +61,15 @@
         mode = "2755";
       }
     ];
+
     files = [
       "/var/log/btmp"
       "/var/log/wtmp"
       "/etc/machine-id"
     ];
   };
+
+  cache.hideMounts = true;
 
   programs = {
     command-not-found.enable = false;

@@ -153,11 +153,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
 
     files = map config.lib.somasis.xdgDataDir [
       "krunnerstaterc"
-    ];
-  };
-
-  log = {
-    files = map config.lib.somasis.xdgDataDir [
       "qtposition-geoclue2"
       # "recently-used.xbel"
     ];

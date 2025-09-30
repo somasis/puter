@@ -40,11 +40,6 @@
     allowOther = true;
   };
 
-  log = {
-    defaultDirectoryMethod = "symlink";
-    allowOther = true;
-  };
-
   persist = {
     defaultDirectoryMethod = "symlink";
     allowOther = true;

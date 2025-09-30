@@ -1,16 +1,6 @@
+{ config, ... }:
 {
-  config,
-  osConfig,
-  lib,
-  ...
-}:
-{
-  services.syncthing = {
-    enable = true;
-    extraOptions = [
-      "--logflags=0" # Don't prefix log lines with date and time, since systemd does
-    ];
-  };
+  services.syncthing.enable = true;
 
   persist.directories = [
     {
@@ -20,6 +10,10 @@
     {
       method = "symlink";
       directory = "sync";
+    }
+    {
+      method = "symlink";
+      directory = config.lib.somasis.xdgStateDir "syncthing";
     }
   ];
 

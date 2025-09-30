@@ -95,12 +95,6 @@
       neededForBoot = true;
     };
 
-    "/log" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/root/log";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
-
     "/persist" = {
       device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
       fsType = "zfs";

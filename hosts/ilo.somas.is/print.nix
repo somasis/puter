@@ -18,6 +18,12 @@
       mode = "0755";
       directory = "/var/lib/cups";
     }
+    {
+      mode = "0755";
+      user = "root";
+      group = "lp";
+      directory = "/var/log/cups";
+    }
   ];
 
   cache.directories = [
@@ -32,15 +38,6 @@
       user = "root";
       group = "lp";
       directory = "/var/spool/cups";
-    }
-  ];
-
-  log.directories = [
-    {
-      mode = "0755";
-      user = "root";
-      group = "lp";
-      directory = "/var/log/cups";
     }
   ];
 

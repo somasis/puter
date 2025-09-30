@@ -29,11 +29,6 @@ in
       This directory is used for less permanent data, such as what would go in
       /var/cache.
     '';
-    log = mkPath "/log" ''
-      The system's default log directory.
-      This directory is used for somewhat permanent data, such as what would go in
-      /var/log, or /var/spool.
-    '';
     sync = mkPath "/persist/sync" ''
       The system's default synchronized persist directory. It is able to be shared
       between synchronized machines with, say, Syncthing (services.syncthing).
@@ -44,7 +39,6 @@ in
   imports = [
     (mkAliasOptionModule [ "persist" ] [ "environment" "persistence" config.persistence.persist ])
     (mkAliasOptionModule [ "cache" ] [ "environment" "persistence" config.persistence.cache ])
-    (mkAliasOptionModule [ "log" ] [ "environment" "persistence" config.persistence.log ])
     (mkAliasOptionModule [ "sync" ] [ "environment" "persistence" config.persistence.sync ])
   ];
 
