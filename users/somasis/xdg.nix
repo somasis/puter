@@ -51,6 +51,8 @@ in
           run ln -Tsf ${lib.escapeShellArg config.xdg.configHome} ~/.config
           if ! [ -L ~/.cache ] && [ -d ~/.cache ]; then run mv ~/.cache ~/.cache.bak; fi
           run ln -Tsf ${lib.escapeShellArg config.xdg.cacheHome} ~/.cache
+          if ! [ -L ~/.local/share ] && [ -d ~/.local/share ]; then run mv ~/.local/share ~/.local/share.bak; fi
+          run ln -Tsf ${lib.escapeShellArg config.xdg.dataHome} ~/.local/share
           if ! [ -L ~/.local/state ] && [ -d ~/.local/state ]; then run mv ~/.local/state ~/.local/state.bak; fi
           run ln -Tsf ${lib.escapeShellArg config.xdg.stateHome} ~/.local/state
         '';
