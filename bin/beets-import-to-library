@@ -252,7 +252,7 @@ for import; do
                     export NTFY_TOPIC NTFY_CONFIG NTFY_FILE
 
                     export NTFY_TITLE="beets-import-to-library: Failed while importing (error code: ${import_exit})"
-                    export NTFY_MESSAGE="${format}"
+                    export NTFY_MESSAGE="${import}"
                     export NTFY_TAGS="${NTFY_TAGS:+$NTFY_TAGS,}speech_balloon"
                     export NTFY_PRIORITY="${NTFY_PRIORITY:-4}"
 
