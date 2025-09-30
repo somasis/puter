@@ -521,8 +521,6 @@ in
         ];
 
         colors = {
-          webpage.bg = "";
-
           downloads = {
             bar.bg = tc.windowBackground;
             start.bg = tc.windowBackground;
