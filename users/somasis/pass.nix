@@ -50,7 +50,7 @@ in
     files = [
       (config.lib.somasis.xdgDataDir "qutebrowser/keepassxc.key")
     ];
-  }
+  };
 
   home.packages =
     with pkgs;
