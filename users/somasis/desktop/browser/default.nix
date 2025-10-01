@@ -239,6 +239,7 @@ in
         anchor-links
         bandcamp-extended-album-history
         bandcamp-volume-bar
+        betterttv
         collapse-hackernews-parent-comments
         ctrl-enter-is-submit-everywhere
         fastmail-without-bevels

@@ -310,6 +310,13 @@ in
       + "/vqfft.user.js";
   };
 
+  betterttv = mkGreasemonkeyScript {
+    pname = "betterttv";
+    version = "0.0.2";
+    url = "https://nightdev.com/betterttv/other/betterttv.user.js";
+    hash = "sha256-xVHHhhxmhgTV+C0QSWJpvxq0r7R1Pe1LGPzc9bsBvU8=";
+  };
+
   disable-google-search-result-url-redirector = mkGreasemonkeyScript {
     pname = "disable-google-search-result-url-redirector";
     version = "1.1.16";
