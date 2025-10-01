@@ -87,7 +87,7 @@
   }
 
   /* coursera.org: remove the AI Coach nonsense */
-  if (matchURL({ hostname: "{www.}?coursera.org", pathname: "*/learn/*" })) {
+  if (matchURL({ hostname: "{www.}?coursera.org", pathname: "*/learn/*" }))
     style+= `
       div.css-1ga2wwn { display: none; }
     `;
