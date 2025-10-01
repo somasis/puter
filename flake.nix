@@ -254,56 +254,71 @@
       );
 
       # Development environment
-      checks = forAllSystems (system: {
-        git-hooks = git-hooks.lib.${system}.run {
-          src = ./.;
+      checks = forAllSystems (
+        system:
+        let
+          pkgs = pkgsFor.${system};
+        in
+        {
+          git-hooks = git-hooks.lib.${system}.run rec {
+            src = ./.;
 
-          hooks = {
-            # Git style
-            gitlint.enable = true;
+            hooks = {
+              # Git style
+              gitlint.enable = true;
 
-            check-merge-conflicts.enable = true;
+              check-merge-conflicts.enable = true;
 
-            # Nix-related hooks
-            # FIXME: maybe statix is a little too harsh for pre-commit usage...
-            # statix.enable = true; # Lint Nix code.
+              # Nix-related hooks
+              # FIXME: maybe statix is a little too harsh for pre-commit usage...
+              # statix.enable = true; # Lint Nix code.
 
-            # Ensure we don't have commit anything bad
-            check-added-large-files.enable = true; # avoid committing binaries when possible
-            check-executables-have-shebangs = {
-              enable = true;
-              excludes = [ ".+.desktop$" ];
-            };
+              # Ensure we don't have commit anything bad
+              check-added-large-files.enable = true; # avoid committing binaries when possible
+              check-executables-have-shebangs = {
+                enable = true;
+                excludes = [ ".+\.desktop$" ];
+              };
 
-            check-shebang-scripts-are-executable.enable = true;
-            check-vcs-permalinks.enable = true; # don't use version control links that could rot
-            check-symlinks.enable = true; # dead symlinks specifically
-            detect-private-keys.enable = true;
+              check-shebang-scripts-are-executable.enable = true;
+              check-vcs-permalinks.enable = true; # don't use version control links that could rot
+              check-symlinks.enable = true; # dead symlinks specifically
+              detect-private-keys.enable = true;
 
-            # Ensure we actually follow our .editorconfig rules.
-            # editorconfig-checker = {
-            #   enable = true;
-            #   types = lib.mkForce [ "text" ];
+              # Ensure we actually follow our .editorconfig rules.
+              # editorconfig-checker = {
+              #   enable = true;
+              #   types = lib.mkForce [ "text" ];
 
-            #   # Disable max-line-length checks, since nixfmt doesn't always wrap lines exactly,
-            #   # for example with long strings that go over the line but can't be wrapped easily.
-            #   entry = "${pkgs.editorconfig-checker}/bin/editorconfig-checker -disable-max-line-length";
-            # };
+              #   # Disable max-line-length checks, since nixfmt doesn't always wrap lines exactly,
+              #   # for example with long strings that go over the line but can't be wrapped easily.
+              #   entry = "${pkgs.editorconfig-checker}/bin/editorconfig-checker -disable-max-line-length";
+              # };
 
-            # Ensure we don't have dead links in comments or whatever.
-            # lychee.enable = true;
+              # Ensure we don't have dead links in comments or whatever.
+              # lychee.enable = true;
 
-            # shellcheck.enable = true;
+              # shellcheck.enable = true;
 
-            treefmt = {
-              enable = true;
-              package = treefmt.${system}.config.build.wrapper;
+              quick-lint-js = {
+                enable = true;
+                name = "quick-lint-js";
+                description = "Lint Javascript files";
+                package = pkgs.quick-lint-js;
+                entry = "${hooks.quick-lint-js.package}/bin/quick-lint-js";
+                files = "\\.js$";
+              };
+
+              treefmt = {
+                enable = true;
+                package = treefmt.${system}.config.build.wrapper;
+              };
             };
           };
-        };
 
-        formatting = treefmt.${system}.config.build.check self;
-      });
+          formatting = treefmt.${system}.config.build.check self;
+        }
+      );
 
       devShells = forAllSystems (
         system: with pkgsFor.${system}.pkgs; {

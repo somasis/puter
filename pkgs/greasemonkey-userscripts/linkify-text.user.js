@@ -9,6 +9,7 @@
 // @run-at        document-end
 // ==/UserScript==
 
+// linkifyPlusPlusCore comes from linkify-plus-plus-core.min.js.
 const { UrlMatcher, Linkifier } = linkifyPlusPlusCore;
 
 (function () {
