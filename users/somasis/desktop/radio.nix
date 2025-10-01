@@ -54,4 +54,8 @@ in
       directory = config.lib.somasis.xdgDataDir "radiotray-ng";
     }
   ];
+
+  xdg.autostart.entries = [
+    "${pkgs.radiotray-ng}/etc/xdg/autostart/radiotray-ng.desktop"
+  ];
 }
