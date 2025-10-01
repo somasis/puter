@@ -42,9 +42,15 @@ in
     (config.lib.somasis.xdgConfigDir "keepassxc")
   ];
 
-  cache.directories = [
-    (config.lib.somasis.xdgCacheDir "keepassxc")
-  ];
+  cache = {
+    directories = [
+      (config.lib.somasis.xdgCacheDir "keepassxc")
+    ];
+
+    files = [
+      (config.lib.somasis.xdgDataDir "qutebrowser/keepassxc.key")
+    ];
+  }
 
   home.packages =
     with pkgs;
