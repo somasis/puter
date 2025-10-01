@@ -40,7 +40,12 @@
       cache32Bit = true;
 
       antialias = true;
-      hinting.enable = true;
+      hinting = {
+        enable = true;
+
+        # Better for my 1080p monitor.
+        style = "medium";
+      };
 
       subpixel = {
         rgba = "none";

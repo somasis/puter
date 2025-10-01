@@ -37,6 +37,10 @@
 
   fonts.fontconfig = {
     enable = true;
+
+    # Better than "slight" on my 1080p monitor.
+    hinting = "medium";
+
     defaultFonts = {
       sansSerif = [
         "Inter"
