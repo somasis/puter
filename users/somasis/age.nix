@@ -18,7 +18,7 @@
   ];
 
   age = {
-    identityPaths = [ "${config.xdg.configHome}/age/identity.tpm" ];
+    identityPaths = [ "${config.xdg.configHome}/age/identity" ];
 
     # Workaround use of "${XDG_RUNTIME_DIR}" in the secrets path.
     # <https://github.com/ryantm/agenix/issues/300>
@@ -45,15 +45,15 @@
         ConditionSecurity = "tpm2";
 
         # and if additionally there are no existing TPM-generated keys.
-        ConditionPathExists = "!%E/age/identity.tpm";
+        ConditionPathExists = "!%E/age/identity";
       };
       Install.WantedBy = [ "default.target" ];
 
       Service = {
         Type = "oneshot";
         ExecStart = [
-          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm --generate -o %E/age/identity.tpm"
-          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm -y %E/age/identity.tpm -o %E/age/recipient"
+          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm --generate -o %E/age/identity"
+          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm -y %E/age/identity -o %E/age/recipient"
         ];
       };
     };
