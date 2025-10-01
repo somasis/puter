@@ -1,7 +1,7 @@
 {
   imports = [
     ./facebook.nix
-    # ./irc.nix
+    ./irc.nix
     ./matrix.nix
     # ./pidgin.nix
     ./signal.nix
