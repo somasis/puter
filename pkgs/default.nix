@@ -201,7 +201,6 @@ rec {
   # keep-sorted start
   aw-watcher-media-player = callPackage ./aw-watcher-media-player { };
   aw-watcher-netstatus = callPackage ./aw-watcher-netstatus { };
-  bandcamp-collection-downloader = callPackage ./bandcamp-collection-downloader { };
   beets-alias = callPackage ./beets-alias { };
   beets-fetchartist = callPackage ./beets-fetchartist { };
   beets-noimport = callPackage ./beets-noimport { };
@@ -217,12 +216,10 @@ rec {
   emojirunner = callPackage ./emojirunner { };
   execshell = callPackage ./execshell { };
   fcitx5-ilo-sitelen = callPackage ./fcitx5-ilo-sitelen { };
-  ffsclient = callPackage ./ffsclient { };
   greybeard = callPackage ./greybeard { };
   hledger-fmt = callPackage ./hledger-fmt { };
   ini2nix = callPackage ./ini2nix { inherit json2nix; };
   jhide = callPackage ./jhide { };
-  jqfmt = callPackage ./jqfmt { };
   json2nix = callPackage ./json2nix { };
   krunner-pass-unstable = callPackage ./krunner-pass-unstable { };
   krunner-zotero-unstable = callPackage ./krunner-zotero-unstable { };
