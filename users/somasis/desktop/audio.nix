@@ -53,4 +53,6 @@
       + "/share/applications/jdsp-gui.desktop"
     )
   ];
+
+  services.easyeffects.enable = true;
 }
