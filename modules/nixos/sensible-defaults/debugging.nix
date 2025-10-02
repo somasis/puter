@@ -15,6 +15,7 @@
   programs = {
     htop.enable = true;
     iotop.enable = true;
+    tcpdump.enable = true;
     bandwhich.enable = true;
   };
 }
