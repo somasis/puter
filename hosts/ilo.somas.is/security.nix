@@ -28,15 +28,15 @@
         ConditionSecurity = "tpm2";
 
         # and if additionally there are no existing TPM-generated keys.
-        ConditionPathExists = "!%E/age/identity.tpm";
+        ConditionPathExists = "!%E/age/identity";
       };
       wantedBy = [ "default.target" ];
 
       serviceConfig = {
         Type = "oneshot";
         ExecStart = [
-          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm --generate -o %E/age/identity.tpm"
-          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm -y %E/age/identity.tpm -o %E/age/recipient"
+          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm --generate -o %E/age/identity"
+          "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm -y %E/age/identity -o %E/age/recipient"
         ];
       };
     };
@@ -66,7 +66,6 @@
     ageBin = "PATH=${pkgs.age-plugin-tpm}/bin:$PATH ${pkgs.age}/bin/age";
 
     identityPaths = [
-      "/etc/age/identity.tpm"
       "/etc/age/identity"
     ];
   };
