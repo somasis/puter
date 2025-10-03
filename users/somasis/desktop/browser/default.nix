@@ -239,6 +239,7 @@ in
         anchor-links
         bandcamp-extended-album-history
         bandcamp-volume-bar
+        better-osm-org
         betterttv
         collapse-hackernews-parent-comments
         ctrl-enter-is-submit-everywhere

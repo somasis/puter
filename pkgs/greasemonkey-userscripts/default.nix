@@ -221,6 +221,21 @@ in
 {
   inherit mkGreasemonkeyScript;
 
+  better-osm-org = mkGreasemonkeyScript {
+    pname = "better-osm-org";
+    version = "1.2.0";
+    src =
+      fetchFromGitHub {
+        owner = "deevroman";
+        repo = "better-osm-org";
+        rev = "5469b36509ee9624b7b5f0d6a8c06322099a186c";
+        hash = "sha256-Y0Du8ivvTEiMCJUhEJMZvIkOoFXt2RmSrBn6Xnxsk4o=";
+      }
+      + "/better-osm-org.user.js";
+
+    meta.description = "Adds power-user features to OpenStreetMap.org";
+  };
+
   fastmail-without-bevels = mkUserstyle {
     pname = "fastmail-without-bevels";
     version = "20250805.14.44";
