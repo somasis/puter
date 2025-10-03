@@ -527,14 +527,14 @@ in
     assert (lib.isAttrs settings);
     mkGreasemonkeyScript {
       pname = "control-panel-for-twitter";
-      version = "199";
+      version = "200";
 
       src =
         fetchFromGitHub {
           owner = "insin";
           repo = "control-panel-for-twitter";
-          rev = "19ca25c13dafabc58c34a21a6412b8dc8ed77f7c";
-          hash = "sha256-N2N/wUdCTCaeos4CPmRe7HihUeOlXQG+KwAzD7gwf9k=";
+          rev = "v4.14.1";
+          hash = "sha256-L2chLJJLlKtuuTBfQWwp9oH1QWcHgJdq/mlJfP3mUlI=";
         }
         + "/script.js";
 
