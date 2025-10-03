@@ -144,5 +144,13 @@
         }
       `;
 
+  if (matchURL({ hostname: "app.fastmail.com" }))
+    style += `
+      .v-Page-main {
+        box-shadow: none !important;
+        border: 0 !important;
+      }
+    `;
+
   if (style != "") GM_addStyle(style);
 })();
