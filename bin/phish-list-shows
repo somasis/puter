@@ -18,8 +18,8 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [-lj] [-A <completeness>] [-S <sort>] [-n <count>]
-                [-s <state>] [-d (<date>[..<end>])]
+usage: ${0##*/} [-lj] [-A <completeness>] [-S <sort>] [-V <venue>]
+                [-d (<date>[..<end>])] [-n <count>] [-s <state>]
        ${0##*/} [-j] [-A <completeness>] [-D <dayofyear>] [-S <sort>]
        ${0##*/} [-Rj] <show>
 
@@ -47,6 +47,16 @@ options:
         ascending order. If a minus is suffixed, it will be printed
         in descending order. If no sort order is specified, the
         default order is determined by Phish.in's API defaults.
+
+    -V <venue>
+        Filter for shows played at <venue>. <venue> must match
+        only one venue name; this is because, in order to avoid
+        requiring the use of a pre-determined venue slug, we search
+        for venues using <venue> as a query. If the query produces
+        multiple results, all matching venues will be printed, so that
+        the venue query may be narrowed down. Due to the design of
+        Phish.in's API, this option cannot be combined with
+        -D <dayofyear>.
 
     -d (<year> | <date> | <start>.. | ..<end> | <start>..<end>)
         Filter for shows which have occurred during <year>, or on
@@ -109,6 +119,7 @@ shows() {
             ${per_page:+-d per_page="${per_page}"} \
             ${start_date:+-d start_date="${start_date}"} \
             ${us_state:+-d us_state="${us_state}"} \
+            ${venue_slug:+-d venue_slug="${venue_slug}"} \
             -d "page=${page:?no \$page set}" \
             "https://phish.in/api/v2/shows"
     fi
@@ -117,6 +128,38 @@ shows() {
 show() {
     : "${1:?error in show(): no date provided}"
     curl --fail-with-body --get "https://phish.in/api/v2/shows/${1}"
+}
+
+get_venue_slug() {
+    : "${1:?error in get_venue_slug(): no venue search query provided}"
+
+    local results result_count
+
+    results=$(
+        curl --fail-with-body --get \
+            ${audio_status:+-d audio_status="${audio_status}"} \
+            -d scope=venues \
+            --variable "query=${1}" \
+            --expand-url 'https://phish.in/api/v2/search/{{query:url}}'
+    )
+
+    results=$(<<<"$results" jq '.venues')
+    result_count=$(jq 'length' <<<"$results")
+
+    if [[ "$result_count" -eq 0 ]]; then
+        printf 'error: no results for query\n' >&2
+        exit 1
+    elif [[ "$result_count" -gt 1 ]]; then
+        mapfile -t results < <(<<<"$results" jq -r '.[] | (.name, .other_names[])')
+        printf '%s\n' \
+            'error: got multiple results for query; narrow down your query' \
+            'matching venues:' \
+            >&2
+        printf '    - %s\n' "${results[@]}" >&2
+        exit 1
+    fi
+
+    <<<"$results" jq -r '.[0].slug'
 }
 
 fetch_run() {
@@ -184,6 +227,7 @@ page=
 start_date=
 us_state=
 sort=
+venue_slug=
 
 # shellcheck disable=SC2209
 output=date
@@ -191,7 +235,7 @@ max_entries=all
 
 BASH_ARGV0="${0##*/}"
 
-while getopts A:D:S:d:Rjln:rs: opt; do
+while getopts A:D:S:V:d:Rjln:rs: opt; do
     case "$opt" in
         A)
             case "${OPTARG}" in
@@ -220,6 +264,12 @@ while getopts A:D:S:d:Rjln:rs: opt; do
                 date- | likes_count- | duration- | updated_at-) sort="${OPTARG%-}:desc" ;;
                 *) usage 'error: -S: invalid argument\n' ;;
             esac
+            ;;
+
+        V)
+            : "${OPTARG:?error: -V: no venue provided}"
+
+            venue_slug=$(get_venue_slug "${OPTARG}")
             ;;
 
         d)
