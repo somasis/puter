@@ -6,109 +6,111 @@
   ...
 }:
 {
-  home.shellAliases = rec {
-    # LC_COLLATE=C sorts uppercase before lowercase.
-    ls = "LC_COLLATE=C ls --hyperlink=auto --group-directories-first --dereference-command-line-symlink-to-dir --time-style=iso --color -AFlh";
-    chown = "chown -c";
-    chmod = "chmod -c";
+  home = {
+    shellAliases = rec {
+      # LC_COLLATE=C sorts uppercase before lowercase.
+      ls = "LC_COLLATE=C ls --hyperlink=auto --group-directories-first --dereference-command-line-symlink-to-dir --time-style=iso --color -AFlh";
+      chown = "chown -c";
+      chmod = "chmod -c";
 
-    vi = "$EDITOR";
+      vi = "$EDITOR";
 
-    ip = "ip --color=auto";
+      ip = "ip --color=auto";
 
-    bc = "bc -q";
-    number = "nl -b a -d '' -f n -w 1";
+      bc = "bc -q";
+      number = "nl -b a -d '' -f n -w 1";
 
-    diff = "diff --color";
+      diff = "diff --color";
 
-    grep = "grep --color";
+      grep = "grep --color";
 
-    g = "find -L ./ -type f \! -path '*/.*/*' -print0 | xe -0 -N0 grep --color -n";
-    f = "bfs -regextype posix-egrep -status";
+      g = "find -L ./ -type f \! -path '*/.*/*' -print0 | xe -0 -N0 grep --color -n";
+      f = "bfs -regextype posix-egrep -status";
 
-    xq = "yq -p xml -o xml";
+      xq = "yq -p xml -o xml";
 
-    xz = "xz -T0 -9 -e";
-    zstd = "zstd -T0 -19";
-    gzip = "pigz -p $(( $(nproc) / 2 )) -9";
+      xz = "xz -T0 -9 -e";
+      zstd = "zstd -T0 -19";
+      gzip = "pigz -p $(( $(nproc) / 2 )) -9";
 
-    sys = "systemctl --legend=no";
-    user = "sys --user";
+      sys = "systemctl --legend=no";
+      user = "sys --user";
 
-    journal = "journalctl -e";
-    syslog = "journal -b 0 --system";
+      journal = "journalctl -e";
+      syslog = "journal -b 0 --system";
 
-    # Exclude log level 7 (debug messages) for user journal, since it is usually
-    # flooded with debug messages from KDE Plasma or KWin or any of that.
-    userlog = "journal --user -p 0..6";
+      # Exclude log level 7 (debug messages) for user journal, since it is usually
+      # flooded with debug messages from KDE Plasma or KWin or any of that.
+      userlog = "journal --user -p 0..6";
 
-    bus = "busctl --verbose --json=short";
+      bus = "busctl --verbose --json=short";
 
       wget = "wcurl";
 
-    since = "datediff -f '%Yy %mm %ww %dd %0Hh %0Mm %0Ss'";
+      since = "datediff -f '%Yy %mm %ww %dd %0Hh %0Mm %0Ss'";
 
-    sudo = lib.mkIf osConfig.security.sudo.enable "sudo "; # trailing space means sudo will use aliases
-    doas = lib.mkIf osConfig.security.sudo.enable "sudo";
+      sudo = lib.mkIf osConfig.security.sudo.enable "sudo "; # trailing space means sudo will use aliases
+      doas = lib.mkIf osConfig.security.sudo.enable "sudo";
 
-    watch = "watch -n1 -c ";
+      watch = "watch -n1 -c ";
 
-    which = "{ alias; declare -f; } | which --read-functions --read-alias";
+      which = "{ alias; declare -f; } | which --read-functions --read-alias";
+    };
+
+    packages = [
+      pkgs.rmlint
+
+      pkgs.spacer
+      pkgs.nocolor
+
+      (pkgs.writeShellScriptBin "execurl" ''
+        fetch_directory=$(${pkgs.coreutils}/bin/mktemp -d)
+
+        fetch() {
+            local file
+
+            printf '%s -> ' "$1" >&2
+            file=$(
+                ${pkgs.curl}/bin/curl \
+                    -g \
+                    -Lfs# \
+                    --output-dir "$fetch_directory" \
+                    -o "file" \
+                    --remote-name \
+                    --remote-time \
+                    --no-clobber \
+                    --remote-header-name \
+                    --remote-name-all \
+                    --remove-on-error \
+                    -w '%{filename_effective}\n' \
+                    "$1"
+            )
+            printf '%s\n' "$file" >&2
+
+            printf '%s' "$file"
+        }
+
+        error_code=0
+        arguments=()
+
+        for argument; do
+            if ${pkgs.trurl}/bin/trurl --no-guess-scheme --verify --url "$argument" >/dev/null 2>&1; then
+                arguments+=( "$(fetch "$argument")" )
+            else
+                arguments+=( "$argument" )
+            fi
+        done
+
+        "''${arguments[@]}" || error_code=$?
+        ${pkgs.coreutils}/bin/rm -rf "$fetch_directory"
+        exit "$error_code"
+      '')
+
+      pkgs.comma
+    ];
+
+    sessionVariables.COMMA_PICKER = "fzf";
   };
-
-  home.sessionVariables.COMMA_PICKER = "fzf";
-
-  home.packages = [
-    pkgs.rmlint
-
-    pkgs.spacer
-    pkgs.nocolor
-
-    (pkgs.writeShellScriptBin "execurl" ''
-      fetch_directory=$(${pkgs.coreutils}/bin/mktemp -d)
-
-      fetch() {
-          local file
-
-          printf '%s -> ' "$1" >&2
-          file=$(
-              ${pkgs.curl}/bin/curl \
-                  -g \
-                  -Lfs# \
-                  --output-dir "$fetch_directory" \
-                  -o "file" \
-                  --remote-name \
-                  --remote-time \
-                  --no-clobber \
-                  --remote-header-name \
-                  --remote-name-all \
-                  --remove-on-error \
-                  -w '%{filename_effective}\n' \
-                  "$1"
-          )
-          printf '%s\n' "$file" >&2
-
-          printf '%s' "$file"
-      }
-
-      error_code=0
-      arguments=()
-
-      for argument; do
-          if ${pkgs.trurl}/bin/trurl --no-guess-scheme --verify --url "$argument" >/dev/null 2>&1; then
-              arguments+=( "$(fetch "$argument")" )
-          else
-              arguments+=( "$argument" )
-          fi
-      done
-
-      "''${arguments[@]}" || error_code=$?
-      ${pkgs.coreutils}/bin/rm -rf "$fetch_directory"
-      exit "$error_code"
-    '')
-
-    pkgs.comma
-  ];
 
   programs.bash.initExtra = ''
     # Spawn a new terminal, detached from the current one, inheriting environment and working directory.
