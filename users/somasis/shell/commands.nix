@@ -44,7 +44,7 @@
 
     bus = "busctl --verbose --json=short";
 
-    wget = "curl -q -Lf# -Z --no-clobber --remote-name-all --remote-header-name --remove-on-error --retry 20 --retry-delay 10";
+      wget = "wcurl";
 
     since = "datediff -f '%Yy %mm %ww %dd %0Hh %0Mm %0Ss'";
 
