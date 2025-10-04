@@ -56,6 +56,8 @@
     which = "{ alias; declare -f; } | which --read-functions --read-alias";
   };
 
+  home.sessionVariables.COMMA_PICKER = "fzf";
+
   home.packages = [
     pkgs.rmlint
 
@@ -119,6 +121,7 @@
 
         local COMMA_NIXPKGS_FLAKE
         : "''${COMMA_NIXPKGS_FLAKE:=nixpkgs}"
+        : "''${COMMA_PICKER:=$(command -v fzy || printf 'nix run %s#fzy' "''${COMMA_NIXPKGS_FLAKE}")}"
 
         local MANPATH="$MANPATH"
         local old_MANPATH="$MANPATH"
