@@ -28,6 +28,8 @@ in
         ];
       })
 
+      koko
+
       krita
 
       darktable
@@ -69,6 +71,13 @@ in
     ];
   };
 
+  persist.directories = [
+    {
+      method = "symlink";
+      directory = xdgDataDir "koko";
+    }
+  ];
+
   cache = {
     directories = [
       {
@@ -87,6 +96,10 @@ in
       {
         method = "symlink";
         directory = xdgCacheDir "gallery-dl";
+      }
+      {
+        method = "symlink";
+        directory = xdgCacheDir "koko";
       }
     ];
     files = [
