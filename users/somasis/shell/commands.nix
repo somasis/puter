@@ -150,21 +150,23 @@
         if command man -w "''${man_args[@]}" >/dev/null 2>&1; then
             command man "''${man_args[@]}"
         else
-            local regex
+            local regex page
             while [[ "$#" -ge 1 ]]; do
                 for man_section in "''${man_sections[@]}"; do
                     if [[ "$1" == "$man_section" ]] && [[ "$#" -ge 2 ]]; then
                         regex='/share/man/man'"$man_section"'/'"$2"'\.'"$man_section"
+                        page="$2"
                         shift
                         break
                     else
                         regex='/share/man/man.*'/"$1"'\.'
+                        page="$1"
                         break
                     fi
                 done
                 shift
 
-                [[ -t 2 ]] && printf 'searching for packages containing manpage %s...\n' "$1" >&2 || :
+                [[ -t 2 ]] && printf 'searching for packages containing manpage %s...\n' "$page" >&2 || :
                 new_man_path=$(nix-locate --minimal --at-root --regex "$regex" 2>/dev/null | grep -v '^(')
                 [[ -n "$new_man_path" ]] || continue
 
