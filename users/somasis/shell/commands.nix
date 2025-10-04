@@ -42,7 +42,7 @@
     # flooded with debug messages from KDE Plasma or KWin or any of that.
     userlog = "journal --user -p 0..6";
 
-    bus = "busctl --verbose -j";
+    bus = "busctl --verbose --json=short";
 
     wget = "curl -q -Lf# -Z --no-clobber --remote-name-all --remote-header-name --remove-on-error --retry 20 --retry-delay 10";
 
