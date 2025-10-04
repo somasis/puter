@@ -49,7 +49,7 @@
         # keep-sorted start
         bc
         ffmpeg-full
-        gucharmap
+        kcharselect
         hyperfine
         okteta
         zenity
