@@ -33,13 +33,17 @@ options:
 
     -D <dayofyear>
         Filter for shows which occurred on a given <dayofyear>.
+        Due to the design of the Phish.in API, this option cannot
+        be combined with options -V <venue>, -n <count>, -s <state>,
+        or -l.
 
     -R
         Get all shows in a run; a run, being shows performed at the
         same venue, multiple days in a row, preceding or following
         the given <show> date. For example, given the show date
         2009-03-06, the shows 2009-03-07, and 2009-03-08 would also
-        be printed.
+        be printed. This option can only be used when querying for a
+        specific show date.
 
     -S ("date" | "likes_count" | "duration" | "updated_at")[+-]
         Sort the shows listed in the requested order. If a plus is
