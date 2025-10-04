@@ -96,6 +96,7 @@ phishin_auth() {
 
 curl() {
     set -- \
+        --globoff \
         --no-progress-meter --user-agent "${user_agent}" \
         ${PHISHIN_USER_TOKEN:+--variable %PHISHIN_USER_TOKEN} \
         ${PHISHIN_USER_TOKEN:+--expand-header X-Auth-Token:\ \{\{PHISHIN_USER_TOKEN\}\}} \
