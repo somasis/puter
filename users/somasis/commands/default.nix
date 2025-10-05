@@ -38,6 +38,7 @@
     ltrace
     ncdu
     nq
+    (lib.meta.hiPrio num-utils) # conflicts with sgt-puzzles
     pandoc
     pastel
     patchutils
