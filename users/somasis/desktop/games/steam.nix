@@ -44,4 +44,16 @@ assert steam.enable;
   ];
 
   home.packages = [ pkgs.r2modman ];
+
+  xdg.autostart.entries = [
+    (
+      pkgs.makeDesktopItem {
+        name = "steam";
+        desktopName = "Steam (silent)";
+        exec = "steam -silent";
+        icon = "steam";
+      }
+      + "/share/applications/steam.desktop"
+    )
+  ];
 }
