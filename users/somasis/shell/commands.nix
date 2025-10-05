@@ -10,6 +10,7 @@
     shellAliases = rec {
       # LC_COLLATE=C sorts uppercase before lowercase.
       ls = "LC_COLLATE=C ls --hyperlink=auto --group-directories-first --dereference-command-line-symlink-to-dir --time-style=iso --color -AFlh";
+
       chown = "chown -c";
       chmod = "chmod -c";
 
@@ -21,7 +22,6 @@
       number = "nl -b a -d '' -f n -w 1";
 
       diff = "diff --color";
-
       grep = "grep --color";
 
       g = "find -L ./ -type f \! -path '*/.*/*' -print0 | xe -0 -N0 grep --color -n";
@@ -113,11 +113,6 @@
   };
 
   programs.bash.initExtra = ''
-    # Spawn a new terminal, detached from the current one, inheriting environment and working directory.
-    newt() (
-        nohup terminal "$@" >/dev/null 2>&1 &
-    )
-
     man() {
         local man_args=( "$@" )
 
