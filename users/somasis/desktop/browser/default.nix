@@ -142,6 +142,7 @@ in
   imports = [
     ./blocking.nix
     ./reader.nix
+    ./redirects.nix
     ./search.nix
   ];
 
