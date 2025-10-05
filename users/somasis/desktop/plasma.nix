@@ -8,10 +8,7 @@
 assert osConfig.services.desktopManager.plasma6.enable;
 {
   persist = {
-    directories = [
-      ".cert/nm-openvpn"
-    ]
-    ++
+    directories =
       map
         (x: {
           directory = config.lib.somasis.xdgConfigDir x;
@@ -26,36 +23,37 @@ assert osConfig.services.desktopManager.plasma6.enable;
           "plasma-workspace"
           "session"
         ]
-    ++
-      map
-        (x: {
-          directory = config.lib.somasis.xdgDataDir x;
-          method = "symlink";
-        })
-        [
-          # NOTE this is just where I've chosen to store my monitor
-          # color profiles, nothing official about this
-          "color-profiles"
+      ++
+        map
+          (x: {
+            directory = config.lib.somasis.xdgDataDir x;
+            method = "symlink";
+          })
+          [
+            # NOTE this is just where I've chosen to store my monitor
+            # color profiles, nothing official about this
+            "color-profiles"
 
-          "baloo"
-          "dbus-1"
-          "dolphin"
-          "drkonqirc"
-          "kactivitymanagerd"
-          "klipper"
-          "knewstuff3"
-          "kscreen"
-          "kwalletd"
-          "kwin"
-          "kxmlgui5"
-          "libkunitconversion"
-          "plasma"
-          "plasmashell"
-          "remoteview"
-          "sddm"
-          "systemmonitorrc"
-          "systemsettings"
-        ];
+            "baloo"
+            "dbus-1"
+            "dolphin"
+            "drkonqirc"
+            "kactivitymanagerd"
+            "klipper"
+            "knewstuff3"
+            "kscreen"
+            "kwalletd"
+            "kwin"
+            "kxmlgui5"
+            "libkunitconversion"
+            "networkmanagement"
+            "plasma"
+            "plasmashell"
+            "remoteview"
+            "sddm"
+            "systemmonitorrc"
+            "systemsettings"
+          ];
 
     files = [
       ".gtkrc-2.0" # kde-gtk-config
