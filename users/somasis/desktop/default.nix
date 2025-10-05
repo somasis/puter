@@ -49,8 +49,8 @@
         # keep-sorted start
         bc
         ffmpeg-full
-        kcharselect
         hyperfine
+        kcharselect
         okteta
         zenity
         # keep-sorted end

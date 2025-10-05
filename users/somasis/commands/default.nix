@@ -21,6 +21,7 @@
 
   home.packages = with pkgs; [
     # keep-sorted start
+    (lib.meta.hiPrio num-utils) # conflicts with sgt-puzzles
     as-tree
     dateutils
     ellipsis
@@ -38,7 +39,6 @@
     ltrace
     ncdu
     nq
-    (lib.meta.hiPrio num-utils) # conflicts with sgt-puzzles
     pandoc
     pastel
     patchutils
