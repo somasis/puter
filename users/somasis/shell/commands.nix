@@ -108,85 +108,90 @@
 
       pkgs.comma
     ];
-
-    sessionVariables.COMMA_PICKER = "fzf";
   };
 
-  programs.bash.initExtra = ''
-    man() {
-        local man_args=( "$@" )
+  programs.bash = {
+    sessionVariables.COMMA_PICKER = "fzf";
+    initExtra = ''
+      man() {
+          local man_args=( "$@" )
 
-        local COMMA_NIXPKGS_FLAKE
-        : "''${COMMA_NIXPKGS_FLAKE:=nixpkgs}"
-        : "''${COMMA_PICKER:=$(command -v fzy || printf 'nix run %s#fzy' "''${COMMA_NIXPKGS_FLAKE}")}"
+          local COMMA_NIXPKGS_FLAKE
+          : "''${COMMA_NIXPKGS_FLAKE:=nixpkgs}"
+          : "''${COMMA_PICKER:=$(command -v fzy || printf 'nix run %s#fzy' "''${COMMA_NIXPKGS_FLAKE}")}"
 
-        local MANPATH="$MANPATH"
-        local old_MANPATH="$MANPATH"
+          case "$COMMA_PICKER" in
+              fzf) export FZF_DEFAULT_OPTS="''${FZF_DEFAULT_OPTS:-} --select-1" ;;
+          esac
 
-        local man_sections man_section new_man_path
-        mapfile -t man_sections < <(
-            IFS=:
+          local MANPATH="$MANPATH"
+          local old_MANPATH="$MANPATH"
 
-            if [[ "''${MANPATH:0:1}" == : ]]; then
-                local MANPATH=( ''${MANPATH:1} )
-            else
-                local MANPATH=( ''${MANPATH} )
-            fi
-            unset IFS
+          local man_sections man_section new_man_path
+          mapfile -t man_sections < <(
+              IFS=:
 
-            find -L \
-                "''${MANPATH[@]}" \
-                -mindepth 1 \
-                -type d \
-                -name 'man*' \
-                -printf '%f\n' \
-                2>/dev/null \
-                | cut -c4- \
-                | sort -u
-        )
+              if [[ "''${MANPATH:0:1}" == : ]]; then
+                  local MANPATH=( ''${MANPATH:1} )
+              else
+                  local MANPATH=( ''${MANPATH} )
+              fi
+              unset IFS
 
-        MANPATH="$old_MANPATH"
+              find -L \
+                  "''${MANPATH[@]}" \
+                  -mindepth 1 \
+                  -type d \
+                  -name 'man*' \
+                  -printf '%f\n' \
+                  2>/dev/null \
+                  | cut -c4- \
+                  | sort -u
+          )
 
-        if command man -w "''${man_args[@]}" >/dev/null 2>&1; then
-            command man "''${man_args[@]}"
-        else
-            local regex page
-            while [[ "$#" -ge 1 ]]; do
-                for man_section in "''${man_sections[@]}"; do
-                    if [[ "$1" == "$man_section" ]] && [[ "$#" -ge 2 ]]; then
-                        regex='/share/man/man'"$man_section"'/'"$2"'\.'"$man_section"
-                        page="$2"
-                        shift
-                        break
-                    else
-                        regex='/share/man/man.*'/"$1"'\.'
-                        page="$1"
-                        break
-                    fi
-                done
-                shift
+          MANPATH="$old_MANPATH"
 
-                [[ -t 2 ]] && printf 'searching for packages containing manpage %s...\n' "$page" >&2 || :
-                new_man_path=$(nix-locate --minimal --at-root --regex "$regex" 2>/dev/null | grep -v '^(')
-                [[ -n "$new_man_path" ]] || continue
+          if command man -w "''${man_args[@]}" >/dev/null 2>&1; then
+              command man "''${man_args[@]}"
+          else
+              local regex page
+              while [[ "$#" -ge 1 ]]; do
+                  for man_section in "''${man_sections[@]}"; do
+                      if [[ "$1" == "$man_section" ]] && [[ "$#" -ge 2 ]]; then
+                          regex='/share/man/man'"$man_section"'/'"$2"'\.'"$man_section"
+                          page="$2"
+                          shift
+                          break
+                      else
+                          regex='/share/man/man.*'/"$1"'\.'
+                          page="$1"
+                          break
+                      fi
+                  done
+                  shift
 
-                new_man_path=$(eval "$COMMA_PICKER" <<< "$new_man_path")
-                new_man_path=$(nix build --no-link --print-out-paths "$COMMA_NIXPKGS_FLAKE"#"$new_man_path")
-                new_man_path="$new_man_path/share/man"
+                  [[ -t 2 ]] && printf 'searching for packages containing manpage %s...\n' "$page" >&2 || :
+                  new_man_path=$(nix-locate --minimal --at-root --regex "$regex" 2>/dev/null | grep -v '^(')
+                  [[ -n "$new_man_path" ]] || continue
 
-                case "$MANPATH" in
-                    :*) MANPATH="$new_man_path$MANPATH" ;;
-                    "") MANPATH="$new_man_path:" ;;
-                    *)  MANPATH="$new_man_path:$MANPATH" ;;
-                esac
-            done
+                  new_man_path=$(eval "$COMMA_PICKER" <<< "$new_man_path")
+                  new_man_path=$(nix build --no-link --print-out-paths "$COMMA_NIXPKGS_FLAKE"#"$new_man_path")
+                  new_man_path="$new_man_path/share/man"
 
-            [[ -t 2 ]] && printf '\033[1K' >&2 || :
+                  case "$MANPATH" in
+                      :*) MANPATH="$new_man_path$MANPATH" ;;
+                      "") MANPATH="$new_man_path:" ;;
+                      *)  MANPATH="$new_man_path:$MANPATH" ;;
+                  esac
+              done
 
-            MANPATH="$MANPATH" command man "''${man_args[@]}"
-        fi
-    }
-  '';
+              [[ -t 2 ]] && printf '\033[1K' >&2 || :
+
+              MANPATH="$MANPATH" command man "''${man_args[@]}"
+          fi
+      }
+    '';
+  };
 
   xdg.configFile."curlrc".text = ''
     show-error
