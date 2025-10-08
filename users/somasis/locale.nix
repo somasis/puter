@@ -20,7 +20,7 @@
     #   # time = "en_DK.UTF-8/UTF-8";
     #   paper = "en_US.UTF-8";
     # };
-    sessionVariables.LANGUAGE = "tok:en_US";
+    sessionVariables.LANGUAGE = "en_US";
   };
 
   i18n.inputMethod = {
