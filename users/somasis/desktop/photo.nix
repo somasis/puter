@@ -22,9 +22,6 @@ in
       (gimp-with-plugins.override {
         plugins = with gimpPlugins; [
           gmic
-          lqrPlugin
-          texturize
-          waveletSharpen
         ];
       })
 
