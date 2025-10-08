@@ -265,9 +265,9 @@ in
 
   reddit-comment-auto-expander = mkGreasemonkeyScript {
     pname = "reddit-comment-auto-expander";
-    version = "0.91";
+    version = "1.08";
     url = "https://update.greasyfork.org/scripts/546618/Reddit%20Comment%20Auto-Expander%20%28Smooth%29%3A.user.js";
-    hash = "sha256-SdJ8a8eus2+/oSP6MnNgfURK+DQsbJJVbCLSxZU7baY=";
+    hash = "sha256-dx62ai3R9+8gna9KM4IoMxLzSjWgQJVducydNECUVa4=";
   };
 
   reddit-highlighter = mkGreasemonkeyScript {
