@@ -22,6 +22,32 @@ let
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
 
+    # Added 2025-10-08: fixes for CMake 4
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/449133.patch";
+      hash = "sha256-ejdJ1UzJwndu/IYTj+ntPFgYG4XEeHaQOqfxzNEIvac=";
+    })
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/449438.patch";
+      hash = "sha256-0nwBsfPzuLEpU7nl2xbXJpYm04HYmtvwOkiT7cwqbb8=";
+    })
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/449469.patch";
+      hash = "sha256-ryFomEaJ/NgaQK4oIEuUa7wdOnsdpyjrBWKZVA9otqM=";
+    })
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/449515.patch";
+      hash = "sha256-ufW1OfXe3mSCpK2XMiRNilvkc9jSqLYDbfS+p/MUo4k=";
+    })
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/450061.patch";
+      hash = "sha256-vhYwsURT/KWilRlUuQIQe+dKZRA547f7kj8j2sn47hg=";
+    })
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/450251.patch";
+      hash = "sha256-tWel4NUYbr/8jHEFcG2V6OJOQj0UAGpCDuHKwS5Fyc4=";
+    })
+
     # Added 2025-10-09: fix failing trurl tests
     (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/450487.patch";
@@ -48,6 +74,10 @@ let
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
     inherit (nixpkgs-quirks.pkgs)
+      fw-ectool
+      halibut
+      intel-graphics-compiler
+      quick-lint-js
       trurl
       ;
   };
