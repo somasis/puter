@@ -44,11 +44,6 @@
 
     nixos-cli.url = "github:nix-community/nixos-cli";
 
-    lix-module = {
-      url = "git+https://git.lix.systems/lix-project/nixos-module";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Secure Boot implementation.
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v0.4.2";
@@ -111,7 +106,6 @@
       nixos-hardware,
 
       agenix,
-      lix-module,
       nixos-cli,
       disko,
 

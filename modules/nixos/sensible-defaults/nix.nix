@@ -40,7 +40,19 @@
     };
   };
 
+  # Use Lix <https://lix.systems/add-to-config/>.
+  nixpkgs.overlays = [
+    (final: prev: {
+      inherit (prev.lixPackageSets.stable)
+        nixpkgs-review
+        nix-update
+        ;
+    })
+  ];
+
   nix = {
+    package = pkgs.lixPackageSets.stable.lix;
+
     registry = lib.mapAttrs (_: flake: { inherit flake; }) inputs;
     nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") inputs;
 
