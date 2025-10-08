@@ -404,9 +404,9 @@ in
 
   adguard-extra = mkGreasemonkeyScript {
     pname = "adguard-extra";
-    version = "1.1.1";
+    version = "1.1.2";
     url = "https://userscripts.adtidy.org/release/adguard-extra/1.0/adguard-extra.user.js";
-    hash = "sha256-NKjnOw3tmjDZBEBGas2LQoxFAD2VXkBdaXC4m0ttdIw=";
+    hash = "sha256-bZrFauffe2OtA83CPCCTEK14cwZFmbHnoW9ePtFbO/I=";
   };
 
   bandcamp-extended-album-history = mkGreasemonkeyScript {
