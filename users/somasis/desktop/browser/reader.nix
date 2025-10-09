@@ -92,7 +92,7 @@ let
 
     PATH=${
       lib.makeBinPath [
-        pkgs.asciidoctor-with-extensions
+        pkgs.asciidoctor
         pkgs.pandoc
       ]
     }:"$PATH"

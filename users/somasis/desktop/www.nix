@@ -4,7 +4,7 @@
 }:
 {
   home.packages = with pkgs; [
-    asciidoctor-with-extensions
+    asciidoctor
     curlFull
     imagemagick
   ];

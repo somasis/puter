@@ -28,10 +28,6 @@ let
       hash = "sha256-ejdJ1UzJwndu/IYTj+ntPFgYG4XEeHaQOqfxzNEIvac=";
     })
     (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/449438.patch";
-      hash = "sha256-0nwBsfPzuLEpU7nl2xbXJpYm04HYmtvwOkiT7cwqbb8=";
-    })
-    (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/449469.patch";
       hash = "sha256-ryFomEaJ/NgaQK4oIEuUa7wdOnsdpyjrBWKZVA9otqM=";
     })
@@ -76,6 +72,7 @@ let
     inherit (nixpkgs-quirks.pkgs)
       fw-ectool
       halibut
+      img2pdf
       intel-graphics-compiler
       quick-lint-js
       trurl
@@ -89,7 +86,7 @@ let
     };
 
     python3Packages = prev.python3Packages // {
-      inherit (nixpkgs-quirks.pkgs.python3Packages)
+      inherit (pkgs.stable.pkgs.python3Packages)
         img2pdf
         ;
     };
