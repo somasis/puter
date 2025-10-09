@@ -21,6 +21,12 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
+
+    # Added 2025-10-09: fix failing trurl tests
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/450487.patch";
+      hash = "sha256-ooxmucGPN9piqSL8oIbcO/uru8BZRa6lwwXCnpikwVU=";
+    })
   ];
 
   # deadnix: skip
@@ -41,6 +47,9 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
+    inherit (nixpkgs-quirks.pkgs)
+      trurl
+      ;
   };
 in
 {
