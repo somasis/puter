@@ -1,8 +1,6 @@
 {
-  stdenv,
   lib,
   fetchFromGitHub,
-  cmake,
   kdePackages,
 }:
 kdePackages.mkKdeDerivation rec {
@@ -28,7 +26,6 @@ kdePackages.mkKdeDerivation rec {
 
   extraCmakeFlags = [
     "-DKDE_INSTALL_USE_QT_SYS_PATHS=ON"
-    "-DBUILD_WITH_QT6=ON"
   ];
 
   meta = with lib; {
