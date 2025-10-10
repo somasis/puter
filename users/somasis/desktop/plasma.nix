@@ -206,8 +206,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       kweather
       lokalize
 
-      pdfarranger
-
       # Used by Ark
       p7zip
 

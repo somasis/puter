@@ -80,6 +80,19 @@ let
       quick-lint-js
       trurl
       ;
+
+    libretro = prev.libretro // {
+      inherit (nixpkgs-quirks.pkgs.libretro)
+        citra
+        dolphin
+        ;
+    };
+
+    python3Packages = prev.python3Packages // {
+      inherit (nixpkgs-quirks.pkgs.python3Packages)
+        img2pdf
+        ;
+    };
   };
 in
 {

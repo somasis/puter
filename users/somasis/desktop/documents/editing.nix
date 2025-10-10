@@ -18,9 +18,9 @@
       })
 
       # PDF editing tools
-      ocrmypdf
+      stable.ocrmypdf
       tesseract
-      pdfarranger
+      stable.pdfarranger
 
       # Scanning tools
       skanpage
