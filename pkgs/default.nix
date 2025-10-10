@@ -210,7 +210,6 @@ rec {
   dates = callPackage ./dates { inherit table; };
   dmenu = callPackage ./dmenu { };
   dmenu-emoji = callPackage ./dmenu-emoji { inherit wrapCommand; };
-  dmenu-pass = callPackage ./dmenu-pass { };
   dmenu-run = callPackage ./dmenu-run { };
   ellipsis = callPackage ./ellipsis { };
   emojirunner = callPackage ./emojirunner { };
@@ -221,7 +220,6 @@ rec {
   ini2nix = callPackage ./ini2nix { inherit json2nix; };
   jhide = callPackage ./jhide { };
   json2nix = callPackage ./json2nix { };
-  krunner-pass-unstable = callPackage ./krunner-pass-unstable { };
   krunner-zotero-unstable = callPackage ./krunner-zotero-unstable { };
   linja-luka = callPackage ./linja-luka { };
   linja-namako = callPackage ./linja-namako { };
@@ -236,11 +234,8 @@ rec {
   newslinkrss = python3Packages.callPackage ./newslinkrss { };
   nocolor = callPackage ./nocolor { };
   optimize = callPackage ./optimize { };
-  pass-secrets = callPackage ./pass-secrets { };
   phish-cli = callPackage ./phish-cli { };
-  plasma-pass-unstable = callPackage ./plasma-pass-unstable { };
   qman = callPackage ./qman { inherit cogapp; };
-  qute-pass = callPackage ./qute-pass { inherit dmenu-pass; };
   scooper = callPackage ./scooper { };
   signal-desktop-patched = callPackage ./signal-desktop-patched { };
   sol = callPackage ./sol { };
@@ -255,7 +250,6 @@ rec {
   greasemonkeyScripts = import ./greasemonkey-userscripts args;
   kakounePlugins = import ./kakoune-plugins args;
   nodePackages.stylelint-config-standard = nodePackages.callPackage ./stylelint-config-standard { };
-  passExtensions = import ./pass-extensions args;
   tmuxPlugins = import ./tmux-plugins args;
   zotero-addons = import ./zotero-addons args;
   # keep-sorted end
