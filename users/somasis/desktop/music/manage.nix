@@ -18,18 +18,12 @@
     whipper
   ];
 
-  sync.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "beets";
-    }
+  persist.directories = [
+    (config.lib.somasis.xdgConfigDir "beets")
   ];
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "beets";
-    }
+    (config.lib.somasis.xdgCacheDir "beets")
   ];
 
   xdg.configFile."whipper/whipper.conf".text =

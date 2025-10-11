@@ -4,10 +4,7 @@
 }:
 {
   persist.directories = [
-    {
-      method = "symlink";
-      directory = "diary";
-    }
+    "diary"
   ];
   home.packages = [
     (pkgs.writeShellScriptBin "diary" ''

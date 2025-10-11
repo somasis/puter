@@ -65,21 +65,12 @@
   };
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "fcitx5";
-    }
+    (config.lib.somasis.xdgConfigDir "fcitx5")
   ];
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "fcitx";
-    }
-    {
-      method = "symlink";
-      directory = ".anthy";
-    }
+    (config.lib.somasis.xdgConfigDir "fcitx")
+    ".anthy"
   ];
 
   programs.kakoune.plugins = [ pkgs.kakounePlugins.kakoune-fcitx ];

@@ -42,17 +42,11 @@ in
   };
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "radiotray-ng";
-    }
+    (config.lib.somasis.xdgConfigDir "radiotray-ng")
   ];
 
   sync.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "radiotray-ng";
-    }
+    (config.lib.somasis.xdgDataDir "radiotray-ng")
   ];
 
   xdg.autostart.entries = [

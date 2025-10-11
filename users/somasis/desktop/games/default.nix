@@ -77,37 +77,13 @@
   ];
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "retroarch";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "crispy-doom";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "PCSX2";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "opentyrian";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "tetrio-desktop";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "SpaceCadetPinball";
-    }
-    {
-      method = "symlink";
-      directory = ".lbreakouthd";
-    }
-    {
-      method = "symlink";
-      directory = ".zaz";
-    }
+    (config.lib.somasis.xdgConfigDir "retroarch")
+    (config.lib.somasis.xdgDataDir "crispy-doom")
+    (config.lib.somasis.xdgConfigDir "PCSX2")
+    (config.lib.somasis.xdgConfigDir "opentyrian")
+    (config.lib.somasis.xdgConfigDir "tetrio-desktop")
+    (config.lib.somasis.xdgDataDir "SpaceCadetPinball")
+    ".lbreakouthd"
+    ".zaz"
   ];
 }

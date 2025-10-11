@@ -6,11 +6,8 @@
 
   nixpkgs.allowUnfreePackages = [ "urbanterror" ];
 
-  sync.directories = [
-    {
-      directory = config.lib.somasis.xdgConfigDir "urbanterror";
-      method = "symlink";
-    }
+  persist.directories = [
+    (config.lib.somasis.xdgConfigDir "urbanterror")
   ];
 
   home.file.".q3a".source =

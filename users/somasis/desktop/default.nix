@@ -86,35 +86,20 @@
   };
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "borg";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "direnv";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "mesa_shader_cache";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "mesa_shader_cache_db";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "containers";
-    }
+    (config.lib.somasis.xdgCacheDir "borg")
+    (config.lib.somasis.xdgCacheDir "direnv")
+    (config.lib.somasis.xdgCacheDir "mesa_shader_cache")
+    (config.lib.somasis.xdgCacheDir "mesa_shader_cache_db")
+    (config.lib.somasis.xdgCacheDir "containers")
     (config.lib.somasis.xdgCacheDir "JOSM")
   ];
 
   persist = {
     directories = [
-      {
-        method = "symlink";
-        directory = config.lib.somasis.relativeToHome config.xdg.userDirs.documents;
-      }
+      (config.lib.somasis.xdgDataDir "containers")
+      (config.lib.somasis.xdgConfigDir "JOSM")
+      (config.lib.somasis.xdgDataDir "JOSM")
+      (config.lib.somasis.relativeToHome config.xdg.userDirs.documents)
       {
         method = "bindfs";
         directory = config.lib.somasis.xdgDataDir "applications";
@@ -123,12 +108,6 @@
         method = "bindfs";
         directory = config.lib.somasis.xdgDataDir "icons";
       }
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "containers";
-      }
-      (config.lib.somasis.xdgConfigDir "JOSM")
-      (config.lib.somasis.xdgDataDir "JOSM")
     ];
 
     files = [
@@ -138,10 +117,7 @@
 
   # ~/share/direnv contains the allowlist of repositories.
   sync.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "direnv";
-    }
+    (config.lib.somasis.xdgDataDir "direnv")
   ];
 
   xdg.autostart.enable = true;

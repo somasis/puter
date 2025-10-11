@@ -54,9 +54,6 @@ in
   };
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "darkman";
-    }
+    (config.lib.somasis.xdgCacheDir "darkman")
   ];
 }

@@ -65,10 +65,7 @@
 
   persist = {
     directories = [
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "tesseract";
-      }
+      (config.lib.somasis.xdgDataDir "tesseract")
     ];
     files = [
       (config.lib.somasis.xdgConfigDir "skanpagerc")
@@ -76,17 +73,8 @@
   };
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "pdfgrep";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "ocrmypdf";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "skanpage";
-    }
+    (config.lib.somasis.xdgCacheDir "pdfgrep")
+    (config.lib.somasis.xdgCacheDir "ocrmypdf")
+    (config.lib.somasis.xdgCacheDir "skanpage")
   ];
 }

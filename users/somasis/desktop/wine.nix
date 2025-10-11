@@ -172,12 +172,8 @@ in
   };
 
   persist.directories = [
-    # { method = "symlink"; directory = xdgConfigDir "wineprefixes"; }
     (xdgConfigDir "wineprefixes")
-    {
-      method = "symlink";
-      directory = xdgDataDir "wineprefixes";
-    }
+    (xdgDataDir "wineprefixes")
   ];
 
   services.darkman = {

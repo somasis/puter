@@ -14,15 +14,9 @@ in
 
   persist = {
     directories = [
-      {
-        method = "symlink";
-        directory = "audio";
-      }
+      "audio"
 
-      {
-        method = "symlink";
-        directory = xdgConfigDir "audacity";
-      }
+      (xdgConfigDir "audacity")
     ];
 
     files = [
@@ -31,14 +25,8 @@ in
   };
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = xdgCacheDir "audacity";
-    }
-    {
-      method = "symlink";
-      directory = xdgDataDir "audacity";
-    }
+    (xdgCacheDir "audacity")
+    (xdgDataDir "audacity")
   ];
 
   xdg.userDirs.music = "${config.home.homeDirectory}/audio/library";

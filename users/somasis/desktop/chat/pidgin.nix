@@ -25,13 +25,7 @@
   };
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = ".purple";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "pidgin";
-    }
+    ".purple"
+    (config.lib.somasis.xdgConfigDir "pidgin")
   ];
 }

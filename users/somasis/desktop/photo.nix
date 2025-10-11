@@ -35,10 +35,7 @@ in
 
   sync = {
     directories = [
-      {
-        method = "symlink";
-        directory = xdgConfigDir "GIMP";
-      }
+      (xdgConfigDir "GIMP")
 
       # NOTE G'MIC seems to recreate the directory if it is a symlink?
       {
@@ -46,19 +43,10 @@ in
         directory = xdgConfigDir "gmic";
       }
 
-      {
-        method = "symlink";
-        directory = xdgConfigDir "darktable";
-      }
-      {
-        method = "symlink";
-        directory = xdgConfigDir "inkscape";
-      }
+      (xdgConfigDir "darktable")
+      (xdgConfigDir "inkscape")
 
-      {
-        method = "symlink";
-        directory = xdgDataDir "krita";
-      }
+      (xdgDataDir "krita")
     ];
 
     files = [
@@ -69,35 +57,17 @@ in
   };
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = xdgDataDir "koko";
-    }
+    (xdgDataDir "koko")
   ];
 
   cache = {
     directories = [
-      {
-        method = "symlink";
-        directory = xdgCacheDir "gimp";
-      }
-      {
-        method = "symlink";
-        directory = xdgCacheDir "gmic";
-      }
+      (xdgCacheDir "gimp")
+      (xdgCacheDir "gmic")
 
-      {
-        method = "symlink";
-        directory = xdgCacheDir "darktable";
-      }
-      {
-        method = "symlink";
-        directory = xdgCacheDir "gallery-dl";
-      }
-      {
-        method = "symlink";
-        directory = xdgCacheDir "koko";
-      }
+      (xdgCacheDir "darktable")
+      (xdgCacheDir "gallery-dl")
+      (xdgCacheDir "koko")
     ];
     files = [
       (xdgDataDir "krita.log")

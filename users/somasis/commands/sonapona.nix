@@ -10,10 +10,7 @@
   ];
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "sonapona";
-    }
+    (config.lib.somasis.xdgDataDir "sonapona")
   ];
 
   services.stw.widgets.sonapona = {

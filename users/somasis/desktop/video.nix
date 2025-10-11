@@ -38,28 +38,14 @@ let
 in
 {
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "mpv";
-    }
+    (config.lib.somasis.xdgCacheDir "mpv")
   ];
+
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim";
-    }
-    # {
-    #   method = "symlink";
-    #   directory = config.lib.somasis.xdgConfigDir "jellyfin.org";
-    # }
-    # {
-    #   method = "symlink";
-    #   directory = config.lib.somasis.xdgDataDir "jellyfinmediaplayer";
-    # }
-    # {
-    #   method = "symlink";
-    #   directory = config.lib.somasis.xdgDataDir "Jellyfin Media Player";
-    # }
+    (config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim")
+    # (config.lib.somasis.xdgConfigDir "jellyfin.org")
+    # (config.lib.somasis.xdgDataDir "jellyfinmediaplayer")
+    # (config.lib.somasis.xdgDataDir "Jellyfin Media Player")
   ];
 
   programs = {

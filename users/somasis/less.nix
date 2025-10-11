@@ -21,10 +21,7 @@
   };
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "less";
-    }
+    (config.lib.somasis.xdgCacheDir "less")
   ];
 
   programs.less = {

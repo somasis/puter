@@ -42,10 +42,7 @@ in
   home.packages = [ mess ];
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = "mess";
-    }
+    "mess"
   ];
 
   xdg.userDirs = {

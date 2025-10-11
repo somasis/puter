@@ -67,11 +67,7 @@ in
 
   persist = {
     directories = [
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "elisa";
-      }
-
+      (config.lib.somasis.xdgDataDir "elisa")
       (config.lib.somasis.xdgConfigDir "mpris-scrobbler")
       (config.lib.somasis.xdgDataDir "mpris-scrobbler")
     ];

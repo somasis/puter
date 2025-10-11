@@ -27,10 +27,7 @@ in
   home.sessionVariables.LEDGER_FILE = "${config.home.homeDirectory}/ledger/journal.ledger";
 
   persist.directories = [
-    {
-      directory = config.lib.somasis.relativeToHome "${config.home.homeDirectory}/ledger";
-      method = "symlink";
-    }
+    (config.lib.somasis.relativeToHome "${config.home.homeDirectory}/ledger")
   ];
 
   home.packages = [

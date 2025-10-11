@@ -122,10 +122,7 @@ rec {
   # <https://wiki.documentfoundation.org/UserProfile#User_profile_content>
   persist = {
     directories = [
-      {
-        method = "symlink";
-        directory = xdgConfigDir "libreoffice/4";
-      }
+      (xdgConfigDir "libreoffice/4")
     ];
 
     files = [
@@ -135,14 +132,8 @@ rec {
   };
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = xdgConfigDir "LanguageTool/LibreOffice/cache";
-    }
-    {
-      method = "symlink";
-      directory = xdgCacheDir "libreoffice/backups";
-    }
+    (xdgConfigDir "LanguageTool/LibreOffice/cache")
+    (xdgCacheDir "libreoffice/backups")
   ];
 
   xdg = {

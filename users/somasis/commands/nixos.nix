@@ -9,10 +9,7 @@
   nix.settings.show-trace = true;
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "nix";
-    }
+    (config.lib.somasis.xdgCacheDir "nix")
   ];
 
   programs.bash = {

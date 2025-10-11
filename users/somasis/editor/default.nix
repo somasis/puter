@@ -701,13 +701,10 @@ in
 
   cache.directories = [
     (config.lib.somasis.xdgDataDir "meld")
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "kak/state-save";
-    }
+    (config.lib.somasis.xdgDataDir "kak/state-save")
   ];
 
-  sync.directories = [
+  persist.directories = [
     (config.lib.somasis.xdgDataDir "org.kde.syntax-highlighting/themes")
   ];
 

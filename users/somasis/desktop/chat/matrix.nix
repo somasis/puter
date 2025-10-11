@@ -20,10 +20,7 @@
     ];
 
     directories = [
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "KDE/neochat";
-      }
+      (config.lib.somasis.xdgDataDir "KDE/neochat")
     ];
   };
 

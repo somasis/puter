@@ -14,17 +14,11 @@
   services.systembus-notify.enable = true;
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "ntfy";
-    }
+    (config.lib.somasis.xdgConfigDir "ntfy")
   ];
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "ntfy";
-    }
+    (config.lib.somasis.xdgCacheDir "ntfy")
   ];
 
   systemd.user.services.ntfy-sh = {

@@ -20,10 +20,7 @@
 
   persist = {
     directories = [
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "konversation";
-      }
+      (config.lib.somasis.xdgDataDir "konversation")
     ];
 
     files = [

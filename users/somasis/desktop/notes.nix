@@ -1,21 +1,13 @@
 { config, pkgs, ... }:
 {
   home.packages = [ pkgs.qownnotes ];
-  sync.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "PBE"; # contains QOwnNotes.conf
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "PBE/QOwnNotes";
-    }
+
+  persist.directories = [
+    (config.lib.somasis.xdgConfigDir "PBE") # contains QOwnNotes.conf
+    (config.lib.somasis.xdgDataDir "PBE/QOwnNotes")
   ];
 
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "PBE/QOwnNotes";
-    }
+    (config.lib.somasis.xdgCacheDir "PBE/QOwnNotes")
   ];
 }

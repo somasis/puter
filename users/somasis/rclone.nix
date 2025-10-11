@@ -30,19 +30,10 @@ let
 in
 {
   cache.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "vfs";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "vfsMeta";
-    }
+    (config.lib.somasis.xdgCacheDir "vfs")
+    (config.lib.somasis.xdgCacheDir "vfsMeta")
 
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "restic";
-    }
+    (config.lib.somasis.xdgCacheDir "restic")
   ];
 
   home = {

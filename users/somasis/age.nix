@@ -11,10 +11,7 @@
   ];
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "age";
-    }
+    (config.lib.somasis.xdgConfigDir "age")
   ];
 
   age = {

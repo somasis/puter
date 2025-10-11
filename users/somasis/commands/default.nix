@@ -11,10 +11,7 @@
   home.sessionPath = [ "$HOME/bin" ];
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = "bin";
-    }
+    "bin"
   ];
 
   programs.jq.enable = true;

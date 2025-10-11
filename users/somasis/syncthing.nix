@@ -3,18 +3,9 @@
   services.syncthing.enable = true;
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = "shared";
-    }
-    {
-      method = "symlink";
-      directory = "sync";
-    }
-    # {
-    #   method = "symlink";
-    #   directory = config.lib.somasis.xdgStateDir "syncthing";
-    # }
+    "shared"
+    "sync"
+    # (config.lib.somasis.xdgStateDir "syncthing")
   ];
 
   systemd.user.services.syncthing = {

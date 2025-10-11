@@ -11,36 +11,15 @@ in
 assert steam.enable;
 {
   persist.directories = [
-    {
-      method = "symlink";
-      directory = ".steam";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "Steam";
-    }
+    ".steam"
+    (config.lib.somasis.xdgDataDir "Steam")
 
-    {
-      method = "symlink";
-      directory = ".WorldOfGoo";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "Celeste";
-    }
-    {
-      method = "symlink";
-      directory = ".paradoxlauncher";
-    }
+    ".WorldOfGoo"
+    (config.lib.somasis.xdgDataDir "Celeste")
+    ".paradoxlauncher"
 
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "r2modman";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgConfigDir "r2modmanPlus-local";
-    }
+    (config.lib.somasis.xdgConfigDir "r2modman")
+    (config.lib.somasis.xdgConfigDir "r2modmanPlus-local")
   ];
 
   home.packages = [ pkgs.r2modman ];

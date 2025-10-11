@@ -11,14 +11,8 @@
   ];
 
   cache.directories = [
-    {
-      directory = config.lib.somasis.xdgCacheDir "pre-commit";
-      method = "symlink";
-    }
-    {
-      directory = config.lib.somasis.xdgCacheDir "treefmt";
-      method = "symlink";
-    }
+    (config.lib.somasis.xdgCacheDir "pre-commit")
+    (config.lib.somasis.xdgCacheDir "treefmt")
   ];
 
   programs = {

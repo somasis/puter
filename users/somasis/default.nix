@@ -45,14 +45,8 @@
     allowOther = true;
 
     directories = [
-      {
-        method = "symlink";
-        directory = "src";
-      }
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "nix";
-      }
+      "src"
+      (config.lib.somasis.xdgDataDir "nix")
     ];
   };
 

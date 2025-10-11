@@ -6,13 +6,7 @@
 {
   home.packages = [ pkgs.thunderbird-esr ];
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgCacheDir "thunderbird";
-    }
-    {
-      method = "symlink";
-      directory = ".thunderbird";
-    }
+    (config.lib.somasis.xdgCacheDir "thunderbird")
+    ".thunderbird"
   ];
 }

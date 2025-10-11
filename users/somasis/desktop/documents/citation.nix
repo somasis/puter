@@ -210,10 +210,7 @@ in
       directory = ".zotero";
     }
 
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "zotero";
-    }
+    (config.lib.somasis.xdgDataDir "zotero")
   ];
 
   programs.qutebrowser = {

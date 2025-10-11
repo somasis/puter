@@ -76,13 +76,7 @@ in
       directory = relativeToHome config.xdg.stateHome;
     }
 
-    {
-      method = "symlink";
-      directory = relativeToHome config.xdg.userDirs.pictures;
-    }
-    {
-      method = "symlink";
-      directory = relativeToHome config.xdg.userDirs.videos;
-    }
+    (relativeToHome config.xdg.userDirs.pictures)
+    (relativeToHome config.xdg.userDirs.videos)
   ];
 }

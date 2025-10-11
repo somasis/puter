@@ -21,10 +21,7 @@
     ];
 
     directories = [
-      {
-        method = "symlink";
-        directory = config.lib.somasis.xdgDataDir "KDE/Kasts";
-      }
+      (config.lib.somasis.xdgDataDir "KDE/Kasts")
     ];
   };
 

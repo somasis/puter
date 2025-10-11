@@ -10,10 +10,7 @@
   ];
 
   persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "PrismLauncher";
-    }
+    (config.lib.somasis.xdgDataDir "PrismLauncher")
   ];
 
   # TODO use NixMinecraft?
