@@ -109,26 +109,32 @@
     (config.lib.somasis.xdgCacheDir "JOSM")
   ];
 
-  persist.directories = [
-    {
-      method = "symlink";
-      directory = config.lib.somasis.relativeToHome config.xdg.userDirs.documents;
-    }
-    {
-      method = "bindfs";
-      directory = config.lib.somasis.xdgDataDir "applications";
-    }
-    {
-      method = "bindfs";
-      directory = config.lib.somasis.xdgDataDir "icons";
-    }
-    {
-      method = "symlink";
-      directory = config.lib.somasis.xdgDataDir "containers";
-    }
-    (config.lib.somasis.xdgConfigDir "JOSM")
-    (config.lib.somasis.xdgDataDir "JOSM")
-  ];
+  persist = {
+    directories = [
+      {
+        method = "symlink";
+        directory = config.lib.somasis.relativeToHome config.xdg.userDirs.documents;
+      }
+      {
+        method = "bindfs";
+        directory = config.lib.somasis.xdgDataDir "applications";
+      }
+      {
+        method = "bindfs";
+        directory = config.lib.somasis.xdgDataDir "icons";
+      }
+      {
+        method = "symlink";
+        directory = config.lib.somasis.xdgDataDir "containers";
+      }
+      (config.lib.somasis.xdgConfigDir "JOSM")
+      (config.lib.somasis.xdgDataDir "JOSM")
+    ];
+
+    files = [
+      (config.lib.somasis.xdgConfigDir "oktetarc")
+    ];
+  };
 
   # ~/share/direnv contains the allowlist of repositories.
   sync.directories = [
