@@ -202,6 +202,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       merkuro
       korganizer
       kpat
+      kalk
       ksystemlog
       kweather
       lokalize

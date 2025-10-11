@@ -23,22 +23,12 @@ let
     # })
 
     # Added 2025-10-08: fixes for CMake 4
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/449133.patch";
-      hash = "sha256-ejdJ1UzJwndu/IYTj+ntPFgYG4XEeHaQOqfxzNEIvac=";
-    })
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/449469.patch";
-      hash = "sha256-ryFomEaJ/NgaQK4oIEuUa7wdOnsdpyjrBWKZVA9otqM=";
-    })
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/449515.patch";
-      hash = "sha256-ufW1OfXe3mSCpK2XMiRNilvkc9jSqLYDbfS+p/MUo4k=";
-    })
+    # quick-lint-js
     (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/450061.patch";
       hash = "sha256-vhYwsURT/KWilRlUuQIQe+dKZRA547f7kj8j2sn47hg=";
     })
+    # dolphin, citra
     (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/450251.patch";
       hash = "sha256-tWel4NUYbr/8jHEFcG2V6OJOQj0UAGpCDuHKwS5Fyc4=";
@@ -48,6 +38,12 @@ let
     (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/450487.patch";
       hash = "sha256-ooxmucGPN9piqSL8oIbcO/uru8BZRa6lwwXCnpikwVU=";
+    })
+
+    # Added 2025-10-11: fix failing tremotesf build
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/450887.patch";
+      hash = "sha256-Vy/bpCaGUAkj2qz5909m+DO1vtOhIsUPY+EX3ep5Asc=";
     })
   ];
 
@@ -70,12 +66,10 @@ let
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
     inherit (nixpkgs-quirks.pkgs)
-      fw-ectool
-      halibut
-      img2pdf
-      intel-graphics-compiler
       quick-lint-js
       trurl
+      cxxopts
+      tremotesf
       ;
 
     libretro = prev.libretro // {
