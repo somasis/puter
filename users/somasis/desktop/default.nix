@@ -106,6 +106,7 @@
       method = "symlink";
       directory = config.lib.somasis.xdgCacheDir "containers";
     }
+    (config.lib.somasis.xdgCacheDir "JOSM")
   ];
 
   persist.directories = [
@@ -125,6 +126,8 @@
       method = "symlink";
       directory = config.lib.somasis.xdgDataDir "containers";
     }
+    (config.lib.somasis.xdgConfigDir "JOSM")
+    (config.lib.somasis.xdgDataDir "JOSM")
   ];
 
   # ~/share/direnv contains the allowlist of repositories.
