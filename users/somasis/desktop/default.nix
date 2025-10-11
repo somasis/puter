@@ -50,6 +50,7 @@
         bc
         ffmpeg-full
         hyperfine
+        josm
         kcharselect
         okteta
         zenity
