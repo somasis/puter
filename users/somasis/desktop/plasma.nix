@@ -137,8 +137,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
     ];
   };
 
-  nixpkgs.allowUnfreePackages = [ "unrar" ];
-
   home.packages =
     with pkgs;
     with libsForQt5;

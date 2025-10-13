@@ -220,8 +220,6 @@ in
     # ;
   };
 
-  nixpkgs.allowUnfreePackages = [ "widevine-cdm" ];
-
   programs = {
     qutebrowser = {
       enable = true;

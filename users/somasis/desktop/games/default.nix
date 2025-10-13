@@ -69,13 +69,6 @@
       )
     ];
 
-  nixpkgs.allowUnfreePackages = [
-    "libretro-picodrive"
-    "libretro-genesis-plus-gx"
-    "SpaceCadetPinball"
-    "tetrio-desktop"
-  ];
-
   persist.directories = [
     (config.lib.somasis.xdgConfigDir "retroarch")
     (config.lib.somasis.xdgDataDir "crispy-doom")

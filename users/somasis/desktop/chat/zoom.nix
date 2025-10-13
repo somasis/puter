@@ -20,8 +20,6 @@
     # })
   ];
 
-  nixpkgs.allowUnfreePackages = [ "zoom" ];
-
   persist = {
     directories = [ ".zoom" ];
     files = [ (config.lib.somasis.xdgConfigDir "zoomus.conf") ];

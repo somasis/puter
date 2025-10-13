@@ -1,7 +1,6 @@
 {
   imports = [
     ../lib.nix
-    ../freedom.nix
 
     ./impermanence.nix
     ./meta.nix

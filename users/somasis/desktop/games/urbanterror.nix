@@ -4,8 +4,6 @@
     pkgs.urbanterror
   ];
 
-  nixpkgs.allowUnfreePackages = [ "urbanterror" ];
-
   persist.directories = [
     (config.lib.somasis.xdgConfigDir "urbanterror")
   ];
