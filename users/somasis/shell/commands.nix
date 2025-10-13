@@ -7,7 +7,7 @@
 }:
 {
   home = {
-    shellAliases = rec {
+    shellAliases = {
       # LC_COLLATE=C sorts uppercase before lowercase.
       ls = "LC_COLLATE=C ls --hyperlink=auto --group-directories-first --dereference-command-line-symlink-to-dir --time-style=iso --color -AFlh";
 
@@ -211,8 +211,12 @@
     colors = {
       bg = "-1";
       fg = "-1";
-      "bg+" = config.theme.colors.accent;
-      "fg+" = "-1";
+
+      current-bg = config.theme.colors.dimAccent;
+      current-fg = "-1";
+
+      input-fg = "regular";
+      ghost = "regular:bright-black:dim:italic";
 
       hl = "1";
 
@@ -223,9 +227,12 @@
     };
 
     defaultOptions = [
+      "--ansi"
+      "--preview-window=bottom"
       "--height=~50%"
       "--info=inline"
-      "--prompt=∴ "
+      "--prompt=/"
+      ''--ghost='wild ^music .mp3$ cool !rmx''
     ];
   };
 }
