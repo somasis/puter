@@ -3,11 +3,11 @@
     "adblockEasyList": {
       "flake": false,
       "locked": {
-        "lastModified": 1760389697,
-        "narHash": "sha256-bn8N91lmQkLpUgoLkJ4vN77+nOunH/Xxv5nT5TacCFU=",
+        "lastModified": 1760389821,
+        "narHash": "sha256-e7c5HSWA33ux6cX3GTePyk8ed4JC/T30lr5aH3PUHi8=",
         "owner": "thedoggybrad",
         "repo": "easylist-mirror",
-        "rev": "70f1f0a43dc1ba9a35a0b3b7143710e0314faa42",
+        "rev": "9d5621e0754bb1064cc9647a776e8706e74c716e",
         "type": "github"
       },
       "original": {
@@ -468,11 +468,11 @@
     },
     "nixpkgs-dev": {
       "locked": {
-        "lastModified": 1760388558,
-        "narHash": "sha256-BqUbFr7wbDg0LZOTmr2lZPFq6Rz/po5NPkGVGCLCVls=",
+        "lastModified": 1760389615,
+        "narHash": "sha256-Xf5jjeQh+wRmaGmBW1oanbw9rv4Yyqmj65BuuHmWZls=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "716984067c3091dbfe546975ba585c5e7bc4b6b9",
+        "rev": "10caab34b9f807dc6678d1f6263769789f84e218",
         "type": "github"
       },
       "original": {
