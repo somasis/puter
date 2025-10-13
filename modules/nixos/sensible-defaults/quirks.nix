@@ -54,6 +54,7 @@ let
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
     inherit (nixpkgs-quirks.pkgs)
+      retroarch-bare
       trurl
       ;
 
