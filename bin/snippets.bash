@@ -26,6 +26,39 @@ edo() {
     "$@"
 }
 
+# usage: ido <command arguments...>
+# Interactive do; run a command noisly, but ask before doing so.
+ido() {
+    local reply
+
+    read -r -n1 -p "run \`$(condquote "$@")\`? [Y/n] " reply >&2
+    case "${reply}" in
+        [Yy] | '')
+            printf '\n' >&2
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    edo "$@"
+}
+
+# Given arguments, quote tokens only if the shell would require them to be.
+condquote() {
+    local arg string
+    string=
+    for arg; do
+        if [[ ${arg@Q} == "'$arg'" ]] && ! [[ ${arg} =~ [[:blank:]] ]]; then
+            string+=" $arg"
+        else
+            string+=" ${arg@Q}"
+        fi
+    done
+
+    printf '%s\n' "${string}"
+}
+
 # usage: usage [<printf(1) arguments>]
 usage() {
     # shellcheck disable=SC2059
