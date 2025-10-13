@@ -55,9 +55,12 @@
     allowOther = true;
   };
 
-  nixpkgs.overlays =
-    (osConfig.nixpkgs.overlays or [ ])
-    ++ (lib.mapAttrsToList (_: v: v) (lib.filterAttrs (n: _: n != "default") self.overlays));
+  nixpkgs = {
+    overlays =
+      (osConfig.nixpkgs.overlays or [ ])
+      ++ (lib.mapAttrsToList (_: v: v) (lib.filterAttrs (n: _: n != "default") self.overlays));
+    config.allowUnfree = true;
+  };
 
   systemd.user.startServices = true;
 

@@ -41,7 +41,10 @@
     ];
 
   meta.type = "laptop";
-  nixpkgs.hostPlatform = "x86_64-linux";
+  nixpkgs = {
+    hostPlatform = "x86_64-linux";
+    config.allowUnfree = true;
+  };
   system.stateVersion = "24.11";
 
   system.autoUpgrade.enable = false;
