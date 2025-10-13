@@ -27,6 +27,12 @@ let
       url = "https://github.com/NixOS/nixpkgs/pull/450487.patch";
       hash = "sha256-ooxmucGPN9piqSL8oIbcO/uru8BZRa6lwwXCnpikwVU=";
     })
+
+    # Added 2025-10-13: fix build fail due to insecure mbedtls pkg
+    (fetchpatch {
+      url = "https://github.com/NixOS/nixpkgs/pull/451745.patch";
+      hash = "sha256-mNtyE9ZfA09NPqgqYo/KtSYQVp/GiccK5uvy+kIE3vs=";
+    })
   ];
 
   # deadnix: skip
