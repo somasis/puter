@@ -76,6 +76,9 @@
 
         log.abbrevCommit = false;
 
+        # TODO Remove when <https://github.com/nix-community/home-manager/issues/7993> fixed
+        merge.conflictStyle = lib.mkIf (config.programs.mergiraf.enable) "diff3";
+
         branch = {
           autoSetupMerge = "simple";
           autoSetupRebase = "always";
