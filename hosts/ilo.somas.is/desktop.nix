@@ -28,14 +28,14 @@
     ];
 
     # Provide a nice splash screen. (<Esc> will show boot log anyway)
-    plymouth = {
-      enable = true;
-      themePackages = with pkgs; [ nixos-bgrt-plymouth ];
-      theme = "nixos-bgrt";
+    # plymouth = {
+    #   enable = true;
+    #   themePackages = with pkgs; [ nixos-bgrt-plymouth ];
+    #   theme = "nixos-bgrt";
 
-      extraConfig = "DeviceScale=1";
-      font = "${pkgs.inter}/share/fonts/truetype/Inter.ttc";
-    };
+    #   extraConfig = "DeviceScale=1";
+    #   font = "${pkgs.inter}/share/fonts/truetype/Inter.ttc";
+    # };
   };
 
   services = {
