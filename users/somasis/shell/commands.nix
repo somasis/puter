@@ -226,13 +226,13 @@
       info = "7";
     };
 
-    defaultOptions = [
-      "--ansi"
-      "--preview-window=bottom"
-      "--height=~50%"
-      "--info=inline"
-      "--prompt=/"
-      ''--ghost="'wild ^music .mp3$ cool !rmx"''
-    ];
+    defaultOptions = lib.cli.toGNUCommandLine { } {
+      ansi = true;
+      preview-window = "bottom";
+      height = "~50%";
+      info = "inline";
+      prompt = "/";
+      ghost = "'wild ^music .mp3$ cool !rmx";
+    };
   };
 }
