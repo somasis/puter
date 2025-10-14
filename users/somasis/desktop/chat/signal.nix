@@ -28,7 +28,7 @@
 
         # Force usage of libsecret instead of kwallet, which it defaults to when
         # XDG_CURRENT_DESKTOP=KDE, for some reason...
-        exec = "/usr/bin/env signal-desktop --password-store='gnome_libsecret' --start-in-tray";
+        exec = "/usr/bin/env signal-desktop --password-store=gnome-libsecret --start-in-tray";
       }
       + "/share/applications/signal.desktop"
     )
