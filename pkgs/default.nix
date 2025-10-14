@@ -237,7 +237,6 @@ rec {
   phish-cli = callPackage ./phish-cli { };
   qman = callPackage ./qman { inherit cogapp; };
   scooper = callPackage ./scooper { };
-  signal-desktop-patched = callPackage ./signal-desktop-patched { };
   sol = callPackage ./sol { };
   somasis-qutebrowser-tools = callPackage ./somasis-qutebrowser-tools { };
   sonapona = callPackage ./sonapona { };
