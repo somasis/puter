@@ -141,8 +141,11 @@ for show; do
         --set=albumartist='Phish'
         --set=albumartist_sort='Phish'
         --set=albumstatus='Bootleg'
-        --set=albumtype='live'
-        --set=albumtypes='live; album'
+
+        # FIXME `beet write` will always try to write these tags to the files
+        # and seemingly fail if these are set!
+        # --set=albumtype='live'
+        # --set=albumtypes='live; album'
 
         ${location:+"--set=location=${location}"}
 
@@ -159,9 +162,4 @@ for show; do
     touch "${download_dir}"/*
 
     edo beet "${beet_args[@]}" import "${beet_import_args[@]}" "${download_dir}" >&2
-
-    # Without this `beet write` will always write albumtype=live for some reason
-    edo beet "${beet_args[@]}" modify -y \
-        artist:'Phish' data_source:'Phish.in' album:"$year-$month-$day" \
-        albumtype=live albumtypes='live; album'
 done

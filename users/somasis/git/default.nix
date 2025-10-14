@@ -138,6 +138,8 @@
       };
     };
 
+    mergiraf.enable = true;
+
     bash.initExtra = ''
       _git_prompt() {
           [ -n "''${_git_prompt:=$(git rev-parse --abbrev-ref=loose HEAD 2>/dev/null)}" ] \
