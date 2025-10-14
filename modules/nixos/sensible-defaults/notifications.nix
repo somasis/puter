@@ -50,7 +50,7 @@ let
   '';
 in
 {
-  age.secrets.ntfy-token.file = "${self}/secrets/ntfy-${config.networking.fqdnOrHostName}.age";
+  age.secrets.ntfy-token.file = "${self}/secrets/ntfy-token-${config.networking.fqdnOrHostName}.age";
 
   systemd.services = {
     ntfy-startup = {
