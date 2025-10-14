@@ -38,7 +38,7 @@ let
     export NTFY_MESSAGE
 
     ${pkgs.curl}/bin/curl \
-        ''${NTFY_TOKEN_FILE:+--variable "%NTFY_TOKEN=@$NTFY_TOKEN_FILE"} \
+        ''${NTFY_TOKEN_FILE:+--variable "%NTFY_TOKEN@$NTFY_TOKEN_FILE"} \
         ''${NTFY_TOKEN_FILE:+--expand-header 'Authorization: Bearer {{NTFY_TOKEN}}'} \
         ''${NTFY_TAGS:+--variable %NTFY_TAGS} \
         ''${NTFY_TAGS:+--expand-header 'Tags: {{NTFY_TAGS}}'} \
