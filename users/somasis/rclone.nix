@@ -121,20 +121,6 @@ in
           };
         };
 
-        raid = {
-          config = {
-            type = "alias";
-            remote = "esther:/mnt/raid";
-          };
-
-          mounts = {
-            "" = {
-              enable = true;
-              mountPoint = "${config.home.homeDirectory}/mnt/raid";
-            };
-          };
-        };
-
         fastmail = {
           config = rec {
             type = "webdav";
