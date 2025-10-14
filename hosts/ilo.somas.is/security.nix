@@ -88,9 +88,6 @@
     };
   };
 
-  # Runs into an error due to hardened profile?
-  services.ananicy.enable = lib.mkForce false;
-
   security = {
     tpm2 = {
       enable = true;
