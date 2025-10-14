@@ -57,11 +57,9 @@ in
   systemd.services = {
     ntfy-startup = {
       description = "Send a notification on system startup";
+      partOf = [ "default.target" ];
       wants = [ "network-online.target" ];
-      after = [
-        "network-online.target"
-        "multi-user.target"
-      ];
+      after = [ "network-online.target" ];
 
       serviceConfig = {
         Type = "oneshot";
@@ -82,9 +80,12 @@ in
     };
 
     ntfy-shutdown = {
-      description = "Send a notification on system shutdown";
+      description = "Send a notification on system shutdown (when service is stopped)";
       bindsTo = [ "network-online.target" ];
-      after = [ "network-online.target" ];
+      after = [
+        "network-online.target"
+        "network.target"
+      ];
       wantedBy = [ "default.target" ];
 
       serviceConfig = {
