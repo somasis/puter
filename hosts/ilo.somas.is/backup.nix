@@ -48,13 +48,13 @@
   ];
 
   age.secrets = {
-    restic-ilo.file = "${self}/secrets/restic-ilo.age";
+    restic.file = "${self}/secrets/restic-${config.networking.fqdnOrHostName}.age";
     restic-rclone-whatbox.file = "${self}/secrets/restic-rclone-whatbox.age";
   };
 
   services.restic.backups.ilo = {
     repository = "rclone:whatbox:backups/restic/ilo";
-    passwordFile = config.age.secrets.restic-ilo.path;
+    passwordFile = config.age.secrets.restic.path;
     rcloneConfigFile = config.age.secrets.restic-rclone-whatbox.path;
     initialize = true;
 

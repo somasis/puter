@@ -48,11 +48,9 @@ let
         --expand-data '{{NTFY_MESSAGE}}' \
         --url "$NTFY_TOPIC"
   '';
-
-  token = "ntfy-token-${config.networking.fqdnOrHostName}";
 in
 {
-  age.secrets."${token}".file = "${self}/secrets/${token}.age";
+  age.secrets.ntfy-token.file = "${self}/secrets/ntfy-${config.networking.fqdnOrHostName}.age";
 
   systemd.services = {
     ntfy-startup = {
@@ -67,7 +65,7 @@ in
 
         Environment = [
           "NTFY_TOPIC=https://ntfy.box.somas.is/system"
-          "NTFY_TOKEN_FILE=${config.age.secrets.${token}.path}"
+          "NTFY_TOKEN_FILE=${config.age.secrets.ntfy-token.path}"
 
           ''NTFY_TITLE="%H powered on"''
           "NTFY_TAGS=origin:%H,green_circle"
@@ -93,7 +91,7 @@ in
 
         Environment = [
           "NTFY_TOPIC=https://ntfy.box.somas.is/system"
-          "NTFY_TOKEN_FILE=${config.age.secrets.${token}.path}"
+          "NTFY_TOKEN_FILE=${config.age.secrets.ntfy-token.path}"
 
           ''NTFY_TITLE="%H powering off"''
           "NTFY_TAGS=origin:%H,red_circle"

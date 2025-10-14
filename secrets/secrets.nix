@@ -19,16 +19,16 @@ builtins.mapAttrs (n: v: v // { armor = true; }) {
   "rclone-fastmail-pass.age".publicKeys = [ somasis.ilo ];
   "rclone-nextcloud-pass.age".publicKeys = [ somasis.ilo ];
   "rclone-whatbox-http-url.age".publicKeys = [ somasis.ilo ];
-  "rclone-whatbox-ilo-pass.age".publicKeys = [ somasis.ilo ];
+  "rclone-whatbox-ilo.somas.is-pass.age".publicKeys = [ somasis.ilo ];
   "rclone-vault-password.age".publicKeys = [ somasis.ilo ];
   "rclone-vault-password2.age".publicKeys = [ somasis.ilo ];
 
   # Used by host, not by a specific user on the host.
-  "ntfy-token-ilo.age".publicKeys = [
+  "ntfy-token-ilo.somas.is.age".publicKeys = [
     ilo
     somasis.ilo
   ];
-  "restic-ilo.age".publicKeys = [
+  "restic-ilo.somas.is.age".publicKeys = [
     ilo
     somasis.ilo
   ];
