@@ -232,7 +232,7 @@
       "--height=~50%"
       "--info=inline"
       "--prompt=/"
-      ''--ghost='wild ^music .mp3$ cool !rmx''
+      ''--ghost="'wild ^music .mp3$ cool !rmx"''
     ];
   };
 }
