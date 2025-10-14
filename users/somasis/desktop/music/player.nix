@@ -5,7 +5,6 @@
   ...
 }:
 let
-  iniFormat = pkgs.formats.iniWithGlobalSection { listsAsDuplicateKeys = true; };
   yamlFormat = pkgs.formats.yaml { };
 in
 {
@@ -120,15 +119,13 @@ in
       disable_musicbrainz_cover = false;
     };
 
-    "mpris-scrobbler/config".source = iniFormat.generate "mpris-scrobbler-config.ini" {
-      globalSection.ignore = [
-        "playerctld"
-        "kdeconnect"
-        "mpv"
-        "chromium"
-        "qutebrowser"
-        "firefox"
-      ];
-    };
+    "mpris-scrobbler/config".text = ''
+      ignore = playerctld
+      ignore = kdeconnect
+      ignore = mpv
+      ignore = chromium
+      ignore = qutebrowser
+      ignore = firefox
+    '';
   };
 }
