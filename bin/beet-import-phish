@@ -140,8 +140,9 @@ for show; do
 
         --set=albumartist='Phish'
         --set=albumartist_sort='Phish'
-        --set=albumstatus='bootleg'
+        --set=albumstatus='Bootleg'
         --set=albumtype='live'
+        --set=albumtypes='live; album'
 
         ${location:+"--set=location=${location}"}
 
@@ -158,4 +159,9 @@ for show; do
     touch "${download_dir}"/*
 
     edo beet "${beet_args[@]}" import "${beet_import_args[@]}" "${download_dir}" >&2
+
+    # Without this `beet write` will always write albumtype=live for some reason
+    edo beet "${beet_args[@]}" modify -y \
+        artist:'Phish' data_source:'Phish.in' album:"$year-$month-$day" \
+        albumtype=live albumtypes='live; album'
 done
