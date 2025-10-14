@@ -20,7 +20,18 @@
   persist.directories = [ (config.lib.somasis.xdgConfigDir "Signal") ];
 
   xdg.autostart.entries = [
-    "${pkgs.signal-desktop}/share/applications/signal.desktop"
+    (
+      pkgs.makeDesktopItem {
+        desktopName = "Signal";
+        name = "signal";
+        icon = "signal";
+
+        # Force usage of libsecret instead of kwallet, which it defaults to when
+        # XDG_CURRENT_DESKTOP=KDE, for some reason...
+        exec = "/usr/bin/env signal-desktop --password-store='gnome_libsecret' --start-in-tray";
+      }
+      + "/share/applications/signal.desktop"
+    )
   ];
 
   # xdg.configFile."Signal/ephemeral.json".text = lib.generators.toJSON { } (
