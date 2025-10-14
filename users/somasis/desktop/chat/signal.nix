@@ -24,7 +24,7 @@
       pkgs.makeDesktopItem {
         desktopName = "Signal";
         name = "signal";
-        icon = "signal";
+        icon = "signal-desktop";
 
         # Force usage of libsecret instead of kwallet, which it defaults to when
         # XDG_CURRENT_DESKTOP=KDE, for some reason...
