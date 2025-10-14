@@ -227,12 +227,12 @@
     };
 
     defaultOptions = [
-      "ansi"
-      "preview-window=bottom"
-      "height=~50%"
-      "info=inline"
-      "prompt=/"
-      "ghost=\''explicit ^anchored .mp3$ cool !negated'"
+      "--ansi"
+      "--preview-window=bottom"
+      "--height=~50%"
+      "--info=inline"
+      "--prompt=/"
+      "--ghost=\\''explicit ^anchored .mp3$ cool !negated'"
     ];
   };
 }
