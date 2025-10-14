@@ -1,6 +1,5 @@
 {
   config,
-  osConfig,
   pkgs,
   ...
 }:
@@ -22,4 +21,8 @@
 
     gh-dash.enable = true;
   };
+
+  persist.files = [
+    (config.lib.somasis.xdgConfigDir "gh/hosts.yml")
+  ];
 }
