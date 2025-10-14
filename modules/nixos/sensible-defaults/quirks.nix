@@ -39,7 +39,10 @@ let
   nixpkgs-quirks =
     if patches != [ ] then
       let
-        args = { inherit (pkgs.stdenvNoCC) system hostPlatform; };
+        args = {
+          inherit (pkgs) config;
+          inherit (pkgs.stdenvNoCC) system hostPlatform;
+        };
       in
       import ((import nixpkgs args).applyPatches {
         name = "nixpkgs-quirks";
