@@ -232,7 +232,7 @@
       "--height=~50%"
       "--info=inline"
       "--prompt=/"
-      "--ghost=\\''explicit ^anchored .mp3$ cool !negated'"
+      "--ghost=\"'explicit ^anchored .mp3$ cool !negated'\""
     ];
   };
 }
