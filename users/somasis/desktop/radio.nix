@@ -17,11 +17,14 @@ let
 
     volume-level = 50;
   };
+
   radiotrayConfigFile = jsonFormat.generate "radiotray-ng.json" radiotrayConfig;
+
+  radiotrayPkg = pkgs.radiotray-ng;
 in
 {
   home = {
-    packages = [ pkgs.radiotray-ng ];
+    packages = [ radiotrayPkg ];
 
     # Merge radiotray-ng's configuration at activation time, so that
     activation.merge-radiotray-config = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -50,6 +53,6 @@ in
   ];
 
   xdg.autostart.entries = [
-    "${pkgs.radiotray-ng}/etc/xdg/autostart/radiotray-ng.desktop"
+    "${radiotrayPkg}/etc/xdg/autostart/radiotray-ng.desktop"
   ];
 }
