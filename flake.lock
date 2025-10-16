@@ -3,11 +3,11 @@
     "adblockEasyList": {
       "flake": false,
       "locked": {
-        "lastModified": 1760472660,
-        "narHash": "sha256-VWemhoIkP9f9Npjny9gofoPg8PQvJVHM089E7/T7XCM=",
+        "lastModified": 1760573540,
+        "narHash": "sha256-gnAKWNixxnKBCYqzK/H3egCgkmaotV3j3CHP9mcL8Kc=",
         "owner": "thedoggybrad",
         "repo": "easylist-mirror",
-        "rev": "ed12da6758819e0e18328b44f0c2993b18471095",
+        "rev": "d981063c1fb1efb0d01657a1cecf5f3b83a35647",
         "type": "github"
       },
       "original": {
@@ -320,11 +320,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1760462439,
-        "narHash": "sha256-bks3rTsKGlqehk4l7rViIg2lBnUsY6we22O+ecRZB/c=",
+        "lastModified": 1760500983,
+        "narHash": "sha256-zfY4F4CpeUjTGgecIJZ+M7vFpwLc0Gm9epM/iMQd4w8=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "990e5ce6791ff1f497a61280a82eb66e3789e0e9",
+        "rev": "c53e65ec92f38d30e3c14f8d628ab55d462947aa",
         "type": "github"
       },
       "original": {
@@ -468,11 +468,11 @@
     },
     "nixpkgs-dev": {
       "locked": {
-        "lastModified": 1760472355,
-        "narHash": "sha256-vr8bVTpeG5YAk7OB800gCkA9BYt3N+mDV3rylsc+Z1U=",
+        "lastModified": 1760569332,
+        "narHash": "sha256-1hzkKi3DerJWImMWh1Jcnnaja1qJjxnniiakExiaqR4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "3de2253e865b43618bf44981d222c01168ef3df5",
+        "rev": "a5279e438af53fb7cdf0bafe0b6bea476f82c874",
         "type": "github"
       },
       "original": {
@@ -499,11 +499,11 @@
     },
     "nixpkgs-stable_2": {
       "locked": {
-        "lastModified": 1760139962,
-        "narHash": "sha256-4xggC56Rub3WInz5eD7EZWXuLXpNvJiUPahGtMkwtuc=",
+        "lastModified": 1760423683,
+        "narHash": "sha256-Tb+NYuJhWZieDZUxN6PgglB16yuqBYQeMJyYBGCXlt8=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "7e297ddff44a3cc93673bb38d0374df8d0ad73e4",
+        "rev": "a493e93b4a259cd9fea8073f89a7ed9b1c5a1da2",
         "type": "github"
       },
       "original": {
@@ -731,11 +731,11 @@
     "uAssets": {
       "flake": false,
       "locked": {
-        "lastModified": 1760455855,
-        "narHash": "sha256-O9TJPxzbOR/gZoWjin7e7BB/rM/3lZmqA2I4Tro7M2I=",
+        "lastModified": 1760563476,
+        "narHash": "sha256-LNCwgkI9Biry9czCz5ErtyaxKZRtSePIMIU/D5aNAEQ=",
         "owner": "uBlockOrigin",
         "repo": "uAssetsCDN",
-        "rev": "8a0c7f4d889c389563d534fec8a060ff3f109bce",
+        "rev": "a94b62eceb6eb4a4329c942421ea3d4f4ecede7a",
         "type": "github"
       },
       "original": {
