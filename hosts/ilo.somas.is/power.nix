@@ -32,6 +32,57 @@
 
       extraRules = [
         {
+          name = "bindfs";
+          type = "BG_CPUIO";
+        }
+
+        {
+          name = "baloorunner";
+          type = "BG_CPUIO";
+        }
+
+        {
+          name = "konversation";
+          type = "Chat";
+        }
+        {
+          name = "equibop";
+          type = "Chat";
+        }
+        {
+          name = "radiotray-ng";
+          type = "Player-Audio";
+        }
+
+        {
+          name = "darkman";
+          type = "Service";
+        }
+        {
+          name = "usbguard-notifier";
+          type = "Service";
+        }
+        {
+          name = "systembus-notify";
+          type = "Service";
+        }
+        {
+          name = "mpris-scrobbler";
+          type = "Service";
+        }
+        {
+          name = "mpris-proxy";
+          type = "Service";
+        }
+        {
+          name = "music-discord-rpc";
+          type = "Service";
+        }
+        {
+          name = "systemd-lock-handler";
+          type = "BG_CPUIO";
+        }
+        {
           name = "qutebrowser";
           type = "Doc-View";
         }
