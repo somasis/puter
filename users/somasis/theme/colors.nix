@@ -141,9 +141,9 @@ with palette;
 {
   theme.colors = palette // rec {
     # Colors by user interface functionality
-    accent = purple;
-    brightAccent = brightPurple;
-    dimAccent = dimPurple;
+    accent = pink;
+    brightAccent = brightPink;
+    dimAccent = dimPink;
 
     accentLightText = "#eeeeec";
     accentDarkText = "#101010";
