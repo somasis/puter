@@ -45,9 +45,11 @@
     hostPlatform = "x86_64-linux";
     config.allowUnfree = true;
   };
-  system.stateVersion = "24.11";
 
-  system.autoUpgrade.enable = false;
+  system = {
+    stateVersion = "24.11";
+    autoUpgrade.enable = false;
+  };
 
   persist = {
     hideMounts = true;
