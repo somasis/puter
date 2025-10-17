@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 {
@@ -18,17 +17,12 @@
     };
   };
 
-  environment = {
-    systemPackages = lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions;
-
-    sessionVariables.FLAKE = config.system.autoUpgrade.flake;
-  };
+  environment.systemPackages =
+    lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions;
 
   # System should automatically upgrade according to the canonical version
   # of the flake repository.
   system.autoUpgrade = {
-    enable = lib.mkDefault (config.system.autoUpgrade.flake != null);
-
     # Allow automatic reboots only if it is not a user-interfacing
     # machine, and it is between 2am and 5:30am. Check for updates
     # every day at 5pm.
@@ -52,9 +46,6 @@
 
   nix = {
     package = pkgs.lixPackageSets.stable.lix;
-
-    registry = lib.mapAttrs (_: flake: { inherit flake; }) inputs;
-    nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") inputs;
 
     # NOTE(somasis) Garbage collect the store every week
     #               (remove derivations that are no longer used

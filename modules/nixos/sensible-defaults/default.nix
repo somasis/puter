@@ -1,121 +1,112 @@
 {
-  config,
-  lib,
   self,
+  sources,
   pkgs,
-  inputs,
-  nixpkgs,
+  lib,
+  config,
   ...
 }:
 {
-  imports =
-    with self;
-    with inputs;
-    [
-      impermanence.nixosModules.impermanence
-      nix-index-database.nixosModules.nix-index
+  imports = with sources; [
+    "${impermanence}/nixos.nix"
 
-      home-manager.nixosModules.default
+    "${home-manager}/nixos"
 
-      nixosModules.lib
-      nixosModules.meta
-      nixosModules.impermanence
+    self.nixosModules.lib
+    self.nixosModules.meta
+    self.nixosModules.impermanence
 
-      ./boot.nix
-      ./debugging.nix
-      ./nix.nix
-      ./notifications.nix
-      ./quirks.nix
-      ./security.nix
-      ./shared-nixos-config.nix
-      ./ssh.nix
-      ./users.nix
-    ];
+    ./boot.nix
+    ./debugging.nix
+    ./nix.nix
+    ./notifications.nix
+    ./quirks.nix
+    ./security.nix
+    ./shared-nixos-config.nix
+    ./ssh.nix
+    ./users.nix
+  ];
 
-  config = {
-    nixpkgs.overlays = lib.mapAttrsToList (_: x: x) self.overlays;
+  nixpkgs.overlays = [ self.overlay self.overlays.nixpkgsVersions ];
 
-    i18n.extraLocales = [
-      "tok/UTF-8" # toki pona
-    ];
-    console.earlySetup = true;
+  i18n.extraLocales = [
+    "tok/UTF-8" # toki pona
+  ];
+  console.earlySetup = true;
 
-    # Keep system firmware up to date.
-    # TODO: Framework still doesn't have their updates in LVFS properly,
-    #       <https://knowledgebase.frame.work/en_us/framework-laptop-bios-releases-S1dMQt6F#:~:text=Updating%20via%20LVFS%20is%20available%20in%20the%20testing%20channel>
-    services.fwupd = {
-      enable = true;
-      extraRemotes = [ "lvfs-testing" ];
-      uefiCapsuleSettings.DisableCapsuleUpdateOnDisk = true;
-    };
+  # Keep system firmware up to date.
+  # TODO: Framework still doesn't have their updates in LVFS properly,
+  #       <https://knowledgebase.frame.work/en_us/framework-laptop-bios-releases-S1dMQt6F#:~:text=Updating%20via%20LVFS%20is%20available%20in%20the%20testing%20channel>
+  services.fwupd = {
+    enable = true;
+    extraRemotes = [ "lvfs-testing" ];
+    uefiCapsuleSettings.DisableCapsuleUpdateOnDisk = true;
+  };
 
-    persist.directories = [
-      "/var/log/lastlog"
-      "/var/lib/fwupd"
-    ];
-    cache.directories = [ "/var/cache/fwupd" ];
+  persist.directories = [
+    "/var/log/lastlog"
+    "/var/lib/fwupd"
+  ];
+  cache.directories = [ "/var/cache/fwupd" ];
 
-    # Use a deterministic host ID, generated from the FQDN of the machine.
-    networking.hostId = builtins.substring 0 8 (
-      builtins.hashString "sha256" config.networking.fqdnOrHostName
-    );
+  # Use a deterministic host ID, generated from the FQDN of the machine.
+  networking.hostId = builtins.substring 0 8 (
+    builtins.hashString "sha256" config.networking.fqdnOrHostName
+  );
 
-    nix.gc = {
-      automatic = lib.mkDefault true;
-      dates = lib.mkDefault "Sun 08:00:00";
-      randomizedDelaySec = lib.mkDefault "1h";
-      options = lib.mkDefault "--delete-older-than 7d";
-    };
+  nix.gc = {
+    automatic = lib.mkDefault true;
+    dates = lib.mkDefault "Sun 08:00:00";
+    randomizedDelaySec = lib.mkDefault "1h";
+    options = lib.mkDefault "--delete-older-than 7d";
+  };
 
-    systemd = {
-      # Fix watchdog delaying reboot
-      # https://wiki.archlinux.org/title/Framework_Laptop#ACPI
-      settings.Manager.RebootWatchdogSec = "0";
+  systemd = {
+    # Fix watchdog delaying reboot
+    # https://wiki.archlinux.org/title/Framework_Laptop#ACPI
+    settings.Manager.RebootWatchdogSec = "0";
 
-      # Only do garbage collection if not on battery,
-      # and limit resource usage priorities.
-      services.nix-gc = {
-        unitConfig.ConditionACPower = true;
-        serviceConfig = {
-          Nice = 19;
+    # Only do garbage collection if not on battery,
+    # and limit resource usage priorities.
+    services.nix-gc = {
+      unitConfig.ConditionACPower = true;
+      serviceConfig = {
+        Nice = 19;
 
-          CPUWeight = "idle";
-          # CPUSchedulingPolicy = "idle";
-          # CPUSchedulingPriority = 1;
+        CPUWeight = "idle";
+        # CPUSchedulingPolicy = "idle";
+        # CPUSchedulingPriority = 1;
 
-          IOSchedulingPriority = 7;
-          IOSchedulingClass = "idle";
-        };
+        IOSchedulingPriority = 7;
+        IOSchedulingClass = "idle";
       };
     };
+  };
 
-    environment = {
-      homeBinInPath = true;
-      systemPackages = with pkgs; [
-        # Ensure busybox tools are always available
-        (busybox.override {
-          enableStatic = true;
-          enableAppletSymlinks = false;
-        })
+  environment = {
+    homeBinInPath = true;
+    systemPackages = with pkgs; [
+      # Ensure busybox tools are always available
+      (busybox.override {
+        enableStatic = true;
+        enableAppletSymlinks = false;
+      })
+    ];
+  };
+
+  home-manager = {
+    backupFileExtension = lib.mkDefault "hm-bak";
+
+    useGlobalPkgs = lib.mkDefault false;
+    useUserPackages = true;
+    extraSpecialArgs = { inherit self sources; };
+
+    sharedModules =
+      with sources;
+      [
+        "${impermanence}/home-manager.nix"
+        self.homeManagerModules.lib
+        self.homeManagerModules.default
       ];
-    };
-
-    home-manager = {
-      backupFileExtension = lib.mkDefault "hm-bak";
-
-      useGlobalPkgs = lib.mkDefault false;
-      useUserPackages = true;
-      extraSpecialArgs = { inherit self inputs nixpkgs; };
-
-      sharedModules =
-        with self;
-        with inputs;
-        [
-          impermanence.nixosModules.home-manager.impermanence
-          nix-index-database.homeModules.nix-index
-          homeManagerModules.lib
-          homeManagerModules.default
-        ];
-    };
   };
 }

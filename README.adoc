@@ -10,7 +10,6 @@ and xref:bin[scripts].
 == Hacking
 
 :url-direnv: https://github.com/cachix/direnv
-:url-nixos-cli: https://github.com/nix-community/nixos-cli
 
 Before creating any commits, ensure that you have {url-direnv}[`direnv`]
 available and loaded in your shell. Then, run
@@ -19,15 +18,14 @@ available and loaded in your shell. Then, run
 
 which will give permission to install the Git hooks and bring tools
 sometimes used when working with this repository, into your shell
-environment. The devShell is kept in `flake.nix`; consult the package
-list in `devShells.default` to see what is included in the development
-environment.
+environment. See `shell.nix` for details on what's included in the
+shell environment.
 
-== Using
+:url-blog-post: https://www.somas.is/note-organizing-nix-configuration-without-flakes.html
 
-The way I prefer to interface with the NixOS system is through the
-`nixos` command, which comes from the {url-nixos-cli}[nixos-cli]
-project.
+I don't use flakes.
+If you're interested in how I structure things without flakes,
+check out this {url-blog-post}[blog post].
 
 Whenever I get a new machine (a really infrequent occurence!), or
 break my computer in some silly way (a slighly more common occurence),
@@ -36,21 +34,12 @@ I download the latest NixOS live USB image, and I do something like this
   $ git clone https://github.com/somasis/puter
   $ ponysay 'TODO lol'
 
-.Updating the flake inputs (i.e., the NixOS version used to build
-system)
+.Updating sources (i.e., the NixOS version used to build system)
 
-  $ nix flake update --commit-lock-file
+  $ npins update
 
 Make sure to ensure things work and build after doing so and before
 committing a lock update, if you can.
-
-.Updating packages somewhat automatically
-
-  $ nix-update <package name> -F --commit
-
-.Updating packages somewhat automatically, but from their Git versions
-
-  $ nix-update <package name> -F --commit --version=branch=master
 
 == `bin`
 

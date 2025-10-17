@@ -1,13 +1,11 @@
 {
-  pkgs,
+  sources,
   config,
+  pkgs,
   lib,
-  inputs,
   ...
 }:
 let
-  inherit (config.lib.somasis) flakeModifiedDateToVersion;
-
   qutebrowser-zotero = pkgs.callPackage (
     {
       lib,
@@ -16,8 +14,7 @@ let
     }:
     python3Packages.buildPythonApplication rec {
       pname = "qutebrowser-zotero";
-      # version = "unstable-2019-06-15";
-      version = flakeModifiedDateToVersion inputs.qutebrowser-zotero;
+      version = "0.0-${sources.qutebrowser-zotero.revision}";
 
       format = "other";
 
@@ -27,7 +24,7 @@ let
       #   rev = "54706b43433c3ea8da6b7b410d67528da9779657";
       #   hash = "sha256-Jv5qrpWSMrfGr6gV8PxELCOfZ0PyGBPO+nBt2czYuu4=";
       # };
-      src = inputs.qutebrowser-zotero;
+      src = sources.qutebrowser-zotero;
 
       propagatedBuildInputs = with python3Packages; [ requests ];
 

@@ -1,29 +1,23 @@
 {
+  self,
+  sources,
   config,
   pkgs,
-  lib,
-  self,
-  inputs,
+  # lib,
   ...
 }:
 {
-  imports = with inputs; [
-    agenix.nixosModules.default
-    nixos-cli.nixosModules.nixos-cli
+  imports = with self; with sources; [
+    "${agenix}/modules/age.nix"
+    (import sources.nixos-cli { inherit pkgs; }).module
   ];
-
-  system.nixos.tags = [ "puter" ];
-
-  # Set the automatic upgrade timer to use this flake's canonical location.
-  system.autoUpgrade.flake = lib.mkDefault "github:somasis/puter";
 
   environment = {
     # Link the complete flake into /etc/nixos.
     # TODO Is there some better way to do this while also including the
     # complete Git repository used?
-    etc."nixos".source = self.outPath;
+    etc.nixos.source = self.outPath;
 
-    sessionVariables.NIXOS_CONFIG = config.system.autoUpgrade.flake;
     systemPackages = with pkgs; [
       nix-output-monitor
       nvd

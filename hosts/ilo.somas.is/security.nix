@@ -1,14 +1,14 @@
 {
-  pkgs,
+  sources,
   modulesPath,
+  pkgs,
   lib,
-  inputs,
   ...
 }:
 {
-  imports = with inputs; [
+  imports = [
     "${modulesPath}/profiles/hardened.nix"
-    lanzaboote.nixosModules.lanzaboote
+    (import sources.lanzaboote).nixosModules.lanzaboote
   ];
 
   persist.directories = [

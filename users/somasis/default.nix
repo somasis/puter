@@ -1,39 +1,33 @@
 {
+  sources,
   self,
   config,
-  inputs,
-  lib,
-  osConfig,
   ...
 }:
 {
-  imports =
-    with self;
-    with inputs;
-    with self.homeManagerModules;
-    [
-      agenix.homeManagerModules.default
-      plasma-manager.homeModules.plasma-manager
+  imports = with sources; [
+    "${agenix}/modules/age-home.nix"
+    "${plasma-manager}/modules"
 
-      # keep-sorted start
-      ./age.nix
-      ./commands
-      ./editor
-      ./git
-      ./less.nix
-      ./locale.nix
-      ./man.nix
-      ./monitor.nix
-      ./pass.nix
-      ./rclone.nix
-      ./shell
-      ./ssh.nix
-      ./syncthing.nix
-      ./theme
-      ./tmux.nix
-      ./xdg.nix
-      # keep-sorted end
-    ];
+    # keep-sorted start
+    ./age.nix
+    ./commands
+    ./editor
+    ./git
+    ./less.nix
+    ./locale.nix
+    ./man.nix
+    ./monitor.nix
+    ./pass.nix
+    ./rclone.nix
+    ./shell
+    ./ssh.nix
+    ./syncthing.nix
+    ./theme
+    ./tmux.nix
+    ./xdg.nix
+    # keep-sorted end
+  ];
 
   cache = {
     defaultDirectoryMethod = "symlink";
@@ -56,9 +50,10 @@
   };
 
   nixpkgs = {
-    overlays =
-      (osConfig.nixpkgs.overlays or [ ])
-      ++ (lib.mapAttrsToList (_: v: v) (lib.filterAttrs (n: _: n != "default") self.overlays));
+    overlays = [
+      self.overlay
+      self.overlays.nixpkgsVersions
+    ];
     config.allowUnfree = true;
   };
 

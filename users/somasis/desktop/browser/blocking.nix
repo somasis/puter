@@ -1,8 +1,8 @@
 {
+  sources,
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }:
 let
@@ -28,7 +28,7 @@ let
     trakt.tv##a[href^="/vip/"], body.dashboard [id*="-wrapper"].middle, body.users [id*="-wrapper"].middle
   '';
 
-  lists = with inputs; [
+  lists = with sources; [
     adblockCustom
 
     (adblockEasyList + /easylist.txt)
@@ -42,7 +42,7 @@ let
     (uAssets + /filters/resource-abuse.txt)
   ];
 
-  listsNonCosmetic = with inputs; [
+  listsNonCosmetic = with sources; [
     # FIXME currently separated from the rest due to a bad rule that trips
     # up jhide and causes all pages to suddenly have `display: none !important`
     # applied lol. ":not(my-obnaruzhili-blokirovshchik)" is the problem rule.
@@ -65,7 +65,7 @@ in
         enabled = true;
         method = "adblock";
         adblock.lists = uriList (lists ++ listsNonCosmetic);
-        # hosts.lists = uriList (with inputs; [ adblockHosts ]);
+        # hosts.lists = uriList (with sources; [ adblockHosts ]);
       };
     };
 
