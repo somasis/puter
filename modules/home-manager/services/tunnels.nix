@@ -26,7 +26,7 @@ let
     toShellVar
     ;
 
-  inherit (config.lib.nixos.systemdUtils.lib) mkPathSafeName;
+  mkPathSafeName = lib.replaceStrings [ "@" ":" "\\" "[" "]" ] [ "-" "-" "-" "" "" ];
 
   ssh = builtins.head (
     builtins.filter (x: x != null) [
