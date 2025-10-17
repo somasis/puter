@@ -139,13 +139,9 @@ assert osConfig.services.desktopManager.plasma6.enable;
 
   home.packages =
     with pkgs;
-    with libsForQt5;
+    # with libsForQt5;
     with kdePackages;
-    with flakePackages;
     [
-      plasma-manager.rc2nix
-
-      alligator
       cameractrls-gtk3
       gwenview
       isoimagewriter
