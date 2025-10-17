@@ -57,11 +57,11 @@
         # keep-sorted end
       ];
 
-    file = {
-      ".face".source = inputs.avatarSomasis;
-      ".face.png".source = inputs.avatarSomasis;
-      ".face.icon".source = inputs.avatarSomasis;
-    };
+    # file = {
+    #   ".face".source = inputs.avatarSomasis;
+    #   ".face.png".source = inputs.avatarSomasis;
+    #   ".face.icon".source = inputs.avatarSomasis;
+    # };
   };
 
   services.tunnels.enable = true;
