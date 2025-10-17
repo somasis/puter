@@ -178,13 +178,11 @@ in
 
   services.darkman = {
     lightModeScripts.wine-color-scheme = ''
-      set -x
-      ~/bin/wine-apply-kde-accent
+      wine-apply-kde-accent
     '';
 
     darkModeScripts.wine-color-scheme = ''
-      set -x
-      ~/bin/wine-apply-kde-accent
+      wine-apply-kde-accent
     '';
   };
 }
