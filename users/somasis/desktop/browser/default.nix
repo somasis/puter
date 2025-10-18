@@ -809,13 +809,14 @@ in
           normal."zsm" = "open -rt https://mastodon.social/authorize_interaction?uri={url}";
           normal."zst" = "open -rt https://twitter.com/share?url={url}";
 
-          normal."tdh" = ''config-cycle -p -t -u *://{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
-          normal."tDh" = ''config-cycle -p -u *://{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
-          normal."tdH" =
-            ''config-cycle -p -t -u *://*.{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
-          normal."tDH" = ''config-cycle -p -u *://*.{url:host}/* colors.webpage.darkmode.enabled ;; reload'';
-          normal."tdu" = ''config-cycle -p -t -u {url} colors.webpage.darkmode.enabled ;; reload'';
-          normal."tDu" = ''config-cycle -p -u {url} colors.webpage.darkmode.enabled ;; reload'';
+          # Don't include `;; reload` at the end; the page CSS reacts to
+          # dark mode being toggled anyway.
+          normal."tdh" = ''config-cycle -p -t -u *://{url:host}/* colors.webpage.darkmode.enabled'';
+          normal."tDh" = ''config-cycle -p -u *://{url:host}/* colors.webpage.darkmode.enabled'';
+          normal."tdH" = ''config-cycle -p -t -u *://*.{url:host}/* colors.webpage.darkmode.enabled'';
+          normal."tDH" = ''config-cycle -p -u *://*.{url:host}/* colors.webpage.darkmode.enabled'';
+          normal."tdu" = ''config-cycle -p -t -u {url} colors.webpage.darkmode.enabled'';
+          normal."tDu" = ''config-cycle -p -u {url} colors.webpage.darkmode.enabled'';
 
           prompt."<Alt+Up>" = "rl-filename-rubout";
         }
