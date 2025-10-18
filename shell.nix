@@ -26,5 +26,19 @@ pkgs.mkShell {
     pkgs.nix-update
     pkgs.npins
     pkgs.replace-secret
+
+    (pkgs.writeShellApplication {
+      name = "npins-update-commit";
+      runtimeInputs = [ pkgs.npins ];
+      text = ''
+        PS3='$ '
+
+        set -euo pipefail
+        set -x
+
+        npins update "$@"
+        git commit -m 'npins: update' npins/
+      '';
+    })
   ];
 }
