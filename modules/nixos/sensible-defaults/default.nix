@@ -16,6 +16,11 @@
     self.nixosModules.meta
     self.nixosModules.impermanence
 
+    ((import "${sources.nix-index-database}/flake.nix").outputs {
+      inherit self;
+      nixpkgs = nixosConfigurations.ilo.pkgs;
+    }).nixosModules.nix-index
+
     ./boot.nix
     ./debugging.nix
     ./nix.nix
