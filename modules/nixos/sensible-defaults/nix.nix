@@ -17,8 +17,7 @@
     };
   };
 
-  environment.systemPackages =
-    lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions;
+  environment.systemPackages = lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions;
 
   # System should automatically upgrade according to the canonical version
   # of the flake repository.

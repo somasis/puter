@@ -1,16 +1,15 @@
 # $ nix repl -f .
 {
   sources ? (import ./npins),
-  self ? (import ./. {}),
+  self ? (import ./. { }),
 
   pkgs ? (import sources.nixpkgs { }),
   lib ? pkgs.lib,
   ...
-}@args:
+}:
 let
   nixos =
-    nixpkgs:
-    configuration:
+    nixpkgs: configuration:
     import "${nixpkgs}/nixos/lib/eval-config.nix" {
       modules = [ configuration ];
       specialArgs = {
@@ -48,9 +47,9 @@ in
 
   overlays = {
     nixpkgsVersions = final: prev: {
-      unstable = import sources.nixos {};
-      stable = import sources.nixos-stable {};
-      dev = import sources.nixpkgs {};
+      unstable = import sources.nixos { };
+      stable = import sources.nixos-stable { };
+      dev = import sources.nixpkgs { };
     };
   };
 

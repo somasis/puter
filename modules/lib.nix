@@ -1,6 +1,8 @@
-{ pkgs,
+{
+  pkgs,
   config,
-  ... }@args:
+  ...
+}@args:
 {
   config.lib.somasis = import ../lib.nix args;
 }

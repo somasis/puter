@@ -10,9 +10,7 @@ let
 in
 pkgs.mkShell {
   # Construct NIX_PATH from npins sources.
-  NIX_PATH = lib.concatStringsSep ":" (
-    lib.mapAttrsToList (n: v: "${n}=${v.outPath}") sources
-  );
+  NIX_PATH = lib.concatStringsSep ":" (lib.mapAttrsToList (n: v: "${n}=${v.outPath}") sources);
 
   shellHook = git-hooks.shellHook + ''
     export NIXOS_CONFIG="$PWD"

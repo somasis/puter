@@ -7,10 +7,13 @@
   ...
 }:
 {
-  imports = with self; with sources; [
-    "${agenix}/modules/age.nix"
-    (import sources.nixos-cli { inherit pkgs; }).module
-  ];
+  imports =
+    with self;
+    with sources;
+    [
+      "${agenix}/modules/age.nix"
+      (import sources.nixos-cli { inherit pkgs; }).module
+    ];
 
   environment = {
     # Link the complete flake into /etc/nixos.

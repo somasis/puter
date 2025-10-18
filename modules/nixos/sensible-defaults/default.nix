@@ -27,7 +27,10 @@
     ./users.nix
   ];
 
-  nixpkgs.overlays = [ self.overlay self.overlays.nixpkgsVersions ];
+  nixpkgs.overlays = [
+    self.overlay
+    self.overlays.nixpkgsVersions
+  ];
 
   i18n.extraLocales = [
     "tok/UTF-8" # toki pona
@@ -101,12 +104,10 @@
     useUserPackages = true;
     extraSpecialArgs = { inherit self sources; };
 
-    sharedModules =
-      with sources;
-      [
-        "${impermanence}/home-manager.nix"
-        self.homeManagerModules.lib
-        self.homeManagerModules.default
-      ];
+    sharedModules = with sources; [
+      "${impermanence}/home-manager.nix"
+      self.homeManagerModules.lib
+      self.homeManagerModules.default
+    ];
   };
 }
