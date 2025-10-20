@@ -10,7 +10,9 @@ let
   nix-index-database = (
     (import "${sources.nix-index-database}/flake.nix").outputs {
       inherit self;
-      nixpkgs = pkgs // { legacyPackages."${config.nixpkgs.system}" = pkgs; };
+      nixpkgs = pkgs // {
+        legacyPackages."${config.nixpkgs.system}" = pkgs;
+      };
     }
   );
 in
