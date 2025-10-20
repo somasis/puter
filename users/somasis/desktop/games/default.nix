@@ -69,13 +69,15 @@
       )
     ];
 
-  persist.directories = [
-    (config.lib.somasis.xdgConfigDir "retroarch")
-    (config.lib.somasis.xdgDataDir "crispy-doom")
-    (config.lib.somasis.xdgConfigDir "PCSX2")
-    (config.lib.somasis.xdgConfigDir "opentyrian")
-    (config.lib.somasis.xdgConfigDir "tetrio-desktop")
-    (config.lib.somasis.xdgDataDir "SpaceCadetPinball")
+  persist.directories = with config.lib.somasis; [
+    (xdgCacheDir "kpat")
+
+    (xdgConfigDir "retroarch")
+    (xdgDataDir "crispy-doom")
+    (xdgConfigDir "PCSX2")
+    (xdgConfigDir "opentyrian")
+    (xdgConfigDir "tetrio-desktop")
+    (xdgDataDir "SpaceCadetPinball")
     ".lbreakouthd"
     ".zaz"
   ];

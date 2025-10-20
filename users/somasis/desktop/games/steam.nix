@@ -17,6 +17,7 @@ assert steam.enable;
     ".WorldOfGoo"
     (config.lib.somasis.xdgDataDir "Celeste")
     ".paradoxlauncher"
+    (config.lib.somasis.xdgDataDir "SHENZHEN IO")
 
     (config.lib.somasis.xdgConfigDir "r2modman")
     (config.lib.somasis.xdgConfigDir "r2modmanPlus-local")
