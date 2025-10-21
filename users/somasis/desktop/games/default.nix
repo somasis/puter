@@ -70,15 +70,17 @@
     ];
 
   persist.directories = with config.lib.somasis; [
-    (xdgCacheDir "kpat")
-
-    (xdgConfigDir "retroarch")
-    (xdgDataDir "crispy-doom")
-    (xdgConfigDir "PCSX2")
-    (xdgConfigDir "opentyrian")
-    (xdgConfigDir "tetrio-desktop")
-    (xdgDataDir "SpaceCadetPinball")
+    # keep-sorted start
     ".lbreakouthd"
     ".zaz"
+    (xdgCacheDir "kpat")
+    (xdgCacheDir "libkcardgame-themes")
+    (xdgConfigDir "PCSX2")
+    (xdgConfigDir "opentyrian")
+    (xdgConfigDir "retroarch")
+    (xdgConfigDir "tetrio-desktop")
+    (xdgDataDir "SpaceCadetPinball")
+    (xdgDataDir "crispy-doom")
+    # keep-sorted end
   ];
 }
