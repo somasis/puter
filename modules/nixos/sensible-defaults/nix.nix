@@ -1,29 +1,13 @@
 {
-  sources,
-  self,
   config,
   lib,
   pkgs,
   ...
 }:
-let
-  nix-index-database = (
-    (import "${sources.nix-index-database}/flake.nix").outputs {
-      inherit self;
-      nixpkgs = pkgs // {
-        legacyPackages."${config.nixpkgs.system}" = pkgs;
-      };
-    }
-  );
-in
 {
-  imports = [
-    nix-index-database.nixosModules.nix-index
-  ];
-
   programs = {
-    # Since we're using their flake, we need to manually set the right package
-    nix-index.package = nix-index-database.packages.${config.nixpkgs.system}.nix-index-with-db;
+    nix-index.enable = true;
+    command-not-found.enable = false;
 
     # Install git by default to ease development from a clean system.
     git.enable = true;
