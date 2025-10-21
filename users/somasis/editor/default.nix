@@ -530,9 +530,9 @@ in
         lsp-auto-signature-help-enable
 
         # If there is an LSP server present, format with it.
-        hook -group lsp-autoformat global BufSetOption lsp_servers=.+ %{
-            hook -group lsp-autoformat-on-save buffer BufWritePre .* lsp-formatting-sync
-        }
+        # hook -group lsp-autoformat global BufSetOption lsp_servers=.+ %{
+        #     hook -group lsp-autoformat-on-save buffer BufWritePre .* lsp-formatting-sync
+        # }
 
         hook -group lsp-filetype-yaml global BufSetOption filetype=yaml %{
             set-option -add buffer lsp_servers %{
