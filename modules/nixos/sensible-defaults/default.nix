@@ -9,8 +9,8 @@
 {
   imports = with sources; [
     "${impermanence}/nixos.nix"
-
     "${home-manager}/nixos"
+    "${agenix}/modules/age.nix"
 
     self.nixosModules.lib
     self.nixosModules.meta
@@ -22,7 +22,6 @@
     ./notifications.nix
     ./quirks.nix
     ./security.nix
-    ./shared-nixos-config.nix
     ./ssh.nix
     ./users.nix
   ];
@@ -87,6 +86,11 @@
   };
 
   environment = {
+    # Link the complete repository into /etc/nixos.
+    # TODO Is there some better way to do this while also including the
+    # complete Git repository used?
+    etc.nixos.source = self.outPath;
+
     homeBinInPath = true;
     systemPackages = with pkgs; [
       # Ensure busybox tools are always available
@@ -94,6 +98,11 @@
         enableStatic = true;
         enableAppletSymlinks = false;
       })
+
+      dix
+      lix-diff
+      nix-output-monitor
+      nvd
     ];
   };
 

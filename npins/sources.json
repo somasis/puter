@@ -133,19 +133,6 @@
       "url": "https://github.com/nixos/nixpkgs/archive/5e2a59a5b1a82f89f2c7e598302a9cacebb72a67.tar.gz",
       "hash": "02rf59xj2v1ml7v35x4j64ax1fb7xx96ld7va6rifyxazmwsr4rb"
     },
-    "nixos-cli": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "nix-community",
-        "repo": "nixos-cli"
-      },
-      "branch": "main",
-      "submodules": false,
-      "revision": "ce228635e4e4a2e44b41583f05b10e57e00f580b",
-      "url": "https://github.com/nix-community/nixos-cli/archive/ce228635e4e4a2e44b41583f05b10e57e00f580b.tar.gz",
-      "hash": "0yfnkdacxzbgc9wlg93g38w2zg9r0jb9kzivwqx8kfbpif7x7n3j"
-    },
     "nixos-hardware": {
       "type": "Git",
       "repository": {
