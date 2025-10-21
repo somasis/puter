@@ -30,11 +30,11 @@ in
 
   nixosModules = {
     default = import ./modules/nixos;
-    lib = import ./modules/lib.nix;
     impermanence = import ./modules/nixos/impermanence.nix;
-    sensible-defaults = import ./modules/nixos/sensible-defaults;
+    lib = import ./modules/lib.nix;
     meta = import ./modules/nixos/meta.nix;
     npins = import ./modules/nixos/npins.nix;
+    sensible-defaults = import ./modules/nixos/sensible-defaults;
     theme = import ./modules/nixos/theme.nix;
   };
 
