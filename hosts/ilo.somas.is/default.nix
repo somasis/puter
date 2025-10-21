@@ -1,6 +1,6 @@
 {
-  sources,
   self,
+  sources,
   config,
   pkgs,
   lib,
@@ -72,10 +72,7 @@
 
   cache.hideMounts = true;
 
-  programs = {
-    command-not-found.enable = false;
-    nano.enable = false;
-  };
+  programs.nano.enable = false;
 
   environment.systemPackages = with pkgs; [
     extrace
