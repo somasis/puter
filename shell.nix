@@ -28,6 +28,13 @@ pkgs.mkShell {
     pkgs.replace-secret
 
     (pkgs.writeShellApplication {
+      name = "nixos";
+      text = ''
+        exec nixos-rebuild -f . -A nixosConfigurations."$HOSTNAME" "$@"
+      '';
+    })
+
+    (pkgs.writeShellApplication {
       name = "npins-update-commit";
       runtimeInputs = [ pkgs.npins ];
       text = ''
