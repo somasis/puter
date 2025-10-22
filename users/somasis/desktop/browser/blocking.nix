@@ -8,6 +8,14 @@
 let
   uriList = map (x: "file://${x}");
 
+  excludedDomains = [
+    # keep-sorted start
+    "gitlab.gnome.org"
+    "indeed.com"
+    "mail.google.com"
+    # keep-sorted end
+  ];
+
   adblockCustom = pkgs.writeText "custom.txt" ''
     [Adblock Plus 2.0]
     ! Title: Custom ad blocking rules
@@ -70,7 +78,7 @@ in
     };
 
     greasemonkey = [
-      (config.lib.somasis.greasemonkey.jhide [ "mail.google.com" "indeed.com" ] (
+      (config.lib.somasis.greasemonkey.jhide excludedDomains (
         map (lib.replaceStrings [ "file://" ] [ "" ])
           # config.programs.qutebrowser.settings.content.blocking.adblock.lists
           (uriList lists)
