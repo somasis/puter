@@ -115,7 +115,7 @@ urgency=
 case "${NTFY_PRIORITY}" in
     1) urgency=low ;;
     2)
-        args+=(--transient)
+        # args+=(--transient)
         urgency=low
         ;;
     0 | 3) urgency=normal ;;
