@@ -10,7 +10,6 @@ let
   importFlake = src: (import sources.flake-compat { inherit src; }).defaultNix;
 in
 {
-  
 
   system.nixos = {
     revision = nixpkgs.revision;
