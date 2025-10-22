@@ -5,6 +5,13 @@
   ...
 }:
 {
+  
+
+  system.nixos = {
+    revision = nixpkgs.revision;
+    versionSuffix = ".${builtins.substring 0 8 nixpkgs.revision}";
+  };
+
   programs = {
     nix-index.enable = true;
     command-not-found.enable = false;
