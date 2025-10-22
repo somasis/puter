@@ -39,6 +39,18 @@
       "url": "https://github.com/ryantm/agenix/archive/2f0f812f69f3eb4140157fe15e12739adf82e32a.tar.gz",
       "hash": "1d4m7hsq727q7ndjqmgyl8vkbkqjwps962ygmv2mcc5dbqzgn963"
     },
+    "flake-compat": {
+      "type": "Git",
+      "repository": {
+        "type": "Git",
+        "url": "https://git.lix.systems/lix-project/flake-compat"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "549f2762aebeff29a2e5ece7a7dc0f955281a1d1",
+      "url": null,
+      "hash": "0g4izwn5k7qpavlk3w41a92rhnp4plr928vmrhc75041vzm3vb1l"
+    },
     "git-hooks": {
       "type": "Git",
       "repository": {
@@ -106,6 +118,19 @@
       "revision": "f0212638a2ec787a7841882f4477d40ae24f0a5d",
       "url": "https://api.github.com/repos/nix-community/lanzaboote/tarball/v0.4.2",
       "hash": "0xc1wawnb0297h5khxblmf9pd1fry950xkcm7mwlck19s2906h80"
+    },
+    "nix-index-database": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "nix-community",
+        "repo": "nix-index-database"
+      },
+      "branch": "main",
+      "submodules": false,
+      "revision": "5024e1901239a76b7bf94a4cd27f3507e639d49e",
+      "url": "https://github.com/nix-community/nix-index-database/archive/5024e1901239a76b7bf94a4cd27f3507e639d49e.tar.gz",
+      "hash": "0rr5p7n1djhimxjmpxh00gf4yc4sy1m6hlv09iib59hi1f83qrf6"
     },
     "nixos": {
       "type": "Git",

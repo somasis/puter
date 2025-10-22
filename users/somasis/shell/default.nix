@@ -55,11 +55,5 @@
         ''
       );
     };
-
-    nix-index.enable = true;
   };
-
-  persist.directories = [
-    (config.lib.somasis.xdgConfigDir "nix-index")
-  ];
 }

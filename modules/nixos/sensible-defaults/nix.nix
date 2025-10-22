@@ -1,9 +1,14 @@
 {
+  sources,
+  nixpkgs,
   config,
   lib,
   pkgs,
   ...
 }:
+let
+  importFlake = src: (import sources.flake-compat { inherit src; }).defaultNix;
+in
 {
   
 
@@ -11,6 +16,9 @@
     revision = nixpkgs.revision;
     versionSuffix = ".${builtins.substring 0 8 nixpkgs.revision}";
   };
+  imports = [
+    (importFlake sources.nix-index-database).outputs.nixosModules.nix-index
+  ];
 
   programs = {
     nix-index.enable = true;
