@@ -8,7 +8,7 @@
 {
   programs.git = {
     # Use SSH for signing commits, rather than GPG.
-    extraConfig.gpg.format = "ssh";
+    settings.gpg.format = "ssh";
 
     # Sign all commits and tags by default.
     signing.signByDefault = true;
@@ -23,6 +23,6 @@
     signing.key = "~/.ssh/id_ed25519";
 
     # Store trusted signatures.
-    extraConfig.gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
+    settings.gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
   };
 }

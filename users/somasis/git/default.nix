@@ -20,40 +20,35 @@
       enable = true;
       package = pkgs.gitFull;
 
-      userName = "Kylie McClain";
-      userEmail = "kylie@somas.is";
+      settings = {
+        user.name = "Kylie McClain";
+        user.email = "kylie@somas.is";
 
-      aliases = {
-        addall = "add -Av";
-        addp = "add -p";
-        unadd = "reset HEAD --";
+        aliases = {
+          addall = "add -Av";
+          addp = "add -p";
+          unadd = "reset HEAD --";
 
-        com = "commit";
-        reword = "commit --amend";
-        amend = "commit -v --amend --no-edit";
+          com = "commit";
+          reword = "commit --amend";
+          amend = "commit -v --amend --no-edit";
 
-        commits = "log --reverse --oneline @{upstream}...HEAD";
-        patches = "format-patch --stdout origin..HEAD";
+          commits = "log --reverse --oneline @{upstream}...HEAD";
+          patches = "format-patch --stdout origin..HEAD";
 
-        re = "rebase";
-        ri = "rebase -i";
-        rbe = "rebase --edit-todo";
-        rbc = "rebase --continue";
-        rbs = "rebase --skip";
-        rba = "rebase --abort";
+          re = "rebase";
+          ri = "rebase -i";
+          rbe = "rebase --edit-todo";
+          rbc = "rebase --continue";
+          rbs = "rebase --skip";
+          rba = "rebase --abort";
 
-        ch = "cherry-pick";
-        chc = "cherry-pick --continue";
-        chs = "cherry-pick --skip";
-        cha = "cherry-pick --abort";
-      };
+          ch = "cherry-pick";
+          chc = "cherry-pick --continue";
+          chs = "cherry-pick --skip";
+          cha = "cherry-pick --abort";
+        };
 
-      difftastic = {
-        enable = true;
-        display = "inline";
-      };
-
-      extraConfig = {
         init.defaultBranch = "main";
         interactive.singlekey = true;
 
@@ -142,6 +137,11 @@
     };
 
     mergiraf.enable = true;
+    difftastic = {
+      enable = true;
+      git.enable = true;
+      options.display = "inline";
+    };
 
     bash.initExtra = ''
       _git_prompt() {
@@ -210,9 +210,8 @@
 
   home = {
     packages = [
-      pkgs.pre-commit
-
       pkgs.git-open
+      pkgs.pre-commit
 
       (pkgs.writeShellScriptBin "git-curlam" ''
         set -e
@@ -256,6 +255,6 @@
     # Add git aliases to the shell
     // lib.mapAttrs (
       _: v: if lib.hasPrefix "!" v then lib.removePrefix "!" v else "git ${v}"
-    ) config.programs.git.aliases;
+    ) config.programs.git.settings.aliases;
   };
 }
