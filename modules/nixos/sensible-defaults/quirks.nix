@@ -50,16 +50,7 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
-    inherit (nixpkgs-quirks.pkgs)
-      retroarch-bare
-      trurl
-      ;
-
-    python3Packages = prev.python3Packages // {
-      inherit (pkgs.stable.pkgs.python3Packages)
-        img2pdf
-        ;
-    };
+    inherit (nixpkgs-quirks.pkgs) trurl;
   };
 in
 {
