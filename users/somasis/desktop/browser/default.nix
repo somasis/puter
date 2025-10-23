@@ -160,12 +160,12 @@ in
     ];
 
     files = [
-      #   # BUG(?): Can't make autoconfig.yml an impermanent file; I think qutebrowser
-      #   #         modifies it atomically (write new file -> rename to replace) so I
-      #   #         think that it gets upset when a bind mount is used.
-      #   # (xdgConfigDir "qutebrowser/autoconfig.yml")
-      #   # (xdgConfigDir "qutebrowser/bookmarks/urls")
-      #   # (xdgConfigDir "qutebrowser/quickmarks")
+      # BUG(?): Can't make autoconfig.yml an impermanent file; I think qutebrowser
+      #         modifies it atomically (write new file -> rename to replace) so I
+      #         think that it gets upset when a bind mount is used.
+      # (xdgConfigDir "qutebrowser/autoconfig.yml")
+      # (xdgConfigDir "qutebrowser/bookmarks/urls")
+      # (xdgConfigDir "qutebrowser/quickmarks")
       (xdgDataDir "qutebrowser/adblock-cache.dat")
       (xdgDataDir "qutebrowser/blocked-hosts")
       (xdgDataDir "qutebrowser/cmd-history")
