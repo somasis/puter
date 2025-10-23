@@ -39,6 +39,8 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgDataDir "libkunitconversion")
       (xdgDataDir "networkmanagement")
       (xdgDataDir "plasma")
+      (xdgDataDir "plasma-manager")
+      (xdgDataDir "plasma-systemmonitor")
       (xdgDataDir "plasmashell")
       (xdgDataDir "remoteview")
       (xdgDataDir "sddm")
@@ -83,6 +85,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "kscreenlockerrc")
       (xdgConfigDir "kservicemenurc")
       (xdgConfigDir "ksmserverrc")
+      (xdgConfigDir "ksplashrc")
       (xdgConfigDir "ktimezonedrc")
       (xdgConfigDir "ktrashrc")
       (xdgConfigDir "kwalletrc")
@@ -101,6 +104,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "powerdevilrc")
       (xdgConfigDir "powermanagementprofilesrc")
       (xdgConfigDir "spectaclerc")
+      (xdgConfigDir "systemmonitorrc")
       (xdgConfigDir "systemsettingsrc")
       (xdgConfigDir "trashrc")
       (xdgConfigDir "xdg-desktop-portal-kderc")
@@ -125,27 +129,29 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgCacheDir "mesa_shader_cache_db")
       (xdgCacheDir "obexd")
       (xdgCacheDir "org.kde.ki18n")
+      (xdgCacheDir "org.kde.kunifiedpush")
       (xdgCacheDir "org.kde.unitconversion")
+      (xdgCacheDir "plasma-systemmonitor")
       (xdgCacheDir "plasma_engine_potd")
       (xdgCacheDir "plasmashell")
       (xdgCacheDir "systemsettings")
       (xdgCacheDir "thumbnails")
+      (xdgCacheDir "xdg-desktop-portal-kde")
       (xdgCacheDir "xwaylandvideobridge")
       # keep-sorted end
     ];
 
     files = [
       # keep-sorted start
+      (xdgCacheDir "xdg-desktop-portal-kderc")
       (xdgDataDir "krunnerstaterc")
       (xdgDataDir "qtposition-geoclue2")
-      # (xdgDataDir "recently-used.xbel")
       # keep-sorted end
     ];
   };
 
   home.packages =
     with pkgs;
-    # with libsForQt5;
     with kdePackages;
     [
       # keep-sorted start
