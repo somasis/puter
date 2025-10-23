@@ -41,6 +41,7 @@
     directories = [
       "src"
       (config.lib.somasis.xdgDataDir "nix")
+      (config.lib.somasis.xdgDataDir "systemd")
     ];
   };
 

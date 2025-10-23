@@ -29,8 +29,32 @@ pkgs.mkShell {
 
     (pkgs.writeShellApplication {
       name = "nixos";
+      runtimeInputs = [ pkgs.nixos-rebuild pkgs.nix-output-monitor ];
       text = ''
-        exec nixos-rebuild -f . -A nixosConfigurations."$HOSTNAME" "$@"
+        edo() {
+            local arg string
+            string=
+            for arg; do
+                if [[ ''${arg@Q} == "'$arg'" ]] && ! [[ ''${arg} =~ [[:blank:]] ]]; then
+                    string+="''${string:+ }$arg"
+                else
+                    string+="''${string:+ }''${arg@Q}"
+                fi
+            done
+
+            printf '$ %s\n' "''${string}" >&2
+            # alt: printf '$ %s\n' "$(condquote "$@")" >&2
+
+            "$@"
+        }
+
+        edo nixos-rebuild \
+            --log-format internal-json \
+            --sudo \
+            -f . \
+            -A nixosConfigurations."$HOSTNAME" \
+            "$@" \
+            |& nom --json
       '';
     })
 
