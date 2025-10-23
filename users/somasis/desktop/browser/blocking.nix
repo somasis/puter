@@ -10,7 +10,6 @@ let
 
   excludedDomains = [
     # keep-sorted start
-    "gitlab.gnome.org"
     "indeed.com"
     "mail.google.com"
     # keep-sorted end
