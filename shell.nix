@@ -29,7 +29,10 @@ pkgs.mkShell {
 
     (pkgs.writeShellApplication {
       name = "nixos";
-      runtimeInputs = [ pkgs.nixos-rebuild pkgs.nix-output-monitor ];
+      runtimeInputs = [
+        pkgs.nixos-rebuild
+        pkgs.nix-output-monitor
+      ];
       text = ''
         edo() {
             local arg string
