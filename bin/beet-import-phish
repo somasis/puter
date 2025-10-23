@@ -85,8 +85,8 @@ if [[ "$#" -le 0 ]]; then
     usage 'error: must provide at least one argument\n'
 fi
 
-for show; do
-    if ! [[ "${show}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]]; then
+for show_date; do
+    if ! [[ "${show_date}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]]; then
         usage 'error: show must be an ISO-formatted date (1969-12-31)\n'
     fi
 done
@@ -100,20 +100,20 @@ beet_args=(
     $(for _ in $(seq 2 "${verbosity:-0}"); do printf -- '-v\n'; done)
 )
 
-for show; do
+for show_date; do
     year=
     month=
     day=
 
-    [[ "${show}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]] \
+    [[ "${show_date}" =~ ^([0-9]{4,})-([0-9]{2})-([0-9]{2})$ ]] \
         && year=${BASH_REMATCH[1]} \
         && month=${BASH_REMATCH[2]} \
         && day=${BASH_REMATCH[3]} \
         || exit 1
 
-    edo phish-show-notes "${show}"
+    edo phish-show-notes "${show_date}"
 
-    download_dir=$(edo phish-download-show ${verbosity:+-v} "${show}")
+    download_dir=$(edo phish-download-show ${verbosity:+-v} "${show_date}")
 
     phishin_id=$(phishin '.id')
 

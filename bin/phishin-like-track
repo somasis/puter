@@ -69,10 +69,10 @@ curl_authed() {
 phishin_auth
 
 errors=0
-show="$1"
+show_date="$1"
 
-[[ "$show" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
-    || usage 'error: show argument is not an ISO format date: %s\n' "$show"
+[[ "$show_date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
+    || usage 'error: show argument is not an ISO format date: %s\n' "$show_date"
 
 shift
 
@@ -105,7 +105,7 @@ for track; do
 
     # /likes requires the show ID be given, not a date
     show_data=$(
-        curl --fail-with-body "https://phish.in/api/v2/shows/${show}"
+        curl --fail-with-body "https://phish.in/api/v2/shows/${show_date}"
     )
 
     track_id=$(
@@ -141,7 +141,7 @@ for track; do
     else
         errors=$((errors + 1))
         printf 'error: failed while %s track %s (id: %i, show: %s)\n' \
-            "$verb" "$track" "$track_id" "$show" >&2
+            "$verb" "$track" "$track_id" "$show_date" >&2
     fi
 done
 

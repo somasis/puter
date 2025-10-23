@@ -130,7 +130,7 @@ jq_script='
         show_data: tojson,
         setlist_data: $show_setlist_data.data | tojson,
         setlist_notes,
-        showdate,
+        show_date,
         permalink,
         tour_name,
         show_venue: [
@@ -155,7 +155,7 @@ eval "$show_data_eval"
 : "${show_data:?}"
 : "${setlist_data:?}"
 : "${setlist_notes?}"
-: "${showdate:?}"
+: "${show_date:?}"
 : "${permalink:?}"
 : "${tour_name:?}"
 : "${show_venue:?}"
@@ -165,7 +165,7 @@ if [[ "$mode" == 'json' ]]; then
     exit $?
 fi
 
-printf 'Phish\n%s\n%s\n%s\n\n' "${showdate}" "${tour_name}" "${show_venue}"
+printf 'Phish\n%s\n%s\n%s\n\n' "${show_date}" "${tour_name}" "${show_venue}"
 
 mapfile -t show_sets < <(jq -r '[.[].set] | unique[]' <<<"$setlist_data")
 

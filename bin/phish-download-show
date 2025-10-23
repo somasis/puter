@@ -95,7 +95,7 @@ shift $((OPTIND - 1))
 [[ "$1" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
     || usage 'error: invalid show argument format (YYYY-MM-DD required)\n'
 
-show="$1"
+show_date="$1"
 shift
 
 # Request that Phish.in generate a ZIP archive of the album, polling until it
@@ -103,7 +103,7 @@ shift
 _said=false
 while :; do
     request_album_zip=$(
-        jq -nc '{date:$show}' --arg show "$show" \
+        jq -nc '{date:$show_date}' --arg show_date "$show_date" \
             | curl --no-progress-meter --json @- \
                 'https://phish.in/api/v2/shows/request_album_zip'
     )
@@ -121,8 +121,8 @@ while :; do
 done
 
 # shellcheck disable=SC2310
-if ! phishin_show_data=$(curl --no-progress-meter --fail "https://phish.in/api/v2/shows/$show"); then
-    printf 'error: failed to download show data for %s\n' "${show}" >&2
+if ! phishin_show_data=$(curl --no-progress-meter --fail "https://phish.in/api/v2/shows/$show_date"); then
+    printf 'error: failed to download show data for %s\n' "${show_date}" >&2
     exit 1
 fi
 
@@ -177,7 +177,7 @@ if
         && ! cmp -s <(jq -c <<<"${phishin_show_data}" || printf '{}') <(jq -c <<<"${near_show_data}" || printf '{}')
 then
     # and if none of this is true, then we don't need to do anything!
-    printf '%s: downloaded version is up to date\n' "${show}" >&2
+    printf '%s: downloaded version is up to date\n' "${show_date}" >&2
     printf '%s\n' "${directory}"
     exit 0
 fi

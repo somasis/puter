@@ -63,17 +63,17 @@ curl_authed() {
 
 [[ "$#" -gt 0 ]] || usage 'error: no arguments provided\n'
 
-for show; do
-    [[ "$show" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
-        || usage 'error: show argument is not an ISO format date: %s\n' "$show"
+for show_date; do
+    [[ "$show_date" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] \
+        || usage 'error: show argument is not an ISO format date: %s\n' "$show_date"
 done
 
 phishin_auth
 
 errors=0
-for show; do
+for show_date; do
     # /likes requires the show ID be given, not a date
-    show_id=$(curl --fail-with-body "https://phish.in/api/v2/shows/${1?no show given}")
+    show_id=$(curl --fail-with-body "https://phish.in/api/v2/shows/${show_date}")
     show_id=$(jq -ce '.id' <<<"${show_id}")
 
     result=$(
@@ -82,11 +82,11 @@ for show; do
             | curl_authed -X POST --json @- "https://phish.in/api/v2/likes"
     )
 
-    if jq -cre --arg show "$show" '.id' <<<"$result" >/dev/null; then
-        printf '%s\n' "$show"
+    if jq -cre --arg show_date "$show_date" '.id' <<<"$result" >/dev/null; then
+        printf '%s\n' "$show_date"
     else
         errors=$((errors + 1))
-        printf 'error: failed while liking show %s (id: %i)\n' "$show" "$show_id" >&2
+        printf 'error: failed while liking show %s (id: %i)\n' "$show_date" "$show_id" >&2
     fi
 done
 
