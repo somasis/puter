@@ -132,19 +132,6 @@
       "url": "https://github.com/nix-community/nix-index-database/archive/5024e1901239a76b7bf94a4cd27f3507e639d49e.tar.gz",
       "hash": "0rr5p7n1djhimxjmpxh00gf4yc4sy1m6hlv09iib59hi1f83qrf6"
     },
-    "nixos": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "nixos",
-        "repo": "nixpkgs"
-      },
-      "branch": "nixos-unstable",
-      "submodules": false,
-      "revision": "5e2a59a5b1a82f89f2c7e598302a9cacebb72a67",
-      "url": "https://github.com/nixos/nixpkgs/archive/5e2a59a5b1a82f89f2c7e598302a9cacebb72a67.tar.gz",
-      "hash": "02rf59xj2v1ml7v35x4j64ax1fb7xx96ld7va6rifyxazmwsr4rb"
-    },
     "nixos-hardware": {
       "type": "Git",
       "repository": {
@@ -170,6 +157,12 @@
       "revision": "33c6dca0c0cb31d6addcd34e90a63ad61826b28c",
       "url": "https://github.com/nixos/nixpkgs/archive/33c6dca0c0cb31d6addcd34e90a63ad61826b28c.tar.gz",
       "hash": "13asggd2xh2pw1n04a2yn4ypfgxqjsqjsy6w1hxly4iv6g8hcz1x"
+    },
+    "nixos-unstable": {
+      "type": "Channel",
+      "name": "nixos-unstable",
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre880095.5e2a59a5b1a8/nixexprs.tar.xz",
+      "hash": "0dkrjdnxgiqi7fwvjmac2nxls1777c1wr7mnikkqajlhisim8hmv"
     },
     "nixpkgs": {
       "type": "Git",

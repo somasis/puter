@@ -47,11 +47,11 @@ in
 
   overlays = {
     nixpkgsVersions = final: prev: {
-      unstable = import sources.nixos { };
+      unstable = import sources.nixos-unstable { };
       stable = import sources.nixos-stable { };
       dev = import sources.nixpkgs { };
     };
   };
 
-  nixosConfigurations.ilo = nixos sources.nixos ./hosts/ilo.somas.is;
+  nixosConfigurations.ilo = nixos sources.nixos-unstable ./hosts/ilo.somas.is;
 }
