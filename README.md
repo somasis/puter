@@ -151,7 +151,7 @@ order to get it to play gaplessly,
 and if I need to download them just to get gapless playback,
 then I might as well automate the process
 of downloading shows and importing them into in my music library properly,
-and simply *play them with my music player* instead of using `mpv`.
+and simply _play them with my music player_ instead of using `mpv`.
 Naturally, it turned into a lot of effort because I was having fun with
 figuring out the most ergonomic design for the tools.
 
@@ -273,17 +273,17 @@ You can also show the taper notes for the show's recording provided by Phish.in:
 
 Behold the untapped power of an unemployed music-listening Linux user.
 
-  [`beet-import-phish`]: ./bin/beet-import-phish
-  [`phish-download-show`]: ./bin/phish-download-show
-  [`phish-list-shows`]: ./bin/phish-list-shows
-  [`phish-show-notes`]: ./bin/phish-show-notes
-  [`phishin-auth-token`]: ./bin/phishin-auth-token
-  [`phishin-like-show`]: ./bin/phishin-like-show
-  [`phishin-like-track`]: ./bin/phishin-like-track
-  [Phish]: https://phish.com
-  [Phish.in]: https://phish.in
-  [Phish.net]: http://phish.net
-  [example]: https://phish.net/setlists/phish-may-07-1994-the-bomb-factory-dallas-tx-usa.html
+[`beet-import-phish`]: ./bin/beet-import-phish
+[`phish-download-show`]: ./bin/phish-download-show
+[`phish-list-shows`]: ./bin/phish-list-shows
+[`phish-show-notes`]: ./bin/phish-show-notes
+[`phishin-auth-token`]: ./bin/phishin-auth-token
+[`phishin-like-show`]: ./bin/phishin-like-show
+[`phishin-like-track`]: ./bin/phishin-like-track
+[Phish]: https://phish.com
+[Phish.in]: https://phish.in
+[Phish.net]: http://phish.net
+[example]: https://phish.net/setlists/phish-may-07-1994-the-bomb-factory-dallas-tx-usa.html
 
 ### `upload`
 
@@ -345,7 +345,7 @@ I use [agenix] for managing secrets.
 Ideally, `age-plugin-tpm` is what provides the machine
 and user identities to which the secrets are encrypted.
 
-  [agenix]: https://github.com/ryantm/agenix
+[agenix]: https://github.com/ryantm/agenix
 
 #### Creating and using a secret
 
