@@ -34,8 +34,9 @@ download the latest NixOS live USB image, and I do something like this
 
 Updating sources (i.e., the NixOS version used to build system)
 
-    $ npins-update-commit    # will also commit npins/* afterwards
-    # or
+    # update *and* commit the changes:
+    $ npins-update-commit
+    # or just update
     $ npins update
 
 Make sure to ensure things work and build after doing so and before
@@ -68,13 +69,13 @@ It provides a nice menu item, and that's the primary way I interact with it.
 Here’s a thousand words:
 
 [The menu item][kio-beets], as shown in Dolphin:
-![A popup menu created by a right-click action on a directory named "Phish - Slip Stitch and Pass (1997)"](./img/beets-import-to-library (menu item).png)
+![A popup menu created by a right-click action on a directory named "Phish - Slip Stitch and Pass (1997)"](./img/beets-import-to-library%20(menu%20item).png)
 
 Notification of import starting soon:
-![A desktop notification as produced by KDE Plasma](./img/beets-import-to-library (importing).png)
+![A desktop notification as produced by KDE Plasma](./img/beets-import-to-library%20(importing).png)
 
 Notification of successful import:
-![A desktop notification as produced by KDE Plasma](./img/beets-import-to-library (imported).png)
+![A desktop notification as produced by KDE Plasma](./img/beets-import-to-library%20(imported).png)
 
 #### `beet-hook-diff-{pluginload,cli_exit}`
 
