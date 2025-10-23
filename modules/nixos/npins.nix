@@ -1,5 +1,6 @@
 {
   sources,
+  nixpkgs,
   pkgs,
   lib ? pkgs.lib,
   config,
@@ -17,9 +18,11 @@
       );
     };
 
+    system.nixos.revision = nixpkgs.revision or (builtins.baseNameOf (builtins.dirOf nixpkgs.url));
+
     nix = {
       # Disable all points of dependency pulling other than npins.
-      # channels.enable = false;
+      # channel.enable = false;
       # registry = lib.mkForce {};
 
       # Use Flake registry to provide access to npins' source paths;
