@@ -99,6 +99,7 @@ shift
 
 # Request that Phish.in generate a ZIP archive of the album, polling until it
 # is actually made available to download if we end up making it generate one.
+_said=false
 while :; do
     request_album_zip=$(
         jq -nc '{date:$show}' --arg show "$show" \
@@ -109,6 +110,11 @@ while :; do
     if jq -re '.message == "Album already generated"' <<<"${request_album_zip}" >/dev/null; then
         break
     else
+        if [[ "$_said" == false ]]; then
+            printf 'waiting for Phish.in to finish generating the album...\n' >&2
+            _said=true
+        fi
+
         sleep 15
     fi
 done
