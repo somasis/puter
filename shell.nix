@@ -22,7 +22,9 @@ pkgs.mkShell {
 
     treefmt
 
+    pkgs.act
     pkgs.apacheHttpd # for `htpasswd`
+    pkgs.cachix
     pkgs.nix-update
     pkgs.npins
     pkgs.replace-secret
