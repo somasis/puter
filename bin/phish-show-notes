@@ -36,7 +36,7 @@ with exception of taper notes provided by the Phish.in project.
 options:
     -A              Use full names of songs only; disable abbreviations.
     -j              Instead of displaying show notes, show Phish.net's
-                    JSON data corresponding to <show>.
+                    JSON data corresponding to <show>. (porcelain)
     -t              Output the taper notes for the show as corresponds
                     to Phish.in's recording.
     <show>          An ISO formatted date (ex. 1969-12-31).
