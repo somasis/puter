@@ -22,7 +22,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [-v] <show ...>
+usage: ${0##*/} [-v] <show...>
 
 Download a Phish show from Phish.in's database of recordings into a
 predetermined download directory using \`phish-download-show\`.
