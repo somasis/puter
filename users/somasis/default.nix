@@ -32,6 +32,12 @@
   cache = {
     defaultDirectoryMethod = "symlink";
     allowOther = true;
+
+    directories = with config.lib.somasis; [
+      (xdgCacheDir "nix")
+      (xdgDataDir "nix")
+      (xdgDataDir "systemd")
+    ];
   };
 
   persist = {
@@ -40,8 +46,6 @@
 
     directories = [
       "src"
-      (config.lib.somasis.xdgDataDir "nix")
-      (config.lib.somasis.xdgDataDir "systemd")
     ];
   };
 
