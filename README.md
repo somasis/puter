@@ -331,6 +331,7 @@ and user identities to which the secrets are encrypted.
 #### Creating and using a secret
 
 ```nix
+# secrets.nix
 {
   "my-new-apikey.age".publicKeys = [ alice bob computer ];
 }
@@ -339,6 +340,7 @@ and user identities to which the secrets are encrypted.
     $ agenix -e secrets/my-new-apikey.age
 
 ```nix
+# Somewhere in a NixOS configuration...
 { self, ...}: {
   age.secrets.my-new-apikey.file = "${self}/secrets/my-new-apikey.age";
 }
