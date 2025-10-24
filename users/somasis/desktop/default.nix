@@ -63,7 +63,14 @@
     # };
   };
 
-  services.tunnels.enable = true;
+  services = {
+    tunnels.enable = true;
+
+    lorri = {
+      enable = true;
+      enableNotifications = true;
+    };
+  };
 
   programs.direnv = {
     enable = true;
