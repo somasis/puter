@@ -34,6 +34,12 @@ let
       url = "https://github.com/NixOS/nixpkgs/pull/455083.patch";
       hash = "sha256-jb/KYkYC2/a/WKeU1OlbW7ulxWp5YYFKlSFmn+NCvf4=";
     })
+
+    # Added 2025-10-23: fix pcsx2
+    (fetchpatch2 {
+      url = "https://github.com/NixOS/nixpkgs/pull/454958.patch";
+      hash = "sha256-O1/4ae4w2bq5d6rQQf8zjEreyYF5k/iLRv8x2+xbcZc=";
+    })
   ];
 
   # deadnix: skip
@@ -58,6 +64,7 @@ let
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
     inherit (nixpkgs-quirks.pkgs)
+      pcsx2
       trurl
       ;
 
