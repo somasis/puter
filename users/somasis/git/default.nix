@@ -10,10 +10,19 @@
     ./signing.nix
   ];
 
+  persist.directories = with config.lib.somasis; [
+    (xdgConfigDir "act")
+    (xdgConfigDir "cachix")
+  ];
+
   cache.directories = with config.lib.somasis; [
+    # keep-sorted start
+    (xdgCacheDir "act")
+    (xdgCacheDir "actcache")
     (xdgCacheDir "pre-commit")
     (xdgCacheDir "treefmt")
     (xdgDataDir "mergiraf")
+    # keep-sorted end
   ];
 
   programs = {
@@ -210,16 +219,18 @@
   };
 
   home = {
-    packages = [
-      pkgs.git-open
-      pkgs.pre-commit
+    packages = with pkgs; [
+      act
+      cachix
+      git-open
+      pre-commit
 
-      (pkgs.writeShellScriptBin "git-curlam" ''
+      (writeShellScriptBin "git-curlam" ''
         set -e
 
         b=$(git rev-parse HEAD)
 
-        ${pkgs.curl}/bin/curl -Lf# "$@" \
+        ${curl}/bin/curl -Lf# "$@" \
             | ${config.programs.git.package}/bin/git am -q
 
         a=$(git rev-parse HEAD)
