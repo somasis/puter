@@ -10,9 +10,10 @@
     ./signing.nix
   ];
 
-  cache.directories = [
-    (config.lib.somasis.xdgCacheDir "pre-commit")
-    (config.lib.somasis.xdgCacheDir "treefmt")
+  cache.directories = with config.lib.somasis; [
+    (xdgCacheDir "pre-commit")
+    (xdgCacheDir "treefmt")
+    (xdgDataDir "mergiraf")
   ];
 
   programs = {
