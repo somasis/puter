@@ -40,6 +40,12 @@ let
       url = "https://github.com/NixOS/nixpkgs/pull/454958.patch";
       hash = "sha256-O1/4ae4w2bq5d6rQQf8zjEreyYF5k/iLRv8x2+xbcZc=";
     })
+
+    # Added 2025-10-23: fix kde-rounded-corners
+    (fetchpatch2 {
+      url = "https://github.com/NixOS/nixpkgs/pull/455101.patch";
+      hash = "sha256-uiEiGB+KkXwQUz65HLPJL2f4RlDUGSaIYgPWCI6jAac=";
+    })
   ];
 
   # deadnix: skip
@@ -64,6 +70,7 @@ let
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
     inherit (nixpkgs-quirks.pkgs)
+      kde-rounded-corners
       pcsx2
       trurl
       ;
