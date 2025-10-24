@@ -33,7 +33,7 @@ pkgs.mkShell {
       name = "nixos";
       runtimeInputs = [
         pkgs.nixos-rebuild
-        pkgs.nix-output-monitor
+        # pkgs.nix-output-monitor
       ];
       text = ''
         edo() {
@@ -54,12 +54,12 @@ pkgs.mkShell {
         }
 
         edo nixos-rebuild \
-            --log-format internal-json \
+            --log-format bar-with-logs \
             --sudo \
             -f . \
             -A nixosConfigurations."$HOSTNAME" \
-            "$@" \
-            |& nom --json
+            "$@"
+            # |& nom --json
       '';
     })
 
