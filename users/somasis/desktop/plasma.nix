@@ -20,6 +20,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "gtk-4.0") # kde-gtk-config
       (xdgConfigDir "kde.org")
       (xdgConfigDir "kdedefaults")
+      (xdgConfigDir "kweather")
       (xdgConfigDir "panel-colorizer")
       (xdgConfigDir "plasma-workspace")
       (xdgConfigDir "session")
@@ -124,6 +125,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgCacheDir "krunner")
       (xdgCacheDir "kscreenlocker_greet")
       (xdgCacheDir "ksplash")
+      (xdgCacheDir "kweather")
       (xdgCacheDir "kwin")
       (xdgCacheDir "mesa_shader_cache")
       (xdgCacheDir "mesa_shader_cache_db")
