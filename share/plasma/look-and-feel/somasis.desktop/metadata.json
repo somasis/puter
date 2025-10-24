@@ -1,0 +1,18 @@
+{
+  "KPackageStructure": "Plasma/LookAndFeel",
+  "KPlugin": {
+    "Authors": [
+      {
+        "Email": "kylie@somas.is",
+        "Name": "somasis"
+      }
+    ],
+    "Category": "",
+    "ServiceTypes": ["Plasma/LookAndFeel"],
+    "Description": "somasis",
+    "Id": "somasis.desktop",
+    "License": "Public domain",
+    "Name": "somasis",
+    "Website": "https://somas.is"
+  }
+}

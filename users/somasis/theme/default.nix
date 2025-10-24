@@ -1,6 +1,6 @@
 {
+  self,
   config,
-  lib,
   ...
 }:
 let
@@ -16,44 +16,25 @@ in
   systemd.user.sessionVariables._JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=on";
 
   programs.plasma = {
-    workspace = {
-      lookAndFeel = "org.kde.breezetwilight.desktop";
-      theme = "breeze-dark";
-      colorScheme = "SomasisLight";
-    };
+    # See `./share/plasma/look-and-feel/somasis.desktop`
+    workspace.lookAndFeel = "somasis.desktop";
 
-    configFile.kdeglobals.General.AccentColor = config.lib.somasis.colors.kde config.theme.colors.accent;
+    configFile.kdeglobals.General.AccentColor = colors.kde config.theme.colors.accent;
+  };
+
+  xdg.dataFile = {
+    "plasma/look-and-feel/somasisdark.desktop".source =
+      "${self}/share/plasma/look-and-feel/somasisdark.desktop";
+    "plasma/look-and-feel/somasis.desktop".source =
+      "${self}/share/plasma/look-and-feel/somasis.desktop";
   };
 
   services.darkman = {
     enable = true;
-
-    lightModeScripts = {
-      kde-color-scheme = ''
-        plasma-apply-colorscheme SomasisLight
-        plasma-apply-colorscheme -a ${lib.escapeShellArg (colors.hex config.theme.colors.accent)}
-      '';
-      kde-gtk-theme = ''
-        dbus-send --session --dest=org.kde.GtkConfig --type=method_call /GtkConfig org.kde.GtkConfig.setGtkTheme "string:Breeze-gtk"
-      '';
-    };
-
-    darkModeScripts = {
-      kde-color-scheme = ''
-        plasma-apply-colorscheme SomasisDark
-        plasma-apply-colorscheme -a ${lib.escapeShellArg (colors.hex config.theme.colors.brightAccent)}
-      '';
-      kde-gtk-theme = ''
-        dbus-send --session --dest=org.kde.GtkConfig --type=method_call /GtkConfig org.kde.GtkConfig.setGtkTheme "string:Breeze-dark-gtk"
-      '';
-    };
-
-    settings = {
-      usegeoclue = true;
-    };
+    settings.usegeoclue = true;
   };
 
-  cache.directories = [
-    (config.lib.somasis.xdgCacheDir "darkman")
+  cache.directories = with config.lib.somasis; [
+    (xdgCacheDir "darkman")
   ];
 }

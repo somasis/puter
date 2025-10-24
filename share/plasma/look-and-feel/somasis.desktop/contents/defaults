@@ -1,0 +1,23 @@
+[kdeglobals][KDE]
+widgetStyle=Breeze
+
+[kdeglobals][General]
+ColorScheme=SomasisLight
+
+[kdeglobals][Icons]
+Theme=Papirus
+
+[plasmarc][Theme]
+name=breeze-dark
+
+[kcminputrc][Mouse]
+cursorTheme=Hackneyed (scalable)
+
+[kwinrc][org.kde.kdecoration2]
+ButtonsOnLeft=M
+ButtonsOnRight=SBFAIX
+library=org.kde.breeze
+theme=Breeze
+
+[KSplash]
+Theme=none
