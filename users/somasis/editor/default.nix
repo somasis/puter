@@ -6,6 +6,37 @@
 }:
 let
   tomlFormat = pkgs.formats.toml { };
+
+  kakSession = pkgs.writeShellScript "kak-session" ''
+    session_name="''${1:?no session name provided}"
+    shift
+
+    sessions=()
+    mapfile -t sessions < <(kak -l)
+
+    mode=create
+    for active_session in "''${sessions[@]}"; do
+        if [[ "$active_session" == "$session_name" ]]; then
+            mode=attach
+            break
+        fi
+    done
+
+    args=( "$@" )
+    mapfile -t args < <(
+        for arg in "''${args[@]}"; do
+            # Turn file arguments into absolute paths because
+            # the session directory might be different from
+            # the file directory.
+            printf '%s\n' "$(readlink -f "$arg")"
+        done
+    )
+
+    case "$mode" in
+        create) exec kak -s "$session_name" "''${args[@]}" ;;
+        attach) exec kak -c "$session_name" "''${args[@]}" ;;
+    esac
+  '';
 in
 {
   imports = [ ./filetype ];
@@ -48,7 +79,7 @@ in
         "ConsoleOnly"
       ];
 
-      exec = "kak -- %F";
+      exec = "${kakSession} desktop -- %F";
       terminal = true;
       mimeType = [
         "text/*"
@@ -62,7 +93,7 @@ in
       };
     }
     // lib.optionalAttrs config.programs.konsole.enable {
-      settings = rec {
+      settings = {
         StartupWMClass = "kakoune";
         TerminalOptions = "--desktopfile kakoune --separate --profile application";
       };
