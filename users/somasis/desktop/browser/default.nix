@@ -148,7 +148,9 @@ in
 
   persist = {
     directories = [
-      (xdgConfigDir "qutebrowser")
+      # bindfs must be used since home-manager needs to write to the directory.
+      { method = "bindfs"; directory = xdgConfigDir "qutebrowser"; }
+
       (xdgCacheDir "qutebrowser")
 
       (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
