@@ -1,4 +1,5 @@
 {
+  self,
   config,
   lib,
   pkgs,
@@ -14,8 +15,9 @@ in
     [
       config.services.playerctld.package
       music-discord-rpc
-      mpris-scrobbler
     ];
+
+  age.secrets.rescrobbled-env.file = "${self}/secrets/rescrobbled-env.age";
 
   # Elisa is my music player of choice. I use it to play music from ~/audio/library.
   # Metadata from Elisa is propagated to beets using `beet-update-from-elisa`,
@@ -62,13 +64,16 @@ in
     # I use playerctld rather than Plasma's built-in media controller.
     playerctld.enable = true;
     mpris-proxy.enable = true;
+
+    rescrobbled = {
+      enable = true;
+      settings.player-whitelist = [ "Elisa" ];
+    };
   };
 
   persist = {
-    directories = [
-      (config.lib.somasis.xdgDataDir "elisa")
-      (config.lib.somasis.xdgConfigDir "mpris-scrobbler")
-      (config.lib.somasis.xdgDataDir "mpris-scrobbler")
+    directories = with config.lib.somasis; [
+      (xdgDataDir "elisa")
     ];
 
     # ~/etc/kde.org is already preserved by plasma.nix, because
@@ -78,12 +83,22 @@ in
     # files = [
     #   (config.lib.somasis.xdgConfigDir "kde.org/elisa.conf")
     # ];
+
+    # Don't forget to log in to Last.FM by running `rescrobbled` manually
+    # in a terminal.
+    files = with config.lib.somasis; [
+      "${xdgConfigDir "rescrobbled"}/session"
+    ];
   };
 
   systemd.user = {
+    services.rescrobbled = {
+      Unit.After = [ "agenix.service" ];
+      Service.EnvironmentFile = config.age.secrets.rescrobbled-env.path;
+    };
+
     targets.graphical-session.Unit.Wants = [
       "music-discord-rpc.service"
-      "mpris-scrobbler.service"
     ];
 
     services.music-discord-rpc = {
@@ -118,14 +133,6 @@ in
 
       disable_musicbrainz_cover = false;
     };
-
-    "mpris-scrobbler/config".text = ''
-      ignore = playerctld
-      ignore = kdeconnect
-      ignore = mpv
-      ignore = chromium
-      ignore = qutebrowser
-      ignore = firefox
-    '';
   };
+
 }
