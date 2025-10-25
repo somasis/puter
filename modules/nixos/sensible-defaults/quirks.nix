@@ -14,7 +14,7 @@
 # without deadnix wanting to change this file.
 let
   # deadnix: skip
-  inherit (pkgs) fetchpatch2;
+  inherit (pkgs) fetchpatch;
   patches = [
     # Here's an example:
     # # Added 2025-04-17: switch to maintained fork of Cantata
@@ -24,27 +24,27 @@ let
     # })
 
     # Added 2025-10-09: fix failing trurl tests
-    (fetchpatch2 {
+    (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/450487.patch";
-      hash = "sha256-QubgzWD/YdMbBEVpXN0uLVk1B/J4ZwK357lCuiv2sh8=";
+      hash = "sha256-ooxmucGPN9piqSL8oIbcO/uru8BZRa6lwwXCnpikwVU=";
     })
 
     # Added 2025-10-23: fix libquotient and NeoChat build
-    (fetchpatch2 {
+    (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/455083.patch";
-      hash = "sha256-jb/KYkYC2/a/WKeU1OlbW7ulxWp5YYFKlSFmn+NCvf4=";
+      hash = "sha256-yUOMjGArgtwII1i9vtoRrE61sWPSwKkqj8u353WzH0E=";
     })
 
     # Added 2025-10-23: fix pcsx2
-    (fetchpatch2 {
+    (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/454958.patch";
-      hash = "sha256-O1/4ae4w2bq5d6rQQf8zjEreyYF5k/iLRv8x2+xbcZc=";
+      hash = "sha256-2bR+bhCOHsTNVP/M6lXtCiHuceqT7vkk8/jXEkQNZac=";
     })
 
     # Added 2025-10-23: fix kde-rounded-corners
-    (fetchpatch2 {
+    (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/455101.patch";
-      hash = "sha256-uiEiGB+KkXwQUz65HLPJL2f4RlDUGSaIYgPWCI6jAac=";
+      hash = "sha256-hWHXfeY+PfRgCp/QSExRRpUvut40n79vmFVD216CI4g=";
     })
   ];
 
