@@ -130,7 +130,7 @@ jq_script='
         show_data: tojson,
         setlist_data: $show_setlist_data.data | tojson,
         setlist_notes,
-        show_date,
+        show_date: .showdate,
         permalink,
         tour_name,
         show_venue: [
