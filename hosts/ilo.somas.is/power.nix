@@ -24,6 +24,13 @@
       percentageAction = 0;
     };
 
+    power-profiles-daemon.enable = false;
+    tuned = {
+      enable = true;
+      ppdSettings.main.default = "power-saver";
+    };
+    tlp.enable = false;
+
     # Automatically `nice` programs for better performance.
     ananicy = {
       enable = true;
@@ -100,13 +107,13 @@
     systemd-lock-handler.enable = true;
   };
 
-  # ananicy spams the log constantly
-  # systemd.services.ananicy-cpp.serviceConfig.StandardOutput = "null";
+  powerManagement = {
+    cpuFreqGovernor = "powersave";
 
-  powerManagement.cpuFreqGovernor = "powersave";
+    # Auto-tune with powertop on boot.
+    powertop.enable = true;
+  };
 
-  # Auto-tune with powertop on boot.
-  powerManagement.powertop.enable = true;
   cache.directories = [ "/var/cache/powertop" ];
   persist.directories = [ "/var/lib/upower" ];
 
