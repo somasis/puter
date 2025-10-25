@@ -25,7 +25,7 @@ jobs:
           skipPush: true
 
       - name: Build ilo
-        run: nix-build . -A nixosConfigurations.ilo.config.system.build.toplevel --keep-going
+        run: nix-build . -A nixosConfigurations.ilo.config.system.build.toplevel
 
       - name: Cache built derivation
         run: realpath result | cachix push somasis
