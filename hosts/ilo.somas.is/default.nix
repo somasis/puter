@@ -74,11 +74,6 @@
 
   programs.nano.enable = false;
 
-  nix.settings = {
-    substituters = [ "https://somasis.cachix.org" ];
-    trusted-public-keys = [ "somasis.cachix.org-1:vJQjpTJdiBUHlxLP+iyj8cPJ0Y/mHh04yRO4kiDbM90=" ];
-  };
-
   environment.systemPackages = with pkgs; [
     extrace
     framework-tool
