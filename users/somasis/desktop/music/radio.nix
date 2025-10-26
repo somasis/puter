@@ -48,6 +48,10 @@ in
     (config.lib.somasis.xdgConfigDir "radiotray-ng")
   ];
 
+  cache.directories = [
+    (config.lib.somasis.xdgCacheDir "radiotray-ng")
+  ];
+
   sync.directories = [
     (config.lib.somasis.xdgDataDir "radiotray-ng")
   ];

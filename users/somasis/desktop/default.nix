@@ -24,7 +24,6 @@
     ./phone.nix
     ./photo.nix
     ./plasma.nix
-    ./radio.nix
     ./syncplay.nix
     ./syncthing.nix
     ./torrent.nix

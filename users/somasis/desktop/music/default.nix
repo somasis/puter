@@ -10,6 +10,7 @@ in
   imports = [
     ./manage.nix
     ./player.nix
+    ./radio.nix
   ];
 
   persist = {
