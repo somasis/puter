@@ -23,22 +23,10 @@ let
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
 
-    # Added 2025-10-09: fix failing trurl tests
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/450487.patch";
-      hash = "sha256-ooxmucGPN9piqSL8oIbcO/uru8BZRa6lwwXCnpikwVU=";
-    })
-
     # Added 2025-10-23: fix libquotient and NeoChat build
     (fetchpatch {
       url = "https://github.com/NixOS/nixpkgs/pull/455083.patch";
       hash = "sha256-yUOMjGArgtwII1i9vtoRrE61sWPSwKkqj8u353WzH0E=";
-    })
-
-    # Added 2025-10-23: fix pcsx2
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/454958.patch";
-      hash = "sha256-2bR+bhCOHsTNVP/M6lXtCiHuceqT7vkk8/jXEkQNZac=";
     })
 
     # Added 2025-10-23: fix kde-rounded-corners
@@ -71,8 +59,6 @@ let
     # inherit (nixpkgs-quirks.pkgs) cantata;
     inherit (nixpkgs-quirks.pkgs)
       kde-rounded-corners
-      pcsx2
-      trurl
       ;
 
     kdePackages = prev.kdePackages // {
