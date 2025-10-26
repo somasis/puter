@@ -10,17 +10,17 @@ let
 in
 assert steam.enable;
 {
-  persist.directories = [
+  persist.directories = with config.lib.somasis; [
     ".steam"
-    (config.lib.somasis.xdgDataDir "Steam")
+    (xdgDataDir "Steam")
 
     ".WorldOfGoo"
-    (config.lib.somasis.xdgDataDir "Celeste")
     ".paradoxlauncher"
-    (config.lib.somasis.xdgDataDir "SHENZHEN IO")
+    (xdgDataDir "Celeste")
+    (xdgDataDir "SHENZHEN IO")
 
-    (config.lib.somasis.xdgConfigDir "r2modman")
-    (config.lib.somasis.xdgConfigDir "r2modmanPlus-local")
+    (xdgConfigDir "r2modman")
+    (xdgConfigDir "r2modmanPlus-local")
   ];
 
   home.packages = [ pkgs.r2modman ];

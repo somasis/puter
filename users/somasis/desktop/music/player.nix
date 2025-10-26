@@ -87,7 +87,7 @@ in
     # Don't forget to log in to Last.FM by running `rescrobbled` manually
     # in a terminal.
     files = with config.lib.somasis; [
-      "${xdgConfigDir "rescrobbled"}/session"
+      (xdgConfigDir "rescrobbled/session")
     ];
   };
 

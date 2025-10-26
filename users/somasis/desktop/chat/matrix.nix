@@ -12,16 +12,16 @@
     "${pkgs.kdePackages.neochat}/share/applications/org.kde.neochat.desktop"
   ];
 
-  persist = {
+  persist = with config.lib.somasis; {
     directories = [
-      (config.lib.somasis.xdgCacheDir "KDE/neochat")
-      (config.lib.somasis.xdgDataDir "KDE/neochat")
+      (xdgCacheDir "KDE/neochat")
+      (xdgDataDir "KDE/neochat")
     ];
 
     files = [
-      (config.lib.somasis.xdgConfigDir "KDE/neochat.conf")
-      (config.lib.somasis.xdgConfigDir "kunifiedpush-org.kde.neochat")
-      (config.lib.somasis.xdgConfigDir "neochatrc")
+      (xdgConfigDir "KDE/neochat.conf")
+      (xdgConfigDir "kunifiedpush-org.kde.neochat")
+      (xdgConfigDir "neochatrc")
     ];
   };
 
