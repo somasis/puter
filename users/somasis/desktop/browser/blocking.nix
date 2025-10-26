@@ -59,9 +59,9 @@ let
   ];
 in
 {
-  cache.files = [
-    (config.lib.somasis.xdgDataDir "qutebrowser/adblock-cache.dat")
-    (config.lib.somasis.xdgDataDir "qutebrowser/blocked-hosts")
+  cache.files = with config.lib.somasis; [
+    (xdgDataDir "qutebrowser/adblock-cache.dat")
+    (xdgDataDir "qutebrowser/blocked-hosts")
   ];
 
   programs.qutebrowser = {
