@@ -65,32 +65,32 @@
 
   services.tunnels.enable = true;
 
-  cache.directories = [
-    (config.lib.somasis.xdgCacheDir "borg")
-    (config.lib.somasis.xdgCacheDir "mesa_shader_cache")
-    (config.lib.somasis.xdgCacheDir "mesa_shader_cache_db")
-    (config.lib.somasis.xdgCacheDir "containers")
-    (config.lib.somasis.xdgCacheDir "JOSM")
+  cache.directories = with config.lib.somasis; [
+    (xdgCacheDir "borg")
+    (xdgCacheDir "mesa_shader_cache")
+    (xdgCacheDir "mesa_shader_cache_db")
+    (xdgCacheDir "containers")
+    (xdgCacheDir "JOSM")
   ];
 
-  persist = {
+  persist = with config.lib.somasis; {
     directories = [
-      (config.lib.somasis.xdgDataDir "containers")
-      (config.lib.somasis.xdgConfigDir "JOSM")
-      (config.lib.somasis.xdgDataDir "JOSM")
-      (config.lib.somasis.relativeToHome config.xdg.userDirs.documents)
+      (xdgDataDir "containers")
+      (xdgConfigDir "JOSM")
+      (xdgDataDir "JOSM")
+      (relativeToHome config.xdg.userDirs.documents)
       {
         method = "bindfs";
-        directory = config.lib.somasis.xdgDataDir "applications";
+        directory = xdgDataDir "applications";
       }
       {
         method = "bindfs";
-        directory = config.lib.somasis.xdgDataDir "icons";
+        directory = xdgDataDir "icons";
       }
     ];
 
     files = [
-      (config.lib.somasis.xdgConfigDir "oktetarc")
+      (xdgConfigDir "oktetarc")
     ];
   };
 
