@@ -12,6 +12,7 @@ assert steam.enable;
   persist.directories = with config.lib.somasis; [
     ".steam"
     (xdgDataDir "Steam")
+    (xdgDataDir "vulkan")
 
     ".WorldOfGoo"
     ".paradoxlauncher"
