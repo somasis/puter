@@ -77,6 +77,13 @@ in
       };
     };
 
+    perDomainSettings = lib.listToAttrs (
+      map (name: {
+        inherit name;
+        value.content.blocking.enabled = false;
+      }) excludedDomains
+    );
+
     greasemonkey = [
       (config.lib.somasis.greasemonkey.jhide excludedDomains (
         map (lib.replaceStrings [ "file://" ] [ "" ])
