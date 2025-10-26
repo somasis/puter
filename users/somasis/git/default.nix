@@ -22,6 +22,7 @@
     (xdgCacheDir "actcache")
     (xdgCacheDir "pre-commit")
     (xdgCacheDir "treefmt")
+    (xdgCacheDir "lorri")
     (xdgDataDir "mergiraf")
     # keep-sorted end
   ];
