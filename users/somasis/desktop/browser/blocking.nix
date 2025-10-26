@@ -11,6 +11,7 @@ let
   excludedDomains = [
     # keep-sorted start
     "indeed.com"
+    "linkedin.com"
     "mail.google.com"
     # keep-sorted end
   ];
