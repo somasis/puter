@@ -278,7 +278,8 @@ if [[ "$edit_tags" == true ]]; then
         phish-show-notes -j "${show_date}" \
             | jq -r '.setlist_notes // ""' \
             | iconv -t ISO-8859-1 \
-            | iconv -t UTF-8)
+            | iconv -t UTF-8
+    )
 
     for file in "${directory}"/*.mp3; do
         if ! [[ -e "$file" ]]; then
