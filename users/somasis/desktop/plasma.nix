@@ -15,6 +15,13 @@ assert osConfig.services.desktopManager.plasma6.enable;
       # color profiles, nothing official about this
       (xdgDataDir "color-profiles")
 
+      # Need bindfs because we write into ~/share/plasma when
+      # installing our theme files in `./users/somasis/theme`.
+      {
+        method = "bindfs";
+        directory = xdgDataDir "plasma";
+      }
+
       # keep-sorted start
       (xdgConfigDir "gtk-3.0") # kde-gtk-config
       (xdgConfigDir "gtk-4.0") # kde-gtk-config
@@ -39,7 +46,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgDataDir "kxmlgui5")
       (xdgDataDir "libkunitconversion")
       (xdgDataDir "networkmanagement")
-      (xdgDataDir "plasma")
       (xdgDataDir "plasma-manager")
       (xdgDataDir "plasma-systemmonitor")
       (xdgDataDir "plasmashell")
