@@ -17,12 +17,12 @@
 
   cache.directories = with config.lib.somasis; [
     # keep-sorted start
-    (xdgCacheDir "direnv")
     (xdgCacheDir "act")
     (xdgCacheDir "actcache")
+    (xdgCacheDir "direnv")
+    (xdgCacheDir "lorri")
     (xdgCacheDir "pre-commit")
     (xdgCacheDir "treefmt")
-    (xdgCacheDir "lorri")
     (xdgDataDir "mergiraf")
     # keep-sorted end
   ];
