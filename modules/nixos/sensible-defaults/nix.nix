@@ -1,6 +1,5 @@
 {
   sources,
-  nixpkgs,
   config,
   lib,
   pkgs,
@@ -8,15 +7,16 @@
 }:
 let
   importFlake = src: (import sources.flake-compat { inherit src; }).defaultNix;
+  nix-index-database = (importFlake sources.nix-index-database).outputs;
 in
 {
   imports = [
-    (importFlake sources.nix-index-database).outputs.nixosModules.nix-index
+    nix-index-database.nixosModules.nix-index
   ];
 
   programs = {
     nix-index.enable = true;
-    command-not-found.enable = false;
+    nix-index-database.comma.enable = true;
 
     # Install git by default to ease development from a clean system.
     git.enable = true;

@@ -105,8 +105,6 @@
         ${pkgs.coreutils}/bin/rm -rf "$fetch_directory"
         exit "$error_code"
       '')
-
-      pkgs.comma
     ];
   };
 
