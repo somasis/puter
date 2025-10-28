@@ -3,10 +3,10 @@
   sources ? (import ./npins),
   self ? (import ./. { }),
 
-  pkgs ? (import sources.nixpkgs { }),
-  lib ? pkgs.lib,
-
   system ? (builtins.currentSystem or null),
+
+  pkgs ? (import sources.nixpkgs { inherit system; }),
+  lib ? pkgs.lib,
 
   treefmt-nix ? (import sources.treefmt-nix),
   ...
@@ -52,9 +52,9 @@ in
   overlays = {
     default = import ./overlay.nix;
     nixpkgsVersions = final: prev: {
-      unstable = import sources.nixos-unstable { };
-      stable = import sources.nixos-stable { };
-      dev = import sources.nixpkgs { };
+      unstable = import sources.nixos-unstable { inherit (final) system; };
+      stable = import sources.nixos-stable { inherit (final) system; };
+      dev = import sources.nixpkgs { inherit (final) system; };
     };
   };
 
@@ -80,16 +80,16 @@ in
     {
       pkgs ? args.pkgs,
       ...
-    }:
-    import ./pkgs/default.nix { inherit pkgs; };
+    }@args:
+    import ./pkgs/default.nix args;
 
   devShells =
     {
       pkgs ? args.pkgs,
       ...
-    }:
+    }@args:
     {
-      default = import ./shell.nix { inherit pkgs; };
+      default = import ./shell.nix args;
     };
 
   nixosConfigurations.ilo = nixos sources.nixos-unstable ./hosts/ilo.somas.is;

@@ -19,7 +19,9 @@ environment. See `shell.nix` for details on what's included in the
 shell environment.
 
 I don't use flakes. If you're interested in how I structure things
-without flakes, check out this [blog post].
+without flakes, check out this [blog post]. That said, there is some
+compatibility infrastructure provided so that this can be used as a
+flake, with the caveat that you can't override inputs.
 
 Whenever I get a new machine (a really infrequent occurence!), or break
 my computer in some silly way (a slighly more common occurence), I
