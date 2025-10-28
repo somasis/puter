@@ -13,7 +13,6 @@ let
     ;
 
   functions = {
-    fetchMediaFire = callPackage ./fetchMediaFire;
     withLinks = callPackage ./withLinks;
     wrapCommand = callPackage ./wrapCommand;
     writeCss = callPackage ./writeCss;
