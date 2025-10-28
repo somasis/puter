@@ -13,35 +13,34 @@ Then, run
 
     $ direnv allow
 
-which will give permission to install the Git hooks and bring tools
-sometimes used when working with this repository, into your shell
-environment. See `shell.nix` for details on what's included in the
-shell environment.
+which will give permission to load the development shell,
+which includes Git hooks, and tools like `npins`, `nix-update`,
+and a `nixos-rebuild` wrapper I use (simply named `nixos`).
+See [`shell.nix`][shell.nix] for more details.
 
-I don't use flakes. If you're interested in how I structure things
-without flakes, check out this [blog post]. That said, there is some
-compatibility infrastructure provided so that this can be used as a
-flake, with the caveat that you can't override inputs.
+Alternatively, you could just run `nix-shell .` or `nix develop`.
 
-Whenever I get a new machine (a really infrequent occurence!), or break
-my computer in some silly way (a slighly more common occurence), I
-download the latest NixOS live USB image, and I do something like this
+I don't use flakes.
+If you're interested in how I structure things without flakes,
+check out this [blog post].
+That said, there is compatibility infrastructure provided
+so that this can be used as a flake if you need to,
+with the caveat that you can't override inputs.
+Run `nix flake show` if you don't believe me! :)
 
-    $ git clone https://github.com/somasis/puter
-    $ ponysay 'TODO lol'
+[shell.nix]: ./shell.nix
+[`direnv`]: https://github.com/cachix/direnv
+[blog post]: https://www.somas.is/note-organizing-nix-configuration-without-flakes.html
 
-Updating sources (i.e., the NixOS version used to build system)
+### Updating sources (i.e., the NixOS version used to build system)
 
-    # update *and* commit the changes:
+    # update *and* commit the changes (command provided by shell.nix):
     $ npins-update-commit
     # or just update
     $ npins update
 
 Make sure to ensure things work and build after doing so and before
 pushing a lock update, if you can.
-
-[`direnv`]: https://github.com/cachix/direnv
-[blog post]: https://www.somas.is/note-organizing-nix-configuration-without-flakes.html
 
 ## `bin`
 
