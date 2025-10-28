@@ -1,12 +1,9 @@
 # <https://github.com/numtide/treefmt-nix>
-# Used by ./shell.nix.
-let
-  sources = import ./npins;
-
-  pkgs = import sources.nixpkgs { };
-  treefmt-nix = import sources.treefmt-nix;
-in
-treefmt-nix.mkWrapper pkgs {
+# Used by ./shell.nix and ./default.nix.
+# Rather than using `treefmt-nix.mkWrapper pkgs { ... }`, this has to be
+# written such that the config can be used by both the checks called to
+# in ./default.nix and the `mkWrapper` call in ./shell.nix.
+{
   # See also <https://github.com/numtide/treefmt-nix/tree/main/programs>
   projectRootFile = "npins/sources.json";
 

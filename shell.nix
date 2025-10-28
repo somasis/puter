@@ -6,7 +6,7 @@ let
 
   git-hooks = import ./git-hooks.nix;
   inherit (import sources.agenix { inherit pkgs; }) agenix;
-  treefmt = import ./treefmt.nix;
+  treefmtPkg = treefmt-nix.mkWrapper pkgs ./treefmt.nix;
 in
 pkgs.mkShell {
   # Construct NIX_PATH from npins sources.
@@ -17,10 +17,10 @@ pkgs.mkShell {
   '';
 
   buildInputs = git-hooks.enabledPackages ++ [
-    # for secrets management (see also: `./secrets/secrets.nix`)
-    agenix
+    # for secrets management (see also: `./secrets.nix`)
+    agenixPkg
 
-    treefmt
+    treefmtPkg
 
     pkgs.act
     pkgs.apacheHttpd # for `htpasswd`
