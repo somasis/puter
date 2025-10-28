@@ -39,7 +39,10 @@ let
   };
 in
 {
-  home.packages = [ mess ];
+  home = {
+    packages = [ mess ];
+    sessionVariables.MESSDIR = messDir;
+  };
 
   persist.directories = [
     "mess"
@@ -84,31 +87,26 @@ in
     };
   };
 
-  programs.bash.initExtra = ''
-    mess() {
-        if [ "$#" -eq 0 ]; then
-            cd "$(command mess)"
-        else
-            command mess "$@"
-        fi
-    }
+  programs = {
+    bash = {
+      initExtra = ''
+        mess() {
+            if [ "$#" -eq 0 ]; then
+                cd "$(command mess)"
+            else
+                command mess "$@"
+            fi
+        }
 
-    src() {
-        CDPATH="${messDir}/current/src:$HOME/src:$HOME/src/nix:$HOME/src/discord" cd "''${@:-}"
-    }
+        CDPATH="''${CDPATH:+$CDPATH:}${messDir}:${messDir}/current"
+      '';
 
-    CDPATH="''${CDPATH:+$CDPATH:}${messDir}:${messDir}/current"
-  '';
+      historyFile = "${messDir}/current/.bash_history";
+      historyFileSize = -1;
+      shellOptions = [ "histappend" ];
+    };
 
-  programs.mpv.config.screenshot-directory = "${messDir}/current/screenshots";
-  programs.zotero.profiles.default.settings."extensions.zotfile.source_dir" =
-    "${messDir}/current/incoming"; # ZotFile > General Settings > "Source Folder for Attaching New Files"
-
-  programs.bash = {
-    historyFile = "${messDir}/current/.bash_history";
-    historyFileSize = -1;
-    shellOptions = [ "histappend" ];
+    mpv.config.screenshot-directory = "${messDir}/current/screenshots";
+    zotero.profiles.default.settings."extensions.zotfile.source_dir" = "${messDir}/current/incoming"; # ZotFile > General Settings > "Source Folder for Attaching New Files"
   };
-
-  home.sessionVariables.SCREENSHOT_DIR = "${messDir}/current/screenshots";
 }
