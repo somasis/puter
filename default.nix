@@ -20,12 +20,10 @@ let
     };
 in
 {
-  inherit self;
+  inherit sources self;
 
   # Allow for using "${self}" to get the project path.
   outPath = ./.;
-
-  inherit sources;
 
   lib = import ./lib.nix;
 
