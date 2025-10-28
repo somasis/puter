@@ -7,8 +7,10 @@
   lib ? pkgs.lib,
 
   system ? (builtins.currentSystem or null),
+
+  treefmt-nix ? (import sources.treefmt-nix),
   ...
-}:
+}@args:
 let
   nixos =
     nixpkgs: configuration:
@@ -55,6 +57,40 @@ in
       dev = import sources.nixpkgs { };
     };
   };
+
+  checks =
+    # Allow for overriding pkgs. See ./flake.nix for how we actually turn
+    # this back into a pure evaluation that follows the Flakes schema.
+    {
+      pkgs ? args.pkgs,
+      ...
+    }:
+    {
+      formatting = (treefmt-nix.evalModule pkgs ./treefmt.nix).config.build.check self.outPath;
+    };
+
+  formatter =
+    {
+      pkgs ? args.pkgs,
+      ...
+    }:
+    (treefmt-nix.evalModule pkgs ./treefmt.nix).config.build.wrapper;
+
+  packages =
+    {
+      pkgs ? args.pkgs,
+      ...
+    }:
+    import ./pkgs/default.nix { inherit pkgs; };
+
+  devShells =
+    {
+      pkgs ? args.pkgs,
+      ...
+    }:
+    {
+      default = import ./shell.nix { inherit pkgs; };
+    };
 
   nixosConfigurations.ilo = nixos sources.nixos-unstable ./hosts/ilo.somas.is;
 }
