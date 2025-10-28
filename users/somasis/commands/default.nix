@@ -76,36 +76,42 @@
       ];
     })
 
-    (withLinks bfs [
-      {
-        target = "bin/bfs";
-        link = "bin/find";
-      }
-      {
-        target = "share/man/man1/bfs.1.gz";
-        link = "share/man/man1/find.1.gz";
-      }
-    ])
+    (withLinks {
+      package = pkgs.bfs;
+      links = [
+        {
+          target = "bin/bfs";
+          link = "bin/find";
+        }
+        {
+          target = "share/man/man1/bfs.1.gz";
+          link = "share/man/man1/find.1.gz";
+        }
+      ];
+    })
 
     # Prefer bsdtar over GNU tar
-    (withLinks libarchive [
-      {
-        target = "bin/bsdcpio";
-        link = "bin/cpio";
-      }
-      {
-        target = "bin/bsdtar";
-        link = "bin/tar";
-      }
-      {
-        target = "share/man/man1/bsdcpio.1.gz";
-        link = "share/man/man1/cpio.1.gz";
-      }
-      {
-        target = "share/man/man1/bsdtar.1.gz";
-        link = "share/man/man1/tar.1.gz";
-      }
-    ])
+    (withLinks {
+      package = pkgs.libarchive;
+      links = [
+        {
+          target = "bin/bsdcpio";
+          link = "bin/cpio";
+        }
+        {
+          target = "bin/bsdtar";
+          link = "bin/tar";
+        }
+        {
+          target = "share/man/man1/bsdcpio.1.gz";
+          link = "share/man/man1/cpio.1.gz";
+        }
+        {
+          target = "share/man/man1/bsdtar.1.gz";
+          link = "share/man/man1/tar.1.gz";
+        }
+      ];
+    })
 
     (busybox.override {
       enableStatic = true;

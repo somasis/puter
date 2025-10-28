@@ -1,14 +1,18 @@
 # example:
-# withLinks pkgs.bfs [
-#   { target = "bin/bfs"; link = "bin/find"; }
-#   { target = "share/man/man1/bfs.1.gz"; link = "share/man/man1/find.1.gz"; }
-# ]
+# withLinks {
+#   package = pkgs.bfs;
+#   links = [
+#     { target = "bin/bfs"; link = "bin/find"; }
+#     { target = "share/man/man1/bfs.1.gz"; link = "share/man/man1/find.1.gz"; }
+#   ];
+# }
 {
   lib,
+  package,
+  links,
   symlinkJoin,
   runCommandLocal,
 }:
-package: links:
 assert (lib.isStorePath package);
 assert (lib.isList links && links != [ ]);
 assert ((lib.filter (link: lib.isString link.target && link.target != "") links) != [ ]);
