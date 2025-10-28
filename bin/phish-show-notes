@@ -35,6 +35,7 @@ with exception of taper notes provided by the Phish.in project.
 
 options:
     -A              Use full names of songs only; disable abbreviations.
+                    See <https://phish.net/abbr> for a guide.
     -j              Instead of displaying show notes, show Phish.net's
                     JSON data corresponding to <show>. (porcelain)
     -t              Output the taper notes for the show as corresponds
