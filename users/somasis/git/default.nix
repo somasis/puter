@@ -160,6 +160,24 @@
       options.display = "inline";
     };
 
+    mr = {
+      enable = true;
+      settings = {
+        "src/home-manager" = {
+          checkout = "git clone 'git@github.com:nix-community/home-manager.git' 'home-manager'";
+        };
+        "src/nixpkgs" = {
+          checkout = "git clone 'git@github.com:NixOS/nixpkgs.git' 'nixpkgs'";
+        };
+        "src/plasma-manager" = {
+          checkout = "git clone 'git@github.com:nix-community/plasma-manager.git' 'plasma-manager'";
+        };
+        "src/puter" = {
+          checkout = "git clone 'git@github.com:somasis/puter.git' 'puter'";
+        };
+      };
+    };
+
     bash.initExtra = ''
       _git_prompt() {
           [ -n "''${_git_prompt:=$(git rev-parse --abbrev-ref=loose HEAD 2>/dev/null)}" ] \
