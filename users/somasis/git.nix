@@ -5,15 +5,15 @@
   ...
 }:
 {
-  imports = [
-    ./gh.nix
-    ./signing.nix
-  ];
+  persist = with config.lib.somasis; {
+    directories = [
+      (xdgConfigDir "act")
+    ];
 
-  persist.directories = with config.lib.somasis; [
-    (xdgConfigDir "act")
-    (xdgConfigDir "cachix")
-  ];
+    files = [
+      (xdgConfigDir "gh/hosts.yml")
+    ];
+  };
 
   cache.directories = with config.lib.somasis; [
     # keep-sorted start
@@ -32,14 +32,57 @@
     (xdgDataDir "direnv")
   ];
 
+  home.packages = with pkgs; [
+    act
+    git-open
+    pre-commit
+
+    (writeShellScriptBin "git-curlam" ''
+      set -e
+
+      b=$(git rev-parse HEAD)
+
+      ${curl}/bin/curl -Lf# "$@" \
+          | ${config.programs.git.package}/bin/git am -q
+
+      a=$(git rev-parse HEAD)
+
+      git log --oneline --reverse "$b".."$a"
+    '')
+  ];
+
   programs = {
     git = {
       enable = true;
       package = pkgs.gitFull;
 
+      maintenance = {
+        enable = true;
+        repositories = map (x: "${config.home.homeDirectory}/${x}") (
+          lib.attrNames config.programs.mr.settings
+        );
+      };
+
+      signing = {
+        signByDefault = true;
+
+        # Use SSH for signing commits, rather than GPG.
+        format = "ssh";
+
+        # It is unnecessary to set `signing.key`, because git-config says
+        # > user.signingKey
+        # >     [...] If not set Git will call gpg.ssh.defaultKeyCommand
+        # >     (e.g.: "ssh-add -L") and try to use the first key available.
+        # which means it'll just use the first available key in the agent.
+        key = null;
+      };
+
       settings = {
         user.name = "Kylie McClain";
         user.email = "kylie@somas.is";
+
+        # Set the file used for storing trusted signatures.
+        gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
 
         aliases = {
           addall = "add -Av";
@@ -87,9 +130,6 @@
         };
 
         log.abbrevCommit = false;
-
-        # TODO Remove when <https://github.com/nix-community/home-manager/issues/7993> fixed
-        merge.conflictStyle = lib.mkIf (config.programs.mergiraf.enable) "diff3";
 
         branch = {
           autoSetupMerge = "simple";
@@ -160,6 +200,16 @@
       options.display = "inline";
     };
 
+    gh = {
+      enable = true;
+      settings = {
+        git_protocol = "ssh";
+        pager = "cat";
+      };
+
+      gitCredentialHelper.enable = true;
+    };
+
     mr = {
       enable = true;
       settings = {
@@ -179,6 +229,11 @@
     };
 
     bash.initExtra = ''
+      src() {
+          CDPATH="''${MESSDIR:+$MESSDIR/current/src:}$HOME/src:$HOME/src/nix" \
+              cd "''${@:-$HOME/src}"
+      }
+
       _git_prompt() {
           [ -n "''${_git_prompt:=$(git rev-parse --abbrev-ref=loose HEAD 2>/dev/null)}" ] \
               && printf '%s ' "''${_git_prompt}"
@@ -264,55 +319,33 @@
 
   services.lorri.enable = true;
 
-  home = {
-    packages = with pkgs; [
-      act
-      cachix
-      git-open
-      pre-commit
+  home.shellAliases = {
+    am = "git am";
+    add = "git add -v";
 
-      (writeShellScriptBin "git-curlam" ''
-        set -e
+    checkout = "git checkout";
+    restore = "git restore";
+    reset = "git reset";
 
-        b=$(git rev-parse HEAD)
+    com = "git commit";
 
-        ${curl}/bin/curl -Lf# "$@" \
-            | ${config.programs.git.package}/bin/git am -q
+    clone = "git clone -vv";
+    push = "git push -vv";
+    pull = "git pull -vv";
 
-        a=$(git rev-parse HEAD)
+    log = "git log --patch-with-stat --summary";
+    status = "git status";
 
-        git log --oneline --reverse "$b".."$a"
-      '')
-    ];
+    stash = "git stash";
 
-    shellAliases = {
-      am = "git am";
-      add = "git add -v";
+    rebase = "git rebase";
 
-      checkout = "git checkout";
-      restore = "git restore";
-      reset = "git reset";
-
-      com = "git commit";
-
-      clone = "git clone -vv";
-      push = "git push -vv";
-      pull = "git pull -vv";
-
-      log = "git log --patch-with-stat --summary";
-      status = "git status";
-
-      stash = "git stash";
-
-      rebase = "git rebase";
-
-      switch = "git switch";
-      branch = "git branch -vv";
-      branchoff = "git branchoff";
-    }
-    # Add git aliases to the shell
-    // lib.mapAttrs (
-      _: v: if lib.hasPrefix "!" v then lib.removePrefix "!" v else "git ${v}"
-    ) config.programs.git.settings.aliases;
-  };
+    switch = "git switch";
+    branch = "git branch -vv";
+    branchoff = "git branchoff";
+  }
+  # Add git aliases to the shell
+  // lib.mapAttrs (
+    _: v: if lib.hasPrefix "!" v then lib.removePrefix "!" v else "git ${v}"
+  ) config.programs.git.settings.aliases;
 }

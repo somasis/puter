@@ -12,10 +12,10 @@
     # keep-sorted start by_regex=['^./.*[^(\.nix)]$', '.*\.nix$']
     ./commands
     ./editor
-    ./git
     ./shell
     ./theme
     ./age.nix
+    ./git.nix
     ./less.nix
     ./locale.nix
     ./man.nix
