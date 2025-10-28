@@ -32,11 +32,9 @@ pkgs.mkShell {
       treefmtPkg
 
       act
-      apacheHttpd # for `htpasswd`
-      cachix
+      apacheHttpd # for `htpasswd`; used by some secrets
       nix-update
       npins
-      replace-secret
 
       (writeShellApplication {
         name = "nixos";
