@@ -1,22 +1,26 @@
 {
   pkgs,
-  lib,
-  config,
   ...
 }:
 let
-  statixFormat = pkgs.writeJqScript "format-statix" { raw-output = true; } ''
-    .file as $file
-      | .report[]
-      | (.severity | ascii_downcase) as $severity
-      | (.note | ascii_downcase) as $note
-      | .diagnostics[]
-      | ([ $file, .at.from.line, .at.to.line ] | join(":"))
-        + ": "
-        + (try ($severity + ": ") catch "")
-        + .message
-        + (try (" (" + $note + ")") catch "")
-  '';
+  statixFormat = pkgs.writeJqScript {
+    name = "format-statix";
+
+    jqArgs.raw-output = true;
+
+    text = ''
+      .file as $file
+        | .report[]
+        | (.severity | ascii_downcase) as $severity
+        | (.note | ascii_downcase) as $note
+        | .diagnostics[]
+        | ([ $file, .at.from.line, .at.to.line ] | join(":"))
+          + ": "
+          + (try ($severity + ": ") catch "")
+          + .message
+          + (try (" (" + $note + ")") catch "")
+    '';
+  };
 
   lint = pkgs.writeShellScript "lint-nix" ''
     statix check -o json "$@" | ${statixFormat}

@@ -5,35 +5,37 @@
   writeScript,
   writeTextFile,
   runtimeShell,
+
+  name,
+  text,
+  jqArgs ? { },
+  jqfmtArgs ? { },
+  ...
 }:
-name: args: text:
 assert (lib.isString name);
-assert (lib.isAttrs args);
 assert (lib.isString text);
 let
-  args' = {
-    inherit jq jqfmt;
-  }
-  // args;
+  inherit
+    jq
+    jqfmt
+    writeScript
+    writeTextFile
+    runtimeShell
+    ;
 
-  inherit (args') jq jqfmt;
-
-  jqArgs =
-    lib.removeAttrs args' [
-      "jq"
-      "jqfmt"
-      "jqfmtArgs"
-    ]
+  jqArgs' = lib.cli.toGNUCommandLineShell { } (
+    jqArgs
     // {
       from-file = jqScript;
-    };
+    }
+  );
 
-  jqfmtArgs = (args'.jqfmtArgs or { }) // {
-    f = jqScript;
-  };
-
-  jqArgs' = lib.cli.toGNUCommandLineShell { } jqArgs;
-  jqfmtArgs' = lib.cli.toGNUCommandLineShell { mkOptionName = x: "-${x}"; } jqfmtArgs;
+  jqfmtArgs' = lib.cli.toGNUCommandLineShell { mkOptionName = x: "-${x}"; } (
+    jqfmtArgs
+    // {
+      f = jqScript;
+    }
+  );
 
   jqScript = writeScript name ''
     #!${jq}/bin/jq -f
