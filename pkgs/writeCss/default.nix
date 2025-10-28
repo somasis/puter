@@ -1,14 +1,19 @@
+name: stylelintUserConfig: text:
 {
   lib,
-  writeTextFile,
-  stylelint,
-  stylelint-config-standard,
+  pkgs,
+  ...
 }:
-name: stylelintUserConfig: text:
 assert (lib.isString name);
 assert (lib.isAttrs stylelintUserConfig);
 assert (lib.isString text);
 let
+  inherit (pkgs)
+    writeTextFile
+    stylelint
+    stylelint-config-standard
+    ;
+
   stylelintConfig =
     if stylelintUserConfig == { } then
       { extends = "stylelint-config-standard"; }
