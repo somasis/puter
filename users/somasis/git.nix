@@ -69,11 +69,6 @@
         # Use SSH for signing commits, rather than GPG.
         format = "ssh";
 
-        # It is unnecessary to set `signing.key`, because git-config says
-        # > user.signingKey
-        # >     [...] If not set Git will call gpg.ssh.defaultKeyCommand
-        # >     (e.g.: "ssh-add -L") and try to use the first key available.
-        # which means it'll just use the first available key in the agent.
         key = null;
       };
 
@@ -81,8 +76,13 @@
         user.name = "Kylie McClain";
         user.email = "kylie@somas.is";
 
-        # Set the file used for storing trusted signatures.
-        gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
+        gpg.ssh = {
+          # Set the file used for storing trusted signatures.
+          allowedSignersFile = "~/.ssh/allowed_signers";
+          defaultKeyCommand = builtins.toString (pkgs.writeShellScript "first-key-in-ssh-agent" ''
+            printf 'key::%s\n' "$(ssh-add -L | head -n1)"
+          '');
+        };
 
         aliases = {
           addall = "add -Av";
