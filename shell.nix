@@ -1,27 +1,31 @@
 {
   sources ? (import ./npins),
 
-  pkgs ? (import sources.nixpkgs { }),
+  nixpkgs ? sources.nixpkgs,
+  pkgs ? (import nixpkgs { }),
+
   lib ? pkgs.lib,
 
-  git-hooks ? (import ./git-hooks.nix),
-  treefmt-nix ? (import sources.treefmt-nix),
-  agenix ? (import sources.agenix { inherit pkgs; }),
-}:
+  agenix ? sources.agenix,
+  treefmt-nix ? sources.treefmt-nix,
+  flake-compat ? sources.flake-compat,
+  git-hooks ? sources.git-hooks,
+
+  ...
+}@args:
 let
-  agenixPkg = agenix.agenix;
-  treefmtPkg = treefmt-nix.mkWrapper pkgs ./treefmt.nix;
+  agenixPkg = (import agenix { inherit pkgs; }).agenix;
+  treefmtPkg = (import treefmt-nix).mkWrapper pkgs ./treefmt.nix;
+  gitHooksPkg = (import git-hooks).run (import ./git-hooks.nix args);
 in
 pkgs.mkShell {
   # Construct NIX_PATH from npins sources.
   NIX_PATH = lib.concatStringsSep ":" (lib.mapAttrsToList (n: v: "${n}=${v.outPath}") sources);
 
-  shellHook = git-hooks.shellHook + ''
-    export NIXOS_CONFIG="$PWD"
-  '';
+  inherit (gitHooksPkg) shellHook;
 
   buildInputs =
-    git-hooks.enabledPackages
+    gitHooksPkg.enabledPackages
     ++ (with pkgs; [
       # for secrets management (see also: `./secrets.nix`)
       agenixPkg

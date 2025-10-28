@@ -5,10 +5,13 @@
 
   system ? (builtins.currentSystem or null),
 
-  pkgs ? (import sources.nixpkgs { inherit system; }),
+  nixpkgs ? sources.nixpkgs,
+
+  pkgs ? (import nixpkgs { inherit system; }),
   lib ? pkgs.lib,
 
-  treefmt-nix ? (import sources.treefmt-nix),
+  git-hooks ? sources.git-hooks,
+  treefmt-nix ? sources.treefmt-nix,
   ...
 }@args:
 let
@@ -25,6 +28,9 @@ let
         modulesPath = "${nixpkgs}/nixos/modules";
       };
     };
+
+  treefmt = (import treefmt-nix).evalModule pkgs ./treefmt.nix;
+  gitHooksPkg = (import git-hooks).run (import ./git-hooks.nix args);
 in
 {
   inherit sources self;
@@ -58,39 +64,19 @@ in
     };
   };
 
-  checks =
-    # Allow for overriding pkgs. See ./flake.nix for how we actually turn
-    # this back into a pure evaluation that follows the Flakes schema.
-    {
-      pkgs ? args.pkgs,
-      ...
-    }:
-    {
-      formatting = (treefmt-nix.evalModule pkgs ./treefmt.nix).config.build.check self.outPath;
-    };
+  formatter = treefmt.config.build.wrapper;
 
-  formatter =
-    {
-      pkgs ? args.pkgs,
-      ...
-    }:
-    (treefmt-nix.evalModule pkgs ./treefmt.nix).config.build.wrapper;
+  checks = {
+    formatting = treefmt.config.build.check self.outPath;
+  }
+  # FIXME? Hide git-hooks from pure eval Nix, since it requires impurity
+  # because of git-hooks.nix' usage of builtins.currentSystem in their
+  # vendored flake-compat ./default.nix.
+  // (if builtins ? "currentSystem" then { pre-commit = gitHooksPkg; } else { });
 
-  packages =
-    {
-      pkgs ? args.pkgs,
-      ...
-    }@args:
-    import ./pkgs/default.nix args;
+  devShells.default = import ./shell.nix args;
 
-  devShells =
-    {
-      pkgs ? args.pkgs,
-      ...
-    }@args:
-    {
-      default = import ./shell.nix args;
-    };
+  packages = import ./pkgs args;
 
   nixosConfigurations.ilo = nixos sources.nixos-unstable ./hosts/ilo.somas.is;
 }
