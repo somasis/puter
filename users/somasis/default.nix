@@ -9,21 +9,21 @@
     "${agenix}/modules/age-home.nix"
     "${plasma-manager}/modules"
 
-    # keep-sorted start
-    ./age.nix
+    # keep-sorted start by_regex=['^./.*[^(\.nix)]$', '.*\.nix$']
     ./commands
     ./editor
     ./git
+    ./shell
+    ./theme
+    ./age.nix
     ./less.nix
     ./locale.nix
     ./man.nix
     ./monitor.nix
     ./pass.nix
     ./rclone.nix
-    ./shell
     ./ssh.nix
     ./syncthing.nix
-    ./theme
     ./tmux.nix
     ./xdg.nix
     # keep-sorted end
