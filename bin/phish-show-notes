@@ -129,6 +129,7 @@ fi
 
 show_setlist_data=$(phishnet "https://api.phish.net/v5/setlists/showdate/$1")
 
+# shellcheck disable=SC2016
 jq_script='
     .[1] as $show_setlist_data
     | .[0].data[] | select(.artist_name == "Phish")
