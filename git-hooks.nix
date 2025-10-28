@@ -1,12 +1,17 @@
 # <https://github.com/cachix/git-hooks.nix>
 # Used by ./shell.nix.
-let
-  sources = import ./npins;
+{
+  sources ? import ./npins,
+  nixpkgs ? sources.nixpkgs,
+  pkgs ? import nixpkgs { },
 
-  pkgs = import sources.nixpkgs { };
-  git-hooks = import sources.git-hooks;
+  treefmt-nix ? sources.treefmt-nix,
+  ...
+}:
+let
+  treefmtPkg = (import treefmt-nix).mkWrapper pkgs ./treefmt.nix;
 in
-git-hooks.run rec {
+rec {
   src = ./.;
 
   hooks = {
@@ -23,6 +28,9 @@ git-hooks.run rec {
     check-added-large-files.enable = true; # avoid committing binaries when possible
     check-executables-have-shebangs = {
       enable = true;
+
+      # KIO servicemenus have to be marked executable,
+      # but .desktop files don't need a shebang.
       excludes = [ ".+\.desktop$" ];
     };
 
@@ -57,7 +65,7 @@ git-hooks.run rec {
 
     treefmt = {
       enable = true;
-      package = import ./treefmt.nix;
+      package = treefmtPkg;
     };
   };
 }
