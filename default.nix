@@ -5,6 +5,8 @@
 
   pkgs ? (import sources.nixpkgs { }),
   lib ? pkgs.lib,
+
+  system ? (builtins.currentSystem or null),
   ...
 }:
 let
@@ -12,7 +14,10 @@ let
     nixpkgs: configuration:
     import "${nixpkgs}/nixos/lib/eval-config.nix" {
       modules = [ configuration ];
+
+      # Ensure that `system` is not determined impurely.
       system = null;
+
       specialArgs = {
         inherit nixpkgs self sources;
         modulesPath = "${nixpkgs}/nixos/modules";
