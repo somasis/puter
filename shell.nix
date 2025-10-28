@@ -62,13 +62,45 @@ pkgs.mkShell {
               "$@"
           }
 
-          edo nixos-rebuild \
-              --log-format bar-with-logs \
+          if command -v nom >/dev/null 2>&1; then
+              use_nom=true
+          else
+              use_nom=false
+          fi
+
+          for arg; do
+              case "$arg" in
+                  --nom) use_nom=true; shift ;;
+                  --no-nom) use_nom=false; shift ;;
+                  --log-format) use_nom=false ;;
+                  repl) use_nom=false ;;
+              esac
+          done
+
+          nixos_rebuild_args=()
+
+          if [[ "$use_nom" == true ]]; then
+              nixos_rebuild_args+=(
+                  --log-format internal-json
+              )
+          else
+              nixos_rebuild_args+=(
+                  --log-format bar-with-logs
+              )
+          fi
+
+          nixos_rebuild_args+=(
               --sudo \
               -f . \
               -A nixosConfigurations."$HOSTNAME" \
               "$@"
-              # |& nom --json
+          )
+
+          if [[ "$use_nom" == true ]]; then
+              edo nixos-rebuild "''${nixos_rebuild_args[@]}" |& nom --json
+          else
+              edo nixos-rebuild "''${nixos_rebuild_args[@]}"
+          fi
         '';
       })
 
