@@ -241,28 +241,28 @@
         commands = ''set-option window autowrap_column 72'';
       }
     ];
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+
+      # Improve default caching settings instead of making a
+      # .devenv directory in every Git repository using it.
+      # See also the relevant config.(cache|sync).directories entries.
+      stdlib = ''
+        : "''${XDG_CACHE_HOME:=$HOME/.cache}"
+        declare -A direnv_layout_dirs
+        direnv_layout_dir() {
+            echo "''${direnv_layout_dirs[$PWD]:=$(
+                echo -n "$XDG_CACHE_HOME"/direnv/layouts/
+                echo -n "$PWD" | sha1sum | cut -d ' ' -f 1
+            )}"
+        }
+      '';
+    };
   };
 
   services.lorri.enable = true;
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-
-    # Improve default caching settings instead of making a
-    # .devenv directory in every Git repository using it.
-    # See also the relevant config.(cache|sync).directories entries.
-    stdlib = ''
-      : "''${XDG_CACHE_HOME:=$HOME/.cache}"
-      declare -A direnv_layout_dirs
-      direnv_layout_dir() {
-          echo "''${direnv_layout_dirs[$PWD]:=$(
-              echo -n "$XDG_CACHE_HOME"/direnv/layouts/
-              echo -n "$PWD" | sha1sum | cut -d ' ' -f 1
-          )}"
-      }
-    '';
-  };
 
   home = {
     packages = with pkgs; [
