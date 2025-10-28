@@ -27,7 +27,7 @@
   ];
 
   nixpkgs.overlays = [
-    self.overlay
+    self.overlays.default
     self.overlays.nixpkgsVersions
   ];
 

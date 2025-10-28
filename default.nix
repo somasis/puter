@@ -12,6 +12,7 @@ let
     nixpkgs: configuration:
     import "${nixpkgs}/nixos/lib/eval-config.nix" {
       modules = [ configuration ];
+      system = null;
       specialArgs = {
         inherit nixpkgs self sources;
         modulesPath = "${nixpkgs}/nixos/modules";
@@ -43,9 +44,8 @@ in
     lib = import ./modules/lib.nix;
   };
 
-  overlay = import ./overlay.nix;
-
   overlays = {
+    default = import ./overlay.nix;
     nixpkgsVersions = final: prev: {
       unstable = import sources.nixos-unstable { };
       stable = import sources.nixos-stable { };
