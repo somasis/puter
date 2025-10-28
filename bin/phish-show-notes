@@ -41,6 +41,12 @@ options:
                     to Phish.in's recording.
     <show>          An ISO formatted date (ex. 1969-12-31).
 
+environment variables:
+    \$NO_COLOR${NO_COLOR:+ (current: ${NO_COLOR@Q})}
+        If set, or if standard output is not a terminal, show notes will
+        not contain any ANSI escape codes (generated with \`pandoc -t
+        ansi\`). Instead, show notes will be converted to Markdown.
+
 see also: the Phish.net project <https://phish.net>,
           the Phish.in project <https://phish.in>.
 
@@ -182,6 +188,10 @@ for show_set in "${show_sets[@]}"; do
 
     case "${show_set}" in
         e) show_set=Encore ;;
+
+        # additional encore; see 2018-10-21 for test case
+        e*) show_set="Encore ${show_set#e}" ;;
+
         *) show_set="Set ${show_set}" ;;
     esac
 
@@ -195,15 +205,32 @@ done
 # (see 1999-12-31 for a testcase).
 if setlist_notes_fixed=$(
     iconv -t ISO-8859-1 <<<"$setlist_notes" \
-        | iconv -t UTF-8 \
-        | pandoc -f html+smart -t markdown-smart
+        | iconv -t UTF-8
 ); then
     setlist_notes="${setlist_notes_fixed}"
 fi
 
-fmt <<<"$setlist_notes"
+if [[ -n "$setlist_notes" ]]; then
+    pandoc_args=()
+    if [[ -v NO_COLOR ]] || [[ -t 1 ]]; then
+        pandoc_args+=(-t markdown-smart)
+    else
+        pandoc_args+=(-t ansi)
+    fi
+
+    setlist_notes=$(
+        pandoc \
+            -f html+smart \
+            "${pandoc_args[@]}" \
+            --columns 72 \
+            --wrap=auto \
+            <<<"$setlist_notes"
+    )
+
+    printf '%s\n\n' "${setlist_notes}"
+fi
 
 # TODO we could ought to print footnotes for songs,
 #      like Phish.net's own show overviews do...
 
-printf '\n<%s>\n' "${permalink}"
+printf '<%s>\n' "${permalink}"
