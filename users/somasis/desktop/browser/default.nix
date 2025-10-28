@@ -833,24 +833,39 @@ in
           ] (key: null);
 
           normal = lib.genAttrs [
-            "G"
-            "gd"
-            "ad"
-            "cd"
-            "<Escape>"
-            "F"
-            "f"
-            "gi"
-            "q"
-            "wf"
-            "r"
-            "d"
-            "b"
-            "<Ctrl+Tab>"
+            # keep-sorted start
             "<Ctrl+Shift+Tab>"
-            "q"
+            "<Ctrl+Tab>"
             "<Ctrl+q>"
+            "<Escape>"
             "<F11>"
+            "D" # tab-close -O
+            "F"
+            "G"
+            "H" # back
+            "J" # tab-next
+            "K" # tab-prev
+            "L" # forward
+            "ad"
+            "b"
+            "cd"
+            "co" # tab-close
+            "d"
+            "f"
+            "gC" # tab-clone
+            "gJ" # tab-move +
+            "gK" # tab-move -
+            "gd"
+            "gi"
+            "gm" # tab-move
+            "q"
+            "r"
+            "th" # back -t
+            "tl" # forward -t
+            "wf"
+            "wh" # back -w
+            "wl" # forward -w
+            # keep-sorted end
           ] (key: null);
         }
       ];
