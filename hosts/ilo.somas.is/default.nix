@@ -46,7 +46,7 @@
   nixpkgs.config.allowUnfree = true;
 
   system = {
-    stateVersion = "24.11";
+    stateVersion = "25.05";
     autoUpgrade.enable = false;
   };
 
