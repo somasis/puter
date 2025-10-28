@@ -1,11 +1,15 @@
+{
+  sources ? (import ./npins),
+
+  pkgs ? (import sources.nixpkgs { }),
+  lib ? pkgs.lib,
+
+  git-hooks ? (import ./git-hooks.nix),
+  treefmt-nix ? (import sources.treefmt-nix),
+  agenix ? (import sources.agenix { inherit pkgs; }),
+}:
 let
-  sources = import ./npins;
-
-  pkgs = import sources.nixpkgs { };
-  lib = pkgs.lib;
-
-  git-hooks = import ./git-hooks.nix;
-  inherit (import sources.agenix { inherit pkgs; }) agenix;
+  agenixPkg = agenix.agenix;
   treefmtPkg = treefmt-nix.mkWrapper pkgs ./treefmt.nix;
 in
 pkgs.mkShell {
@@ -16,65 +20,82 @@ pkgs.mkShell {
     export NIXOS_CONFIG="$PWD"
   '';
 
-  buildInputs = git-hooks.enabledPackages ++ [
-    # for secrets management (see also: `./secrets.nix`)
-    agenixPkg
+  buildInputs =
+    git-hooks.enabledPackages
+    ++ (with pkgs; [
+      # for secrets management (see also: `./secrets.nix`)
+      agenixPkg
+      treefmtPkg
 
-    treefmtPkg
+      act
+      apacheHttpd # for `htpasswd`
+      cachix
+      nix-update
+      npins
+      replace-secret
 
-    pkgs.act
-    pkgs.apacheHttpd # for `htpasswd`
-    pkgs.cachix
-    pkgs.nix-update
-    pkgs.npins
-    pkgs.replace-secret
+      (writeShellApplication {
+        name = "nixos";
+        runtimeInputs = [
+          pkgs.nixos-rebuild
+          # pkgs.nix-output-monitor
+        ];
+        text = ''
+          set -euo pipefail
 
-    (pkgs.writeShellApplication {
-      name = "nixos";
-      runtimeInputs = [
-        pkgs.nixos-rebuild
-        # pkgs.nix-output-monitor
-      ];
-      text = ''
-        edo() {
-            local arg string
-            string=
-            for arg; do
-                if [[ ''${arg@Q} == "'$arg'" ]] && ! [[ ''${arg} =~ [[:blank:]] ]]; then
-                    string+="''${string:+ }$arg"
-                else
-                    string+="''${string:+ }''${arg@Q}"
-                fi
-            done
+          edo() {
+              local arg string
+              string=
+              for arg; do
+                  if [[ ''${arg@Q} == "'$arg'" ]] && ! [[ ''${arg} =~ [[:blank:]] ]]; then
+                      string+="''${string:+ }$arg"
+                  else
+                      string+="''${string:+ }''${arg@Q}"
+                  fi
+              done
 
-            printf '$ %s\n' "''${string}" >&2
-            # alt: printf '$ %s\n' "$(condquote "$@")" >&2
+              printf '$ %s\n' "''${string}" >&2
+              # alt: printf '$ %s\n' "$(condquote "$@")" >&2
 
-            "$@"
-        }
+              "$@"
+          }
 
-        edo nixos-rebuild \
-            --log-format bar-with-logs \
-            --sudo \
-            -f . \
-            -A nixosConfigurations."$HOSTNAME" \
-            "$@"
-            # |& nom --json
-      '';
-    })
+          edo nixos-rebuild \
+              --log-format bar-with-logs \
+              --sudo \
+              -f . \
+              -A nixosConfigurations."$HOSTNAME" \
+              "$@"
+              # |& nom --json
+        '';
+      })
 
-    (pkgs.writeShellApplication {
-      name = "npins-update-commit";
-      runtimeInputs = [ pkgs.npins ];
-      text = ''
-        PS3='$ '
+      (writeShellApplication {
+        name = "npins-update-commit";
+        runtimeInputs = [ pkgs.npins ];
+        text = ''
+          set -euo pipefail
 
-        set -euo pipefail
-        set -x
+          edo() {
+              local arg string
+              string=
+              for arg; do
+                  if [[ ''${arg@Q} == "'$arg'" ]] && ! [[ ''${arg} =~ [[:blank:]] ]]; then
+                      string+="''${string:+ }$arg"
+                  else
+                      string+="''${string:+ }''${arg@Q}"
+                  fi
+              done
 
-        npins update "$@"
-        git commit -m 'npins: update' npins/
-      '';
-    })
-  ];
+              printf '$ %s\n' "''${string}" >&2
+              # alt: printf '$ %s\n' "$(condquote "$@")" >&2
+
+              "$@"
+          }
+
+          edo npins update "$@"
+          edo git commit -m 'npins: update' npins/
+        '';
+      })
+    ]);
 }
