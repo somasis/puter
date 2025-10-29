@@ -79,9 +79,11 @@
         gpg.ssh = {
           # Set the file used for storing trusted signatures.
           allowedSignersFile = "~/.ssh/allowed_signers";
-          defaultKeyCommand = builtins.toString (pkgs.writeShellScript "first-key-in-ssh-agent" ''
-            printf 'key::%s\n' "$(ssh-add -L | head -n1)"
-          '');
+          defaultKeyCommand = builtins.toString (
+            pkgs.writeShellScript "first-key-in-ssh-agent" ''
+              printf 'key::%s\n' "$(ssh-add -L | head -n1)"
+            ''
+          );
         };
 
         aliases = {
