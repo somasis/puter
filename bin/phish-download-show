@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive tageditor
+#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive pandoc tageditor
 # shellcheck shell=bash
 
 # keep-sorted start skip_lines=1 prefix_order=type,,>,||
@@ -10,6 +10,7 @@ type \
     curl \
     jq \
     mktemp \
+    pandoc \
     tageditor \
     >/dev/null \
     || exit 1
@@ -283,7 +284,8 @@ if [[ "$edit_tags" == true ]]; then
         phish-show-notes -j "${show_date}" \
             | jq -r '.setlist_notes // ""' \
             | iconv -t ISO-8859-1 \
-            | iconv -t UTF-8
+            | iconv -t UTF-8 \
+            | pandoc -f html -t plain --wrap=none
     )
 
     for file in "${directory}"/*.mp3; do
