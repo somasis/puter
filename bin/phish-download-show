@@ -274,6 +274,11 @@ file_i=0
 disc=1
 
 if [[ "$edit_tags" == true ]]; then
+    # See "iconv weirdness" comment in `phish-show-notes` for why
+    # the iconv dance is necessary.
+    # Pandoc is used where something smaller would suffice (like recode)
+    # for replacing the escaped HTML-entities because pandoc is also used
+    # by `phish-show-notes`.
     phishnet_setlist_notes=$(
         phish-show-notes -j "${show_date}" \
             | jq -r '.setlist_notes // ""' \

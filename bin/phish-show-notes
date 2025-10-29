@@ -200,7 +200,7 @@ for show_set in "${show_sets[@]}"; do
     printf '%s: %s\n\n' "${show_set}" "${set_tracks}" | fmt -t
 done
 
-# FIXME The iconv weirdness here is because it seems that some
+# NOTE The iconv weirdness here is because it seems that some
 # show notes provided by Phish.net were improperly converted to
 # UTF-8 from Windows-1252 and/or ISO-8859-1 at some point in
 # their processing. Thus, artifacts in text show up occasionally
