@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+# Disable SC2016 since we use the beets variable substitution quite
+# a lot in the script, which ShellCheck gives a false positive for.
+# shellcheck disable=SC2016
+
+# shellcheck disable=SC2120
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} [-ALWagtwv] <query>
+
+Open the release track pages for items matching <query>.
+
+options:
+    -A              Open artist pages instead.
+    -L              Open album artist pages instead.
+    -W              Open parent work pages instead.
+    -a              Open album/release pages instead.
+    -g              Open release group pages instead.
+    -t              Open track pages instead.
+    -w              Open work pages instead.
+    -n              Don't open, just print the URLs.
+    -v              Print the URLs as they are opened.
+    <query>         A query as defined by Beets.
+
+see also: beet(1), <https://musicbrainz.org/doc/Terminology>.
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 64 # EX_USAGE
+}
+
+
+set -euo pipefail
+
+dry_run=false
+format='https://musicbrainz.org/track/$mb_releasetrackid'
+xargs_args=()
+while getopts :ALWagntvw arg; do
+    case "$arg" in
+        A) format='https://musicbrainz.org/artist/$mb_artistid' ;;
+        L) format='https://musicbrainz.org/artist/$mb_albumartistid' ;;
+        W) format='https://musicbrainz.org/work/$mb_parentworkid' ;;
+        a) format='https://musicbrainz.org/release/$mb_albumid' ;;
+        g) format='https://musicbrainz.org/releasegroup/$mb_releasegroupid' ;;
+        n) dry_run=true ;;
+        t) format='https://musicbrainz.org/release/$mb_trackid' ;;
+        v) xargs_args+=( -t ) ;;
+        w) format='https://musicbrainz.org/work/$mb_workid' ;;
+        ?) usage 'unknown argument -- %s\n' "${OPTARG}" ;;
+        *) usage ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+beet list -f "$format" "$@" \
+    | if [[ "${dry_run}" == true ]]; then
+        cat
+    else
+        xargs "${xargs_args[@]}" -n1 xdg-open
+    fi
