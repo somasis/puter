@@ -47,7 +47,7 @@ let
       stem = lib.removeSuffix ".user.css" (lib.getName args.src);
     in
     assert (lib.isStorePath args.src);
-    pkgs.runCommandNoCC "${stem}.user.js"
+    pkgs.runCommand "${stem}.user.js"
       (
         {
           inherit code_header code_footer;
