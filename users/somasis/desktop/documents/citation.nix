@@ -126,7 +126,7 @@ in
           ];
 
           # Zotero OCR
-          "extensions.zotero.zoteroocr.pdftoppmPath" = "${pkgs.poppler_utils}/bin/pdftoppm";
+          "extensions.zotero.zoteroocr.pdftoppmPath" = "${pkgs.poppler-utils}/bin/pdftoppm";
           "extensions.zotero.zoteroocr.ocrPath" = "${pkgs.tesseract}/bin/tesseract";
           "extensions.zotero.zoteroocr.language" = "eng";
 
