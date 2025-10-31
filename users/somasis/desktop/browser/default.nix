@@ -160,8 +160,8 @@ in
       (xdgDataDir "qutebrowser/greasemonkey/requires")
       (xdgDataDir "qutebrowser/webengine")
 
-      (xdgConfigDir "chromium")
-      (xdgCacheDir "chromium")
+      ".mozilla"
+      (xdgCacheDir "mozilla/firefox")
     ];
 
     files = [
@@ -198,32 +198,17 @@ in
   ];
 
   home.sessionVariables.BROWSER = lib.mkIf config.programs.qutebrowser.enable "qutebrowser";
-  xdg.mimeApps = {
-    defaultApplications = lib.mkIf config.programs.qutebrowser.enable (
-      lib.genAttrs [
-        "application/xhtml"
-        "text/html"
-        "text/xml"
-        "x-scheme-handler/http"
-        "x-scheme-handler/https"
-        "x-scheme-handler/about"
-        "x-scheme-handler/unknown"
-      ] (_: "org.qutebrowser.qutebrowser.desktop")
-    );
-
-    # associations.removed = lib.genAttrs
-    #   [
-    #     "application/xhtml"
-    #     "text/html"
-    #     "text/xml"
-    #     "x-scheme-handler/http"
-    #     "x-scheme-handler/https"
-    #     "x-scheme-handler/about"
-    #     "x-scheme-handler/unknown"
-    #   ]
-    #   (_: "chromium.desktop")
-    # ;
-  };
+  xdg.mimeApps.defaultApplications = lib.mkIf config.programs.qutebrowser.enable (
+    lib.genAttrs [
+      "application/xhtml"
+      "text/html"
+      "text/xml"
+      "x-scheme-handler/http"
+      "x-scheme-handler/https"
+      "x-scheme-handler/about"
+      "x-scheme-handler/unknown"
+    ] (_: "org.qutebrowser.qutebrowser.desktop")
+  );
 
   programs = {
     qutebrowser = {
@@ -885,16 +870,6 @@ in
         '')
       ];
     };
-
-    chromium = {
-      enable = false;
-      package = pkgs.ungoogled-chromium.override { enableWideVine = true; };
-
-      dictionaries = with pkgs.hunspellDictsChromium; [
-        en-us
-        en-gb
-      ];
-    };
   };
 
   systemd.user = {
@@ -999,10 +974,10 @@ in
     with kdePackages;
     (
       [
-        ungoogled-chromium
+        firefox-esr
+        plasma-browser-integration
       ]
       ++ (lib.optional config.programs.qutebrowser.enable somasis-qutebrowser-tools)
-      ++ (lib.optional config.programs.chromium.enable plasma-browser-integration)
     );
 
   services.darkman =
