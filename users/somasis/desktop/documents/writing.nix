@@ -115,7 +115,6 @@ rec {
     gelasio # Georgia
     liberation-sans-narrow # Arial Narrow
     liberation_ttf # Arial, Helvetica, Times New Roman, Courier New
-    noto-fonts-extra # Arial, Times New Roman
   ];
 
   # See for more details:
