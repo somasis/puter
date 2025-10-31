@@ -22,7 +22,7 @@ in
 
     tray = {
       enable = true;
-      package = pkgs.syncthingtray-qt6;
+      package = pkgs.syncthingtray;
     };
   };
 
