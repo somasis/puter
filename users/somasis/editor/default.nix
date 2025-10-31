@@ -22,15 +22,13 @@ let
         fi
     done
 
-    args=( "$@" )
-    mapfile -t args < <(
-        for arg in "''${args[@]}"; do
-            # Turn file arguments into absolute paths because
-            # the session directory might be different from
-            # the file directory.
-            printf '%s\n' "$(readlink -f "$arg")"
-        done
-    )
+    args=( )
+    for arg; do
+        # Turn file arguments into absolute paths because
+        # the session directory might be different from
+        # the file directory.
+        args+=( "$(readlink -f "$arg")" )
+    done
 
     case "$mode" in
         create) exec kak -s "$session_name" "''${args[@]}" ;;
