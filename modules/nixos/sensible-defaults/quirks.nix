@@ -28,12 +28,6 @@ let
       url = "https://github.com/NixOS/nixpkgs/pull/455083.patch";
       hash = "sha256-yUOMjGArgtwII1i9vtoRrE61sWPSwKkqj8u353WzH0E=";
     })
-
-    # Added 2025-10-23: fix kde-rounded-corners
-    (fetchpatch {
-      url = "https://github.com/NixOS/nixpkgs/pull/455101.patch";
-      hash = "sha256-hWHXfeY+PfRgCp/QSExRRpUvut40n79vmFVD216CI4g=";
-    })
   ];
 
   # deadnix: skip
@@ -57,9 +51,6 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
-    inherit (nixpkgs-quirks.pkgs)
-      kde-rounded-corners
-      ;
 
     kdePackages = prev.kdePackages // {
       inherit (nixpkgs-quirks.pkgs.kdePackages) libquotient neochat;
