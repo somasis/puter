@@ -77,7 +77,9 @@ pkgs.mkShell {
               esac
           done
 
-          nixos_rebuild_args=()
+          nixos_rebuild_args=(
+              --no-flake
+          )
 
           if [[ "$use_nom" == true ]]; then
               nixos_rebuild_args+=(
