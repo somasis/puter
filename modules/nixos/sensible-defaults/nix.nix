@@ -6,6 +6,11 @@
   ...
 }:
 let
+  nix-run = import sources.nix-run {
+    inherit pkgs;
+    system = pkgs.stdenv.hostPlatform.system;
+  };
+
   importFlake = src: (import sources.flake-compat { inherit src; }).defaultNix;
   nix-index-database = (importFlake sources.nix-index-database).outputs;
 in
@@ -29,7 +34,10 @@ in
     };
   };
 
-  environment.systemPackages = lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions;
+  environment.systemPackages = [
+    nix-run
+  ]
+  ++ (lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions);
 
   # System should automatically upgrade according to the canonical version
   # of the flake repository.

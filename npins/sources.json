@@ -126,6 +126,11 @@
       "url": "https://github.com/nix-community/nix-index-database/archive/ed6b293161b378a7368cda38659eb8d3d9a0dac4.tar.gz",
       "hash": "1jn0ih2vj2zdpirx5939a1wx6wysvxmip71kywmad3h827mln4m8"
     },
+    "nix-run": {
+      "type": "Tarball",
+      "url": "https://tangled.org/@weethet.bsky.social/nix-run/archive/main",
+      "hash": "0lyb3dxndc7yrnfnd77a20qkxsdmdzf9wbch0pvv9ifprzr5cmhm"
+    },
     "nixos-hardware": {
       "type": "Git",
       "repository": {

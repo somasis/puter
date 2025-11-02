@@ -68,10 +68,12 @@ pkgs.mkShell {
               use_nom=false
           fi
 
+          update=false
           for arg; do
               case "$arg" in
                   --nom) use_nom=true; shift ;;
                   --no-nom) use_nom=false; shift ;;
+                  --update) update=true
                   --log-format) use_nom=false ;;
                   repl) use_nom=false ;;
               esac
@@ -80,6 +82,10 @@ pkgs.mkShell {
           nixos_rebuild_args=(
               --no-flake
           )
+
+          if [[ "$update" == true ]]; then
+              npins-update-commit || exit 1
+          fi
 
           if [[ "$use_nom" == true ]]; then
               nixos_rebuild_args+=(
