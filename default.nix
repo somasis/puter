@@ -58,9 +58,9 @@ in
   overlays = {
     default = import ./overlay.nix;
     nixpkgsVersions = final: prev: {
-      unstable = import sources.nixos-unstable { inherit (final) system; };
-      stable = import sources.nixos-stable { inherit (final) system; };
-      dev = import sources.nixpkgs { inherit (final) system; };
+      unstable = import sources.nixos-unstable { inherit (final.stdenv.hostPlatform) system; };
+      stable = import sources.nixos-stable { inherit (final.stdenv.hostPlatform) system; };
+      dev = import sources.nixpkgs { inherit (final.stdenv.hostPlatform) system; };
     };
   };
 
