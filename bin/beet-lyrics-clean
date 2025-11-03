@@ -9,11 +9,12 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/}
+usage: ${0##*/} <query>
 
-Automatically clean up cruft in lyric fields in Beets, the music organizer's,
-database by acting as an \$EDITOR for \`beet edit\`. Note that this means the
-"lyrics" and "edit" plugins should be enabled in Beets.
+Automatically clean cruft from lyric fields in the Beets database by
+acting as an editor driving \`beet edit\`.
+
+see also: beet-lyrics-unsync
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -21,7 +22,12 @@ EOF
     exit 64 # EX_USAGE
 }
 
+case "${1:-}" in
+    --help) usage ;;
+esac
+
 if [[ "${BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT:=0}" -eq 1 ]]; then
+    # NOTE $@ is referring to the YAML file produced by `beet edit`.
     yq --inplace -p yaml -o yaml --expression '
         .lyrics |= (
             sub(".*This\\s*song\\s*is\\s*an\\s*instrumental.*|.*[\(\[][Ii]nstrumental[\]\)].*"; "[instrumental]")
@@ -33,4 +39,8 @@ if [[ "${BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT:=0}" -eq 1 ]]; then
 fi
 
 export EDITOR="$0"
-BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT=1 beet edit -f lyrics "$@"
+export BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT=1
+
+beet -p lyrics \
+    edit -f lyrics \
+        "$@"
