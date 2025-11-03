@@ -14,19 +14,19 @@
 # without deadnix wanting to change this file.
 let
   # deadnix: skip
-  inherit (pkgs) fetchpatch;
+  inherit (pkgs) fetchpatch2;
   patches = [
     # Here's an example:
     # # Added 2025-04-17: switch to maintained fork of Cantata
-    # (fetchpatch {
+    # (fetchpatch2 {
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
 
     # Added 2025-10-23: fix libquotient and NeoChat build
-    (fetchpatch {
+    (fetchpatch2 {
       url = "https://github.com/NixOS/nixpkgs/pull/455083.patch";
-      hash = "sha256-yUOMjGArgtwII1i9vtoRrE61sWPSwKkqj8u353WzH0E=";
+      hash = "sha256-AGdeTpI5jg5dHGHBhTMUEMu4i0RyKOPDBc0NVFA1c8Y=";
     })
   ];
 
@@ -36,7 +36,7 @@ let
       let
         args = {
           inherit (pkgs) config;
-          inherit (pkgs.stdenvNoCC) system hostPlatform;
+          inherit (pkgs.stdenvNoCC) hostPlatform;
         };
       in
       import ((import nixpkgs args).applyPatches {
