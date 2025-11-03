@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash curl imagemagick jq libnotify pup sed xurls
+#! nix-shell -i bash -p bash curl imagemagick.out jq libnotify pup sed xurls
 # shellcheck shell=bash
 # vim: ft=sh
 
@@ -247,7 +247,7 @@ if [[ -n "${NTFY_ICON:-}" ]] && [[ "${NTFY_ICON:0:1}" != '/' ]]; then
         --output "${icon_file}" \
         --url "${icon_url}"
 
-    edo magick convert "${icon_file}" "${icon_file%.*}.png"
+    edo magick "${icon_file}" "${icon_file%.*}.png"
     icon_file="${icon_file%.*}.png"
 fi
 
