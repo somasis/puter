@@ -984,8 +984,11 @@ in
     with kdePackages;
     (
       [
-        firefox-esr
-        plasma-browser-integration
+        (firefox-esr.override {
+          nativeMessagingHosts = [
+            plasma-browser-integration
+          ];
+        })
       ]
       ++ (lib.optional config.programs.qutebrowser.enable somasis-qutebrowser-tools)
     );
