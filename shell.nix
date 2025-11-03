@@ -73,9 +73,9 @@ pkgs.mkShell {
               case "$arg" in
                   --nom) use_nom=true; shift ;;
                   --no-nom) use_nom=false; shift ;;
-                  --update) update=true
+                  --update) update=true; shift ;;
                   --log-format) use_nom=false ;;
-                  repl) use_nom=false ;;
+                  repl|edit|list-generations) use_nom=false ;;
               esac
           done
 
