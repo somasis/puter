@@ -1,0 +1,49 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash yq-go
+# shellcheck shell=bash
+
+set -euo pipefail
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} <query>
+
+Strip timing from synced/LRC lyrics from tracks matching a Beets query.
+Useful for tracks like live recordings, where the lyrics might be very
+well be correct, but the timing is likely way off.
+
+see also: beet-lyrics-clean
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 64 # EX_USAGE
+}
+
+case "${1:-}" in
+    --help) usage ;;
+esac
+
+if [[ "${BEET_LYRICS_UNSYNC_INSIDE_BEETS_EDIT:=0}" -eq 1 ]]; then
+    # NOTE $@ is referring to the YAML file produced by `beet edit`.
+    yq --inplace -p yaml -o yaml --expression '
+        .lyrics |= (
+            split("\n")
+                | map(sub("^\\[[0-9]+:[0-9]+\\.[0-9]+\\] ?"; ""))
+                | join("\n")
+        )
+    ' "$@"
+    exit $?
+fi
+
+export EDITOR="$0"
+export BEET_LYRICS_UNSYNC_INSIDE_BEETS_EDIT=1
+
+# Prepend the query to match for lyrics which contain timing.
+beet -p lyrics \
+    edit -f lyrics \
+        lyrics::'^\[[0-9]+:[0-9]+\.[0-9]+\]' \
+        "$@"
