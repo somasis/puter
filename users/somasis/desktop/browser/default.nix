@@ -192,10 +192,20 @@ in
 
   # Ensure the default session exists, if necessary. Prevents a possible write error later on
   # when rebuilding or starting a session for the first time.
-  systemd.user.tmpfiles.rules = [
-    "f ${config.sync.persistentStoragePath}/${relativeToHome config.xdg.dataHome}/qutebrowser/sessions/${config.programs.qutebrowser.settings.session.default_name}.yml - - - -  "
-    "f ${config.xdg.dataHome}/qutebrowser/sessions/.stignore - - - - _autosave.yml"
-  ];
+  systemd.user.tmpfiles.settings.qutebrowser.rules =
+    let
+      defaultSessionPath = lib.concatStringsSep "/" [
+        config.sync.persistentStoragePath
+        (relativeToHome config.xdg.dataHome)
+        "qutebrowser"
+        "sessions"
+        "${config.programs.qutebrowser.settings.session.default_name}.yml"
+      ];
+    in
+    {
+      ${defaultSessionPath}.f = { };
+      "${config.xdg.dataHome}/qutebrowser/sessions/.stignore".f.argument = "_autosave.yml";
+    };
 
   home.sessionVariables.BROWSER = lib.mkIf config.programs.qutebrowser.enable "qutebrowser";
   xdg.mimeApps.defaultApplications = lib.mkIf config.programs.qutebrowser.enable (
