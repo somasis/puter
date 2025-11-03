@@ -1,6 +1,7 @@
 {
   self,
   config,
+  lib,
   ...
 }:
 let
@@ -32,6 +33,25 @@ in
   services.darkman = {
     enable = true;
     settings.usegeoclue = true;
+    lightModeScripts = {
+      kde-color-scheme = ''
+        plasma-apply-lookandfeel -a somasis.desktop
+        plasma-apply-colorscheme -a ${lib.escapeShellArg (colors.hex config.theme.colors.accent)}
+      '';
+      kde-gtk-theme = ''
+        dbus-send --session --dest=org.kde.GtkConfig --type=method_call /GtkConfig org.kde.GtkConfig.setGtkTheme "string:Breeze-gtk"
+      '';
+    };
+
+    darkModeScripts = {
+      kde-color-scheme = ''
+        plasma-apply-lookandfeel -a somasisdark.desktop
+        plasma-apply-colorscheme -a ${lib.escapeShellArg (colors.hex config.theme.colors.brightAccent)}
+      '';
+      kde-gtk-theme = ''
+        dbus-send --session --dest=org.kde.GtkConfig --type=method_call /GtkConfig org.kde.GtkConfig.setGtkTheme "string:Breeze-dark-gtk"
+      '';
+    };
   };
 
   cache.directories = with config.lib.somasis; [
