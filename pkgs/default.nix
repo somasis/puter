@@ -25,9 +25,6 @@ let
   attrsets = {
     greasemonkeyScripts = import ./greasemonkey-userscripts args';
     kakounePlugins = import ./kakoune-plugins args';
-    nodePackages.stylelint-config-standard =
-      pkgs.nodePackages.callPackage ./stylelint-config-standard
-        { };
     tmuxPlugins = import ./tmux-plugins args';
     zotero-addons = import ./zotero-addons args';
   };
