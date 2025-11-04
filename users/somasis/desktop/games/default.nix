@@ -69,18 +69,24 @@
       )
     ];
 
-  persist.directories = with config.lib.somasis; [
-    # keep-sorted start
-    ".lbreakouthd"
-    ".zaz"
-    (xdgCacheDir "kpat")
-    (xdgCacheDir "libkcardgame-themes")
-    (xdgConfigDir "PCSX2")
-    (xdgConfigDir "opentyrian")
-    (xdgConfigDir "retroarch")
-    (xdgConfigDir "tetrio-desktop")
-    (xdgDataDir "SpaceCadetPinball")
-    (xdgDataDir "crispy-doom")
-    # keep-sorted end
-  ];
+  persist = {
+    directories = with config.lib.somasis; [
+      # keep-sorted start
+      ".lbreakouthd"
+      ".zaz"
+      (xdgCacheDir "kpat")
+      (xdgCacheDir "libkcardgame-themes")
+      (xdgConfigDir "PCSX2")
+      (xdgConfigDir "opentyrian")
+      (xdgConfigDir "retroarch")
+      (xdgConfigDir "tetrio-desktop")
+      (xdgDataDir "SpaceCadetPinball")
+      (xdgDataDir "crispy-doom")
+      # keep-sorted end
+    ];
+
+    files = with config.lib.somasis; [
+      (xdgConfigDir "kpatrc")
+    ];
+  };
 }
