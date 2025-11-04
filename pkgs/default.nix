@@ -6,8 +6,8 @@
 }@args:
 let
   args' = builtins.removeAttrs args [
-    "omitFunctions"
     "omitAttrsets"
+    "omitFunctions"
   ];
 
   inherit (pkgs)
