@@ -33,6 +33,7 @@ pkgs.mkShell {
 
       act
       apacheHttpd # for `htpasswd`; used by some secrets
+      cachix
       nix-update
       npins
 

@@ -8,11 +8,17 @@
   persist = with config.lib.somasis; {
     directories = [
       (xdgConfigDir "act")
+      (xdgConfigDir "cachix")
     ];
 
     files = [
       (xdgConfigDir "gh/hosts.yml")
     ];
+  };
+
+  nix.settings = {
+    extra-substituters = [ "https://somasis.cachix.org" ];
+    trusted-public-keys = [ "somasis.cachix.org-1:vJQjpTJdiBUHlxLP+iyj8cPJ0Y/mHh04yRO4kiDbM90=" ];
   };
 
   cache.directories = with config.lib.somasis; [
@@ -36,6 +42,7 @@
     act
     git-open
     pre-commit
+    cachix
 
     (writeShellScriptBin "git-curlam" ''
       set -e
