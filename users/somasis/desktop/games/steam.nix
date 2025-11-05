@@ -2,13 +2,10 @@
   config,
   pkgs,
   osConfig,
+  lib,
   ...
 }:
-let
-  inherit (osConfig.programs) steam;
-in
-assert steam.enable;
-{
+lib.mkIf osConfig.programs.steam.enable {
   persist.directories = with config.lib.somasis; [
     ".steam"
     (xdgDataDir "Steam")
