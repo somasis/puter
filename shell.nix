@@ -93,7 +93,7 @@ pkgs.mkShell {
               )
           else
               nixos_rebuild_args+=(
-                  --log-format bar-with-logs
+                  --log-format multiline-with-logs
               )
           fi
 
