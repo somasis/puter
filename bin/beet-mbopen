@@ -19,7 +19,11 @@ options:
     -L              Open album artist pages instead.
     -W              Open parent work pages instead.
     -a              Open album/release pages instead.
+                    Passes \`-a\` to \`beet list\`, causing the query
+                    to match albums instead of tracks as well.
     -g              Open release group pages instead.
+                    Passes \`-a\` to \`beet list\`, causing the query
+                    to match albums instead of tracks as well.
     -t              Open track pages instead.
     -w              Open work pages instead.
     -n              Don't open, just print the URLs.
@@ -39,14 +43,21 @@ set -euo pipefail
 
 dry_run=false
 format='https://musicbrainz.org/track/$mb_releasetrackid'
+beet_args=()
 xargs_args=()
 while getopts :ALWagntvw arg; do
     case "$arg" in
         A) format='https://musicbrainz.org/artist/$mb_artistid' ;;
         L) format='https://musicbrainz.org/artist/$mb_albumartistid' ;;
         W) format='https://musicbrainz.org/work/$mb_parentworkid' ;;
-        a) format='https://musicbrainz.org/release/$mb_albumid' ;;
-        g) format='https://musicbrainz.org/releasegroup/$mb_releasegroupid' ;;
+        a)
+            beet_args+=( "-a" )
+            format='https://musicbrainz.org/release/$mb_albumid'
+            ;;
+        g)
+            beet_args+=( "-a" )
+            format='https://musicbrainz.org/releasegroup/$mb_releasegroupid'
+            ;;
         n) dry_run=true ;;
         t) format='https://musicbrainz.org/release/$mb_trackid' ;;
         v) xargs_args+=( -t ) ;;
@@ -57,7 +68,7 @@ while getopts :ALWagntvw arg; do
 done
 shift $(( OPTIND - 1 ))
 
-beet list -f "$format" "$@" \
+beet list -f "$format" "${beet_args[@]}" "$@" \
     | if [[ "${dry_run}" == true ]]; then
         cat
     else
