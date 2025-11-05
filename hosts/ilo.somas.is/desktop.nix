@@ -36,6 +36,11 @@
     #   extraConfig = "DeviceScale=1";
     #   font = "${pkgs.inter}/share/fonts/truetype/Inter.ttc";
     # };
+
+    # <https://wiki.archlinux.org/title/Docker#Enable_native_overlay_diff_engine>
+    extraModprobeConfig = ''
+      options overlay metacopy=off redirect_dir=off
+    '';
   };
 
   services = {
@@ -151,11 +156,6 @@
       autoPrune.enable = true;
     };
   };
-
-  # <https://wiki.archlinux.org/title/Docker#Enable_native_overlay_diff_engine>
-  boot.extraModprobeConfig = ''
-    options overlay metacopy=off redirect_dir=off
-  '';
 
   environment.plasma6.excludePackages =
     with pkgs;
