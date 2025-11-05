@@ -1,8 +1,14 @@
 {
+  services = {
+    logind.settings.Login = {
+      # Don't automatically start any getty services on virtual terminals.
+      NAutoVTs = 0;
 
-  # Only create two virtual terminals, one for Xorg and one for getty.
-  services.logind.settings.Login.NAutoVTs = 2;
+      # But always reserve tty11 for a getty service.
+      ReserveVt = 11;
+    };
 
-  # Show the system journal on tty12.
-  services.journald.console = "/dev/tty12";
+    # Show the system journal on tty12.
+    journald.console = "/dev/tty12";
+  };
 }
