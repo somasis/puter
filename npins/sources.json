@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "8e490bd302ee4f8fad1b24745d1bcfc5340693a0",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/8e490bd302ee4f8fad1b24745d1bcfc5340693a0.tar.gz",
-      "hash": "0l913xyxrcmi1kvnqkvpkqyxkzbkq5qi080rwp812p5474f2900i"
+      "revision": "daaf1b4ec67d9e529436f71b80ff8870093e1e09",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/daaf1b4ec67d9e529436f71b80ff8870093e1e09.tar.gz",
+      "hash": "0dm66jzsf502wk86c1kyspihil7gsjbfzbv6vl3d0iwbfwxwqgi2"
     },
     "adblockHosts": {
       "type": "Git",
@@ -140,9 +140,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "d48e8f0e1691e0200a675c13df7c85e275090a15",
-      "url": "https://github.com/nixos/nixos-hardware/archive/d48e8f0e1691e0200a675c13df7c85e275090a15.tar.gz",
-      "hash": "0yr58y9fi4dbr7w1c9cmmm7qwqg5dkngj1c5mx0alkhcsyr6pvns"
+      "revision": "e4c6ee69e710805a15a3da905214a25618271609",
+      "url": "https://github.com/nixos/nixos-hardware/archive/e4c6ee69e710805a15a3da905214a25618271609.tar.gz",
+      "hash": "0zx8sk4rh9w7wnbk1viv5frr1aacdlifjhqai98s3dpxg0g4ndjn"
     },
     "nixos-stable": {
       "type": "Channel",
@@ -197,9 +197,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "4ef3dfdbb5ddfb9e39999a2f2b0c2637277859d4",
-      "url": "https://github.com/numtide/treefmt-nix/archive/4ef3dfdbb5ddfb9e39999a2f2b0c2637277859d4.tar.gz",
-      "hash": "0dhvpzcknsr2ybi3zz9mjggs93aqkfr24radvlw74y9620dziqw4"
+      "revision": "97a30861b13c3731a84e09405414398fbf3e109f",
+      "url": "https://github.com/numtide/treefmt-nix/archive/97a30861b13c3731a84e09405414398fbf3e109f.tar.gz",
+      "hash": "0j2cg7x4g8z9hgxj4bf7fy6r8xq5ahqpl6rxqm7p78ayhsz5ypk8"
     },
     "uAssets": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "d305085b313229118d7b241da56b99efa4f060e6",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/d305085b313229118d7b241da56b99efa4f060e6.tar.gz",
-      "hash": "161g5r4kkfp2jln2dkjf05zn8llnbfwg4zrxi3a5c52srm2hj2x4"
+      "revision": "07f5cddc67ac15f93d82707f065e43be29c50ef4",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/07f5cddc67ac15f93d82707f065e43be29c50ef4.tar.gz",
+      "hash": "0l22mmbi026jm5bfwsgbm7s86pslsr2rbgk1a2rgagczqarpfzrf"
     }
   },
   "version": 5
