@@ -326,7 +326,10 @@
     };
   };
 
-  services.lorri.enable = true;
+  services.lorri = {
+    enable = true;
+    enableNotifications = true;
+  };
 
   home.shellAliases = {
     am = "git am";
