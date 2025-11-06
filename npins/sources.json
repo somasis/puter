@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "daaf1b4ec67d9e529436f71b80ff8870093e1e09",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/daaf1b4ec67d9e529436f71b80ff8870093e1e09.tar.gz",
-      "hash": "0dm66jzsf502wk86c1kyspihil7gsjbfzbv6vl3d0iwbfwxwqgi2"
+      "revision": "a9ef22a5337a6a52c098acd10014d85ad34150da",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/a9ef22a5337a6a52c098acd10014d85ad34150da.tar.gz",
+      "hash": "1m7azif1i27n8bpj320v8m8rkmlnmnb7dydidrfqmcp2af5sg79i"
     },
     "adblockHosts": {
       "type": "Git",
@@ -54,9 +54,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "ca5b894d3e3e151ffc1db040b6ce4dcc75d31c37",
-      "url": "https://github.com/cachix/git-hooks.nix/archive/ca5b894d3e3e151ffc1db040b6ce4dcc75d31c37.tar.gz",
-      "hash": "11r45r45qcfv77rx024mqpra2yixnc5g248kp7rmccq09vll1y85"
+      "revision": "8e7576e79b88c16d7ee3bbd112c8d90070832885",
+      "url": "https://github.com/cachix/git-hooks.nix/archive/8e7576e79b88c16d7ee3bbd112c8d90070832885.tar.gz",
+      "hash": "1p8jvasihr5adrkcdb6w3wk7lxxfpa262xlbj4agczbxbm1wvslg"
     },
     "home-manager": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "b959c67241cae17fc9e4ee7eaf13dfa8512477ea",
-      "url": "https://github.com/nix-community/home-manager/archive/b959c67241cae17fc9e4ee7eaf13dfa8512477ea.tar.gz",
-      "hash": "0vacnji2f3ihnwhs0cbsxpcxi61l7rz13czvjdjgviihnq6m96yj"
+      "revision": "2907788315a73d3292140b4d59b5d95796565625",
+      "url": "https://github.com/nix-community/home-manager/archive/2907788315a73d3292140b4d59b5d95796565625.tar.gz",
+      "hash": "0zxmxzmxdnqdz9y16n98iz5mncl00pplfqmscy9irmmppnl6hn04"
     },
     "home-manager-stable": {
       "type": "Git",
@@ -140,9 +140,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "e4c6ee69e710805a15a3da905214a25618271609",
-      "url": "https://github.com/nixos/nixos-hardware/archive/e4c6ee69e710805a15a3da905214a25618271609.tar.gz",
-      "hash": "0zx8sk4rh9w7wnbk1viv5frr1aacdlifjhqai98s3dpxg0g4ndjn"
+      "revision": "24084931d8098fce300fabea9e48fa96292228d7",
+      "url": "https://github.com/nixos/nixos-hardware/archive/24084931d8098fce300fabea9e48fa96292228d7.tar.gz",
+      "hash": "10fxghml3pjkpz0nhby6chrmsphdqpyig9l3i358ns5c5ai6w0mi"
     },
     "nixos-stable": {
       "type": "Channel",
@@ -159,8 +159,8 @@
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre889481.12c1f0253aa9/nixexprs.tar.xz",
-      "hash": "1zm0n2iql1jbpqamcmyhky81m6djcipi4c276v6sbg70m46mrici"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre889916.ffcdcf99d65c/nixexprs.tar.xz",
+      "hash": "15p1xw8myy5pmg9wwnrxqhrxcb2dnfycj03rhg42rqjgc9xbmdfc"
     },
     "plasma-manager": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "07f5cddc67ac15f93d82707f065e43be29c50ef4",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/07f5cddc67ac15f93d82707f065e43be29c50ef4.tar.gz",
-      "hash": "0l22mmbi026jm5bfwsgbm7s86pslsr2rbgk1a2rgagczqarpfzrf"
+      "revision": "e438965e2399cd1af2615b72c88ed92af23109ef",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/e438965e2399cd1af2615b72c88ed92af23109ef.tar.gz",
+      "hash": "1cyh5ldra80nfixqafwm2569xfsjrrq4waxvxwkrywg7kz1caly6"
     }
   },
   "version": 5
