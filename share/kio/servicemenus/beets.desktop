@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 MimeType=inode/directory;
-Actions=import
+Actions=import;import-manually
 
 [Desktop Action import]
 Name=Import to music library...
@@ -9,3 +9,12 @@ Name[en]=Import to music library...
 Name[tok]=kulupu kalama o moku...
 Icon=media-import-audio-cd
 Exec=beets-import-to-library %F
+
+Actions=import;import-manually
+
+[Desktop Action import-manually]
+Name=Import manually...
+Name[en]=Import manually...
+Name[tok]=kulupu kalama o moku kepeken luka...
+Icon=media-import-audio-cd
+Exec=konsole -e beet import --timid %F
