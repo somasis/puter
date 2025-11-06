@@ -236,6 +236,41 @@ in
     meta.description = "Adds power-user features to OpenStreetMap.org";
   };
 
+  video-swap-new = mkGreasemonkeyScript {
+    pname = "video-swap-new";
+    version = "1.47";
+    src =
+      (fetchFromGitHub {
+        owner = "pixeltris";
+        repo = "TwitchAdSolutions";
+        rev = "954d6ed942a2df226189b208b14a618edad04a17";
+        hash = "sha256-+kTom/V9tVpPGbUUQxqOOr8VoMuwIvA1Ckt6wn4+nZ8=";
+      })
+      + "/video-swap-new/video-swap-new.user.js";
+
+    meta.description = ''
+      Ad-blocking userscript for Twitch.tv that uses a lower resolution stream during ads.
+    '';
+  };
+
+  vaft = mkGreasemonkeyScript {
+    pname = "vaft";
+    version = "28.0.0";
+    src =
+      (fetchFromGitHub {
+        owner = "pixeltris";
+        repo = "TwitchAdSolutions";
+        rev = "954d6ed942a2df226189b208b14a618edad04a17";
+        hash = "sha256-+kTom/V9tVpPGbUUQxqOOr8VoMuwIvA1Ckt6wn4+nZ8=";
+      })
+      + "/vaft/vaft.user.js";
+
+    meta.description = ''
+      Ad-blocking userscript for Twitch.tv like video-swap-new that attempts
+      to get a high-resolution stream video faster.
+    '';
+  };
+
   fastmail-without-bevels = mkUserstyle {
     pname = "fastmail-without-bevels";
     version = "20250805.14.44";
