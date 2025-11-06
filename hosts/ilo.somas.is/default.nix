@@ -4,9 +4,6 @@
   config,
   pkgs,
   lib,
-  localSystem ? {
-    system = lib.systems.examples.gnu64;
-  },
   ...
 }:
 {
@@ -43,7 +40,10 @@
   ];
 
   meta.type = "laptop";
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config.allowUnfree = true;
+    hostPlatform = lib.systems.examples.gnu64;
+  };
 
   system = {
     stateVersion = "25.05";
