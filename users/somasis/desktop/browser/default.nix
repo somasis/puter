@@ -180,15 +180,9 @@ in
   };
 
   # Some qutebrowser data is synchronized between computers
-  sync = {
-    directories = [
-      (xdgDataDir "qutebrowser/sessions")
-    ];
-    files = [
-      (xdgConfigDir "qutebrowser/bookmarks/urls")
-      (xdgConfigDir "qutebrowser/quickmarks")
-    ];
-  };
+  sync.directories = [
+    (xdgDataDir "qutebrowser/sessions")
+  ];
 
   # Ensure the default session exists, if necessary. Prevents a possible write error later on
   # when rebuilding or starting a session for the first time.
