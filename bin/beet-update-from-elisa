@@ -15,7 +15,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ${0##*/} [--dry-run]
+usage: ${0##*/} [-mMwWy] [beets query]
 
 Update tracks in the Beets database, based off of tracks
 stored in the library database for Elisa, the KDE music player.
@@ -75,49 +75,64 @@ if ! [[ -e "${ELISA_DATABASE}" ]]; then
     exit 1
 fi
 
-# Elisa expects only absolute, physical, non-symlink paths.
+# Elisa keeps only absolute, physical (non-symlink) paths in its database.
 BEETS_DIRECTORY_absolute=$(readlink -f "${BEETS_DIRECTORY}")
 
-while [[ "$#" -gt 0 ]]; do
-    case "${1-'--help'}" in
-        --help) usage ;;
-        --dry-run)
-            edo() { echo "$ $*" >&2; }
-            shift
-            ;;
-        --)
-            shift
-            break
-            ;;
-        *) usage 'error: unknown argument -- %s\n' "$1" ;;
+beet_modify_args=()
+while getopts :mMwWy arg; do
+    case "$arg" in
+        [mMwWy]) beet_modify_args+=( -"$arg" ) ;;
+        *) usage ;;
     esac
 done
+shift $(( OPTIND - 1 ))
 
+# Example output:
+#     file://
 beets=$(
-    beet list -f 'file://$path'$'\t''$rating' \
-        | sed -e 's/\$rating$/0/' -e "s|^file://${BEETS_DIRECTORY}/||" \
-        | sort
+    beet list -f '$rating'$'\t''$path' "$@" \
+        | teip -d $'\t' -f 1 -- sed -e 's/^\$rating\t/0\t/' \
+        | teip -d $'\t' -f2 -- cut -c $(( ${#BEETS_DIRECTORY} + 2 ))- \
+        | sort -s
 )
 
 # All paths from Elisa are absolute paths. URL decoding has to be used before
-# comparing the paths to the paths in Beets' database.
+# comparing the paths to the paths in Beets' database. For some reason, jq's
+# @urid function is too broad with what it converts, and some characters that
+# are not escaped by sqlite (affects some unicode characters; "bôa" was a
+# testcase string I ran into this issue with), so we need to convert it
+# ourselves.
 elisa=$(
-    sqlite3 -json -readonly "${ELISA_DATABASE}" 'SELECT FileName, Rating FROM Tracks;' \
-        | jq --arg dir "${BEETS_DIRECTORY_absolute}/" -r \
-            'map("\(.FileName | ltrimstr("file://\($dir)"))'$'\t''\(.Rating)")[]' \
-        | while IFS= read -r filename; do urldecode "$filename"; done \
-        | sort
+    sqlite3 -tabs -readonly "${ELISA_DATABASE}" 'SELECT Rating, FileName FROM Tracks;' \
+        | teip -d $'\t' -f2 -- xe -LL -j0 -s 'echo -e "${*//%/\\x}"' \
+        | teip -d $'\t' -f2 -- sort -snk1 \
+        | teip -d $'\t' -f2 -- cut -d' ' -f2- \
+        | teip -d $'\t' -f2 -- cut -c $(( 7 + ${#BEETS_DIRECTORY_absolute} + 2 ))- \
+        | sort -s
 )
 
-# Then, actually perform the modifications on what tracks differ between beets
-# and Elisa's databases. We do not account for changes in the other direction
-# (that is, a rating being removed in Elisa and that being propagated to beets).
-# TODO maybe? this script would need to be made a lot smarter I think to do that
-# and probably rewritten
-diff -u <(printf '%s\n' "${beets}") <(printf '%s\n' "${elisa}") | grep '^+' \
-    | cut -c2- \
-    | while IFS=$'\t' read -r filename elisa_rating; do
-        if [[ -e "${BEETS_DIRECTORY}/$filename" ]]; then
-            edo beet modify "$@" -y "path:${BEETS_DIRECTORY}/${filename}" rating="${elisa_rating}" || :
-        fi
-    done
+# edo diff --color -u <(printf '%s\n' "${beets}") <(printf '%s\n' "${elisa}")
+updated_ratings=$(
+    comm -13 <(printf '%s\n' "${beets}") <(printf '%s\n' "${elisa}" | grep -v '^0') \
+        | teip -d $'\t' -f2 -- xe -LL -j0 printf 'path:%s/%s\n\n' "${BEETS_DIRECTORY}" \
+        | teip -d $'\t' -f2 -- sort -snk1 \
+        | teip -d $'\t' -f2 -- cut -d' ' -f2-
+)
+# exit
+
+# Use an associative array to store the ratings.
+# This is faster than running `beet modify` per file by orders of magnitude.
+modify_args=()
+for r in {0..10}; do
+    mapfile -t modify_args < <(
+        sed -E \
+            -e '/^'"${r}"'\t|^,$/!d' \
+            -e 's/^[0-9][0-9]*\t//' \
+            -e '0~2 a,' \
+            <<<"${updated_ratings}"
+    )
+
+    [[ "${#modify_args[@]}" -gt 0 ]] || continue
+
+    edo beet modify "${beet_modify_args[@]}" "${modify_args[@]}" rating="${r}"
+done
