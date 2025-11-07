@@ -41,6 +41,6 @@ fi
 export EDITOR="$0"
 export BEET_CLEAN_LYRICS_INSIDE_BEETS_EDIT=1
 
-beet -p lyrics \
+beet -p edit \
     edit -f lyrics \
         "$@"
