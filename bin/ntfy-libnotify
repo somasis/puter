@@ -249,7 +249,7 @@ if [[ -n "${NTFY_ICON:-}" ]] && [[ "${NTFY_ICON:0:1}" != '/' ]]; then
         --output "${icon_file}" \
         --url "${icon_url}"
 
-    edo magick "${icon_file}" "${icon_file%.*}.png"
+    edo convert "${icon_file}" "${icon_file%.*}.png"
     icon_file="${icon_file%.*}.png"
 fi
 
