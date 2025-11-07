@@ -252,6 +252,7 @@ in
         substack-popup-dismisser
         twitter-direct
         video-quality-fixer-for-twitter
+        video-swap-new
         youtube-autoskip
         # keep-sorted end
 
