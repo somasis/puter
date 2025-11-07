@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "a9ef22a5337a6a52c098acd10014d85ad34150da",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/a9ef22a5337a6a52c098acd10014d85ad34150da.tar.gz",
-      "hash": "1m7azif1i27n8bpj320v8m8rkmlnmnb7dydidrfqmcp2af5sg79i"
+      "revision": "f3de454bfb57e9147a696bcbc432091b3fdf4bcd",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/f3de454bfb57e9147a696bcbc432091b3fdf4bcd.tar.gz",
+      "hash": "1g6409im7mbc97fibzfd977myg4z3naaq5bmk7bc0dqb5ickbv1a"
     },
     "adblockHosts": {
       "type": "Git",
@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "19859c00362ab5342e33795592883fc3837bd299",
-      "url": "https://github.com/StevenBlack/hosts/archive/19859c00362ab5342e33795592883fc3837bd299.tar.gz",
-      "hash": "04g7qmvcjzn6lqry8gacap7zi240xqrlhzcj7ddlhg4jq90qycwy"
+      "revision": "99bdb28ee250dd2ad83eeefda0bf64e6262a46ca",
+      "url": "https://github.com/StevenBlack/hosts/archive/99bdb28ee250dd2ad83eeefda0bf64e6262a46ca.tar.gz",
+      "hash": "1wlmdp4nvf0ryv1sv2v67pf1b8p7jrpnb9nclrisgjl1vz427gpl"
     },
     "agenix": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "2907788315a73d3292140b4d59b5d95796565625",
-      "url": "https://github.com/nix-community/home-manager/archive/2907788315a73d3292140b4d59b5d95796565625.tar.gz",
-      "hash": "0zxmxzmxdnqdz9y16n98iz5mncl00pplfqmscy9irmmppnl6hn04"
+      "revision": "0562fef070a1027325dd4ea10813d64d2c967b39",
+      "url": "https://github.com/nix-community/home-manager/archive/0562fef070a1027325dd4ea10813d64d2c967b39.tar.gz",
+      "hash": "09a1bqayhm4a67v2y20p5pp5ji42nmk47jka25cy1jagdaqi8xnz"
     },
     "home-manager-stable": {
       "type": "Git",
@@ -140,21 +140,21 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "24084931d8098fce300fabea9e48fa96292228d7",
-      "url": "https://github.com/nixos/nixos-hardware/archive/24084931d8098fce300fabea9e48fa96292228d7.tar.gz",
-      "hash": "10fxghml3pjkpz0nhby6chrmsphdqpyig9l3i358ns5c5ai6w0mi"
+      "revision": "52113c4f5cfd1e823001310e56d9c8d0699a6226",
+      "url": "https://github.com/nixos/nixos-hardware/archive/52113c4f5cfd1e823001310e56d9c8d0699a6226.tar.gz",
+      "hash": "10gxzv78vk2sy4qwxc9ijbp3pssfnf4iwixvb7kkcggrk0dndzc6"
     },
     "nixos-stable": {
       "type": "Channel",
       "name": "nixos-25.05",
-      "url": "https://releases.nixos.org/nixos/25.05/nixos-25.05.812378.ca534a76c4af/nixexprs.tar.xz",
-      "hash": "0s8jmvmybdqfw2gswfj4xnlnaakqnixq9snm19lqskdv1r3xbva0"
+      "url": "https://releases.nixos.org/nixos/25.05/nixos-25.05.812554.6faeb062ee4c/nixexprs.tar.xz",
+      "hash": "0rj2xz1ppwncsfby149k14rn3xy9pyxnvpli6plcg7b04naqz1v8"
     },
     "nixos-unstable": {
       "type": "Channel",
       "name": "nixos-unstable",
-      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre888552.b3d51a0365f6/nixexprs.tar.xz",
-      "hash": "1prwr19nnc66s594y32v8isbi0xr6qfk5vys96h08d3a9nb169d4"
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre889928.ae814fd3904b/nixexprs.tar.xz",
+      "hash": "1rkrrb4s7wfdpnvw52h797bkl6v1kr6l935hf2dzsqqn9l83la24"
     },
     "nixpkgs": {
       "type": "Channel",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "e438965e2399cd1af2615b72c88ed92af23109ef",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/e438965e2399cd1af2615b72c88ed92af23109ef.tar.gz",
-      "hash": "1cyh5ldra80nfixqafwm2569xfsjrrq4waxvxwkrywg7kz1caly6"
+      "revision": "b4224b3c530bdd92d8652aa4cb6cbd800c18d958",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/b4224b3c530bdd92d8652aa4cb6cbd800c18d958.tar.gz",
+      "hash": "0ks67fdzaqg3fmcaq8903xgrbkjkixgpki4nryz7zhfsplxcdvm7"
     }
   },
   "version": 5
