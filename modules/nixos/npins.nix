@@ -24,7 +24,22 @@ in
     );
   };
 
-  system.nixos.revision = nixpkgs.revision or (builtins.baseNameOf (builtins.dirOf nixpkgs.url));
+  system.nixos = rec {
+    revision =
+      with builtins;
+      if elem ".git-revision" (attrNames (readDir nixpkgs)) then
+        (substring 0 10 (readFile "${nixpkgs}/.git-revision"))
+      else
+        nixpkgs.revision
+          or (replaceStrings [ "nixos-" "nixpkgs-" ] [ "" "" ] (baseNameOf (dirOf nixpkgs.url)));
+
+    versionSuffix =
+      with builtins;
+      if elem ".version-suffix" (attrNames (readDir nixpkgs)) then
+        ".${readFile "${nixpkgs}/.version-suffix"}"
+      else
+        ".${revision}";
+  };
 
   # Disable all points of dependency pulling other than npins.
   nix = {
