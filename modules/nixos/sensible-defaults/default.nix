@@ -22,6 +22,7 @@
     ./notifications.nix
     ./quirks.nix
     ./security.nix
+    ./self-update.nix
     ./ssh.nix
     ./users.nix
   ];

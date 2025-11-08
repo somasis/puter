@@ -39,20 +39,6 @@ in
   ]
   ++ (lib.optional config.programs.bash.completion.enable pkgs.nix-bash-completions);
 
-  # System should automatically upgrade according to the canonical version
-  # of the flake repository.
-  system.autoUpgrade = {
-    # Allow automatic reboots only if it is not a user-interfacing
-    # machine, and it is between 2am and 5:30am. Check for updates
-    # every day at 5pm.
-    dates = "17:00";
-    allowReboot = !config.meta.desktop;
-    rebootWindow = {
-      lower = "02:00";
-      upper = "05:30";
-    };
-  };
-
   # Use Lix <https://lix.systems/add-to-config/>.
   nixpkgs.overlays = [
     (final: prev: {
