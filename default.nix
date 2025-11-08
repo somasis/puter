@@ -46,7 +46,7 @@ in
     lib = import ./modules/lib.nix;
     meta = import ./modules/nixos/meta.nix;
     npins = import ./modules/nixos/npins.nix;
-    sensible-defaults = import ./modules/nixos/sensible-defaults;
+    defaults = import ./modules/nixos/defaults;
     theme = import ./modules/nixos/theme.nix;
   };
 

@@ -8,7 +8,7 @@
 }:
 {
   imports = with sources; [
-    self.nixosModules.sensible-defaults
+    self.nixosModules.defaults
     self.nixosModules.npins
 
     "${nixos-hardware}/framework/13-inch/12th-gen-intel"

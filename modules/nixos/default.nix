@@ -8,6 +8,6 @@
 
     ./theme.nix
 
-    ./sensible-defaults
+    ./defaults
   ];
 }
