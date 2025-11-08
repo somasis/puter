@@ -91,13 +91,6 @@
     ];
   };
 
-  security.wrappers.extrace = {
-    source = "${pkgs.extrace}/bin/extrace";
-    capabilities = "cap_net_admin+ep";
-    owner = "root";
-    group = "root";
-  };
-
   environment.pathsToLink =
     lib.optional config.programs.bash.completion.enable "/share/bash-completion"
     ++ lib.optionals config.xdg.portal.enable [

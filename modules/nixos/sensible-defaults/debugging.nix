@@ -8,9 +8,6 @@
   services.uptimed.enable = true;
   persist.directories = [ "/var/lib/uptimed" ];
 
-  # services.nixseparatedebuginfod.enable = true;
-  # cache.directories = [ "/var/cache/nixseparatedebuginfod" ];
-
   # Add some additional tools for monitoring the system's resources.
   programs = {
     bandwhich.enable = true;
@@ -27,4 +24,13 @@
       usbmon.enable = true;
     };
   };
+
+  # extrace(1) is a tool for showing programs executed by a given program.
+  security.wrappers.extrace = {
+    source = "${pkgs.extrace}/bin/extrace";
+    capabilities = "cap_net_admin+ep";
+    owner = "root";
+    group = "root";
+  };
+
 }
