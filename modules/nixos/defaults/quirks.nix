@@ -22,12 +22,6 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
-
-    # Added 2025-10-23: fix libquotient and NeoChat build
-    (fetchpatch2 {
-      url = "https://github.com/NixOS/nixpkgs/pull/455083.patch";
-      hash = "sha256-AGdeTpI5jg5dHGHBhTMUEMu4i0RyKOPDBc0NVFA1c8Y=";
-    })
   ];
 
   # deadnix: skip
@@ -51,10 +45,6 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks.pkgs) cantata;
-
-    kdePackages = prev.kdePackages // {
-      inherit (nixpkgs-quirks.pkgs.kdePackages) libquotient neochat;
-    };
   };
 in
 {
