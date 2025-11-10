@@ -25,7 +25,6 @@ let
 
       specialArgs = {
         inherit nixpkgs self sources;
-        modulesPath = "${nixpkgs}/nixos/modules";
       };
     };
 
