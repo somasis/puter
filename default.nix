@@ -40,7 +40,7 @@ in
 
   lib = import ./lib.nix;
 
-  nixosModules = {
+  nixosModules = rec {
     default = import ./modules/nixos;
     impermanence = import ./modules/nixos/impermanence.nix;
     lib = import ./modules/lib.nix;
@@ -48,6 +48,10 @@ in
     npins = import ./modules/nixos/npins.nix;
     defaults = import ./modules/nixos/defaults;
     theme = import ./modules/nixos/theme.nix;
+
+    sensible-defaults =
+      lib.traceVal "nixosModules.sensible-defaults was renamed to nixosModules.defaults" import
+        default;
   };
 
   homeManagerModules = {
