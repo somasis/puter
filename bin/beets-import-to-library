@@ -206,7 +206,7 @@ for import; do
 
             notify-send \
                 -t $((15 * 1000)) \
-                --urgency=low \
+                --urgency=normal \
                 --print-id \
                 -a "${0##*/}" \
                 -A 'timid-exit=Import manually...' \
@@ -237,7 +237,10 @@ for import; do
 
         beets_skipped_log=$(mktemp)
 
-        edo beet import --quiet --log "$beets_skipped_log" "${beet_import_args[@]}" "${import}"
+        edo beet import --quiet \
+            --log "$beets_skipped_log" \
+            "${beet_import_args[@]}" \
+            "${import}"
         import_exit=$?
 
         if grep -q '^skip' "$beets_skipped_log" || [[ "$import_exit" -ne 0 ]]; then
