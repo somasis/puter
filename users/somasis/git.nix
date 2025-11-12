@@ -26,7 +26,6 @@
     (xdgCacheDir "act")
     (xdgCacheDir "actcache")
     (xdgCacheDir "direnv")
-    (xdgCacheDir "lorri")
     (xdgCacheDir "pre-commit")
     (xdgCacheDir "treefmt")
     (xdgDataDir "mergiraf")
@@ -324,11 +323,6 @@
         }
       '';
     };
-  };
-
-  services.lorri = {
-    enable = true;
-    enableNotifications = true;
   };
 
   home.shellAliases = {
