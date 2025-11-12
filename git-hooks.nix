@@ -50,9 +50,12 @@ rec {
     # };
 
     # Ensure we don't have dead links in comments or whatever.
-    # lychee.enable = true;
+    lychee.enable = true;
 
-    # shellcheck.enable = true;
+    shellcheck = {
+      enable = true;
+      excludes = [ "\.envrc" ];
+    };
 
     quick-lint-js = {
       enable = true;
