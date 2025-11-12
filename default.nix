@@ -34,6 +34,8 @@ in
 {
   inherit sources self;
 
+  description = "https://github.com/somasis/puter";
+
   # Allow for using "${self}" to get the project path.
   outPath = ./.;
 
