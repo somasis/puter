@@ -41,10 +41,10 @@ case "${1:---help}" in
 esac
 
 # If another instance is running, just wait until it's gone.
-if [[ "${FLOCKER:-}" != "${0}" ]]; then
-    export FLOCKER="$0"
-    exec flock -e "$0" "$0" "$@"
-fi
+# if [[ "${FLOCKER:-}" != "${0}" ]]; then
+#     export FLOCKER="$0"
+#     exec flock -e "$0" "$0" "$@"
+# fi
 
 edo() {
     local arg string
