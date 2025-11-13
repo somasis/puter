@@ -116,3 +116,7 @@ and() {
 }
 
 peek() { tee /dev/stderr; }
+
+stderrred() {
+    "$@" 2>> >(grep --color '.*')
+}
