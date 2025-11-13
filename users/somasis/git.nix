@@ -64,6 +64,12 @@
       enable = true;
       package = pkgs.gitFull;
 
+      # Globally ignore common backup files suffixes.
+      ignores = [
+        "*~"
+        "*.bak"
+      ];
+
       maintenance = {
         enable = true;
         repositories = map (x: "${config.home.homeDirectory}/${x}") (
