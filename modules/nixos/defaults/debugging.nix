@@ -33,4 +33,9 @@
     group = "root";
   };
 
+  # TODO I think this will make DrKonqi work?
+  services.nixseparatedebuginfod2 = {
+    enable = true;
+    substituters = [ "local:" ] ++ config.nix.settings.substituters;
+  };
 }
