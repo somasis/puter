@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "55aa152222cb89f01f714a2a9d422ba6cf8060a3",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/55aa152222cb89f01f714a2a9d422ba6cf8060a3.tar.gz",
-      "hash": "1a61r52jdzrni5nykyl48p5lwb72wsw5mg8cgsi19lgl5dwfwdar"
+      "revision": "aeb3c8414c21462a559a10b419c0a6edc6a84950",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/aeb3c8414c21462a559a10b419c0a6edc6a84950.tar.gz",
+      "hash": "0a9jfz4a1isj324bjxmk7diwqw341g9m0s0al246smr33svc8w9x"
     },
     "adblockHosts": {
       "type": "Git",
@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "99bdb28ee250dd2ad83eeefda0bf64e6262a46ca",
-      "url": "https://github.com/StevenBlack/hosts/archive/99bdb28ee250dd2ad83eeefda0bf64e6262a46ca.tar.gz",
-      "hash": "1wlmdp4nvf0ryv1sv2v67pf1b8p7jrpnb9nclrisgjl1vz427gpl"
+      "revision": "eb8b88d342f8f7b23427c17df6590926849a33af",
+      "url": "https://github.com/StevenBlack/hosts/archive/eb8b88d342f8f7b23427c17df6590926849a33af.tar.gz",
+      "hash": "0xa6cgg60ma0sr780gi42043rgh1qllcm88bv2ldgfcjwn1bzqig"
     },
     "agenix": {
       "type": "Git",
@@ -54,9 +54,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "8e7576e79b88c16d7ee3bbd112c8d90070832885",
-      "url": "https://github.com/cachix/git-hooks.nix/archive/8e7576e79b88c16d7ee3bbd112c8d90070832885.tar.gz",
-      "hash": "1p8jvasihr5adrkcdb6w3wk7lxxfpa262xlbj4agczbxbm1wvslg"
+      "revision": "c5c3147730384576196fb5da048a6e45dee10d56",
+      "url": "https://github.com/cachix/git-hooks.nix/archive/c5c3147730384576196fb5da048a6e45dee10d56.tar.gz",
+      "hash": "1q9760yjpa0wwphyayhx7cg4kwsh2v4m3kd0l1xgxf70dgcbp922"
     },
     "home-manager": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "b8645b18b0f5374127bbade6de7381ef0b3d5720",
-      "url": "https://github.com/nix-community/home-manager/archive/b8645b18b0f5374127bbade6de7381ef0b3d5720.tar.gz",
-      "hash": "1p7gq5ch9b1sm14b04gyqppm2mg29flvljyr9k2qj0rfx89br38k"
+      "revision": "827f2a23373a774a8805f84ca5344654c31f354b",
+      "url": "https://github.com/nix-community/home-manager/archive/827f2a23373a774a8805f84ca5344654c31f354b.tar.gz",
+      "hash": "18r687m153vzr2j98zjlhnjhkyb4i5jfkqiqbiysx3f0xzqcv0a5"
     },
     "home-manager-stable": {
       "type": "Git",
@@ -140,27 +140,27 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "52113c4f5cfd1e823001310e56d9c8d0699a6226",
-      "url": "https://github.com/nixos/nixos-hardware/archive/52113c4f5cfd1e823001310e56d9c8d0699a6226.tar.gz",
-      "hash": "10gxzv78vk2sy4qwxc9ijbp3pssfnf4iwixvb7kkcggrk0dndzc6"
+      "revision": "899dc449bc6428b9ee6b3b8f771ca2b0ef945ab9",
+      "url": "https://github.com/nixos/nixos-hardware/archive/899dc449bc6428b9ee6b3b8f771ca2b0ef945ab9.tar.gz",
+      "hash": "1dbf11zjspg68wiryp2y24w587izg954nbv517q57mpl8i8sfr85"
     },
     "nixos-stable": {
       "type": "Channel",
       "name": "nixos-25.05",
-      "url": "https://releases.nixos.org/nixos/25.05/nixos-25.05.812554.6faeb062ee4c/nixexprs.tar.xz",
-      "hash": "0rj2xz1ppwncsfby149k14rn3xy9pyxnvpli6plcg7b04naqz1v8"
+      "url": "https://releases.nixos.org/nixos/25.05/nixos-25.05.812676.c2448301fb85/nixexprs.tar.xz",
+      "hash": "16h11vz5jjfhdqpxjkncgnp7r39834gqc18f7qg47nk5d189yhm6"
     },
     "nixos-unstable": {
       "type": "Channel",
       "name": "nixos-unstable",
-      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre891611.b6a8526db03f/nixexprs.tar.xz",
-      "hash": "16annd2hssfxbm40vqlj1bggfgnvi7z1zd3m6pqanc04idlpffxg"
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre892896.9da7f1cf7f8a/nixexprs.tar.xz",
+      "hash": "1z0fa1lmf4rbxnwr7d6pw1mkjhbkp78fhrc93ai633jk1dm93ycy"
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre890836.e1ebeec86b77/nixexprs.tar.xz",
-      "hash": "0gd99x25zygh82wniqz7jbqwnxjdcpvxxaks8fw38cqxxrgfi426"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre891648.f6b44b240152/nixexprs.tar.xz",
+      "hash": "0rljaahlkcrcjqd9sj5iyv9zng4yqns1215kanm7hi4w9gri0b74"
     },
     "plasma-manager": {
       "type": "Git",
@@ -171,9 +171,9 @@
       },
       "branch": "trunk",
       "submodules": false,
-      "revision": "6296d7100cc84b2ff732b7c103a50c2856974cf6",
-      "url": "https://github.com/nix-community/plasma-manager/archive/6296d7100cc84b2ff732b7c103a50c2856974cf6.tar.gz",
-      "hash": "0wkp9x777z9yap53clhz2a1pv64cdpgkvwnhr0iarrimz6x6bf2m"
+      "revision": "7911a0f8a44c7e8b29d031be3149ee8943144321",
+      "url": "https://github.com/nix-community/plasma-manager/archive/7911a0f8a44c7e8b29d031be3149ee8943144321.tar.gz",
+      "hash": "0yia1w86y5s8xzcs5axlwzndpk6zql5887fdhqwhkjrbl7vj9nx1"
     },
     "qutebrowser-zotero": {
       "type": "Git",
@@ -197,9 +197,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "97a30861b13c3731a84e09405414398fbf3e109f",
-      "url": "https://github.com/numtide/treefmt-nix/archive/97a30861b13c3731a84e09405414398fbf3e109f.tar.gz",
-      "hash": "0j2cg7x4g8z9hgxj4bf7fy6r8xq5ahqpl6rxqm7p78ayhsz5ypk8"
+      "revision": "5b4ee75aeefd1e2d5a1cc43cf6ba65eba75e83e4",
+      "url": "https://github.com/numtide/treefmt-nix/archive/5b4ee75aeefd1e2d5a1cc43cf6ba65eba75e83e4.tar.gz",
+      "hash": "0cr6aj9bk7n3y09lwmfjr7xg1f069332xf4q99z3kj1c1mp0wl82"
     },
     "uAssets": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "365505c404f493f494d770f55a0d71f0dc2b1395",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/365505c404f493f494d770f55a0d71f0dc2b1395.tar.gz",
-      "hash": "032cy0wapsxzsnsmk77sa0dal70yjfh1firy8nq9zd8nr1pcgbfs"
+      "revision": "0bb251cf23381406df757e7aa226788e039fc3bc",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/0bb251cf23381406df757e7aa226788e039fc3bc.tar.gz",
+      "hash": "1plq20pfd7h2jmpyfc8rlahw85058jd1331p7rcpv1h879lfjgfi"
     }
   },
   "version": 5
