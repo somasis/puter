@@ -98,7 +98,7 @@
       "/share/applications"
     ];
 
-# Keep system firmware up to date.
+  # Keep system firmware up to date.
   services.fwupd = {
     enable = true;
     uefiCapsuleSettings.DisableCapsuleUpdateOnDisk = true;
