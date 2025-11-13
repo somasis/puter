@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "aeb3c8414c21462a559a10b419c0a6edc6a84950",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/aeb3c8414c21462a559a10b419c0a6edc6a84950.tar.gz",
-      "hash": "0a9jfz4a1isj324bjxmk7diwqw341g9m0s0al246smr33svc8w9x"
+      "revision": "dd6bb7152ed8bd95ffd7e42fdf527c056cea1332",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/dd6bb7152ed8bd95ffd7e42fdf527c056cea1332.tar.gz",
+      "hash": "0352hivsy92776x6sml57wj1liny644x4462lvy0nwfm4wp1jvhl"
     },
     "adblockHosts": {
       "type": "Git",
@@ -54,9 +54,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "c5c3147730384576196fb5da048a6e45dee10d56",
-      "url": "https://github.com/cachix/git-hooks.nix/archive/c5c3147730384576196fb5da048a6e45dee10d56.tar.gz",
-      "hash": "1q9760yjpa0wwphyayhx7cg4kwsh2v4m3kd0l1xgxf70dgcbp922"
+      "revision": "84255025dee4c8701a99fbff65ac3c9095952f99",
+      "url": "https://github.com/cachix/git-hooks.nix/archive/84255025dee4c8701a99fbff65ac3c9095952f99.tar.gz",
+      "hash": "1g0qr37zkv50vkb1f2c17rqn8r27lmy4a46m17j5rlh2182r1v9k"
     },
     "home-manager": {
       "type": "Git",
@@ -159,8 +159,8 @@
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre891648.f6b44b240152/nixexprs.tar.xz",
-      "hash": "0rljaahlkcrcjqd9sj5iyv9zng4yqns1215kanm7hi4w9gri0b74"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre893393.91c9a64ce2a8/nixexprs.tar.xz",
+      "hash": "0k6ldznm7azjxbx0znr7a1mxv6d2lsljvj18acrdi5fg6jiyd5b6"
     },
     "plasma-manager": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "0bb251cf23381406df757e7aa226788e039fc3bc",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/0bb251cf23381406df757e7aa226788e039fc3bc.tar.gz",
-      "hash": "1plq20pfd7h2jmpyfc8rlahw85058jd1331p7rcpv1h879lfjgfi"
+      "revision": "57fb83c1271a241290e8b9f517447a9ac16fb7f6",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/57fb83c1271a241290e8b9f517447a9ac16fb7f6.tar.gz",
+      "hash": "1qnlwqmf5lp09w8pvvq6qnw34hzkbcs3q8s5mlaf7kvf6a6lqn20"
     }
   },
   "version": 5
