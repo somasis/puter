@@ -178,6 +178,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       kde-gtk-config
       kde-rounded-corners
       kdialog
+      kdotool
       kjournald
       korganizer
       ksystemlog
