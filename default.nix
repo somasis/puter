@@ -17,8 +17,8 @@
 let
   nixos =
     nixpkgs: configuration:
-    import "${nixpkgs}/nixos/lib/eval-config.nix" {
-      modules = [ configuration ];
+    import "${nixpkgs}/nixos" {
+      inherit configuration;
 
       # Ensure that `system` is not determined impurely.
       system = null;
