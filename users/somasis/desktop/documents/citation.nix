@@ -112,9 +112,10 @@ in
           "extensions.zotero.tabs.title.reader" = "filename"; # Show filename in tab title
 
           # Sync settings
+          "extensions.zotero.sync.storage.enabled" = true;
           "extensions.zotero.sync.protocol" = "webdav";
           "extensions.zotero.sync.storage.url" = "files.box.somas.is";
-          "extensions.zotero.sync.storage.username" = "somasis";
+          "extensions.zotero.sync.storage.username" = "zotero";
 
           # "extensions.zotero.attachmentRenameFormatString" = "{%c - }%t{100}{ (%y)}"; # Set the file name format used by Zotero's internal stuff
 
