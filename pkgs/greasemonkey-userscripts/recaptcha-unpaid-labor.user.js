@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name            Make ReCaptcha's "I'm not a robot" accurate
-// @description     Ported from the original WebExtension, adding support for hCaptcha
+// @description     Ported from the original WebExtension
 // @version         0.1
 // @author          Kylie McClain <kylie@somas.is> (Greasemonkey port)
 // @author          AJ Jordan <alex@strugee.net> (original WebExtension version <https://github.com/strugee/recaptcha-unpaid-labor>)
@@ -11,6 +11,8 @@
 // (function () {
 // 'use strict';
 
+// TODO hCaptcha support would be nice, but I can't get it to work in hCaptcha's
+// frames in qutebrowser at least.
 // var hcaptcha = document.location.hostname.endsWith("hcaptcha.com");
 var recaptcha = document.getElementsByClassName("g-recaptcha");
 
