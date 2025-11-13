@@ -1,0 +1,2 @@
+# Placeholders filled in by qutebrowser at runtime that I use on occasion.
+.*\{url[^\}]*\}.*
