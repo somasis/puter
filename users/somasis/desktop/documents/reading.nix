@@ -11,10 +11,14 @@
       okular
     ];
 
-  persist = {
+  persist = with config.lib.somasis; {
+    directories = [
+      (xdgDataDir "okular")
+    ];
+
     files = [
-      (config.lib.somasis.xdgConfigDir "okularpartrc")
-      (config.lib.somasis.xdgConfigDir "okularrc")
+      (xdgConfigDir "okularpartrc")
+      (xdgConfigDir "okularrc")
     ];
   };
 

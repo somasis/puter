@@ -35,20 +35,25 @@ let
         (lib.escapeShellArgs extraArgs)
       ]
     );
-
 in
 {
-  persist.directories = [
-    (config.lib.somasis.xdgConfigDir "keepassxc")
-  ];
-
-  cache = {
+  persist = with config.lib.somasis; {
     directories = [
-      (config.lib.somasis.xdgCacheDir "keepassxc")
+      (xdgConfigDir "keepassxc")
     ];
 
     files = [
-      (config.lib.somasis.xdgDataDir "qutebrowser/keepassxc.key")
+      (xdgConfigDir "KeePassXCrc")
+    ];
+  };
+
+  cache = with config.lib.somasis; {
+    directories = [
+      (xdgCacheDir "keepassxc")
+    ];
+
+    files = [
+      (xdgDataDir "qutebrowser/keepassxc.key")
     ];
   };
 

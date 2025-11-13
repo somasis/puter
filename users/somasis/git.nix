@@ -26,6 +26,8 @@
     (xdgCacheDir "act")
     (xdgCacheDir "actcache")
     (xdgCacheDir "direnv")
+    (xdgCacheDir "gh")
+    (xdgCacheDir "hugo_cache")
     (xdgCacheDir "pre-commit")
     (xdgCacheDir "treefmt")
     (xdgDataDir "mergiraf")

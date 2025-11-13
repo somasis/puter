@@ -179,6 +179,10 @@ in
     ];
   };
 
+  cache.directories = [
+    ".pki" # Created by Firefox.
+  ];
+
   # Some qutebrowser data is synchronized between computers
   sync.directories = [
     (xdgDataDir "qutebrowser/sessions")

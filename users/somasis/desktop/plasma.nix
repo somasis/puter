@@ -32,6 +32,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "plasma-workspace")
       (xdgConfigDir "session")
       (xdgConfigDir "xsettingsd") # kde-gtk-config
+      (xdgDataDir "ark")
       (xdgDataDir "baloo")
       (xdgDataDir "color-schemes")
       (xdgDataDir "dbus-1")
@@ -48,6 +49,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgDataDir "networkmanagement")
       (xdgDataDir "plasma-manager")
       (xdgDataDir "plasma-systemmonitor")
+      (xdgDataDir "plasma_icons") # Used for desktop icon widgets.
       (xdgDataDir "plasmashell")
       (xdgDataDir "remoteview")
       (xdgDataDir "sddm")
@@ -66,6 +68,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "KDE/kunifiedpush-distributor.conf")
       (xdgConfigDir "QtProject.conf")
       (xdgConfigDir "Trolltech.conf")
+      (xdgConfigDir "arkrc")
       (xdgConfigDir "baloofileinformationrc")
       (xdgConfigDir "baloofilerc")
       (xdgConfigDir "bluedevilglobalrc")
@@ -123,9 +126,11 @@ assert osConfig.services.desktopManager.plasma6.enable;
   cache = {
     directories = [
       # keep-sorted start
+      (xdgCacheDir "dolphin")
       (xdgCacheDir "drkonqi")
       (xdgCacheDir "elisa")
       (xdgCacheDir "fontconfig")
+      (xdgCacheDir "kalk")
       (xdgCacheDir "kcrash-metadata")
       (xdgCacheDir "kio_http")
       (xdgCacheDir "krunner")
@@ -142,6 +147,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgCacheDir "plasma-systemmonitor")
       (xdgCacheDir "plasma_engine_potd")
       (xdgCacheDir "plasmashell")
+      (xdgCacheDir "spectacle")
       (xdgCacheDir "systemsettings")
       (xdgCacheDir "thumbnails")
       (xdgCacheDir "xdg-desktop-portal-kde")

@@ -36,16 +36,18 @@ let
     actionTypes = [ "skip" ];
   };
 in
+with config.lib.somasis;
 {
   cache.directories = [
-    (config.lib.somasis.xdgCacheDir "mpv")
+    (xdgCacheDir "mpv")
+    (xdgCacheDir "yt-dlp")
   ];
 
   persist.directories = [
-    (config.lib.somasis.xdgConfigDir "jellyfin-mpv-shim")
-    # (config.lib.somasis.xdgConfigDir "jellyfin.org")
-    # (config.lib.somasis.xdgDataDir "jellyfinmediaplayer")
-    # (config.lib.somasis.xdgDataDir "Jellyfin Media Player")
+    (xdgConfigDir "jellyfin-mpv-shim")
+    # (xdgConfigDir "jellyfin.org")
+    # (xdgDataDir "jellyfinmediaplayer")
+    # (xdgDataDir "Jellyfin Media Player")
   ];
 
   programs = {

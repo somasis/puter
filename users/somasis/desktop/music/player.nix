@@ -71,8 +71,8 @@ in
     };
   };
 
-  persist = {
-    directories = with config.lib.somasis; [
+  persist = with config.lib.somasis; {
+    directories = [
       (xdgDataDir "elisa")
     ];
 
@@ -86,8 +86,14 @@ in
 
     # Don't forget to log in to Last.FM by running `rescrobbled` manually
     # in a terminal.
-    files = with config.lib.somasis; [
+    files = [
       (xdgConfigDir "rescrobbled/session")
+    ];
+  };
+
+  cache = with config.lib.somasis; {
+    directories = [
+      (xdgCacheDir "music-discord-rpc")
     ];
   };
 

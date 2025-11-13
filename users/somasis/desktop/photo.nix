@@ -58,10 +58,13 @@ in
 
   persist.directories = [
     (xdgDataDir "koko")
+    (xdgConfigDir "GREYC") # Used by gmic.
   ];
 
   cache = {
     directories = [
+      (xdgCacheDir "optimize")
+
       (xdgCacheDir "gimp")
       (xdgCacheDir "gmic")
 
