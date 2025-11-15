@@ -4,6 +4,7 @@
 
 set -euo pipefail
 
+# shellcheck disable=SC2120
 usage() {
     # shellcheck disable=SC2059
     [[ "$#" -eq 0 ]] || printf "$@" >&2
@@ -15,7 +16,7 @@ Strip timing from synced/LRC lyrics from tracks matching a Beets query.
 Useful for tracks like live recordings, where the lyrics might be very
 well be correct, but the timing is likely way off.
 
-see also: beet-lyrics-clean
+see also: beet-lyrics-clean, beet-edit-jq
 
 Kylie McClain <kylie@somas.is>
 EOF
@@ -27,23 +28,13 @@ case "${1:-}" in
     --help) usage ;;
 esac
 
-if [[ "${BEET_LYRICS_UNSYNC_INSIDE_BEETS_EDIT:=0}" -eq 1 ]]; then
-    # NOTE $@ is referring to the YAML file produced by `beet edit`.
-    yq --inplace -p yaml -o yaml --expression '
-        .lyrics |= (
-            split("\n")
-                | map(sub("^\\[[0-9]+:[0-9]+\\.[0-9]+\\] ?"; ""))
-                | join("\n")
-        )
-    ' "$@"
-    exit $?
-fi
-
-export EDITOR="$0"
-export BEET_LYRICS_UNSYNC_INSIDE_BEETS_EDIT=1
-
 # Prepend the query to match for lyrics which contain timing.
-beet -p lyrics \
-    edit -f lyrics \
-        lyrics::'^\[[0-9]+:[0-9]+\.[0-9]+\]' \
-        "$@"
+exec beet-edit-jq -f lyrics \
+    lyrics::'^\[[0-9]+:[0-9]+\.[0-9]+\]' \
+    "$@" '
+    .lyrics |= (
+        split("\n")
+            | map(sub("^\\[[0-9]+:[0-9]+\\.[0-9]+\\] ?"; ""))
+            | join("\n")
+    )
+'
