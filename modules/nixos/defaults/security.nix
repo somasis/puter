@@ -38,15 +38,7 @@
         });
       '');
     };
-
-    apparmor = {
-      enable = true;
-      enableCache = true;
-      packages = [ pkgs.roddhjav-apparmor-rules ];
-    };
   };
-
-  services.dbus.apparmor = "enabled";
 
   # Add the SSH keys of all users in the wheel group to the initrd
   # SSH server's authorized keys as well.
