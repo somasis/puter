@@ -1,4 +1,6 @@
 {
+  sources,
+
   lib,
   config,
   ...
@@ -35,22 +37,71 @@ in
     '';
   };
 
-  # Actually create the aliases options.
   imports = [
+    "${sources.impermanence}/nixos.nix"
+
+    # Actually create the aliases options.
     (mkAliasOptionModule [ "persist" ] [ "environment" "persistence" config.persistence.persist ])
     (mkAliasOptionModule [ "cache" ] [ "environment" "persistence" config.persistence.cache ])
     (mkAliasOptionModule [ "sync" ] [ "environment" "persistence" config.persistence.sync ])
   ];
 
-  config.environment.persistence = {
-    persist.persistentStoragePath = config.persistence.persist;
-    cache.persistentStoragePath = config.persistence.cache;
-    log.persistentStoragePath = config.persistence.log;
-    sync.persistentStoragePath = config.persistence.sync;
+  config = {
+    environment.persistence = {
+      persist.persistentStoragePath = config.persistence.persist;
+      cache.persistentStoragePath = config.persistence.cache;
+      log.persistentStoragePath = config.persistence.log;
+      sync.persistentStoragePath = config.persistence.sync;
 
-    # Add entries for every user's home directory (and make them owner of it)
-    # persist.directories = homes;
-    # cache.directories = homes;
-    # log.directories = homes;
+      # Add entries for every user's home directory (and make them owner of it)
+      # persist.directories = homes;
+      # cache.directories = homes;
+      # log.directories = homes;
+    };
+
+    cache.directories =
+      (lib.optional config.services.fwupd.enable "/var/cache/fwupd")
+      ++ (lib.optional config.services.self-deploy.enable "/var/lib/nixos-self-deploy");
+
+    persist = {
+      users.root = {
+        home = "/root";
+        directories = [
+          ".cache"
+          ".config"
+          ".local"
+          ".ssh"
+        ];
+        files = [
+          ".bash_history"
+        ];
+      };
+
+      directories = [
+        "/var/log/lastlog"
+
+        # Used for keeping declared users' UIDs and GIDs consistent across boots.
+        {
+          directory = "/var/lib/nixos";
+          user = "root";
+          group = "root";
+          mode = "0755";
+        }
+      ]
+      ++ (lib.optional config.services.uptimed.enable "/var/lib/uptimed")
+      ++ (lib.optional config.services.fwupd.enable "/var/lib/fwupd")
+      ++ (lib.optional config.services.accounts-daemon.enable {
+        directory = "/var/lib/AccountsService";
+        mode = "0775";
+      });
+
+      # Persist all host keys (NixOS has default host key locations!)
+      files = lib.flatten (
+        map (key: [
+          key.path
+          "${key.path}.pub"
+        ]) config.services.openssh.hostKeys
+      );
+    };
   };
 }

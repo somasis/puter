@@ -8,13 +8,11 @@
 }:
 {
   imports = with sources; [
-    "${impermanence}/nixos.nix"
     "${home-manager}/nixos"
     "${agenix}/modules/age.nix"
 
     self.nixosModules.lib
     self.nixosModules.meta
-    self.nixosModules.impermanence
 
     ./boot.nix
     ./debugging.nix
@@ -24,7 +22,6 @@
     ./security.nix
     ./self-update.nix
     ./ssh.nix
-    ./users.nix
   ];
 
   nixpkgs.overlays = [
@@ -33,12 +30,6 @@
   ];
 
   console.earlySetup = true;
-
-  persist.directories = [
-    "/var/log/lastlog"
-    "/var/lib/fwupd"
-  ];
-  cache.directories = [ "/var/cache/fwupd" ];
 
   # Use a deterministic host ID, generated from the FQDN of the machine.
   networking.hostId = builtins.substring 0 8 (
@@ -93,6 +84,11 @@
       nix-output-monitor
       nvd
     ];
+  };
+
+  users.users.root = {
+    home = "/root";
+    createHome = true;
   };
 
   home-manager = {

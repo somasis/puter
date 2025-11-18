@@ -10,6 +10,7 @@
   imports = with sources; [
     self.nixosModules.defaults
     self.nixosModules.npins
+    self.nixosModules.impermanence
 
     "${nixos-hardware}/framework/13-inch/12th-gen-intel"
 

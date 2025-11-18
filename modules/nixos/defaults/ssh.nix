@@ -1,9 +1,4 @@
 {
-  config,
-  lib,
-  ...
-}:
-{
   services.openssh = {
     enable = true;
 
@@ -30,12 +25,4 @@
 
     mosh.enable = true;
   };
-
-  # Persist all host keys (NixOS has default host key locations!)
-  persist.files = lib.flatten (
-    map (key: [
-      key.path
-      "${key.path}.pub"
-    ]) config.services.openssh.hostKeys
-  );
 }

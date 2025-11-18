@@ -6,7 +6,6 @@
 {
   # Keep uptime statistics.
   services.uptimed.enable = true;
-  persist.directories = [ "/var/lib/uptimed" ];
 
   # Add some additional tools for monitoring the system's resources.
   programs = {
