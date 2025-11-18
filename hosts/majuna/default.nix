@@ -62,7 +62,27 @@
 
   services.logind.settings.Login.HandleLidSwitch = "ignore";
 
-  services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = false;
+  };
+
+  services.tor = {
+    enable = true;
+    client = {
+      enable = true;
+      onionServices.ssh = {
+        settings = {
+          HiddenServicePort = "22 127.0.0.1:22";
+        };
+      };
+    };
+  };
+
+  security.sudo = {
+    execWheelOnly = true;
+    wheelNeedsPassword = false;
+  };
 
   powerManagement.powertop.enable = true;
 
