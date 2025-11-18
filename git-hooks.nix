@@ -50,7 +50,12 @@ rec {
     # };
 
     # Ensure we don't have dead links in comments or whatever.
-    lychee.enable = true;
+    lychee = {
+      enable = true;
+      excludes = [
+        "users/somasis/desktop/browser/search.nix" # Lots of false positives due to qutebrowser templating
+      ];
+    };
 
     shellcheck = {
       enable = true;
