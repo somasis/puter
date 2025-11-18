@@ -69,7 +69,7 @@ in
 
       "!gh" = "https://github.com/search?q={}";
 
-      "!nix" = "file://${config.nix.package.doc}/share/doc/nix/manual/index.html?search={}";
+      # "!nix" = "file://${config.nix.package.doc}/share/doc/nix/manual/index.html?search={}";
       "!nixdiscuss" = "https://discourse.nixos.org/search?q={}";
       "!nixpkgsissues" = "https://github.com/NixOS/nixpkgs/issues?q={}";
       "!nixopts" = "https://search.nixos.org/options?channel=${channel}&sort=alpha_asc&query={}";
