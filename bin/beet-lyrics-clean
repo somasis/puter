@@ -31,5 +31,6 @@ exec beet-edit-jq -f lyrics "$@" '
         sub(".*This\\s*song\\s*is\\s*an\\s*instrumental.*|.*[\(\[][Ii]nstrumental[\]\)].*"; "[instrumental]")
         | sub(".*Lyrics for this song have yet to be transcribed.*"; "")
         | sub("^[0-9]+\\s*Contributors?[^\\n]+?(Lyrics|Embed)(.+Read More)?"; "")
+        | gsub("\\r\\n"; "\\n")
     )
 '
