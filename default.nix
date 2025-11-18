@@ -83,5 +83,8 @@ in
 
   packages = import ./pkgs args;
 
-  nixosConfigurations.ilo = nixos sources.nixos-unstable ./hosts/ilo.somas.is;
+  nixosConfigurations = {
+    ilo = nixos sources.nixos-unstable ./hosts/ilo.somas.is;
+    majuna = nixos sources.nixos-unstable ./hosts/majuna;
+  };
 }

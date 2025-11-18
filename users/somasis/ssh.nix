@@ -98,11 +98,8 @@
         };
       };
 
-      "esther.7596ff.com" = {
-        host = "esther.7596ff.com esther";
-        hostname = "esther.7596ff.com";
-
-        forwardAgent = true;
+      "majuna" = {
+        hostname = "majuna.local";
       };
 
       "box.somas.is" = {
