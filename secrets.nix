@@ -4,6 +4,7 @@
 let
   recipients = {
     ilo = "age1tpm1qtfwxktsqmuw363sjalejf80qasph0dzawu38rs8h9ah5fqsc0zekwu5ev8";
+    majuna = "age1wzn2fqm39eqgzyspdlvh3knwzfjxnvhqmftz8wmyfm9r0gwwu98qwrjcs8";
     somasis.ilo = "age1tpm1qd0gxkaj69v6s44khyfrdkqry4tvs3gm0rjl6m74fmys37q0dfk3szkxadd";
   };
 
@@ -21,6 +22,10 @@ let
     # Used by host, not by a specific user on the host.
     "ntfy-token-ilo.somas.is.age".publicKeys = [
       ilo
+      somasis.ilo
+    ];
+    "ntfy-token-majuna.age".publicKeys = [
+      majuna
       somasis.ilo
     ];
     "restic-ilo.somas.is.age".publicKeys = [
