@@ -60,7 +60,7 @@
 
   nix.settings.trusted-users = [ "somasis" ];
 
-  services.logind.lidSwitch = "ignore";
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
 
   services.openssh.enable = true;
 
