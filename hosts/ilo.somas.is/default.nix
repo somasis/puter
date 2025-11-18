@@ -18,7 +18,6 @@
     ./backup.nix
     ./bluetooth.nix
     ./boot.nix
-    ./brightness.nix
     ./console.nix
     ./desktop.nix
     ./documentation.nix
