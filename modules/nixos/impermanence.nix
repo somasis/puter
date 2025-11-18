@@ -88,6 +88,7 @@ in
           mode = "0755";
         }
       ]
+      ++ (lib.optional config.services.age-keygen.enable "/etc/age")
       ++ (lib.optional config.services.uptimed.enable "/var/lib/uptimed")
       ++ (lib.optional config.services.fwupd.enable "/var/lib/fwupd")
       ++ (lib.optional config.services.accounts-daemon.enable {

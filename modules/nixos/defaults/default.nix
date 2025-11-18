@@ -9,11 +9,11 @@
 {
   imports = with sources; [
     "${home-manager}/nixos"
-    "${agenix}/modules/age.nix"
 
     self.nixosModules.lib
     self.nixosModules.meta
 
+    ./age.nix
     ./boot.nix
     ./debugging.nix
     ./nix.nix
