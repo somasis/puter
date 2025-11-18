@@ -69,12 +69,17 @@ pkgs.mkShell {
               use_nom=false
           fi
 
+          provide_default_attr=true
           update=false
           for arg; do
               case "$arg" in
+                  # Arguments not to be passed to nixos-rebuild
                   --nom) use_nom=true; shift ;;
                   --no-nom) use_nom=false; shift ;;
                   --update) update=true; shift ;;
+
+                  # Arguments to be passed through
+                  -A) provide_default_attr=false ;;
                   --log-format) use_nom=false ;;
                   repl|edit|list-generations) use_nom=false ;;
               esac
@@ -100,10 +105,14 @@ pkgs.mkShell {
 
           nixos_rebuild_args+=(
               --sudo \
-              -f . \
-              -A nixosConfigurations."$HOSTNAME" \
-              "$@"
+              -f .
           )
+
+          if [[ "$provide_default_attr" == true ]]; then
+              nixos_rebuild_args+=( -A nixosConfigurations."$HOSTNAME" )
+          fi
+
+          nixos_rebuild_args+=( "$@" )
 
           if [[ "$use_nom" == true ]]; then
               edo nixos-rebuild "''${nixos_rebuild_args[@]}" |& nom --json
