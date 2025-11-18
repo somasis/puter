@@ -68,9 +68,9 @@
   systemd.settings.Manager.DefaultIPAccounting = true;
 
   services.tor = {
-    enable = false;
+    enable = true;
     client = {
-      enable = false;
+      enable = true;
       dns.enable = true;
     };
 
