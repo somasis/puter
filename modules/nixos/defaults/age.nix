@@ -62,6 +62,7 @@ in
           ExecStart = [
             "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm --generate -o /etc/age/identity"
             "${pkgs.age-plugin-tpm}/bin/age-plugin-tpm -y /etc/age/identity -o /etc/age/recipient"
+            "${pkgs.coreutils}/bin/chmod go+r /etc/age/recipient"
           ];
         };
       };
@@ -81,6 +82,7 @@ in
           ExecStart = [
             "${pkgs.age}/bin/age-keygen -o /etc/age/identity"
             "${pkgs.age}/bin/age-keygen -y -o /etc/age/recipient /etc/age/identity"
+            "${pkgs.coreutils}/bin/chmod go+r /etc/age/recipient"
           ];
         };
       };
