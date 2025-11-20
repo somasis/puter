@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "b494f1d53539b37cca42ecafa6d9fccaa07edae4",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/b494f1d53539b37cca42ecafa6d9fccaa07edae4.tar.gz",
-      "hash": "0n6ni2h5d0h4d8ymlqyp77wipnckbl5mypj0xab3qizby6sf0pr0"
+      "revision": "1c6a893c7dfa4e316606fe1698a612c3f303b205",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/1c6a893c7dfa4e316606fe1698a612c3f303b205.tar.gz",
+      "hash": "1dwrv1xzwy13vbs4bkivarhgzgkqszhn7i2b7xcqxh39aryzzbx1"
     },
     "adblockHosts": {
       "type": "Git",
@@ -147,8 +147,8 @@
     "nixos-stable": {
       "type": "Channel",
       "name": "nixos-25.05",
-      "url": "https://releases.nixos.org/nixos/25.05/nixos-25.05.812880.4c8cdd5b1a63/nixexprs.tar.xz",
-      "hash": "16678m7ar3lj5rffqyqmx5r16m0bmdpadymvfjva5f4y377cap6w"
+      "url": "https://releases.nixos.org/nixos/25.05/nixos-25.05.812955.c58bc7f54593/nixexprs.tar.xz",
+      "hash": "0fch5cr2x3d78lpb3gfpz86gn4jb1wl4lv0q1kbda0yfk9hg6z4c"
     },
     "nixos-unstable": {
       "type": "Channel",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "af796c4689217e40f11f504c4b98a9cc6d24d830",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/af796c4689217e40f11f504c4b98a9cc6d24d830.tar.gz",
-      "hash": "1rwnpqi00g8lcwjy066svcwy90ykax51i2z5zc1c7106hs75ihjy"
+      "revision": "253524cfcd58d9916c39b3a39e8ede4556729a60",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/253524cfcd58d9916c39b3a39e8ede4556729a60.tar.gz",
+      "hash": "09bfx5w8nm8cnjcn4k8qbg9kk72a4d6w4h1j63aallai3qc66n50"
     }
   },
   "version": 5
