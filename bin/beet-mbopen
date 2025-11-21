@@ -56,7 +56,7 @@ while getopts :ALWagntvw arg; do
             ;;
         g)
             beet_args+=( "-a" )
-            format='https://musicbrainz.org/releasegroup/$mb_releasegroupid'
+            format='https://musicbrainz.org/release-group/$mb_releasegroupid'
             ;;
         n) dry_run=true ;;
         t) format='https://musicbrainz.org/release/$mb_trackid' ;;

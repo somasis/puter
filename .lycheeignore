@@ -1,2 +1,5 @@
 # Placeholders filled in by qutebrowser at runtime that I use on occasion.
 .*\{url[^\}]*\}.*
+
+# Used by bin/beet-mbopen
+https://musicbrainz.org/.*
