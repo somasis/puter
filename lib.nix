@@ -1,7 +1,18 @@
 {
-  pkgs,
-  lib,
-  config,
+  sources ? (import ./npins),
+  nixpkgs ? (
+    let
+      channel = builtins.tryEval <nixpkgs>;
+    in
+    if channel.success then channel.value else sources.nixpkgs
+  ),
+  pkgs ? import nixpkgs { },
+  lib ? pkgs.lib,
+  config ? (
+    lib.warn
+      "No NixOS `config` argument provided to `somasis/puter/lib.nix`, so this function probably will not function properly"
+      { }
+  ),
   ...
 }:
 with lib;
