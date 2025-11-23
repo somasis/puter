@@ -22,29 +22,61 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
+    # jellyfin-mpv-shim: enable Discord rich presence
+    (fetchpatch2 {
+      url = "https://github.com/NixOS/nixpkgs/pull/406879.patch";
+      hash = "sha256-tJHS4IU0ZQpAvBSKyMLKrsgWirEUs8dq8BqTEKwmr+U=";
+    })
+    # less: 679 -> 685
+    (fetchpatch2 {
+      url = "https://github.com/NixOS/nixpkgs/pull/452499.patch";
+      hash = "sha256-2T1quEfAI6+AnDCLEqqCQSoE5o/DTsrLkJOmSGcub64=";
+    })
+    # twitter-color-emoji: 15.0.2 -> 17.0.2
+    (fetchpatch2 {
+      url = "https://github.com/NixOS/nixpkgs/pull/422552.patch";
+      hash = "sha256-kn0O7bRoFO9w2PPZ4vWCc9BNzwQwoCnuZke3UlVlAlE=";
+    })
+    # kdePackages.elisa: allow building without libVLC
+    (fetchpatch2 {
+      url = "https://github.com/NixOS/nixpkgs/pull/462799.patch";
+      hash = "sha256-9LPraR6D/LxSC7j9vpa/8O7UrdSzYFbk4U6YTpb5+Ms=";
+    })
   ];
 
   # deadnix: skip
   nixpkgs-quirks =
+    let
+      args = {
+        inherit (pkgs) config;
+        inherit (pkgs.stdenvNoCC) hostPlatform;
+      };
+    in
     if patches != [ ] then
-      let
-        args = {
-          inherit (pkgs) config;
-          inherit (pkgs.stdenvNoCC) hostPlatform;
-        };
-      in
       import ((import nixpkgs args).applyPatches {
         name = "nixpkgs-quirks";
         src = nixpkgs;
         inherit patches;
       }) args
     else
-      nixpkgs;
+      import nixpkgs args;
 
   overlay = final: prev: {
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
-    # inherit (nixpkgs-quirks.pkgs) cantata;
+    # inherit (nixpkgs-quirks) cantata;
+
+    inherit (nixpkgs-quirks)
+      jellyfin-mpv-shim
+      less
+      twitter-color-emoji
+      ;
+
+    kdePackages = prev.kdePackages // {
+      elisa = nixpkgs-quirks.kdePackages.elisa.override {
+        withVLC = false;
+      };
+    };
   };
 in
 {
