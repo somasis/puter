@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   ...
 }:
 {
@@ -15,6 +16,19 @@
   ];
 
   programs.jq.enable = true;
+  home.file.".jq".text = lib.concatLines (
+    map lib.fileContents [
+      (
+        pkgs.fetchFromGitHub {
+          owner = "fearphage";
+          repo = "jq-duration";
+          rev = "a888df2a4a699482d782b06c74b4a39f05d8efd0";
+          hash = "sha256-K8EllZ6ijeR9aGz9tX+ZAL92GqIJM/rWgyITBNJIEkg=";
+        }
+        + "/duration.jq"
+      )
+    ]
+  );
 
   home.packages = with pkgs; [
     # keep-sorted start
