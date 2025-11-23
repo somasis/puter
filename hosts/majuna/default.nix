@@ -36,6 +36,11 @@
     ];
   };
 
+  home-manager = {
+    verbose = true;
+    users.somasis = import ../../users/somasis;
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
