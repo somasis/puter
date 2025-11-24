@@ -171,27 +171,22 @@ assert osConfig.services.desktopManager.plasma6.enable;
       # keep-sorted start
       breeze-gtk
       cameractrls-gtk3
-      cava
       emojirunner
       glib.bin # used by plasma-panel-colorizer
       gwenview
       hackneyed
       isoimagewriter
       kalk
-      kara
       kclock
       kconfig # used by plasma-panel-spacer-extended
       kde-gtk-config
-      kde-rounded-corners
       kdialog
       kdotool
       kjournald
       korganizer
       ksystemlog
-      kurve
       kweather
       lokalize
-      merkuro
       p7zip # used by Ark
       papirus-icon-theme
       plasma-applet-commandoutput
