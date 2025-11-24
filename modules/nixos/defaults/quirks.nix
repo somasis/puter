@@ -37,11 +37,6 @@ let
       url = "https://github.com/NixOS/nixpkgs/pull/422552.patch";
       hash = "sha256-kn0O7bRoFO9w2PPZ4vWCc9BNzwQwoCnuZke3UlVlAlE=";
     })
-    # kdePackages.elisa: allow building without libVLC
-    (fetchpatch2 {
-      url = "https://github.com/NixOS/nixpkgs/pull/462799.patch";
-      hash = "sha256-9LPraR6D/LxSC7j9vpa/8O7UrdSzYFbk4U6YTpb5+Ms=";
-    })
   ];
 
   # deadnix: skip
@@ -71,12 +66,6 @@ let
       less
       twitter-color-emoji
       ;
-
-    kdePackages = prev.kdePackages // {
-      elisa = nixpkgs-quirks.kdePackages.elisa.override {
-        withVLC = false;
-      };
-    };
   };
 in
 {
