@@ -22,7 +22,10 @@ pkgs.mkShell {
   # Construct NIX_PATH from npins sources.
   NIX_PATH = lib.concatStringsSep ":" (lib.mapAttrsToList (n: v: "${n}=${v.outPath}") sources);
 
-  inherit (gitHooksPkg) shellHook;
+  shellHook = ''
+    ${gitHooksPkg.shellHook}
+    export PATH="$PWD/bin:''${PATH:+:$PATH}"
+  '';
 
   buildInputs =
     gitHooksPkg.enabledPackages
@@ -119,34 +122,6 @@ pkgs.mkShell {
           else
               edo nixos-rebuild "''${nixos_rebuild_args[@]}"
           fi
-        '';
-      })
-
-      (writeShellApplication {
-        name = "npins-update-commit";
-        runtimeInputs = [ pkgs.npins ];
-        text = ''
-          set -euo pipefail
-
-          edo() {
-              local arg string
-              string=
-              for arg; do
-                  if [[ ''${arg@Q} == "'$arg'" ]] && ! [[ ''${arg} =~ [[:blank:]] ]]; then
-                      string+="''${string:+ }$arg"
-                  else
-                      string+="''${string:+ }''${arg@Q}"
-                  fi
-              done
-
-              printf '$ %s\n' "''${string}" >&2
-              # alt: printf '$ %s\n' "$(condquote "$@")" >&2
-
-              "$@"
-          }
-
-          edo npins update "$@"
-          edo git commit -m 'npins: update' npins/
         '';
       })
     ]);
