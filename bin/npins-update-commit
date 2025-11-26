@@ -21,5 +21,33 @@ edo() {
     "$@"
 }
 
-edo npins update "$@"
-edo git commit -m 'npins: update' npins/
+for arg; do
+    case "$arg" in
+        --help) exec npins update "$@" ;;
+    esac
+done
+
+: "${NPINS_COMMIT_LOCKFILE_SUMMARY:=npins: update}"
+: "${NPINS_DIRECTORY:=npins/}"
+
+npins_args=()
+npins_files=()
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        --directory | -d)
+            shift
+            NPINS_DIRECTORY="${2:?no directory provided}"
+            npins_args+=(--directory "${NPINS_DIRECTORY}")
+            ;;
+        --lock-file)
+            shift
+            npins_args+=(--lock-file "${2:?no lock fileprovided}")
+            ;;
+        *) break ;;
+    esac
+done
+
+npins_files=("${NPINS_DIRECTORY}/sources.json" "${NPINS_DIRECTORY}/default.nix")
+
+edo npins "${npins_args[@]}" update "$@"
+edo git commit -m "${NPINS_COMMIT_LOCKFILE_SUMMARY}" "${npins_files[@]}"
