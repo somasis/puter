@@ -28,7 +28,7 @@ for arg; do
 done
 
 : "${NPINS_COMMIT_LOCKFILE_SUMMARY:=npins: update}"
-: "${NPINS_DIRECTORY:=npins/}"
+: "${NPINS_DIRECTORY:=npins}"
 
 npins_args=()
 npins_files=()
