@@ -1,3 +1,5 @@
+# Populate the system environment with information about the configuration
+# from npins and its assorted infrastructure.
 {
   sources,
   nixpkgs ? (throw "The nixpkgs npins source used by this configuration needs to be provided"),
@@ -58,4 +60,6 @@ in
       }) sources'
     );
   };
+
+  meta.maintainers = with lib.maintainers; [ somasis ];
 }
