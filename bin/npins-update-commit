@@ -49,5 +49,8 @@ done
 
 npins_files=("${NPINS_DIRECTORY}/sources.json" "${NPINS_DIRECTORY}/default.nix")
 
-edo npins "${npins_args[@]}" update "$@"
-edo git commit -m "${NPINS_COMMIT_LOCKFILE_SUMMARY}" "${npins_files[@]}"
+if edo npins "${npins_args[@]}" update "$@"; then
+    edo git commit -m "${NPINS_COMMIT_LOCKFILE_SUMMARY}" "${npins_files[@]}"
+else
+    exit $?
+fi
