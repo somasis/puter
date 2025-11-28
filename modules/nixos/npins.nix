@@ -31,25 +31,23 @@ in
     nixos = {
       revision =
         with builtins;
-        if elem ".git-revision" (attrNames (readDir nixpkgs)) then
-          (substring 0 10 (readFile "${nixpkgs}/.git-revision"))
-        else
-          nixpkgs.revision
-            or (replaceStrings [ "nixos-" "nixpkgs-" ] [ "" "" ] (baseNameOf (dirOf nixpkgs.url)));
+        with lib;
+        trivial.revisionWithDefault (
+          replaceStrings [ "nixos-" "nixpkgs-" ] [ "" "" ] (baseNameOf (dirOf nixpkgs.url))
+        );
 
-      versionSuffix =
-        with builtins;
-        if elem ".version-suffix" (attrNames (readDir nixpkgs)) then
-          ".${readFile "${nixpkgs}/.version-suffix"}"
-        else
-          ".${revision}";
+      versionSuffix = ".${lib.trivial.versionSuffix}";
     };
 
     configurationRevision =
+      with builtins;
+      with lib;
       let
-        repo = builtins.tryEval (builtins.fetchGit "file://${self.outPath}");
+        git = "${self.outPath}/.git";
       in
-      if repo.success then repo.value.dirtyRev or repo.value.rev else null;
+      # NOTE: this differs from version info calculation in Flakes,
+      # because it doesn't tell us when the Git repo is dirty or not.
+      if pathExists git then commitIdFromGitRepo git else null;
   };
 
   # Disable all points of dependency pulling other than npins.
