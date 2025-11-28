@@ -26,7 +26,7 @@ python3Packages.buildPythonApplication rec {
 
   propagatedBuildInputs = with python3Packages; [
     confuse
-    jsonpath_rw
+    jsonpath-rw
     pyyaml
   ];
 
