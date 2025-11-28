@@ -1,6 +1,7 @@
 # Populate the system environment with information about the configuration
 # from npins and its assorted infrastructure.
 {
+  self ? null,
   sources,
   nixpkgs ? (throw "The nixpkgs npins source used by this configuration needs to be provided"),
   pkgs,
@@ -26,21 +27,29 @@ in
     );
   };
 
-  system.nixos = rec {
-    revision =
-      with builtins;
-      if elem ".git-revision" (attrNames (readDir nixpkgs)) then
-        (substring 0 10 (readFile "${nixpkgs}/.git-revision"))
-      else
-        nixpkgs.revision
-          or (replaceStrings [ "nixos-" "nixpkgs-" ] [ "" "" ] (baseNameOf (dirOf nixpkgs.url)));
+  system = {
+    nixos = rec {
+      revision =
+        with builtins;
+        if elem ".git-revision" (attrNames (readDir nixpkgs)) then
+          (substring 0 10 (readFile "${nixpkgs}/.git-revision"))
+        else
+          nixpkgs.revision
+            or (replaceStrings [ "nixos-" "nixpkgs-" ] [ "" "" ] (baseNameOf (dirOf nixpkgs.url)));
 
-    versionSuffix =
-      with builtins;
-      if elem ".version-suffix" (attrNames (readDir nixpkgs)) then
-        ".${readFile "${nixpkgs}/.version-suffix"}"
-      else
-        ".${revision}";
+      versionSuffix =
+        with builtins;
+        if elem ".version-suffix" (attrNames (readDir nixpkgs)) then
+          ".${readFile "${nixpkgs}/.version-suffix"}"
+        else
+          ".${revision}";
+    };
+
+    configurationRevision =
+      let
+        repo = builtins.tryEval (builtins.fetchGit "file://${self.outPath}");
+      in
+      if repo.success then repo.value.dirtyRev or repo.value.rev else null;
   };
 
   # Disable all points of dependency pulling other than npins.
