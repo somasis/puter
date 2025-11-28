@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "2f488e776c13faa14cfa16e8e503400e977561bb",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/2f488e776c13faa14cfa16e8e503400e977561bb.tar.gz",
-      "hash": "05s8ikk32ndfx3rxxb5c99yam1h30gyj746g6lhgsz50njgg8hd0"
+      "revision": "415e24e3c8551f316d2c997159142068b68190e7",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/415e24e3c8551f316d2c997159142068b68190e7.tar.gz",
+      "hash": "05bxv32bgmmlf191aqk55gncxx0c2r8bck1z4p3bcr5ggha6klzx"
     },
     "adblockHosts": {
       "type": "Git",
@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "5300bf25b363583ceb7d73073652523aa3aadbbe",
-      "url": "https://github.com/StevenBlack/hosts/archive/5300bf25b363583ceb7d73073652523aa3aadbbe.tar.gz",
-      "hash": "0c03dm5h485fddcib0z0aqfv834n08a73j6ghwv6l9nk2bj6xh9l"
+      "revision": "ecb4558464835587867b288b61887ba42f08cadc",
+      "url": "https://github.com/StevenBlack/hosts/archive/ecb4558464835587867b288b61887ba42f08cadc.tar.gz",
+      "hash": "174pqfz5fza8d3d3frcvm2v55gfzlwmgw1w45ywmmkzgrw8yz890"
     },
     "agenix": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "295d90e22d557ccc3049dc92460b82f372cd3892",
-      "url": "https://github.com/nix-community/home-manager/archive/295d90e22d557ccc3049dc92460b82f372cd3892.tar.gz",
-      "hash": "1bg6p94gn7rzs43asb1njvhl242kd09ka2dbq3jyzhs140f0i099"
+      "revision": "86ff0ef506c209bb397849706e85cc3a913cb577",
+      "url": "https://github.com/nix-community/home-manager/archive/86ff0ef506c209bb397849706e85cc3a913cb577.tar.gz",
+      "hash": "1g7zqng287z5glg5jg6sq9z6yx9vcc32hsan9sxh3sn5yqvwbvkc"
     },
     "home-manager-stable": {
       "type": "Git",
@@ -140,9 +140,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "da17006633ca9cda369be82893ae36824a2ddf1a",
-      "url": "https://github.com/nixos/nixos-hardware/archive/da17006633ca9cda369be82893ae36824a2ddf1a.tar.gz",
-      "hash": "050i03nvf0nrhighs9g4nfcfp5c3pbh7yg7dsri84wqh1cnjslvg"
+      "revision": "d62603a997438e19182af69d3ce7be07565ecad4",
+      "url": "https://github.com/nixos/nixos-hardware/archive/d62603a997438e19182af69d3ce7be07565ecad4.tar.gz",
+      "hash": "12218jd2bj9awl83zi0y55vki7m7i6qhm6dmqz8pmy8xfkaqap44"
     },
     "nixos-stable": {
       "type": "Channel",
@@ -153,14 +153,14 @@
     "nixos-unstable": {
       "type": "Channel",
       "name": "nixos-unstable",
-      "url": "https://releases.nixos.org/nixos/unstable/nixos-25.11pre901419.5ae3b07d8d65/nixexprs.tar.xz",
-      "hash": "1yki567nyfv42k6apchdghm3pfn2gcz7pakvgn836zcssaj64wmg"
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre903292.2fad6eac6077/nixexprs.tar.xz",
+      "hash": "1c0c0a78466m07rr8z6wiixkn7s7lsy0y1cza3lg4ap2cwdl9zgb"
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-25.11pre901289.ee09932cedce/nixexprs.tar.xz",
-      "hash": "0fhp30vs6cavr1547j0kzr46p7lsm1ylxj2qqp87a3jz6n542mhb"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre903204.0d59e0290eef/nixexprs.tar.xz",
+      "hash": "0zkhijkc8zn0imixpvmdk2rnp7kwfhad62wn49k2k01m1pg3sr9c"
     },
     "plasma-manager": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "cd88d7d6f28aaf492b1675d6a3b45e51af983b02",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/cd88d7d6f28aaf492b1675d6a3b45e51af983b02.tar.gz",
-      "hash": "1k0l4ys6badmva6p164i8gvxklvl1z6sv98381syx7ml1macp7z1"
+      "revision": "9dfea09de24dd45450db3e45ef520b3aaf6eab48",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/9dfea09de24dd45450db3e45ef520b3aaf6eab48.tar.gz",
+      "hash": "152ksjcg7b3zipfv40i2jd2g5vl5nld59jvns64c449l0x0rxcdr"
     }
   },
   "version": 5
