@@ -43,12 +43,15 @@ in
 
   nixosModules = {
     default = import ./modules/nixos;
+
+    # keep-sorted start
+    defaults = import ./modules/nixos/defaults;
     impermanence = import ./modules/nixos/impermanence.nix;
     lib = import ./modules/lib.nix;
     meta = import ./modules/nixos/meta.nix;
     npins = import ./modules/nixos/npins.nix;
-    defaults = import ./modules/nixos/defaults;
     theme = import ./modules/nixos/theme.nix;
+    # keep-sorted end
 
     sensible-defaults = builtins.trace "nixosModules.sensible-defaults was renamed to nixosModules.defaults" (
       import ./modules/nixos
@@ -57,7 +60,17 @@ in
 
   homeManagerModules = {
     default = import ./modules/home-manager;
+
+    # keep-sorted start
+    catgirl = import ./modules/home-manager/programs/catgirl.nix;
+    impermanence = import ./modules/home-manager/impermanence.nix;
     lib = import ./modules/lib.nix;
+    stw = import ./modules/home-manager/services/stw.nix;
+    tunnels = import ./modules/home-manager/services/tunnels.nix;
+    xsecurelock = import ./modules/home-manager/services/xsecurelock.nix;
+    xssproxy = import ./modules/home-manager/services/xssproxy.nix;
+    zotero = import ./modules/home-manager/programs/zotero.nix;
+    # keep-sorted end
   };
 
   overlays = {
