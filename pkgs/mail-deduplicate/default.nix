@@ -9,7 +9,7 @@
   click-log,
   poetry-core,
   sphinx,
-  sphinx_rtd_theme,
+  sphinx-rtd-theme,
   tabulate,
   tomlkit,
 }:
@@ -42,7 +42,7 @@ buildPythonPackage rec {
     click-help-colors
     click-log
     sphinx
-    sphinx_rtd_theme
+    sphinx-rtd-theme
     tabulate
     tomlkit
   ];
