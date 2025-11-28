@@ -28,7 +28,7 @@ in
   };
 
   system = {
-    nixos = rec {
+    nixos = {
       revision =
         with builtins;
         if elem ".git-revision" (attrNames (readDir nixpkgs)) then
