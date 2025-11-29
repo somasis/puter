@@ -132,7 +132,7 @@ for show_date; do
         --set=art_source='Phish.in'
         --set=data_source='Phish.in'
         --set=phishin_id="${phishin_id}"
-        --set=comments_source='Phish.in'
+        --set=comments_source='beet-import-phish'
         --set=label='Phish.in'
         --set=media='Digital Media'
 
