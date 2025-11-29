@@ -147,24 +147,26 @@ in
   ];
 
   persist = {
-    directories = [
-      # bindfs must be used since home-manager needs to write to the directory.
-      {
-        method = "bindfs";
-        directory = xdgConfigDir "qutebrowser";
-      }
+    directories =
+      (lib.optionals config.programs.qutebrowser.enable [
+        # bindfs must be used since home-manager needs to write to the directory.
+        {
+          method = "bindfs";
+          directory = xdgConfigDir "qutebrowser";
+        }
 
-      (xdgCacheDir "qutebrowser")
+        (xdgCacheDir "qutebrowser")
 
-      (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
-      (xdgDataDir "qutebrowser/greasemonkey/requires")
-      (xdgDataDir "qutebrowser/webengine")
+        (xdgDataDir "qutebrowser/qtwebengine_dictionaries")
+        (xdgDataDir "qutebrowser/greasemonkey/requires")
+        (xdgDataDir "qutebrowser/webengine")
+      ])
+      ++ [
+        ".mozilla"
+        (xdgCacheDir "mozilla/firefox")
+      ];
 
-      ".mozilla"
-      (xdgCacheDir "mozilla/firefox")
-    ];
-
-    files = [
+    files = lib.mkIf config.programs.qutebrowser.enable [
       # BUG(?): Can't make autoconfig.yml an impermanent file; I think qutebrowser
       #         modifies it atomically (write new file -> rename to replace) so I
       #         think that it gets upset when a bind mount is used.
@@ -184,33 +186,42 @@ in
   ];
 
   # Some qutebrowser data is synchronized between computers
-  sync.directories = [
+  sync.directories = lib.mkIf config.programs.qutebrowser.enable [
     (xdgDataDir "qutebrowser/sessions")
   ];
 
   # Ensure the default session exists, if necessary. Prevents a possible write error later on
   # when rebuilding or starting a session for the first time.
-  systemd.user.tmpfiles.rules = [
+  systemd.user.tmpfiles.rules = lib.mkIf config.programs.qutebrowser.enable [
     "f ${config.sync.persistentStoragePath}/${relativeToHome config.xdg.dataHome}/qutebrowser/sessions/${config.programs.qutebrowser.settings.session.default_name}.yml - - - -  "
     "f ${config.xdg.dataHome}/qutebrowser/sessions/.stignore - - - - _autosave.yml"
   ];
 
-  home.sessionVariables.BROWSER = lib.mkIf config.programs.qutebrowser.enable "qutebrowser";
-  xdg.mimeApps.defaultApplications = lib.mkIf config.programs.qutebrowser.enable (
-    lib.genAttrs [
-      "application/xhtml"
-      "text/html"
-      "text/xml"
-      "x-scheme-handler/http"
-      "x-scheme-handler/https"
-      "x-scheme-handler/about"
-      "x-scheme-handler/unknown"
-    ] (_: "org.qutebrowser.qutebrowser.desktop")
-  );
+  home.sessionVariables.BROWSER =
+    if config.programs.qutebrowser.enable then "qutebrowser" else "firefox-esr";
+
+  xdg.mimeApps.defaultApplications =
+    lib.genAttrs
+      [
+        "application/xhtml"
+        "text/html"
+        "text/xml"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+        "x-scheme-handler/about"
+        "x-scheme-handler/unknown"
+      ]
+      (
+        _:
+        if config.programs.qutebrowser.enable then
+          "org.qutebrowser.qutebrowser.desktop"
+        else
+          "firefox-esr.desktop"
+      );
 
   programs = {
     qutebrowser = {
-      enable = true;
+      enable = false;
 
       package = pkgs.qutebrowser.override {
         withPdfReader = config.programs.qutebrowser.settings.content.pdfjs;
@@ -872,7 +883,7 @@ in
   };
 
   systemd.user = {
-    services.qutebrowser-dictionaries = {
+    services.qutebrowser-dictionaries = lib.mkIf config.programs.qutebrowser.enable {
       Unit.Description = "Install/update qutebrowser's spell checking dictionaries";
 
       Service = {
@@ -957,7 +968,7 @@ in
       };
     };
 
-    timers.qutebrowser-dictionaries = {
+    timers.qutebrowser-dictionaries = lib.mkIf config.programs.qutebrowser.enable {
       Unit.Description = "Install/update qutebrowser's spell checking dictionaries";
       Install.WantedBy = [ "timers.target" ];
 
@@ -1008,7 +1019,7 @@ in
         fi
       '';
     in
-    {
+    lib.mkIf config.programs.qutebrowser.enable {
       lightModeScripts.qutebrowser = qutebrowser-change-color "light";
       darkModeScripts.qutebrowser = qutebrowser-change-color "dark";
     };
