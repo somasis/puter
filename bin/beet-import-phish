@@ -95,10 +95,10 @@ if ! cd "${BEET_IMPORT_PHISH_DOWNLOAD_DIR}"; then
     exit $?
 fi
 
-beet_args=(
-    # Require -vv for `beet` verbosity
-    $(for _ in $(seq 2 "${verbosity:-0}"); do printf -- '-v\n'; done)
-)
+beet_args=()
+
+# Require -vv to make `beet` itself be verbose
+for _ in $(seq 2 "${verbosity:-0}"); do beet_args+=( -v ); done
 
 for show_date; do
     year=
