@@ -80,6 +80,8 @@
     git
   ];
 
+  hardware.fw-fanctrl.enable = true;
+
   # VDPAU, VAAPI, etc. is handled by <nixos-hardware/common/gpu/intel>,
   # which is imported by <nixos-hardware/framework>.
   hardware.graphics = {
