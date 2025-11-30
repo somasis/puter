@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "699697c00b1c38cfc61145c36586073d8e0dff95",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/699697c00b1c38cfc61145c36586073d8e0dff95.tar.gz",
-      "hash": "02ygsw54dzc8br34gz9lih0s30cz8h9g3hpj463pznnnjsfzcmm4"
+      "revision": "7d1c77541668cf840384acfa47c8283d1cbd6512",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/7d1c77541668cf840384acfa47c8283d1cbd6512.tar.gz",
+      "hash": "11h91gb1s0633f3vb3z9lrg607vz9xr214r7ingjfg1wsjvpyvxn"
     },
     "adblockHosts": {
       "type": "Git",
@@ -22,9 +22,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "ecb4558464835587867b288b61887ba42f08cadc",
-      "url": "https://github.com/StevenBlack/hosts/archive/ecb4558464835587867b288b61887ba42f08cadc.tar.gz",
-      "hash": "174pqfz5fza8d3d3frcvm2v55gfzlwmgw1w45ywmmkzgrw8yz890"
+      "revision": "0b7224699a71fcb348eeed40e4bfab07e0fc2173",
+      "url": "https://github.com/StevenBlack/hosts/archive/0b7224699a71fcb348eeed40e4bfab07e0fc2173.tar.gz",
+      "hash": "0w7zsyxsyjs3b3j8yqcq6ial22p4zz0zhmpy4p7xmlw8chkb26s2"
     },
     "agenix": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "780be8ef503a28939cf9dc7996b48ffb1a3e04c6",
-      "url": "https://github.com/nix-community/home-manager/archive/780be8ef503a28939cf9dc7996b48ffb1a3e04c6.tar.gz",
-      "hash": "0k15q1vw517mqagq9nfzabbb5sv5l44d4ai2a7vv478sja1b61cf"
+      "revision": "784a83782ce00985bee65c588d4c315ec0b5a172",
+      "url": "https://github.com/nix-community/home-manager/archive/784a83782ce00985bee65c588d4c315ec0b5a172.tar.gz",
+      "hash": "0hpfll9c5ajjiharvs7xvy8ybw0z3jghjp4hqay7lhfzjkn02h2f"
     },
     "home-manager-stable": {
       "type": "Git",
@@ -122,9 +122,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "d7423982c7a26586aa237d130b14c8b302c7a367",
-      "url": "https://github.com/nix-community/nix-index-database/archive/d7423982c7a26586aa237d130b14c8b302c7a367.tar.gz",
-      "hash": "1w0pgxx4hqm79836dgqwfq4c9xgipxgz1jf50bpzz6milpprrz1l"
+      "revision": "5a3ff8c1a09003f399f43d5742d893c0b1ab8af0",
+      "url": "https://github.com/nix-community/nix-index-database/archive/5a3ff8c1a09003f399f43d5742d893c0b1ab8af0.tar.gz",
+      "hash": "0qlxwhxi2z5avmivhp0r7vcixbv46hv0x5135qn5krvigvjcpf7g"
     },
     "nix-run": {
       "type": "Tarball",
@@ -146,9 +146,9 @@
     },
     "nixos-stable": {
       "type": "Channel",
-      "name": "nixos-25.05",
-      "url": "https://releases.nixos.org/nixos/25.05/nixos-25.05.813221.9a7b80b6f82a/nixexprs.tar.xz",
-      "hash": "1fqx9lvgr7wizmdca39yp2qd2xwps1dyv9zxqzrxkx50hk809jji"
+      "name": "nixos-25.11",
+      "url": "https://releases.nixos.org/nixos/25.11/nixos-25.11.612.d542db745310/nixexprs.tar.xz",
+      "hash": "1cgniq3qrphj28jjxn3bzbrvi7x6b4585xpb2svvvjc7v5caxn1j"
     },
     "nixos-unstable": {
       "type": "Channel",
@@ -159,8 +159,8 @@
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre903996.59b6c96beacc/nixexprs.tar.xz",
-      "hash": "0b0yr9d1xyfwgpaj68bimsbjjbj7yis4whjvkrfdycfnasdf0gf0"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre904445.890f57fde071/nixexprs.tar.xz",
+      "hash": "0kq3r7q9larniy4n03ixy9498ad4k572dbxrafk2i524gxb20dkx"
     },
     "plasma-manager": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "d483ae0457f4a406e5c6b331d6771bc3c32962d1",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/d483ae0457f4a406e5c6b331d6771bc3c32962d1.tar.gz",
-      "hash": "12v357mk8rjpa8pdxvxqkmqf2csxbm60wbsgy1ggf6qavpaqm2h1"
+      "revision": "1879b8e75f0885330b281838d808cf4d50133fc5",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/1879b8e75f0885330b281838d808cf4d50133fc5.tar.gz",
+      "hash": "14vcs7qs3p5hvvqs7pnyg1b85hqwyzrsnaaidp4r0bclc5farpz9"
     }
   },
   "version": 5
