@@ -31,6 +31,11 @@ in
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+
+      # Use angrr to clean up Nix garbage collection roots created by
+      # direnv when they are unused for long periods of time (by default,
+      # if they are unused for two weeks).
+      angrr.enable = true;
     };
   };
 
