@@ -117,12 +117,20 @@
           link = "bin/tar";
         }
         {
+          target = "bin/bsdunzip";
+          link = "bin/unzip";
+        }
+        {
           target = "share/man/man1/bsdcpio.1.gz";
           link = "share/man/man1/cpio.1.gz";
         }
         {
           target = "share/man/man1/bsdtar.1.gz";
           link = "share/man/man1/tar.1.gz";
+        }
+        {
+          target = "share/man/man1/bsdunzip.1.gz";
+          link = "share/man/man1/unzip.1.gz";
         }
       ];
     })
