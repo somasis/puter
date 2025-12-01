@@ -41,10 +41,7 @@ pkgs.mkShell {
 
       (writeShellApplication {
         name = "nixos";
-        runtimeInputs = [
-          pkgs.nixos-rebuild
-          # pkgs.nix-output-monitor
-        ];
+
         text = ''
           set -euo pipefail
 
