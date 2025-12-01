@@ -8,7 +8,6 @@
 
   agenix ? sources.agenix,
   treefmt-nix ? sources.treefmt-nix,
-  flake-compat ? sources.flake-compat,
   git-hooks ? sources.git-hooks,
 
   ...
