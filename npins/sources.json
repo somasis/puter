@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "7d1c77541668cf840384acfa47c8283d1cbd6512",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/7d1c77541668cf840384acfa47c8283d1cbd6512.tar.gz",
-      "hash": "11h91gb1s0633f3vb3z9lrg607vz9xr214r7ingjfg1wsjvpyvxn"
+      "revision": "ad875fe9b78d57f9a5d22e905df11be4430e7af6",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/ad875fe9b78d57f9a5d22e905df11be4430e7af6.tar.gz",
+      "hash": "07hz73xv6szh47z60cc1xnracgnjh2x333snqkhanrnayg1lac4d"
     },
     "adblockHosts": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "784a83782ce00985bee65c588d4c315ec0b5a172",
-      "url": "https://github.com/nix-community/home-manager/archive/784a83782ce00985bee65c588d4c315ec0b5a172.tar.gz",
-      "hash": "0hpfll9c5ajjiharvs7xvy8ybw0z3jghjp4hqay7lhfzjkn02h2f"
+      "revision": "e4e25a8c310fa45f2a8339c7972dc43d2845a612",
+      "url": "https://github.com/nix-community/home-manager/archive/e4e25a8c310fa45f2a8339c7972dc43d2845a612.tar.gz",
+      "hash": "18ljhl70i9554qmpfyl7fs86wb19cp1mg2akmv5nrcnlxs64cl0r"
     },
     "home-manager-stable": {
       "type": "Git",
@@ -153,14 +153,14 @@
     "nixos-unstable": {
       "type": "Channel",
       "name": "nixos-unstable",
-      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre903292.2fad6eac6077/nixexprs.tar.xz",
-      "hash": "1c0c0a78466m07rr8z6wiixkn7s7lsy0y1cza3lg4ap2cwdl9zgb"
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre904649.2d293cbfa5a7/nixexprs.tar.xz",
+      "hash": "07gj4v84d8dl2gdxd4nvd9pmavjgv9i3lb3acrnl5i6zc5wy7cy4"
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre904445.890f57fde071/nixexprs.tar.xz",
-      "hash": "0kq3r7q9larniy4n03ixy9498ad4k572dbxrafk2i524gxb20dkx"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre904683.23258e03aaa4/nixexprs.tar.xz",
+      "hash": "05l4vicvsalz3w373jr5fl7q91zm13p7nmvh4bs8mnm2gh535742"
     },
     "plasma-manager": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "1879b8e75f0885330b281838d808cf4d50133fc5",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/1879b8e75f0885330b281838d808cf4d50133fc5.tar.gz",
-      "hash": "14vcs7qs3p5hvvqs7pnyg1b85hqwyzrsnaaidp4r0bclc5farpz9"
+      "revision": "6b0b0b14d7f89aee3de5418e8438e0cba57a2175",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/6b0b0b14d7f89aee3de5418e8438e0cba57a2175.tar.gz",
+      "hash": "1yqdi7l2da55kzdkz779myb0aa1azr4fx31f0j79szj03yzch7dd"
     }
   },
   "version": 5
