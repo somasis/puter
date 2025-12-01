@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name          Linkify Text
 // @description   Make URLs in plain text into hyperlinks (using Linkify Plus Plus Core)
+// @updateURL     https://raw.githubusercontent.com/somasis/puter/refs/heads/main/pkgs/greasemonkey-userscripts/linkify-text.user.js
 // @author        Kylie McClain <kylie@somas.is>
 // @namespace     https://somas.is
 // @license       CC0-1.0

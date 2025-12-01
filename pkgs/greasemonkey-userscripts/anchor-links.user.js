@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Anchor links
 // @description  Add a link to headings with anchors
+// @updateURL    https://raw.githubusercontent.com/somasis/puter/refs/heads/main/pkgs/greasemonkey-userscripts/anchor-links.user.js
 // @author       Kylie McClain <kylie@somas.is>
 // @license      MIT
 // @include      http://*

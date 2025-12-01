@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         Quirks
+// @updateURL    https://raw.githubusercontent.com/somasis/puter/refs/heads/main/pkgs/greasemonkey-userscripts/quirks.user.js
 // @author       Kylie McClain <kylie@somas.is>
 // @include      http://*
 // @include      https://*

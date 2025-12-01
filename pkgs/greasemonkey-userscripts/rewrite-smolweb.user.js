@@ -2,6 +2,7 @@
 // @name            Rewrite and proxy smolweb links
 // @description     Rewrites smolweb (gemini, gopher, etc.) links to use a *->HTTP proxy.
 // @version         0.1
+// @updateURL       https://raw.githubusercontent.com/somasis/puter/refs/heads/main/pkgs/greasemonkey-userscripts/rewrite-smolweb.user.js
 // @author          Kylie McClain <kylie@somas.is>
 // @namespace       https://somas.is
 // @license         CC0-1.0

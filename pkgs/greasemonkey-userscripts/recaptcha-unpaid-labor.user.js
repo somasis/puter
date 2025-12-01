@@ -2,6 +2,7 @@
 // @name            Make ReCaptcha's "I'm not a robot" accurate
 // @description     Ported from the original WebExtension
 // @version         0.1
+// @updateURL       https://raw.githubusercontent.com/somasis/puter/refs/heads/main/pkgs/greasemonkey-userscripts/recaptcha-unpaid-labor.user.js
 // @author          Kylie McClain <kylie@somas.is> (Greasemonkey port)
 // @author          AJ Jordan <alex@strugee.net> (original WebExtension version <https://github.com/strugee/recaptcha-unpaid-labor>)
 // @namespace       https://somas.is
