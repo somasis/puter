@@ -26,7 +26,7 @@ pkgs.mkShell {
     export PATH="$PWD/bin:''${PATH:+:$PATH}"
   '';
 
-  buildInputs =
+  packages =
     gitHooksPkg.enabledPackages
     ++ (with pkgs; [
       # for secrets management (see also: `./secrets.nix`)
