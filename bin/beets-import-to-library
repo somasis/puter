@@ -150,11 +150,11 @@ finish_import() {
     exit
 }
 
-beets_import_args=()
+beet_import_args=()
 for arg in "$@"; do
     case "${arg}" in
         --) break ;;
-        --*) beets_import_args+=("${arg}") ;;
+        --*) beet_import_args+=("${arg}") ;;
         ./* | /* | *) break ;;
     esac
 done
