@@ -72,7 +72,6 @@
     teip
     tree
     trurl
-    ugrep
     xe
     xmlstarlet
     xurls
@@ -80,6 +79,11 @@
     yq-go
     zstd
     # keep-sorted end
+
+    (ugrep.override {
+      wrapWithFilterUtils = true;
+      createGrepReplacementLinks = true;
+    })
 
     # moreutils's /bin/ts conflicts with outils.
     (symlinkJoin {
