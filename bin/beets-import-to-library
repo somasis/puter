@@ -72,13 +72,13 @@ exec-to-terminal() {
 }
 
 finish_import() {
-    latest_after_import=$(beet ls -p -a 'added-' | head -n 1 || :)
+    latest_after_import=$(beet ls -p -a source_path:="${import}" | head -n 1 || :)
     [[ -n "${latest_after_import:-}" ]] \
         && [[ "${latest_after_import}" != "${latest_before_import:-}" ]] \
         || return 1
 
     # shellcheck disable=SC2016
-    if artpath=$(beet ls -f '$artpath' -a "${latest_after_import}") && [[ "${artpath}" != 'None' ]]; then
+    if artpath=$(beet ls -f '$artpath' -a source_path:="${import}") && [[ "${artpath}" != 'None' ]]; then
         printf 'using art for notification: %s\n' "${artpath}" >&2
     else
         artpath=
@@ -89,7 +89,7 @@ finish_import() {
         beet ls \
             -f 'Successfully imported $albumartist - $album ($year) using metadata from $data_source.' \
             -a \
-            "${latest_after_import}"
+            source_path:="${import}"
     )
 
     if [[ -n "${WITH_NTFY:-}" ]]; then
@@ -126,14 +126,14 @@ finish_import() {
 
         case "${action}" in
             play)
-                edo beet play -a path:"${latest_after_import}" &
+                edo beet play -a source_path:="${import}" &
                 ;;
             directory)
                 edo xdg-open "${latest_after_import}" &
                 disown
                 ;;
             undo)
-                exec-to-terminal beet rm -adf "${latest_after_import}"
+                exec-to-terminal beet rm -adf source_path:="${import}"
 
                 # HACK for beets' thumbnails plugin not deleting .directory :/
                 rm -r "${latest_after_import}"
@@ -141,7 +141,7 @@ finish_import() {
             redo)
                 exec-to-terminal beet import "${beet_import_args}" \
                     --timid --noincremental \
-                    -L "${latest_after_import}"
+                    -L source_path:="${import}"
                 ;;
         esac
     } &
@@ -158,11 +158,6 @@ for arg in "$@"; do
         ./* | /* | *) break ;;
     esac
 done
-
-beet_import_args+=(
-    --flat # Each argument should count as an album, for the purposes of this script
-    --noincremental
-)
 
 beet_config=$(beet config -d)
 library_directory=$(<<<"$beet_config" yq '.library')
@@ -183,8 +178,18 @@ done
 import_errors=()
 for import; do
     error=0
+
+    import=$(readlink -f "${import}")
     export import
+
     (
+        beet_import_args+=(
+            --flat # Each argument should count as an album, for the purposes of this script
+            --noincremental
+            # Used for ensuring we can track this specific album, post-import
+            --set=source_path="${import}"
+        )
+
         case "${import}" in
             "${library_directory}"/*)
                 beet_import_args+=(--nocopy --move)
