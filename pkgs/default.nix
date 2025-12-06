@@ -50,6 +50,7 @@ let
       emojirunner = callPackage ./emojirunner { };
       execshell = callPackage ./execshell { };
       fcitx5-ilo-sitelen = callPackage ./fcitx5-ilo-sitelen { };
+      gitmal = callPackage ./gitmal { };
       greybeard = callPackage ./greybeard { };
       ini2nix = callPackage ./ini2nix { inherit json2nix; };
       jhide = callPackage ./jhide { };
