@@ -3,3 +3,6 @@
 
 # Used by bin/beet-mbopen
 https://musicbrainz.org/.*
+
+# Used by bin/phish-*
+https://phish.in/.*
