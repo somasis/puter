@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash coreutils curl libiconv jq pandoc
+#! nix-shell -i bash -p bash coreutils curl jq pandoc python3Packages.ftfy
 # shellcheck shell=bash
 
 # keep-sorted start skip_lines=1 prefix_order=type,,>,||
@@ -200,15 +200,11 @@ for show_set in "${show_sets[@]}"; do
     printf '%s: %s\n\n' "${show_set}" "${set_tracks}" | fmt -t
 done
 
-# NOTE The iconv weirdness here is because it seems that some
-# show notes provided by Phish.net were improperly converted to
-# UTF-8 from Windows-1252 and/or ISO-8859-1 at some point in
-# their processing. Thus, artifacts in text show up occasionally
-# (see 1999-12-31 for a testcase).
-if setlist_notes_fixed=$(
-    iconv -t ISO-8859-1 <<<"$setlist_notes" \
-        | iconv -t UTF-8 \
-); then
+# NOTE The use of ftfy here is because it seems that some show
+# notes provided by Phish.net were improperly converted to UTF-8
+# at some point in their processing. Thus, artifacts in text show
+# up occasionally (see 1999-12-31 for a testcase).
+if setlist_notes_fixed=$(ftfy -g <<<"$setlist_notes"); then
     setlist_notes="${setlist_notes_fixed}"
 fi
 

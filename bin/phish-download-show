@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #!/usr/bin/env nix-shell
-#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive pandoc tageditor
+#! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive pandoc tageditor python3Packages.ftfy
 # shellcheck shell=bash
 
 # keep-sorted start skip_lines=1 prefix_order=type,,>,||
@@ -275,16 +275,14 @@ file_i=0
 disc=1
 
 if [[ "$edit_tags" == true ]]; then
-    # See "iconv weirdness" comment in `phish-show-notes` for why
-    # the iconv dance is necessary.
+    # See "ftfy" comment in `phish-show-notes` for why this is necessary.
     # Pandoc is used where something smaller would suffice (like recode)
     # for replacing the escaped HTML-entities because pandoc is also used
     # by `phish-show-notes`.
     phishnet_setlist_notes=$(
         phish-show-notes -j "${show_date}" \
             | jq -r '.setlist_notes // ""' \
-            | iconv -t ISO-8859-1 \
-            | iconv -t UTF-8 \
+            | ftfy -g \
             | pandoc -f html -t plain --wrap=none
     )
 
