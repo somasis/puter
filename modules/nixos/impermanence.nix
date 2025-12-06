@@ -61,7 +61,26 @@ in
 
     cache.directories =
       (lib.optional config.services.fwupd.enable "/var/cache/fwupd")
-      ++ (lib.optional config.services.self-deploy.enable "/var/lib/nixos-self-deploy");
+      ++ (lib.optional config.services.self-deploy.enable "/var/lib/nixos-self-deploy")
+      ++ (
+        # For every Restic backup job that exists, persist its cache directory.
+        let
+          jobs = config.services.restic.backups;
+          jobNames = builtins.attrNames jobs;
+        in
+        lib.optionals (jobs != [ ]) (
+          map (jobName: {
+            directory = "/var/cache/restic-backups-${jobName}";
+
+            # NOTE one of these would be better, but it causes infrec
+            # directory = config.systemd.services."restic-backups-${jobName}".environment.RESTIC_CACHE_DIR;
+            # directory = "/var/cache/${
+            #   config.systemd.services."restic-backups-${jobName}".serviceConfig.CacheDirectory
+            # }";
+            mode = "0770";
+          }) jobNames
+        )
+      );
 
     persist = {
       users.root = {

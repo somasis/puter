@@ -4,13 +4,6 @@
   ...
 }:
 {
-  cache.directories = [
-    {
-      directory = "/var/cache/restic-backups-ilo";
-      mode = "0770";
-    }
-  ];
-
   age.secrets = {
     restic.file = "${self}/secrets/restic-${config.networking.fqdnOrHostName}.age";
     restic-rclone-whatbox.file = "${self}/secrets/restic-rclone-whatbox.age";
