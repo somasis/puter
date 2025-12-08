@@ -200,6 +200,16 @@ in
   home.sessionVariables.BROWSER =
     if config.programs.qutebrowser.enable then "qutebrowser" else "firefox-esr";
 
+  # Use cookies from browser if available
+  programs.gallery-dl.settings.extractor.cookies =
+    if config.programs.qutebrowser.enable then
+      [
+        "chromium"
+        "${config.xdg.dataHome}/qutebrowser/webengine"
+      ]
+    else
+      [ "firefox" ];
+
   xdg.mimeApps.defaultApplications =
     lib.genAttrs
       [

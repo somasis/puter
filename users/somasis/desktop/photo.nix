@@ -107,12 +107,6 @@ in
           ])
           + ".{extension}";
 
-        # Use cookies from qutebrowser if available
-        cookies = lib.mkIf config.programs.qutebrowser.enable [
-          "chromium"
-          "${config.xdg.dataHome}/qutebrowser/webengine"
-        ];
-
         postprocessors = [
           {
             name = "exec";
