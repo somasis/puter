@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "05aa853b9af7c5968cd47df00d7adb6aabbde828",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/05aa853b9af7c5968cd47df00d7adb6aabbde828.tar.gz",
-      "hash": "0n6jb1bkfxgcafblbgfsp1fw28c1a0v54nb7qlp9l64rd08hnhp6"
+      "revision": "58ab8c4ba284e2b96891f4560fa11b60bfaeb538",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/58ab8c4ba284e2b96891f4560fa11b60bfaeb538.tar.gz",
+      "hash": "0hzk63b9h24dqhfkccbih335bq6ayan3nw9q8l5872sshcavwpc0"
     },
     "adblockHosts": {
       "type": "Git",
@@ -67,9 +67,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "27a6182347ccae90a88231ae0dc5dfa7d15815bb",
-      "url": "https://github.com/nix-community/home-manager/archive/27a6182347ccae90a88231ae0dc5dfa7d15815bb.tar.gz",
-      "hash": "13lgll1zqa1ygmp3a3c6k5lqcyn5r4pc6x3ibv1p4z4byagsv5kx"
+      "revision": "e5b1f87841810fc24772bf4389f9793702000c9b",
+      "url": "https://github.com/nix-community/home-manager/archive/e5b1f87841810fc24772bf4389f9793702000c9b.tar.gz",
+      "hash": "0sbf66mx4pvzb18gq7w08l9x44dlj8hdylgb53y00w2bhw174m85"
     },
     "home-manager-stable": {
       "type": "Git",
@@ -210,9 +210,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "af6079cfa74f1f73e4782abb1b986b5259585362",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/af6079cfa74f1f73e4782abb1b986b5259585362.tar.gz",
-      "hash": "1h0lyfxd7wc8zq8dvf4xpqfwc1qhhv9a29mxnkcqmyqsa4c00njk"
+      "revision": "d0d76534bea215be359ee31716308aed579d3c60",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/d0d76534bea215be359ee31716308aed579d3c60.tar.gz",
+      "hash": "18dmsj4kn22k7fypz3jws1n4rirhbmsivp5wqvamaqsyiaka5w3c"
     }
   },
   "version": 5
