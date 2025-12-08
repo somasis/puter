@@ -103,190 +103,190 @@ in
     "equibop/TrayIcons/speaking.png".source =
       mkIcon "${pkgs.papirus-icon-theme}/share/icons/Papirus-Dark/24x24@2x/panel/discord-tray-speaking.svg";
 
-    "equibop/settings/quickCss.css".source = ./discord.css;
+    # "equibop/settings/quickCss.css".source = ./discord.css;
 
-    "equibop/settings/settings.json".text = json {
-      disableMinSize = false;
-      notifications = {
-        useNative = "always";
-        missed = true;
-        logLimit = 0;
-      };
+    # "equibop/settings/settings.json".text = json {
+    #   disableMinSize = false;
+    #   notifications = {
+    #     useNative = "always";
+    #     missed = true;
+    #     logLimit = 0;
+    #   };
 
-      useQuickCss = true;
-      winCtrlQ = false;
-      winNativeTitleBar = false;
+    #   useQuickCss = true;
+    #   winCtrlQ = false;
+    #   winNativeTitleBar = false;
 
-      plugins = {
-        AlwaysTrust = {
-          enabled = true;
-          domain = true;
-          file = true;
-        };
-        Anammox = {
-          enabled = true;
-          billing = false;
-          dms = true;
-          emojiList = true;
-          gift = true;
-        };
-        BetterBlockedUsers = {
-          enabled = true;
-          hideBlockedWarning = false;
-          showUnblockConfirmationEverywhere = false;
-        };
-        BetterGifAltText.enabled = true;
-        BetterGifPicker.enabled = true;
-        BetterPlusReacts.enabled = true;
-        BetterSessions = {
-          enabled = true;
-          backgroundCheck = true;
-          checkInterval = 30;
-        };
-        BetterSettings = {
-          enabled = true;
-          disableFade = true;
-          eagerLoad = true;
-          organizeMenu = true;
-        };
-        BlurNSFW = {
-          enabled = true;
-          blurAllChannels = false;
-          blurAmount = 15;
-        };
-        CallTimer = {
-          enabled = true;
-          format = "human";
-        };
-        ClearURLs.enabled = true;
-        ConsoleJanitor.enabled = true;
-        CrashHandler = {
-          enabled = true;
-          attemptToNavigateToHome = true;
-          attemptToPreventCrashes = true;
-        };
-        DontRoundMyTimestamps.enabled = true;
-        Downloadify = {
-          enabled = true;
-          defaultDirectory = config.xdg.userDirs.download;
-        };
-        FixImagesQuality.enabled = true;
-        ForceOwnerCrown.enabled = true;
-        FrequentQuickSwitcher.enabled = true;
-        FriendsSince.enabled = true;
-        FullSearchContext.enabled = true;
-        FullUserInChatbox.enabled = true;
-        FullVCPFP.enabled = true;
-        GameActivityToggle = {
-          enabled = true;
-          oldIcon = false;
-        };
-        GuildPickerDumper.enabled = true;
-        HomeTyping.enabled = true;
-        ImageFilename = {
-          enabled = true;
-          showFullUrl = false;
-        };
-        IrcColors = {
-          enabled = true;
-          applyColorOnlyInDms = true;
-          applyColorOnlyToUsersWithoutColor = true;
-          lightness = 65;
-          memberListColors = true;
-        };
-        LimitMiddleClickPaste = {
-          enabled = true;
-          limitTo = "direct";
-          reenableDelay = 500;
-        };
-        MentionAvatars = {
-          enabled = true;
-          showAtSymbol = true;
-        };
-        NSFWGateBypass.enabled = true;
-        NoDevtoolsWarning.enabled = true;
-        NoF1.enabled = true;
-        NoModalAnimation.enabled = true;
-        NoTrack.disableAnalytics = true;
-        NoUnblockToJump.enabled = true;
-        NormalizeMessageLinks.enabled = true;
-        PinIcon.enabled = true;
-        ReactErrorDecoder.enabled = true;
-        ReplaceGoogleSearch = {
-          enabled = true;
-          customEngineName = "DuckDuckGo";
-          customEngineURL = "https://duckduckgo.com/?q=";
-        };
-        SearchFix.enabled = true;
-        ServerSearch.enabled = true;
-        Settings.settingsLocation = "aboveActivity";
-        ShikiCodeblocks.enabled = true;
-        ShowAllMessageButtons = {
-          enabled = true;
-          noShiftDelete = false;
-          noShiftPin = false;
-        };
-        ShowConnections = {
-          enabled = true;
-          iconSize = 32;
-          iconSpacing = 1;
-        };
-        SilentMessageToggle = {
-          enabled = true;
-          autoDisable = true;
-          persistState = "none";
-        };
-        SortFriends = {
-          enabled = true;
-          showDates = true;
-        };
-        TextReplace = {
-          enabled = true;
-          regexRules = [ ];
-          stringRules = [
-            {
-              find = "https://x.com";
-              onlyIfIncludes = "/status/";
-              replace = "https://fxtwitter.com";
-              scope = "myMessages";
-            }
-            {
-              find = "https://twitter.com";
-              onlyIfIncludes = "/status/";
-              replace = "https://fxtwitter.com";
-              scope = "myMessages";
-            }
-          ];
-        };
-        ThemeAttributes.enabled = true;
-        Title = {
-          enabled = true;
-          title = "Discord";
-        };
-        UnreadCountBadge = {
-          enabled = true;
-          notificationCountLimit = false;
-          replaceWhiteDot = false;
-          showOnMutedChannels = false;
-        };
-        UserVoiceShow = {
-          enabled = true;
-          showInMemberList = true;
-          showInMessages = true;
-          showInUserProfileModal = true;
-        };
-        ValidReply.enabled = true;
-        ValidUser.enabled = true;
-        ViewIcons = {
-          enabled = true;
-          format = "webp";
-          imgSize = "1024";
-        };
-        VoiceChatDoubleClick.enabled = true;
-        WebKeybinds.enabled = true;
-        WebScreenShareFixes.enabled = true;
-        YoutubeAdblock.enabled = true;
-      };
-    };
+    #   plugins = {
+    #     AlwaysTrust = {
+    #       enabled = true;
+    #       domain = true;
+    #       file = true;
+    #     };
+    #     Anammox = {
+    #       enabled = true;
+    #       billing = false;
+    #       dms = true;
+    #       emojiList = true;
+    #       gift = true;
+    #     };
+    #     BetterBlockedUsers = {
+    #       enabled = true;
+    #       hideBlockedWarning = false;
+    #       showUnblockConfirmationEverywhere = false;
+    #     };
+    #     BetterGifAltText.enabled = true;
+    #     BetterGifPicker.enabled = true;
+    #     BetterPlusReacts.enabled = true;
+    #     BetterSessions = {
+    #       enabled = true;
+    #       backgroundCheck = true;
+    #       checkInterval = 30;
+    #     };
+    #     BetterSettings = {
+    #       enabled = true;
+    #       disableFade = true;
+    #       eagerLoad = true;
+    #       organizeMenu = true;
+    #     };
+    #     BlurNSFW = {
+    #       enabled = true;
+    #       blurAllChannels = false;
+    #       blurAmount = 15;
+    #     };
+    #     CallTimer = {
+    #       enabled = true;
+    #       format = "human";
+    #     };
+    #     ClearURLs.enabled = true;
+    #     ConsoleJanitor.enabled = true;
+    #     CrashHandler = {
+    #       enabled = true;
+    #       attemptToNavigateToHome = true;
+    #       attemptToPreventCrashes = true;
+    #     };
+    #     DontRoundMyTimestamps.enabled = true;
+    #     Downloadify = {
+    #       enabled = true;
+    #       defaultDirectory = config.xdg.userDirs.download;
+    #     };
+    #     FixImagesQuality.enabled = true;
+    #     ForceOwnerCrown.enabled = true;
+    #     FrequentQuickSwitcher.enabled = true;
+    #     FriendsSince.enabled = true;
+    #     FullSearchContext.enabled = true;
+    #     FullUserInChatbox.enabled = true;
+    #     FullVCPFP.enabled = true;
+    #     GameActivityToggle = {
+    #       enabled = true;
+    #       oldIcon = false;
+    #     };
+    #     GuildPickerDumper.enabled = true;
+    #     HomeTyping.enabled = true;
+    #     ImageFilename = {
+    #       enabled = true;
+    #       showFullUrl = false;
+    #     };
+    #     IrcColors = {
+    #       enabled = true;
+    #       applyColorOnlyInDms = true;
+    #       applyColorOnlyToUsersWithoutColor = true;
+    #       lightness = 65;
+    #       memberListColors = true;
+    #     };
+    #     LimitMiddleClickPaste = {
+    #       enabled = true;
+    #       limitTo = "direct";
+    #       reenableDelay = 500;
+    #     };
+    #     MentionAvatars = {
+    #       enabled = true;
+    #       showAtSymbol = true;
+    #     };
+    #     NSFWGateBypass.enabled = true;
+    #     NoDevtoolsWarning.enabled = true;
+    #     NoF1.enabled = true;
+    #     NoModalAnimation.enabled = true;
+    #     NoTrack.disableAnalytics = true;
+    #     NoUnblockToJump.enabled = true;
+    #     NormalizeMessageLinks.enabled = true;
+    #     PinIcon.enabled = true;
+    #     ReactErrorDecoder.enabled = true;
+    #     ReplaceGoogleSearch = {
+    #       enabled = true;
+    #       customEngineName = "DuckDuckGo";
+    #       customEngineURL = "https://duckduckgo.com/?q=";
+    #     };
+    #     SearchFix.enabled = true;
+    #     ServerSearch.enabled = true;
+    #     Settings.settingsLocation = "aboveActivity";
+    #     ShikiCodeblocks.enabled = true;
+    #     ShowAllMessageButtons = {
+    #       enabled = true;
+    #       noShiftDelete = false;
+    #       noShiftPin = false;
+    #     };
+    #     ShowConnections = {
+    #       enabled = true;
+    #       iconSize = 32;
+    #       iconSpacing = 1;
+    #     };
+    #     SilentMessageToggle = {
+    #       enabled = true;
+    #       autoDisable = true;
+    #       persistState = "none";
+    #     };
+    #     SortFriends = {
+    #       enabled = true;
+    #       showDates = true;
+    #     };
+    #     TextReplace = {
+    #       enabled = true;
+    #       regexRules = [ ];
+    #       stringRules = [
+    #         {
+    #           find = "https://x.com";
+    #           onlyIfIncludes = "/status/";
+    #           replace = "https://fxtwitter.com";
+    #           scope = "myMessages";
+    #         }
+    #         {
+    #           find = "https://twitter.com";
+    #           onlyIfIncludes = "/status/";
+    #           replace = "https://fxtwitter.com";
+    #           scope = "myMessages";
+    #         }
+    #       ];
+    #     };
+    #     ThemeAttributes.enabled = true;
+    #     Title = {
+    #       enabled = true;
+    #       title = "Discord";
+    #     };
+    #     UnreadCountBadge = {
+    #       enabled = true;
+    #       notificationCountLimit = false;
+    #       replaceWhiteDot = false;
+    #       showOnMutedChannels = false;
+    #     };
+    #     UserVoiceShow = {
+    #       enabled = true;
+    #       showInMemberList = true;
+    #       showInMessages = true;
+    #       showInUserProfileModal = true;
+    #     };
+    #     ValidReply.enabled = true;
+    #     ValidUser.enabled = true;
+    #     ViewIcons = {
+    #       enabled = true;
+    #       format = "webp";
+    #       imgSize = "1024";
+    #     };
+    #     VoiceChatDoubleClick.enabled = true;
+    #     WebKeybinds.enabled = true;
+    #     WebScreenShareFixes.enabled = true;
+    #     YoutubeAdblock.enabled = true;
+    #   };
+    # };
   };
 }
