@@ -6,12 +6,15 @@
   ...
 }:
 let
-  importFlake = src: (import sources.flake-compat { inherit src; }).defaultNix;
+  lanzaboote = import sources.lanzaboote {
+    inherit pkgs;
+    inherit (pkgs) system;
+  };
 in
 {
   imports = [
     "${modulesPath}/profiles/hardened.nix"
-    (importFlake sources.lanzaboote).nixosModules.lanzaboote
+    lanzaboote.nixosModules.lanzaboote
   ];
 
   persist.directories = [
