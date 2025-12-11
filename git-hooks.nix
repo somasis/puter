@@ -56,6 +56,12 @@ rec {
         "users/somasis/desktop/browser/search.nix" # Lots of false positives due to qutebrowser templating
         ".*.user.js" # greasemonkey scripts; too many false positives
       ];
+
+      settings.configPath = builtins.toString (
+        pkgs.writers.writeTOML "lychee.toml" {
+          accept = "100..=103,200..=299,401";
+        }
+      );
     };
 
     shellcheck = {

@@ -83,7 +83,9 @@ in
             "audio/source" = {
               enable = true;
               mountPoint = "${config.home.homeDirectory}/audio/source";
-              options = bigCacheOptions;
+              options = bigCacheOptions // {
+                dir-cache-time = "2m0s";
+              };
             };
 
             "video/anime" = {
