@@ -2,7 +2,6 @@
   self,
   config,
   lib,
-  nixpkgs,
   pkgs,
   ...
 }:
@@ -33,13 +32,13 @@ let
       };
     in
     if patches != [ ] then
-      import ((import nixpkgs args).applyPatches {
+      import ((import pkgs.path args).applyPatches {
         name = "nixpkgs-quirks";
-        src = nixpkgs;
+        src = pkgs.path;
         inherit patches;
       }) args
     else
-      import nixpkgs args;
+      import pkgs.path args;
 
   overlay = final: prev: {
     # Continuing the earlier example, make sure to do an override
