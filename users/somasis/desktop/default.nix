@@ -51,6 +51,8 @@
         josm
         kcharselect
         okteta
+        qemu
+        quickemu
         zenity
         # keep-sorted end
       ];
