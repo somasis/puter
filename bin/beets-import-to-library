@@ -87,7 +87,7 @@ finish_import() {
     # shellcheck disable=SC2016
     format=$(
         beet ls \
-            -f 'Successfully imported $albumartist - $album ($year) using metadata from $data_source.' \
+            -f 'Successfully imported $albumartist - $album ($year) using metadata from %if{$mb_albumid,<a href=https://musicbrainz.org/release/${mb_albumid}>}$data_source%if{$mb_albumid,</a>}.' \
             -a \
             source_path:="${import}"
     )
