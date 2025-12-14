@@ -70,7 +70,7 @@ in
             type = "webdav";
             url = "https://files.box.somas.is";
             vendor = "rclone";
-            user = "ilo";
+            user = hostName;
           };
           secrets.pass = config.age.secrets."rclone-whatbox-${hostName}-pass".path;
 
