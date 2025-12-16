@@ -142,7 +142,10 @@
     # };
   };
 
+  services.hardware.bolt.enable = true;
+
   environment.systemPackages = with pkgs; [
+    kdePackages.plasma-thunderbolt
     waypipe
     usbguard-notifier
   ];
