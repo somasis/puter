@@ -34,6 +34,7 @@ let
     with attrsets;
     rec {
       # keep-sorted start
+      avahi2dns = callPackage ./avahi2dns { };
       aw-watcher-media-player = callPackage ./aw-watcher-media-player { };
       aw-watcher-netstatus = callPackage ./aw-watcher-netstatus { };
       beets-alias = callPackage ./beets-alias { };

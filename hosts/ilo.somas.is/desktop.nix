@@ -143,7 +143,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    polychromatic
     waypipe
     usbguard-notifier
   ];
