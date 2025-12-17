@@ -29,6 +29,7 @@
         ++ lib.optional config.services.printing.enable "lp"
         ++ lib.optional config.services.timesyncd.enable "systemd-timesync"
         ++ lib.optional config.virtualisation.podman.enable "podman"
+        ++ lib.optional config.virtualisation.virtualbox.host.enable "vboxusers"
         # keep-sorted end
         ++ lib.optionals config.networking.networkmanager.enable [
           "network"
