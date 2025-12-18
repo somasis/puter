@@ -45,12 +45,14 @@
       with kdePackages;
       [
         # keep-sorted start
+
         bc
         ffmpeg-full
         hyperfine
         josm
         kcharselect
         okteta
+        organicmaps
         qemu
         quickemu
         zenity
@@ -77,6 +79,8 @@
   persist = with config.lib.somasis; {
     directories = [
       (xdgDataDir "containers")
+      (xdgConfigDir "OMaps")
+      (xdgDataDir "OMaps")
       (xdgConfigDir "JOSM")
       (xdgDataDir "JOSM")
       (relativeToHome config.xdg.userDirs.documents)
