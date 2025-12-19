@@ -45,9 +45,9 @@ with config.lib.somasis;
 
   persist.directories = [
     (xdgConfigDir "jellyfin-mpv-shim")
-    # (xdgConfigDir "jellyfin.org")
-    # (xdgDataDir "jellyfinmediaplayer")
-    # (xdgDataDir "Jellyfin Media Player")
+    (xdgConfigDir "jellyfin.org")
+    (xdgDataDir "jellyfinmediaplayer")
+    (xdgDataDir "Jellyfin Media Player")
   ];
 
   programs = {
@@ -238,7 +238,7 @@ with config.lib.somasis;
   home = {
     packages = [
       pkgs.jellyfin-mpv-shim
-      #   pkgs.jellyfin-media-player
+      pkgs.jellyfin-media-player
     ];
 
     shellAliases.ytaudio = "yt-dlp --format bestaudio --extract-audio --audio-format wav";
