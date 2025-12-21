@@ -21,7 +21,7 @@
     ];
 
     directories = [
-      (config.lib.somasis.xdgDataDir "KDE/Kasts")
+      (config.lib.somasis.xdgDataDir "KDE/kasts")
     ];
   };
 
