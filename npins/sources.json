@@ -9,9 +9,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "6a8345d9a9121ea6a315c6668dce35e505c70306",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/6a8345d9a9121ea6a315c6668dce35e505c70306.tar.gz",
-      "hash": "0m5m7v1mzxsg84bacz8fj5sa8ihrjsx587h8kpi2pgc0r66nbjcr"
+      "revision": "eb474ff88cf9892236d81fc0d9b8c99d3b1a14b3",
+      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/eb474ff88cf9892236d81fc0d9b8c99d3b1a14b3.tar.gz",
+      "hash": "04ni76p7vwx2ij5f1qr1kvi0pimclcgfisxnj2qdpbafflywr44z"
     },
     "adblockHosts": {
       "type": "Git",
@@ -148,14 +148,14 @@
     "nixos-unstable": {
       "type": "Channel",
       "name": "nixos-unstable",
-      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre913595.c6245e83d836/nixexprs.tar.xz",
-      "hash": "0a93r0l6ajblcb23x1phdf489jdqbxghpxi8q3rkxldzy5gqyn3x"
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre914755.a6531044f6d0/nixexprs.tar.xz",
+      "hash": "105kfsjzg2ra700408s11gxhnccpc3qs2cr725xddlz1sj57sgvx"
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre913981.7d853e518814/nixexprs.tar.xz",
-      "hash": "1cpg513zly625rw05kbz1hvfiqcrwbd71c1bqhp61sh6ng8ifg4c"
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre914780.306ea70f9eb0/nixexprs.tar.xz",
+      "hash": "1xx42m8amnda6z8nbm2ksv0plpzcdqxzymb1qqnp0xnf0k2bz2d1"
     },
     "plasma-manager": {
       "type": "Git",
@@ -205,9 +205,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "9440c1335a1e89acad2a29bca2ec7b023411f54b",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/9440c1335a1e89acad2a29bca2ec7b023411f54b.tar.gz",
-      "hash": "1pdf6sb5b57y1hd3874yp785xpavppmws0l52xvz9zi6nsf1c0cf"
+      "revision": "b2cd8c2eda0b241c501c08e01eb0c5fcaabc7262",
+      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/b2cd8c2eda0b241c501c08e01eb0c5fcaabc7262.tar.gz",
+      "hash": "0mnb58wlwclf507nqpg5lz3s0qs5szyhb24d98bl7wdingb8hzhb"
     }
   },
   "version": 5
