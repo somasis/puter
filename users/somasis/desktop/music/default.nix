@@ -32,10 +32,10 @@ in
 
   xdg.userDirs.music = "${config.home.homeDirectory}/audio/library";
 
-  home.packages = [
-    pkgs.ffmpeg-full
-    pkgs.opusTools
-    pkgs.flac
-    pkgs.audacity
+  home.packages = with pkgs; [
+    audacity
+    ffmpeg-full
+    flac
+    opusTools
   ];
 }
