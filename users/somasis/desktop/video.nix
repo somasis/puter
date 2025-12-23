@@ -39,15 +39,14 @@ in
 with config.lib.somasis;
 {
   cache.directories = [
+    (xdgCacheDir "jellyfin-desktop")
     (xdgCacheDir "mpv")
     (xdgCacheDir "yt-dlp")
   ];
 
   persist.directories = [
     (xdgConfigDir "jellyfin-mpv-shim")
-    (xdgConfigDir "jellyfin.org")
-    (xdgDataDir "jellyfinmediaplayer")
-    (xdgDataDir "Jellyfin Media Player")
+    (xdgDataDir "jellyfin-desktop")
   ];
 
   programs = {

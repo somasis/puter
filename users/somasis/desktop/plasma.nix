@@ -83,6 +83,8 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "gwenviewrc")
       (xdgConfigDir "kactivitymanagerd-statsrc")
       (xdgConfigDir "kactivitymanagerdrc")
+      (xdgConfigDir "kclockdrc")
+      (xdgConfigDir "kclockrc")
       (xdgConfigDir "kcminputrc")
       (xdgConfigDir "kconf_updaterc")
       (xdgConfigDir "kded5rc")
