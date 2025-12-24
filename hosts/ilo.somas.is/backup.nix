@@ -19,7 +19,10 @@
       "/persist"
       "/persist/home/somasis"
     ];
-    exclude = [ "*cache*" ];
+    exclude = [
+      "*cache*"
+      "*/Steam/steamapps/*"
+    ];
 
     extraBackupArgs = [
       "--one-file-system"
