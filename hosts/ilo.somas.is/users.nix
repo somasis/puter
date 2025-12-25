@@ -19,6 +19,7 @@
           "systemd-journal"
         ]
         # keep-sorted start
+        ++ lib.optional config.hardware.keyboard.qmk.enable "plugdev"
         ++ lib.optional config.hardware.sane.enable "scanner"
         ++ lib.optional config.hardware.uinput.enable "input"
         ++ lib.optional config.programs.adb.enable "adbusers"
