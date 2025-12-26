@@ -59,11 +59,7 @@ in
 
     preferXdgDirectories = true;
 
-    packages = [
-      (pkgs.writeShellScriptBin "open" ''
-        exec xdg-open "$@"
-      '')
-    ];
+    shellAliases.open = "xe -N1 -a xdg-open --";
   };
 
   persist.directories = [
