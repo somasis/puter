@@ -42,6 +42,12 @@ pkgs.mkShell {
       (writeShellApplication {
         name = "nixos";
 
+        runtimeInputs = with pkgs; [
+          dix
+          jq
+          nix-output-monitor
+        ];
+
         text = ''
           set -euo pipefail
 
@@ -113,11 +119,20 @@ pkgs.mkShell {
 
           nixos_rebuild_args+=( "$@" )
 
+          system_before=/nix/var/nix/profiles/system-$(nixos-rebuild list-generations --json | jq -r '.[0].generation')-link
+
+          e=0
           if [[ "$use_nom" == true ]]; then
-              edo nixos-rebuild "''${nixos_rebuild_args[@]}" |& nom --json
+              edo nixos-rebuild "''${nixos_rebuild_args[@]}" |& nom --json || e=$?
           else
-              edo nixos-rebuild "''${nixos_rebuild_args[@]}"
+              edo nixos-rebuild "''${nixos_rebuild_args[@]}" || e=$?
           fi
+
+          system_after=/nix/var/nix/profiles/system-$(nixos-rebuild list-generations --json | jq -r '.[0].generation')-link
+
+          [[ "$system_before" != "$system_after" ]] && dix "$system_before" "$system_after" >&2
+
+          exit $e
         '';
       })
     ]);
