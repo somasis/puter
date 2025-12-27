@@ -57,6 +57,7 @@ let
       jhide = callPackage ./jhide { };
       json2nix = callPackage ./json2nix { };
       krunner-zotero-unstable = callPackage ./krunner-zotero-unstable { };
+      kwin-switch-to-last-used-desktop = callPackage ./kwin-switch-to-last-used-desktop { };
       linja-luka = callPackage ./linja-luka { };
       linja-namako = callPackage ./linja-namako { };
       linja-pi-tomo-lipu = callPackage ./linja-pi-tomo-lipu { };

@@ -188,6 +188,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       korganizer
       ksystemlog
       kweather
+      kwin-switch-to-last-used-desktop
       lokalize
       p7zip # used by Ark
       papirus-icon-theme
