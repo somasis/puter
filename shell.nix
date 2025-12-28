@@ -19,7 +19,12 @@ let
 in
 pkgs.mkShell {
   # Construct NIX_PATH from npins sources.
-  NIX_PATH = lib.concatStringsSep ":" (lib.mapAttrsToList (n: v: "${n}=${v.outPath}") sources);
+  NIX_PATH = lib.concatStringsSep ":" (
+    lib.mapAttrsToList (n: v: "${n}=${(v { inherit pkgs; }).outPath}") (
+      # Required since lockfile ver. 5.
+      builtins.removeAttrs sources [ "__functor" ]
+    )
+  );
 
   shellHook = ''
     ${gitHooksPkg.shellHook}
