@@ -24,7 +24,14 @@ let
       system = null;
 
       specialArgs = {
-        inherit nixpkgs self sources;
+        inherit nixpkgs self;
+        sources =
+          with builtins;
+          with lib;
+          mapAttrs (_: v: v { pkgs = import nixpkgs { }; }) (
+            # Required since lockfile ver. 5.
+            removeAttrs sources [ "__functor" ]
+          );
       };
     };
 

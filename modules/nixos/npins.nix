@@ -12,9 +12,11 @@ let
   # Ensure the system's nixpkgs source is named "nixpkgs", so that
   # <nixpkgs> and `nixpkgs#...` refer to the same thing that they
   # usually do when using Flakes and channels system-wide.
-  sources' = sources // {
-    inherit nixpkgs;
-  };
+  sources' =
+    # Required since lockfile ver. 5.
+    (builtins.removeAttrs sources [ "__functor" ]) // {
+      inherit nixpkgs;
+    };
 in
 {
   environment = {
