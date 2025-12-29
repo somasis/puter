@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
 #!/usr/bin/env nix-shell
+#!/usr/bin/env bash
 #! nix-shell -i bash -p bash coreutils curl diffutils jq libarchive pandoc tageditor python3Packages.ftfy
 # shellcheck shell=bash
 
