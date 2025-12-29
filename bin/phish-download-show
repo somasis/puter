@@ -348,14 +348,23 @@ if [[ "$edit_tags" == true ]]; then
                 id3:TSST="${set_name}"
             )
 
-            edo tageditor set "${tags[@]}" \
-                --id3v1-usage never \
-                --id3v2-version 4 \
-                --quiet \
-                --treat-unknown-as-mp3 \
-                --verbose \
-                --files "${file}" \
-                && rm -f "${file}".bak
+            if [[ -e "${file}" ]] && ! [[ -s "${file}" ]]; then
+                # Phish.in gives us empty MP3 files in the downloaded archive,
+                # for tracks that should exist in a set, but do not exist as
+                # part of the recording they have. Consequentially, beets then
+                # will report an "unreadable file"; so, we should warn the user,
+                # and then delete the empty file.
+                printf 'warning: skipping track %i (%s); show recording only has partial audio\n' "$((file_i + 1))" "${set_name}: ${title}" >&2
+                edo rm -f "${file}"
+            else
+                edo tageditor set "${tags[@]}" \
+                    --id3v1-usage never \
+                    --id3v2-version 4 \
+                    --quiet \
+                    --verbose \
+                    --files "${file}" \
+                    && rm -f "${file}".bak
+            fi
         } >/dev/null
 
         last_set_name="${set_name}"
