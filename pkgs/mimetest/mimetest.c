@@ -15,14 +15,18 @@ static bool invert = false;
 static bool aflag = false;
 static int verbose = 0;
 
-bool test(magic_t cookie, char *glob, char *file) {
+bool
+test(magic_t cookie, char *glob, char *file)
+{
 	bool matched;
 	const char *file_mime;
 
 	if (!(file_mime = magic_file(cookie, file)))
 		errx(EX_UNAVAILABLE, "%s", magic_error(cookie));
 
-	if (verbose >= 1) warnx("testing `%s' (`%s') against `%s'", file, file_mime, glob);
+	if (verbose >= 1)
+		warnx("testing `%s' (`%s') against `%s'", file, file_mime,
+		    glob);
 
 	/* Glob the type against the file's type... */
 	matched = fnmatch(glob, file_mime, FNM_PATHNAME) != FNM_NOMATCH;
@@ -30,28 +34,40 @@ bool test(magic_t cookie, char *glob, char *file) {
 	return (matched ? !invert : invert);
 }
 
-int main(int argc, char *argv[]) {
+int
+main(int argc, char *argv[])
+{
 	verbose = 0;
 
 	int opt;
 	while ((opt = getopt(argc, argv, "!0av")) != -1) {
 		switch (opt) {
-		case '!': invert = true; break;
-		case '0': delim = '\0'; break;
-		case 'a': aflag = true; break;
-		case 'v': verbose++; break;
+		case '!':
+			invert = true;
+			break;
+		case '0':
+			delim = '\0';
+			break;
+		case 'a':
+			aflag = true;
+			break;
+		case 'v':
+			verbose++;
+			break;
 		default:
 			fprintf(stderr,
-			        "usage: ... | %s [-!0v] MIME...\n"
-			        "       %s [-!0v] -a MIME... -- FILE...\n",
-			        argv[0], argv[0]);
+			    "usage: ... | %s [-!0v] MIME...\n"
+			    "       %s [-!0v] -a MIME... -- FILE...\n",
+			    argv[0], argv[0]);
 			exit(EX_USAGE);
 		}
 	}
 
-	/* Ask libmagic(3) to only give us the mime/type, and treat OS errors as real errors. */
+	/* Ask libmagic(3) to only give us the mime/type, and treat OS errors as
+	 * real errors. */
 	magic_t cookie = magic_open(MAGIC_MIME_TYPE | MAGIC_ERROR);
-	if (!(magic_load(cookie, NULL) == 0)) errx(EX_UNAVAILABLE, "%s", magic_error(cookie));
+	if (!(magic_load(cookie, NULL) == 0))
+		errx(EX_UNAVAILABLE, "%s", magic_error(cookie));
 
 	bool found = false;
 	if (aflag) {
@@ -81,7 +97,8 @@ int main(int argc, char *argv[]) {
 		int read;
 		/* Receive list of files on stdin. */
 		while ((read = getdelim(&file, &size, delim, stdin)) != -1) {
-			if (file[read - 1] == delim) file[read - 1] = 0;
+			if (file[read - 1] == delim)
+				file[read - 1] = 0;
 
 			for (int mi = optind; mi < argc; mi++) {
 				if (test(cookie, argv[mi], file)) {
