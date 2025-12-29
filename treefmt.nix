@@ -28,7 +28,9 @@
     };
 
     # black.enable = true;
-    clang-format.enable = true;
+    clang-format = {
+      enable = true;
+    };
 
     deadnix = {
       enable = true;
@@ -54,6 +56,16 @@
   };
 
   settings.formatter = {
+    clang-format.options =
+      let
+        freebsdConfig = pkgs.fetchurl {
+          url = "https://raw.githubusercontent.com/freebsd/freebsd-src/8494be1b5af7fe4f765532f802ac0a145e061d73/.clang-format";
+          hash = "sha256-hRWc+LVlMCiHGr/ihboNa/fR2CKT+Q6I8S8ksdBOpQw=";
+        };
+      in
+      [
+        "-style=file:${toString freebsdConfig}"
+      ];
     shellcheck.options = [
       "--external-sources"
     ];
