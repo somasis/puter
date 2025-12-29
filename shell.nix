@@ -10,12 +10,13 @@
   treefmt-nix ? sources.treefmt-nix,
   git-hooks ? sources.git-hooks,
 
+  treefmt ? import ./treefmt.nix args,
   ...
 }@args:
 let
   agenixPkg = (import agenix { inherit pkgs; }).agenix;
-  treefmtPkg = (import treefmt-nix).mkWrapper pkgs ./treefmt.nix;
   gitHooksPkg = (import git-hooks).run (import ./git-hooks.nix args);
+  treefmtPkg = treefmt.config.build.wrapper;
 in
 pkgs.mkShell {
   # Construct NIX_PATH from npins sources.

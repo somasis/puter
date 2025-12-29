@@ -5,11 +5,10 @@
   nixpkgs ? sources.nixpkgs,
   pkgs ? import nixpkgs { },
 
-  treefmt-nix ? sources.treefmt-nix,
   ...
-}:
+}@args:
 let
-  treefmtPkg = (import treefmt-nix).mkWrapper pkgs ./treefmt.nix;
+  treefmt = import ./treefmt.nix args;
 in
 rec {
   src = ./.;
@@ -80,7 +79,7 @@ rec {
 
     treefmt = {
       enable = true;
-      package = treefmtPkg;
+      package = treefmt.config.build.wrapper;
     };
   };
 }

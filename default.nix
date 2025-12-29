@@ -12,6 +12,8 @@
 
   git-hooks ? sources.git-hooks,
   treefmt-nix ? sources.treefmt-nix,
+
+  treefmt ? import ./treefmt.nix,
   ...
 }@args:
 let
@@ -35,7 +37,6 @@ let
       };
     };
 
-  treefmt = (import treefmt-nix).evalModule pkgs ./treefmt.nix;
   gitHooksPkg = (import git-hooks).run (import ./git-hooks.nix args);
 in
 {

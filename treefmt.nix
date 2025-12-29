@@ -4,9 +4,18 @@
 # written such that the config can be used by both the checks called to
 # in ./default.nix and the `mkWrapper` call in ./shell.nix.
 {
-  # See also <https://github.com/numtide/treefmt-nix/tree/main/programs>
+  sources ? import ./npins,
+  nixpkgs ? sources.nixpkgs,
+  pkgs ? import nixpkgs { },
+  lib ? pkgs.lib,
+
+  treefmt-nix ? sources.treefmt-nix,
+  ...
+}:
+(import treefmt-nix).evalModule pkgs {
   projectRootFile = "npins/sources.json";
 
+  # See <https://github.com/numtide/treefmt-nix/tree/main/programs>
   programs = {
     # Format shell scripts
     shellcheck = {
