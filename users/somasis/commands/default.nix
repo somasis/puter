@@ -48,6 +48,7 @@
     json2nix
     lowdown
     ltrace
+    mimetest
     ncdu
     nq
     pandoc
