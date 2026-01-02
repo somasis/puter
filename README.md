@@ -29,7 +29,7 @@ with the caveat that you can't override inputs.
 Run `nix flake show` if you don't believe me! :)
 
 [shell.nix]: ./shell.nix
-[`direnv`]: https://github.com/cachix/direnv
+[`direnv`]: https://github.com/direnv/direnv
 [blog post]: https://www.somas.is/note-organizing-nix-configuration-without-flakes.html
 
 ### Updating sources (i.e., the NixOS version used to build system)
