@@ -56,7 +56,10 @@ in
 
   nixpkgs = {
     overlays = [ overlay ];
-    config.permittedInsecurePackages = [ "olm-3.2.16" ];
+    config.permittedInsecurePackages = [
+      # Used by various Matrix clients (in my case, NeoChat).
+      "olm-3.2.16"
+    ];
   };
 
   home-manager.sharedModules = [
