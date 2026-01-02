@@ -18,15 +18,11 @@ which includes Git hooks, and tools like `npins`, `nix-update`,
 and a `nixos-rebuild` wrapper I use (simply named `nixos`).
 See [`shell.nix`][shell.nix] for more details.
 
-Alternatively, you could just run `nix-shell .` or `nix develop`.
+Alternatively, you could just run `nix-shell`.
 
 I don't use flakes.
 If you're interested in how I structure things without flakes,
 check out this [blog post].
-That said, there is compatibility infrastructure provided
-so that this can be used as a flake if you need to,
-with the caveat that you can't override inputs.
-Run `nix flake show` if you don't believe me! :)
 
 [shell.nix]: ./shell.nix
 [`direnv`]: https://github.com/direnv/direnv
