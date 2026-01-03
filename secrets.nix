@@ -3,9 +3,9 @@
 # it is only used by the `agenix` command line tool.
 let
   recipients = {
-    ilo = "age1tpm1qtfwxktsqmuw363sjalejf80qasph0dzawu38rs8h9ah5fqsc0zekwu5ev8";
+    ilo = "age1tag1qtfwxktsqmuw363sjalejf80qasph0dzawu38rs8h9ah5fqsc0zek479y76";
     majuna = "age1wzn2fqm39eqgzyspdlvh3knwzfjxnvhqmftz8wmyfm9r0gwwu98qwrjcs8";
-    somasis.ilo = "age1tpm1qd0gxkaj69v6s44khyfrdkqry4tvs3gm0rjl6m74fmys37q0dfk3szkxadd";
+    somasis.ilo = "age1tag1qd0gxkaj69v6s44khyfrdkqry4tvs3gm0rjl6m74fmys37q0dfk3se5hqls";
   };
 
   secrets = with recipients; {
