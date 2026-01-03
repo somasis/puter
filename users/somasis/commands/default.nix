@@ -47,7 +47,7 @@
     jqfmt
     json2nix
     lowdown
-    ltrace
+    # ltrace # TODO fails to build with GCC 15
     mimetest
     ncdu
     nq
