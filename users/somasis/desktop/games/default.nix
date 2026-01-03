@@ -45,7 +45,7 @@
       (
         assert (osConfig.hardware.graphics.enable);
         assert (osConfig.services.udev.enable && osConfig.hardware.uinput.enable);
-        retroarch.withCores (
+        stable.retroarch.withCores (
           cores: with cores; [
             stella # Atari - 2600
             # mame # MAME
