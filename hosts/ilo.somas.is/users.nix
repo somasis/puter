@@ -22,7 +22,6 @@
         ++ lib.optional config.hardware.keyboard.qmk.enable "plugdev"
         ++ lib.optional config.hardware.sane.enable "scanner"
         ++ lib.optional config.hardware.uinput.enable "input"
-        ++ lib.optional config.programs.adb.enable "adbusers"
         ++ lib.optional config.programs.tcpdump.enable "pcap"
         ++ lib.optional config.programs.wireshark.enable "wireshark"
         ++ lib.optional config.security.sudo.enable "wheel"
