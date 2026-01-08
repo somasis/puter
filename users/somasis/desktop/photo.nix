@@ -69,7 +69,6 @@ in
       (xdgCacheDir "gmic")
 
       (xdgCacheDir "darktable")
-      (xdgCacheDir "gallery-dl")
       (xdgCacheDir "koko")
     ];
     files = [
@@ -89,62 +88,4 @@ in
       _: "darktable.desktop"
     );
   };
-
-  programs.gallery-dl = {
-    enable = true;
-
-    settings = {
-      extractor = {
-        base-directory = ".";
-
-        filename =
-          (lib.concatStringsSep "-" [
-            "{date|created_at!T}"
-            "{category}"
-            "{author[name]|user[name]|uploader}"
-            "{tweet_id|id}"
-            "{filename}"
-          ])
-          + ".{extension}";
-
-        postprocessors = [
-          {
-            name = "exec";
-            command = "${lib.getExe pkgs.optimize} -q {}";
-            async = true;
-          }
-        ];
-
-        ytdl = lib.mkIf config.programs.yt-dlp.enable {
-          enabled = true;
-          module = "yt_dlp";
-        };
-      };
-
-      downloader = {
-        # Don't set mtime on downloaded files (we store it in the name).
-        mtime = false;
-
-        # ytdl = lib.mkIf config.programs.yt-dlp.enable {
-        #   # config-file = "${config.xdg.configHome}/yt-dlp/config";
-        #   forward-cookies = true;
-        # };
-      };
-    };
-  };
-
-  programs.qutebrowser =
-    let
-      gallery-dl = pkgs.writeShellScript "gallery-dl" ''
-        exec ${lib.getExe config.programs.gallery-dl.package} -o output.log='{"level": "warning"}' "$@"
-      '';
-    in
-    {
-      aliases.gallery-dl = "spawn -m ${gallery-dl}";
-      keyBindings.normal = {
-        dgd = "gallery-dl -D ${config.xdg.userDirs.download} {url}";
-        dgn = "gallery-dl -D ${config.xdg.userDirs.pictures}/nsfw {url}";
-        dgw = "gallery-dl -D ${config.xdg.userDirs.pictures}/wallpapers {url}";
-      };
-    };
 }
