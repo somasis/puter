@@ -140,8 +140,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgCacheDir "ksplash")
       (xdgCacheDir "kweather")
       (xdgCacheDir "kwin")
-      (xdgCacheDir "mesa_shader_cache")
-      (xdgCacheDir "mesa_shader_cache_db")
       (xdgCacheDir "obexd")
       (xdgCacheDir "org.kde.ki18n")
       (xdgCacheDir "org.kde.kunifiedpush")
