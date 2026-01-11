@@ -28,7 +28,7 @@ let
 in
 {
   home.packages = [
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
     pkgs.statix
   ];
 
