@@ -88,11 +88,11 @@ finish_import() {
         'Successfully imported $albumartist - $album ($year)'
         '%if{$mb_albumid, using metadata from <a href="https://musicbrainz.org/release/${mb_albumid}">$data_source</a>}.'
         $'%if{${original_year}${label}${catalognum}${barcode}${country},\n}'
-        $'%if{${original_year},\n- Original year: $original_year'
-        $'%if{${label},\n- Label: $label'
-        $'%if{${catalognum},\n- Catalog number: $catalognum'
-        $'%if{${barcode},\n- Barcode: $barcode'
-        $'%if{${country},\n- Country: $country'
+        $'%if{${original_year},\n- Original year: $original_year}'
+        $'%if{${label},\n- Label: $label}'
+        $'%if{${catalognum},\n- Catalog number: $catalognum}'
+        $'%if{${barcode},\n- Barcode: $barcode}'
+        $'%if{${country},\n- Country: $country}'
     )
 
     # shellcheck disable=SC2016
