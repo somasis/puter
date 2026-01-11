@@ -95,11 +95,6 @@
     };
   };
 
-  hardware.openrazer = {
-    enable = true;
-    users = [ "somasis" ];
-  };
-
   cache.directories = [
     {
       directory = "/var/lib/usbguard";
