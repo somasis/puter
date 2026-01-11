@@ -6,7 +6,7 @@
   ...
 }:
 let
-  ageWithPlugins = (pkgs.age.withPlugins (p: [ p.age-plugin-tpm ])).overrideAttrs (oldAttrs: {
+  agePkg = (pkgs.age.withPlugins (p: [ p.age-plugin-tpm ])).overrideAttrs (oldAttrs: {
     meta = (oldAttrs.meta or { }) // {
       mainProgram = "age";
     };
@@ -29,15 +29,14 @@ in
   config = lib.mkIf config.services.age-keygen.enable {
     age = {
       # <https://github.com/ryantm/agenix/issues/237#issuecomment-2813581111>
-      ageBin = lib.getExe ageWithPlugins;
+      ageBin = lib.getExe agePkg;
       identityPaths = [
         "/etc/age/identity"
       ];
     };
 
     environment.systemPackages = [
-      pkgs.age
-      pkgs.age-plugin-tpm
+      agePkg
     ];
 
     systemd.services = {
@@ -80,8 +79,8 @@ in
           Type = "oneshot";
           ExecStartPre = [ "${pkgs.coreutils}/bin/mkdir -p /etc/age" ];
           ExecStart = [
-            "${pkgs.age}/bin/age-keygen -o /etc/age/identity"
-            "${pkgs.age}/bin/age-keygen -y -o /etc/age/recipient /etc/age/identity"
+            "${agePkg}/bin/age-keygen -o /etc/age/identity"
+            "${agePkg}/bin/age-keygen -y -o /etc/age/recipient /etc/age/identity"
             "${pkgs.coreutils}/bin/chmod go+r /etc/age/recipient"
           ];
         };
@@ -90,7 +89,7 @@ in
 
     home-manager.sharedModules = [
       {
-        age.package = ageWithPlugins;
+        age.package = agePkg;
       }
     ];
   };
