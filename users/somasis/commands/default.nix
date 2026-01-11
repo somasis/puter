@@ -3,6 +3,38 @@
   lib,
   ...
 }:
+let
+  # example:
+  # withLinks {
+  #   package = pkgs.bfs;
+  #   links = [
+  #     { target = "bin/bfs"; link = "bin/find"; }
+  #     { target = "share/man/man1/bfs.1.gz"; link = "share/man/man1/find.1.gz"; }
+  #   ];
+  # }
+  withLinks =
+    {
+      package ? throw "no package argument was given",
+      links ? throw "no links argument was given",
+    }:
+    assert (lib.isStorePath package);
+    assert (lib.isList links && links != [ ]);
+    assert ((lib.filter (link: lib.isString link.target && link.target != "") links) != [ ]);
+    pkgs.symlinkJoin {
+      name = "${package.pname}-with-links";
+      paths = [
+        package
+        (pkgs.runCommandLocal "links" { } (
+          lib.concatLines (
+            map (pair: ''
+              mkdir -p $out/${lib.escapeShellArg (dirOf pair.link)}
+              ln -s ${lib.escapeShellArg package}/${lib.escapeShellArg pair.target} $out/${lib.escapeShellArg pair.link}
+            '') links
+          )
+        ))
+      ];
+    };
+in
 {
   imports = [
     ./nixos.nix
