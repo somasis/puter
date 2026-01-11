@@ -69,14 +69,14 @@ rec {
       excludes = [ "\.envrc" ];
     };
 
-    quick-lint-js = {
-      enable = true;
-      name = "quick-lint-js";
-      description = "Lint Javascript files";
-      package = pkgs.quick-lint-js;
-      entry = "${hooks.quick-lint-js.package}/bin/quick-lint-js";
-      files = "\\.js$";
-    };
+    # quick-lint-js = {
+    #   enable = true;
+    #   name = "quick-lint-js";
+    #   description = "Lint Javascript files";
+    #   package = pkgs.quick-lint-js;
+    #   entry = "${hooks.quick-lint-js.package}/bin/quick-lint-js";
+    #   files = "\\.js$";
+    # };
 
     treefmt = {
       enable = true;
