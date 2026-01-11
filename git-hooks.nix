@@ -58,7 +58,8 @@ rec {
 
       settings.configPath = builtins.toString (
         pkgs.writers.writeTOML "lychee.toml" {
-          accept = "100..=103,200..=299,401";
+          accept = "100..=103,200..=299,401,503";
+          exclude-all-private = true;
         }
       );
     };

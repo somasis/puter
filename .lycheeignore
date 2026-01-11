@@ -1,4 +1,7 @@
-# Placeholders filled in by qutebrowser at runtime that I use on occasion.
+# Ignore loopback
+.*://127.0.0.1/.*
+
+# URLs with placeholders in them
 .*\{url[^\}]*\}.*
 
 # URLs with dollar signs in them (ex. from Nix substitution syntax)
@@ -9,3 +12,4 @@ https://musicbrainz.org/.*
 
 # Used by bin/phish-*
 https://phish.in/.*
+
