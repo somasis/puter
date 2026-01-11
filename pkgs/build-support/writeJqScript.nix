@@ -6,8 +6,8 @@
   writeTextFile,
   runtimeShell,
 
-  name ? null,
-  text ? null,
+  name,
+  text,
   jqArgs ? { },
   jqfmtArgs ? { },
   ...

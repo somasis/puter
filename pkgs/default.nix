@@ -14,7 +14,20 @@
   lib ? pkgs.lib,
   ...
 }:
-lib.filesystem.packagesFromDirectoryRecursive {
-  inherit (pkgs) callPackage newScope;
-  directory = ./.;
-}
+(lib.removeAttrs
+  (lib.filesystem.packagesFromDirectoryRecursive {
+    inherit (pkgs) callPackage newScope;
+    directory = ./.;
+  })
+  [
+    "build-support"
+    "default"
+    "packages"
+  ]
+)
+// (lib.listToAttrs (
+  map (x: {
+    name = lib.removeSuffix ".nix" (baseNameOf x);
+    value = pkgs.callPackage x;
+  }) (lib.filesystem.listFilesRecursive ./build-support)
+))
