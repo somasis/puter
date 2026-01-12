@@ -37,7 +37,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgDataDir "color-schemes")
       (xdgDataDir "dbus-1")
       (xdgDataDir "dolphin")
-      (xdgDataDir "drkonqirc")
       (xdgDataDir "kactivitymanagerd")
       (xdgDataDir "klipper")
       (xdgDataDir "knewstuff3")
@@ -159,7 +158,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       # keep-sorted start
       (xdgCacheDir "xdg-desktop-portal-kderc")
       (xdgDataDir "krunnerstaterc")
-      (xdgDataDir "qtposition-geoclue2")
       # keep-sorted end
     ];
   };
