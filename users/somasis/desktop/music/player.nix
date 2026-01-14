@@ -22,6 +22,11 @@ in
   # Elisa is my music player of choice. I use it to play music from ~/audio/library.
   programs.elisa = {
     enable = true;
+
+    package = pkgs.kdePackages.elisa.override {
+      withVLC = false;
+    };
+
     appearance = {
       showNowPlayingBackground = true;
       showProgressOnTaskBar = true;
