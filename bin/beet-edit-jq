@@ -1,0 +1,105 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash jq moreutils yq-go
+# shellcheck shell=bash
+
+set -euo pipefail
+set -x
+
+usage() {
+    # shellcheck disable=SC2059
+    [[ "$#" -eq 0 ]] || printf "$@" >&2
+
+    cat >&2 <<EOF
+usage: ${0##*/} [-d] [-f <fields>] [<query...>] <jq(1) expression>
+
+see also: beet edit --help
+
+Kylie McClain <kylie@somas.is>
+EOF
+    [[ "$#" -eq 0 ]] || exit 1
+    exit 64 # EX_USAGE
+}
+
+beet_edit_orig_editor=
+beet_edit_args=()
+print_only=false
+while getopts :df: arg; do
+    case "$arg" in
+        f) beet_edit_args+=( -f "${OPTARG:?no field given}" ) ;;
+        d) print_only=true ;;
+        *) break ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+args=("$@")
+printf 'argv[%i]: %s\n' "${args[@]@k}" >&2
+
+if [[ -v beet_edit_inside_state ]] && [[ -v beet_edit_expression ]] && [[ "$#" -eq 1 ]] && [[ -f "${1:?no file to edit given}" ]]; then
+    if [[ "$(<"$beet_edit_inside_state")" == 'first-run' ]]; then
+        e=0
+        result=$(
+            yq -p yaml -o json <"$1" \
+                | jq \
+                    "${beet_edit_expression:?\$beet_edit_expression not set!}" \
+                | yq -p json -o yaml
+        )
+        e=$?
+
+        if [[ "${print_only}" == true ]]; then
+            cat <<<"$result"
+            exit
+        else
+            cat >"$1" <<<"$result"
+        fi
+
+        printf 'user' > "$beet_edit_inside_state"
+
+        exit "$e"
+    elif [[ "$(<"$beet_edit_inside_state")" == 'user' ]]; then
+        : "${beet_edit_orig_editor:?\$beet_edit_orig_editor not set!}"
+        # Allow using `e` at the `beet edit` prompt to continue
+        # editing by hand with the user's text editor.
+        exec "${beet_edit_orig_editor}" "$1"
+    fi
+fi
+
+args=()
+beet_edit_query=()
+
+if [[ "$#" -eq 0 ]]; then
+    usage 'not enough arguments given, need at least one\n'
+# empty query (all items)
+elif [[ "$#" -eq 1 ]]; then
+    beet_edit_expression="$1"
+# query (which can be of arbitrary length) and jq expression
+elif [[ "$#" -ge 2 ]]; then
+    args=( "$@" )
+
+    # Take all args except the last one and make a new array
+    beet_edit_query=( "$@" )
+    unset 'beet_edit_query[-1]'
+
+    beet_edit_expression="${args[-1]}"
+fi
+
+export beet_edit_orig_editor="${EDITOR:-vi}"
+export EDITOR="$0"
+unset VISUAL
+
+beet_edit_inside_state="${XDG_STATE_HOME:=$HOME/.local/state}/beet-edit-jq.$$"
+export beet_edit_inside_state
+printf 'first-run' > "${beet_edit_inside_state}"
+
+export print_only
+export beet_edit_expression
+
+e=0
+beet -p edit \
+    edit \
+        "${beet_edit_args[@]}" \
+        "${beet_edit_query[@]}" || e=$?
+
+rm -f "$beet_edit_inside_state"
+
+exit "$e"
