@@ -152,7 +152,7 @@ in
                 type = types.nonEmptyStr;
                 description = "Pretty name for use by other stuff";
                 default = name;
-                defaultText = literalExpression ''config.services.tunnels.tunnels.<name>.port'';
+                defaultText = literalExpression "config.services.tunnels.tunnels.<name>.port";
                 example = "ircd";
               };
 
@@ -198,7 +198,7 @@ in
                 type = types.port;
                 description = "Remote port to tunnel to (only does something when type == local)";
                 default = t.port;
-                defaultText = literalExpression ''config.services.tunnels.tunnels.<name>.port'';
+                defaultText = literalExpression "config.services.tunnels.tunnels.<name>.port";
                 example = 9400;
               };
 

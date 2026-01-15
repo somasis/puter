@@ -9,7 +9,7 @@ let
   inherit (config.lib.somasis) randomPort;
 
   seed = host: "${config.home.username}@${host}";
-  syncthingGuiPortFor = host: randomPort ''${seed host}:syncthing-gui'';
+  syncthingGuiPortFor = host: randomPort "${seed host}:syncthing-gui";
   syncthingGuiPort = syncthingGuiPortFor osConfig.networking.fqdnOrHostName;
 in
 {

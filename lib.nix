@@ -22,7 +22,7 @@ rec {
     pipe (readFile textPath) [
       (splitString "\n")
       (x: filter (hasPrefix "#! nix-shell") x)
-      (x: concatStrings (map (replaceStrings [ ''#! nix-shell -i bash -p '' ] [ "" ]) x))
+      (x: concatStrings (map (replaceStrings [ "#! nix-shell -i bash -p " ] [ "" ]) x))
       (splitString " ")
       (map (pkgAttr: getAttrFromPath ([ "pkgs" ] ++ (splitString "." pkgAttr)) pkgs))
     ];
@@ -421,7 +421,7 @@ rec {
 
       allowList = lib.optionalString (
         excludeDomains != [ ]
-      ) ''--whitelist ${lib.escapeShellArg (lib.concatStringsSep "," excludeDomains)}'';
+      ) "--whitelist ${lib.escapeShellArg (lib.concatStringsSep "," excludeDomains)}";
 
       # Create a hash of all lists' hashes combined together.
       hash = builtins.hashString "sha256" (

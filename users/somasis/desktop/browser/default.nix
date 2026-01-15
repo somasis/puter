@@ -380,7 +380,7 @@ in
             with lib;
             concatStringsSep "," (
               reverseList (
-                imap1 (i: v: ''${v};q=${substring 0 5 (toString (i * .001))}'') (reverseList [
+                imap1 (i: v: "${v};q=${substring 0 5 (toString (i * .001))}") (reverseList [
                   "en-US"
                   "en"
                   "tok"
@@ -796,7 +796,7 @@ in
 
           normal."cnp" =
             if proxies != [ ] then
-              ''config-cycle -p content.proxy ${lib.concatStringsSep " " ([ "system" ] ++ proxies)}''
+              "config-cycle -p content.proxy ${lib.concatStringsSep " " ([ "system" ] ++ proxies)}"
             else
               "nop";
 
@@ -821,12 +821,12 @@ in
 
           # Don't include `;; reload` at the end; the page CSS reacts to
           # dark mode being toggled anyway.
-          normal."tdh" = ''config-cycle -p -t -u *://{url:host}/* colors.webpage.darkmode.enabled'';
-          normal."tDh" = ''config-cycle -p -u *://{url:host}/* colors.webpage.darkmode.enabled'';
-          normal."tdH" = ''config-cycle -p -t -u *://*.{url:host}/* colors.webpage.darkmode.enabled'';
-          normal."tDH" = ''config-cycle -p -u *://*.{url:host}/* colors.webpage.darkmode.enabled'';
-          normal."tdu" = ''config-cycle -p -t -u {url} colors.webpage.darkmode.enabled'';
-          normal."tDu" = ''config-cycle -p -u {url} colors.webpage.darkmode.enabled'';
+          normal."tdh" = "config-cycle -p -t -u *://{url:host}/* colors.webpage.darkmode.enabled";
+          normal."tDh" = "config-cycle -p -u *://{url:host}/* colors.webpage.darkmode.enabled";
+          normal."tdH" = "config-cycle -p -t -u *://*.{url:host}/* colors.webpage.darkmode.enabled";
+          normal."tDH" = "config-cycle -p -u *://*.{url:host}/* colors.webpage.darkmode.enabled";
+          normal."tdu" = "config-cycle -p -t -u {url} colors.webpage.darkmode.enabled";
+          normal."tDu" = "config-cycle -p -u {url} colors.webpage.darkmode.enabled";
 
           prompt."<Alt+Up>" = "rl-filename-rubout";
         }

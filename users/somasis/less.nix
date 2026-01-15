@@ -6,14 +6,14 @@
   home.sessionVariables = {
     # Colors for man pages
     # See terminfo(5) and <https://unix.stackexchange.com/a/108840> for tips
-    LESS_TERMCAP_mb = ''$(tput sitm)''; # italicized text: italics
-    LESS_TERMCAP_md = ''$(tput bold setaf 3)''; # headers: bold, yellow foreground
-    LESS_TERMCAP_us = ''$(tput sitm setaf 2)''; # italicized text: italics, green foreground
-    LESS_TERMCAP_so = ''$(tput bold rev)''; # search result highlighting: emboldened, inverted background
+    LESS_TERMCAP_mb = "$(tput sitm)"; # italicized text: italics
+    LESS_TERMCAP_md = "$(tput bold setaf 3)"; # headers: bold, yellow foreground
+    LESS_TERMCAP_us = "$(tput sitm setaf 2)"; # italicized text: italics, green foreground
+    LESS_TERMCAP_so = "$(tput bold rev)"; # search result highlighting: emboldened, inverted background
 
-    LESS_TERMCAP_ue = ''$(tput sgr0)'';
-    LESS_TERMCAP_me = ''$(tput sgr0)'';
-    LESS_TERMCAP_se = ''$(tput sgr0)'';
+    LESS_TERMCAP_ue = "$(tput sgr0)";
+    LESS_TERMCAP_me = "$(tput sgr0)";
+    LESS_TERMCAP_se = "$(tput sgr0)";
 
     # less's XDG support uses $XDG_STATE_HOME/lesshst for some reason...
     LESSHISTFILE = "${config.xdg.cacheHome}/less/history";

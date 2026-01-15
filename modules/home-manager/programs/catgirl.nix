@@ -46,7 +46,7 @@ let
     mkKeyValue =
       key: value:
       if builtins.isBool value then
-        if value then "${escape [ ''='' ] key}" else ""
+        if value then "${escape [ "=" ] key}" else ""
       else if builtins.isNull value then
         ""
       else if builtins.isAttrs value && key == "hash" then

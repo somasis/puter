@@ -26,7 +26,7 @@
 
     extraBackupArgs = [
       "--one-file-system"
-      ''--iexclude=*cache*''
+      "--iexclude=*cache*"
       "--exclude-if-present=.stfolder"
       "--exclude-caches"
     ];
