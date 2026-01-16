@@ -7,6 +7,11 @@
 }:
 let
   yamlFormat = pkgs.formats.yaml { };
+
+  scrobblers = [
+    "Elisa"
+    "fooyin"
+  ];
 in
 {
   home.packages =
@@ -71,7 +76,7 @@ in
 
     rescrobbled = {
       enable = true;
-      settings.player-whitelist = [ "Elisa" ];
+      settings.player-whitelist = scrobblers;
     };
   };
 
@@ -142,7 +147,7 @@ in
       small_image = "player";
 
       # Only allow Elisa's now-playing to be broadcast over Discord Rich Presence.
-      allowlist = [ "Elisa" ];
+      allowlist = scrobblers;
 
       disable_musicbrainz_cover = false;
     };
