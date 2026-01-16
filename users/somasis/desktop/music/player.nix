@@ -15,6 +15,7 @@ in
     [
       config.services.playerctld.package
       music-discord-rpc
+      fooyin
     ];
 
   age.secrets.rescrobbled-env.file = "${self}/secrets/rescrobbled-env.age";
@@ -77,6 +78,8 @@ in
   persist = with config.lib.somasis; {
     directories = [
       (xdgDataDir "elisa")
+      (xdgConfigDir "fooyin")
+      (xdgDataDir "fooyin")
     ];
 
     # ~/etc/kde.org is already preserved by plasma.nix, because
@@ -97,6 +100,7 @@ in
   cache = with config.lib.somasis; {
     directories = [
       (xdgCacheDir "music-discord-rpc")
+      (xdgCacheDir "fooyin")
     ];
   };
 
