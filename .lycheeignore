@@ -3,6 +3,7 @@
 
 # URLs with placeholders in them
 .*\{url[^\}]*\}.*
+.*%7B.*%7D.*
 
 # URLs with dollar signs in them (ex. from Nix substitution syntax)
 .*\$.*
