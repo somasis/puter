@@ -55,8 +55,6 @@ in
     iadd.date-format = "%Y-%m-%d";
   };
 
-  programs.qutebrowser.searchEngines."!ledger" = "https://ledger.somas.is/journal?q={}";
-
   home.shellAliases = {
     ledger = "hledger";
     led = "hledger";

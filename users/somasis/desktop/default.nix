@@ -6,12 +6,12 @@
 {
   imports = [
     # keep-sorted start by_regex=['^./.*[^(\.nix)]$', '.*\.nix$']
-    ./browser
     ./chat
     ./documents
     ./games
     ./music
     ./audio.nix
+    ./browser.nix
     ./diary.nix
     ./email.nix
     ./feeds.nix

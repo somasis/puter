@@ -5,43 +5,6 @@
   lib,
   ...
 }:
-let
-  qutebrowser-zotero = pkgs.callPackage (
-    {
-      lib,
-      # fetchFromGitHub,
-      python3Packages,
-    }:
-    python3Packages.buildPythonApplication rec {
-      pname = "qutebrowser-zotero";
-      version = "0.0-${sources.qutebrowser-zotero.revision}";
-
-      format = "other";
-
-      # src = fetchFromGitHub {
-      #   owner = "parchd-1";
-      #   repo = "qutebrowser-zotero";
-      #   rev = "54706b43433c3ea8da6b7b410d67528da9779657";
-      #   hash = "sha256-Jv5qrpWSMrfGr6gV8PxELCOfZ0PyGBPO+nBt2czYuu4=";
-      # };
-      src = sources.qutebrowser-zotero;
-
-      propagatedBuildInputs = with python3Packages; [ requests ];
-
-      installPhase = ''
-        install -m0755 -D $src/qute-zotero $out/bin/qute-zotero
-      '';
-
-      meta = with lib; {
-        description = "Connect qutebrowser to a running Zotero instance";
-        homepage = "https://github.com/parchd-1/qutebrowser-zotero";
-        maintainers = with maintainers; [ somasis ];
-        license = licenses.gpl3;
-        mainProgram = "qute-zotero";
-      };
-    }
-  ) { };
-in
 {
   programs.zotero = {
     enable = true;
@@ -209,13 +172,4 @@ in
 
     (config.lib.somasis.xdgDataDir "zotero")
   ];
-
-  programs.qutebrowser = {
-    aliases.zotero = "spawn -u ${qutebrowser-zotero}/bin/qute-zotero";
-    aliases.Zotero = "hint links userscript ${qutebrowser-zotero}/bin/qute-zotero";
-    keyBindings.normal = {
-      "zpz" = "zotero";
-      "zpZ" = "Zotero";
-    };
-  };
 }

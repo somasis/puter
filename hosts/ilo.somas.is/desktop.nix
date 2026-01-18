@@ -83,16 +83,6 @@
     kdeconnect.enable = true;
     kde-pim.enable = true; # TODO testing
     partition-manager.enable = true;
-
-    captive-browser = {
-      enable = true;
-      browser = ''
-        qutebrowser \
-            --target private-window --override-restore \
-            --set 'content.proxy' "$PROXY" "$@"
-      '';
-      interface = "wlp166s0";
-    };
   };
 
   cache.directories = [

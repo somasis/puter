@@ -214,23 +214,9 @@ with config.lib.somasis;
 
         trim-filenames = 128;
 
-        # Use cookies from qutebrowser if available
-        # FIXME(somasis 2025-04-28) disable temporarily, as this causes it to error out for me right now
-        # cookies-from-browser = lib.mkIf config.programs.qutebrowser.enable
-        #   "chromium:${config.xdg.dataHome}/qutebrowser/webengine";
-
         # Mark the video watched on its platform, if possible.
         mark-watched = true;
       };
-    };
-
-    qutebrowser = {
-      greasemonkey = with pkgs.greasemonkeyScripts; [
-        (sb.override { settings = sponsorBlockSettings; })
-      ];
-
-      aliases.mpv = "spawn -u ${config.programs.mpv.package}/bin/umpv";
-      keyBindings.normal."zpv" = "mpv --loop=inf {url}";
     };
   };
 

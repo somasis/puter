@@ -74,6 +74,4 @@
     # Used by `bin/beet-import-phish`.
     sessionVariables.BEET_IMPORT_PHISH_DOWNLOAD_DIR = "${config.home.homeDirectory}/audio/source/bootleg-phishin";
   };
-
-  # programs.qutebrowser.searchEngines."!beets" = "file:///${beets.doc}/share/doc/beets-${beets.version}/html/search.html?q={}";
 }

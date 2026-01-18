@@ -90,10 +90,6 @@
           type = "BG_CPUIO";
         }
         {
-          name = "qutebrowser";
-          type = "Doc-View";
-        }
-        {
           name = "zotero";
           type = "Doc-View";
         }

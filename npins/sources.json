@@ -1,31 +1,5 @@
 {
   "pins": {
-    "adblockEasyList": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "thedoggybrad",
-        "repo": "easylist-mirror"
-      },
-      "branch": "main",
-      "submodules": false,
-      "revision": "73f885de76dca3a75693dabe8a1dc8625a0acfc9",
-      "url": "https://github.com/thedoggybrad/easylist-mirror/archive/73f885de76dca3a75693dabe8a1dc8625a0acfc9.tar.gz",
-      "hash": "sha256-+DdB6ISPcq9FLqz7bVnzPZktc/QnTGPsckfQw2Zigjo="
-    },
-    "adblockHosts": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "StevenBlack",
-        "repo": "hosts"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "008d87fe38aa3e67411abf5be071a8efd97d4acb",
-      "url": "https://github.com/StevenBlack/hosts/archive/008d87fe38aa3e67411abf5be071a8efd97d4acb.tar.gz",
-      "hash": "sha256-wnwFyhvsfKIJyxL94ZTnJv8rYVoevwCwcYOssnWWHsE="
-    },
     "agenix": {
       "type": "Git",
       "repository": {
@@ -171,19 +145,6 @@
       "url": "https://github.com/nix-community/plasma-manager/archive/51816be33a1ff0d4b22427de83222d5bfa96d30e.tar.gz",
       "hash": "sha256-d5Q1GmQ+sW1Bt8cgDE0vOihzLaswsm8cSdg8124EqXE="
     },
-    "qutebrowser-zotero": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "parchd-1",
-        "repo": "qutebrowser-zotero"
-      },
-      "branch": "master",
-      "submodules": false,
-      "revision": "54706b43433c3ea8da6b7b410d67528da9779657",
-      "url": "https://github.com/parchd-1/qutebrowser-zotero/archive/54706b43433c3ea8da6b7b410d67528da9779657.tar.gz",
-      "hash": "sha256-Jv5qrpWSMrfGr6gV8PxELCOfZ0PyGBPO+nBt2czYuu4="
-    },
     "treefmt-nix": {
       "type": "Git",
       "repository": {
@@ -196,19 +157,6 @@
       "revision": "e96d59dff5c0d7fddb9d113ba108f03c3ef99eca",
       "url": "https://github.com/numtide/treefmt-nix/archive/e96d59dff5c0d7fddb9d113ba108f03c3ef99eca.tar.gz",
       "hash": "sha256-67vyT1+xClLldnumAzCTBvU0jLZ1YBcf4vANRWP3+Ak="
-    },
-    "uAssets": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "uBlockOrigin",
-        "repo": "uAssetsCDN"
-      },
-      "branch": "main",
-      "submodules": false,
-      "revision": "73ca8768d09d1d0d318d0ffafb8ddab9779108c8",
-      "url": "https://github.com/uBlockOrigin/uAssetsCDN/archive/73ca8768d09d1d0d318d0ffafb8ddab9779108c8.tar.gz",
-      "hash": "sha256-zubKNqsJ3MBTz24W00fd6LD8iVjipn+VkZMqMdna2ts="
     }
   },
   "version": 7

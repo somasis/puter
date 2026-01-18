@@ -52,7 +52,6 @@ rec {
     lychee = {
       enable = true;
       excludes = [
-        "users/somasis/desktop/browser/search.nix" # Lots of false positives due to qutebrowser templating
         ".*.user.js" # greasemonkey scripts; too many false positives
       ];
 

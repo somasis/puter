@@ -47,13 +47,6 @@ let
   };
 in
 {
-  # Fix issues with poorly rendered fonts that can occur
-  # when running Qt 6 applications on Wayland.
-  # Issue first showed up in qutebrowser <https://github.com/qutebrowser/qutebrowser/discussions/7938>
-  # but it can happen in other applications, like KDE's systemsettings.
-  # Necessary as of 2025-03-13 NixOS 24.11.
-  environment.sessionVariables.QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
-
   nixpkgs = {
     overlays = [ overlay ];
     config.permittedInsecurePackages = [

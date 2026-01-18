@@ -51,10 +51,6 @@ in
     directories = [
       (xdgCacheDir "keepassxc")
     ];
-
-    files = [
-      (xdgDataDir "qutebrowser/keepassxc.key")
-    ];
   };
 
   home.packages =
@@ -80,15 +76,6 @@ in
       + "/share/applications/keepassxc.desktop"
     )
   ];
-
-  programs.qutebrowser = {
-    aliases.keepassxc = "spawn -u qute-keepassxc --insecure";
-
-    keyBindings.normal = {
-      zl = "keepassxc";
-      zL = "keepassxc --totp";
-    };
-  };
 
   home.sessionVariables = {
     # Used by `bin/phishin-auth-login`, among other things.

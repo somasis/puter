@@ -26,9 +26,4 @@ assert osConfig.programs.kdeconnect.enable;
     (config.lib.somasis.xdgCacheDir "kdeconnect.daemon")
     (config.lib.somasis.xdgCacheDir "kdeconnect.sms")
   ];
-
-  programs.qutebrowser = {
-    aliases.kdeconnect = "spawn ${config.services.kdeconnect.package}/bin/kdeconnect-handler";
-    keyBindings.normal."zk" = "kdeconnect {url}";
-  };
 }
