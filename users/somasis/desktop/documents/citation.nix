@@ -53,7 +53,7 @@ in
           style = "http://www.zotero.org/styles/chicago-note-bibliography";
           locale = "en-US";
         in
-        rec {
+        {
           # See <https://www.zotero.org/support/preferences/hidden_preferences> also.
           "general.smoothScroll" = false;
           "intl.accept_language" = "en-US, en";
@@ -62,7 +62,6 @@ in
           # "extensions.zotero.automaticScraperUpdates" = false;
           "extensions.zotero.automaticScraperUpdates" = true;
 
-          # Use Appalachian State University's OpenURL resolver
           "extensions.zotero.findPDFs.resolvers" = [
             {
               "name" = "Sci-Hub";
