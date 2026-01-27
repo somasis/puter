@@ -61,7 +61,9 @@
   };
 
   services = {
-    ssh-agent.enable = true;
+    # NOTE: Workaround the agents AUTH_SOCK values conflicting; remove once
+    # <https://github.com/nix-community/home-manager/pull/8533> is merged
+    ssh-agent.enable = !osConfig.security.tpm2.enable;
     ssh-tpm-agent.enable = osConfig.security.tpm2.enable;
   };
 
