@@ -40,6 +40,7 @@
       tetrio-desktop
       zaz
 
+      dolphin-emu
       pcsx2 # Sony - PlayStation 2
       crispy-doom
       (
@@ -74,14 +75,17 @@
       # keep-sorted start
       ".lbreakouthd"
       ".zaz"
+      (xdgCacheDir "dolphin-emu")
       (xdgCacheDir "kpat")
       (xdgCacheDir "libkcardgame-themes")
       (xdgConfigDir "PCSX2")
+      (xdgConfigDir "dolphin-emu")
       (xdgConfigDir "opentyrian")
       (xdgConfigDir "retroarch")
       (xdgConfigDir "tetrio-desktop")
       (xdgDataDir "SpaceCadetPinball")
       (xdgDataDir "crispy-doom")
+      (xdgDataDir "dolphin-emu")
       # keep-sorted end
     ];
 

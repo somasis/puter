@@ -6,7 +6,8 @@
 }:
 {
   home.packages = [
-    (pkgs.age.withPlugins (p: with p; [ p.age-plugin-tpm ]))
+    pkgs.age
+    pkgs.age-plugin-tpm
   ];
 
   persist.directories = [
