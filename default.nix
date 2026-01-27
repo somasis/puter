@@ -86,15 +86,12 @@ in
     nixpkgsVersions = final: prev: {
       unstable = import sources.nixos-unstable {
         inherit (final.stdenv.hostPlatform) system;
-        inherit (final) config;
       };
       stable = import sources.nixos-stable {
         inherit (final.stdenv.hostPlatform) system;
-        inherit (final) config;
       };
       dev = import sources.nixpkgs {
         inherit (final.stdenv.hostPlatform) system;
-        inherit (final) config;
       };
     };
   };
