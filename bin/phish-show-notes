@@ -173,6 +173,18 @@ if [[ "$mode" == 'json' ]]; then
     exit $?
 fi
 
+# NOTE The use of ftfy here is because it seems that some show
+# notes provided by Phish.net were improperly converted to UTF-8
+# at some point in their processing. Thus, artifacts in text show
+# up occasionally (see 1999-12-31 for a testcase).
+if setlist_notes_fixed=$(ftfy -g <<<"$setlist_notes"); then
+    setlist_notes="${setlist_notes_fixed}"
+fi
+
+if show_venue_fixed=$(ftfy -g <<<"$show_venue"); then
+    show_venue="${show_venue_fixed}"
+fi
+
 printf 'Phish\n%s\n%s\n%s\n\n' "${show_date}" "${tour_name}" "${show_venue}"
 
 mapfile -t show_sets < <(jq -r '[.[].set] | unique[]' <<<"$setlist_data")
@@ -199,14 +211,6 @@ for show_set in "${show_sets[@]}"; do
 
     printf '%s: %s\n\n' "${show_set}" "${set_tracks}" | fmt -t
 done
-
-# NOTE The use of ftfy here is because it seems that some show
-# notes provided by Phish.net were improperly converted to UTF-8
-# at some point in their processing. Thus, artifacts in text show
-# up occasionally (see 1999-12-31 for a testcase).
-if setlist_notes_fixed=$(ftfy -g <<<"$setlist_notes"); then
-    setlist_notes="${setlist_notes_fixed}"
-fi
 
 if [[ -n "$setlist_notes" ]]; then
     pandoc_args=()
