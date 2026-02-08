@@ -1,6 +1,7 @@
 {
   self,
   config,
+  pkgs,
   lib,
   ...
 }:
@@ -12,6 +13,10 @@ in
     ./colors.nix
     ./fonts.nix
     ./icons.nix
+  ];
+
+  home.packages = with pkgs; [
+    klassy
   ];
 
   systemd.user.sessionVariables._JAVA_OPTIONS = "-Dawt.useSystemAAFontSettings=on";
@@ -53,6 +58,10 @@ in
       '';
     };
   };
+
+  persist.directories = with config.lib.somasis; [
+    (xdgConfigDir "klassy")
+  ];
 
   cache.directories = with config.lib.somasis; [
     (xdgCacheDir "darkman")

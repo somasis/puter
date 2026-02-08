@@ -1,5 +1,6 @@
 [kdeglobals][KDE]
-widgetStyle=Breeze
+widgetStyle=Klassy
+# widgetStyle=Breeze
 
 [kdeglobals][General]
 ColorScheme=SomasisLight
@@ -16,8 +17,10 @@ cursorTheme=Hackneyed (scalable)
 [kwinrc][org.kde.kdecoration2]
 ButtonsOnLeft=M
 ButtonsOnRight=SBFAIX
-library=org.kde.breeze
-theme=Breeze
+library=org.kde.klassy
+theme=Klassy
+# library=org.kde.breeze
+# theme=Breeze
 
 [KSplash]
 Theme=none
