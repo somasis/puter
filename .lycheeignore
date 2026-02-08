@@ -14,3 +14,5 @@ https://musicbrainz.org/.*
 # Used by bin/phish-*
 https://phish.in/.*
 
+# Used by /default.nix
+https://github.com/.*
