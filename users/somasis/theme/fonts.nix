@@ -20,6 +20,11 @@
     sarasa-gothic
     spleen
 
+    atkinson-hyperlegible
+    atkinson-hyperlegible-next
+    atkinson-monolegible
+    atkinson-hyperlegible-mono
+
     lmodern
 
     linja-namako
