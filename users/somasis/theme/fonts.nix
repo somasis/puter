@@ -80,27 +80,22 @@
     };
 
     small = {
-      # family = "PT Sans";
       family = "Inter";
       pointSize = if osConfig.meta.type == "laptop" then 8 else 10;
     };
 
     toolbar = {
-      # family = "PT Sans";
-      family = "Inter Display";
+      family = "Inter";
       pointSize = if osConfig.meta.type == "laptop" then 10 else 13;
     };
 
     menu = {
-      # family = "PT Sans";
-      family = "Inter Display";
+      family = "Inter";
       pointSize = if osConfig.meta.type == "laptop" then 10 else 12;
     };
 
     windowTitle = {
-      # family = "Inter Display";
-      # weight = "Bold";
-      family = "Inter Display";
+      family = "Inter";
       weight = "medium";
       pointSize = if osConfig.meta.type == "laptop" then 10 else 12;
     };
