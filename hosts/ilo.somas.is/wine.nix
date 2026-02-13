@@ -16,8 +16,6 @@ in
 
   environment.systemPackages = [
     pkgs.winetricks
-    pkgs.wineasio
-
     wine
   ];
 
