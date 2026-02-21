@@ -71,7 +71,7 @@
   programs.plasma.fonts = {
     general = {
       family = "Inter";
-      pointSize = if osConfig.meta.type == "laptop" then 10 else 12;
+      pointSize = if osConfig.meta.type == "laptop" then 9 else 12;
     };
 
     fixedWidth = {
@@ -81,23 +81,25 @@
 
     small = {
       family = "Inter";
-      pointSize = if osConfig.meta.type == "laptop" then 8 else 10;
+      pointSize = if osConfig.meta.type == "laptop" then 8 else 9;
     };
 
     toolbar = {
       family = "Inter";
-      pointSize = if osConfig.meta.type == "laptop" then 10 else 13;
+      weight = "medium";
+      pointSize = if osConfig.meta.type == "laptop" then 9 else 13;
     };
 
     menu = {
       family = "Inter";
-      pointSize = if osConfig.meta.type == "laptop" then 10 else 12;
+      weight = "light";
+      pointSize = if osConfig.meta.type == "laptop" then 9 else 12;
     };
 
     windowTitle = {
       family = "Inter";
-      weight = "medium";
-      pointSize = if osConfig.meta.type == "laptop" then 10 else 12;
+      weight = "demiBold";
+      pointSize = if osConfig.meta.type == "laptop" then 9 else 12;
     };
   };
 }
