@@ -99,6 +99,7 @@ in
 
               options = bigCacheOptions // {
                 dir-cache-time = "2m0s";
+                vfs-cache-max-size = "20G";
               };
             };
 
