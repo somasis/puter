@@ -36,6 +36,6 @@ in
     audacity
     ffmpeg-full
     flac
-    opusTools
+    opus-tools
   ];
 }

@@ -108,21 +108,6 @@ in
       }
 
       {
-          # Set Wine DPI automatically based off of current display settings
-
-          PATH=${lib.makeBinPath [ pkgs.xorg.xrdb ]}"''${PATH:+:$PATH}"
-
-          if [[ -v DISPLAY ]] && ! [[ -v WAYLAND_DISPLAY ]]; then
-              dpi=$(xrdb -get Xft.dpi 2>/dev/null || echo 96)
-              dpi=$(printf '0x%X' "$dpi")
-
-              reg_sync \
-                  'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Hardware Profiles\Current\Software\Fonts' \
-                  /v 'LogPixels' /t REG_DWORD /d "$dpi"
-          fi
-      }
-
-      {
           # Disable win64 warnings from winetricks
           touch "$WINEPREFIX/no_win64_warnings"
           export WINE=wine
