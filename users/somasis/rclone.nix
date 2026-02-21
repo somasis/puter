@@ -80,6 +80,17 @@ in
               mountPoint = "${config.home.homeDirectory}/mnt/whatbox";
             };
 
+            "audio/library" = {
+              enable = true;
+              mountPoint = "${config.home.homeDirectory}/audio/library";
+
+              logLevel = "DEBUG";
+
+              options = bigCacheOptions // {
+                dir-cache-time = "2m0s";
+              };
+            };
+
             "audio/source" = {
               enable = true;
               mountPoint = "${config.home.homeDirectory}/audio/source";
