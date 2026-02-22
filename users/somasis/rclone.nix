@@ -30,9 +30,7 @@ let
 in
 {
   cache.directories = [
-    (config.lib.somasis.xdgCacheDir "vfs")
-    (config.lib.somasis.xdgCacheDir "vfsMeta")
-
+    (config.lib.somasis.xdgCacheDir "rclone")
     (config.lib.somasis.xdgCacheDir "restic")
   ];
 
