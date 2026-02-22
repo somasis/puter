@@ -6,13 +6,13 @@
 }:
 {
   home.packages = with pkgs; [
-    beets
-    # (beets.override {
-    #   pluginOverrides.alias = {
-    #     enable = true;
-    #     propagatedBuildInputs = [ beets-alias ];
-    #   };
-    # })
+    # beets
+    (python3.pkgs.beets.override {
+      pluginOverrides.filetote = {
+        enable = true;
+        propagatedBuildInputs = [ python3Packages.beets-filetote ];
+      };
+    })
     rsgain
     unflac
     tageditor
