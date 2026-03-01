@@ -93,10 +93,6 @@
           name = "zotero";
           type = "Doc-View";
         }
-        {
-          name = "elisa";
-          type = "Player-Audio";
-        }
       ];
     };
 

@@ -154,6 +154,7 @@
     with pkgs;
     with kdePackages;
     [
+      elisa
       kate
     ];
 }

@@ -1,5 +1,4 @@
 {
-  self,
   config,
   lib,
   pkgs,
@@ -7,10 +6,6 @@
 }:
 let
   yamlFormat = pkgs.formats.yaml { };
-
-  scrobblers = [
-    "Elisa"
-  ];
 in
 {
   home.packages =
@@ -22,81 +17,16 @@ in
       feishin
     ];
 
-  age.secrets.rescrobbled-env.file = "${self}/secrets/rescrobbled-env.age";
-
   # Elisa is my music player of choice. I use it to play music from ~/audio/library.
-  programs.elisa = {
-    enable = true;
-
-    package = pkgs.kdePackages.elisa.override {
-      withVLC = false;
-    };
-
-    appearance = {
-      showNowPlayingBackground = true;
-      showProgressOnTaskBar = true;
-
-      defaultView = "allAlbums";
-      defaultFilesViewPath = config.xdg.userDirs.music;
-
-      # Elisa doesn't currently attempt to split the genre tags
-      # in any way (I use '; ' as a separator), so this looks
-      # kinda silly.
-      # embeddedView = "genres";
-    };
-
-    indexer = {
-      paths = [ config.xdg.userDirs.music ];
-      scanAtStartup = true;
-      ratingsStyle = "stars";
-    };
-    player = {
-      playAtStartup = false;
-      useAbsolutePlaylistPaths = false;
-    };
-  };
-
-  # TODO contribute the settings needed to add these to `programs.elisa`.
-  programs.plasma.configFile.elisarc.Views = {
-    # Sort the Albums view in descending order
-    SortOrderPreferences.value = "Album==DescendingOrder";
-
-    # albums: sort by year (latest first); tracks: in alphabetical order by title
-    SortRolePreferences.value = "Album==YearRole,Track==TitleRole";
-
-    # albums: grid; files: list; genres: list
-    ViewStylePreferences.value = "Album==GridStyle,FileName==ListStyle,Genre==ListStyle";
-  };
-
   services = {
     # I use playerctld rather than Plasma's built-in media controller.
     playerctld.enable = true;
     mpris-proxy.enable = true;
-
-    rescrobbled = {
-      enable = true;
-      settings.player-whitelist = scrobblers;
-    };
   };
 
   persist = with config.lib.somasis; {
     directories = [
       (xdgConfigDir "feishin")
-      (xdgDataDir "elisa")
-    ];
-
-    # ~/etc/kde.org is already preserved by plasma.nix, because
-    # KDE programs create so many little files in this directory,
-    # it's just easier that way without having to make the
-    # persistence more strict.
-    # files = [
-    #   (config.lib.somasis.xdgConfigDir "kde.org/elisa.conf")
-    # ];
-
-    # Don't forget to log in to Last.FM by running `rescrobbled` manually
-    # in a terminal.
-    files = [
-      (xdgConfigDir "rescrobbled/session")
     ];
   };
 
@@ -107,11 +37,6 @@ in
   };
 
   systemd.user = {
-    services.rescrobbled = {
-      Unit.After = [ "agenix.service" ];
-      Service.EnvironmentFile = config.age.secrets.rescrobbled-env.path;
-    };
-
     targets.graphical-session.Unit.Wants = [
       "music-discord-rpc.service"
     ];
@@ -143,8 +68,8 @@ in
 
       small_image = "player";
 
-      # Only allow Elisa's now-playing to be broadcast over Discord Rich Presence.
-      allowlist = scrobblers;
+      # Only allow Feishin's now-playing to be broadcast over Discord Rich Presence.
+      allowlist = [ "Feishin" ];
 
       disable_musicbrainz_cover = false;
     };

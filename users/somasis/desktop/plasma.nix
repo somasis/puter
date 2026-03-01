@@ -129,7 +129,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       # keep-sorted start
       (xdgCacheDir "dolphin")
       (xdgCacheDir "drkonqi")
-      (xdgCacheDir "elisa")
       (xdgCacheDir "fontconfig")
       (xdgCacheDir "kalk")
       (xdgCacheDir "kcrash-metadata")

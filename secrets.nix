@@ -17,7 +17,6 @@ let
     "rclone-whatbox-ilo-pass.age".publicKeys = [ somasis.ilo ];
     "rclone-vault-password.age".publicKeys = [ somasis.ilo ];
     "rclone-vault-password2.age".publicKeys = [ somasis.ilo ];
-    "rescrobbled-env.age".publicKeys = [ somasis.ilo ];
 
     # Used by host, not by a specific user on the host.
     "ntfy-token-ilo.somas.is.age".publicKeys = [
