@@ -130,6 +130,7 @@ finish_import() {
                 -a "${0##*/}" \
                 -A 'play=Play' \
                 -A 'directory=Open directory' \
+                -A 'source-directory=Open source directory' \
                 -A 'undo=Undo' \
                 -A 'redo=Reimport manually...' \
                 ${artpath:+-i "${artpath}"} \
@@ -143,6 +144,10 @@ finish_import() {
                 ;;
             directory)
                 edo xdg-open "${latest_after_import}" &
+                disown
+                ;;
+            source-directory)
+                edo xdg-open "${import}" &
                 disown
                 ;;
             undo)
