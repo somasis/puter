@@ -87,8 +87,10 @@ finish_import() {
     format_concat=(
         'Successfully imported $albumartist - $album ($year)'
         '%if{$mb_albumid, using metadata from <a href="https://musicbrainz.org/release/${mb_albumid}">$data_source</a>}.'
-        $'%if{${original_year}${label}${catalognum}${barcode}${country},\n}'
+        $'%if{${media}${original_year}${year}${label}${catalognum}${barcode}${country},\n}'
+        $'%if{${media},\n- Media: $media}'
         $'%if{${original_year},\n- Original year: $original_year}'
+        $'%if{${year},\n- Release year: $year}'
         $'%if{${label},\n- Label: $label}'
         $'%if{${catalognum},\n- Catalog number: $catalognum}'
         $'%if{${barcode},\n- Barcode: $barcode}'
