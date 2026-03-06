@@ -48,9 +48,11 @@
 
         bc
         ffmpeg-full
+        fmit
         hyperfine
         josm
         kcharselect
+        lingot
         okteta
         organicmaps
         qemu
