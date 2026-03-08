@@ -7,10 +7,10 @@
 {
   home.packages = with pkgs; [
     # beets
-    (python3.pkgs.beets.override {
+    (master.python3.pkgs.beets.override {
       pluginOverrides.filetote = {
         enable = true;
-        propagatedBuildInputs = [ python3Packages.beets-filetote ];
+        propagatedBuildInputs = [ master.python3Packages.beets-filetote ];
       };
     })
     rsgain
