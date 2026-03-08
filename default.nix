@@ -92,7 +92,7 @@ in
         inherit (final.stdenv.hostPlatform) system;
         config.allowUnfree = true;
       };
-      dev = import sources.nixpkgs {
+      master = import sources.nixpkgs {
         inherit (final.stdenv.hostPlatform) system;
         config.allowUnfree = true;
       };
