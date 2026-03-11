@@ -21,6 +21,11 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
+    #
+    (fetchpatch2 {
+      url = "https://github.com/NixOS/nixpkgs/pull/481370.patch";
+      hash = "sha256-m/zQs3iSsJ2rfwTCu5jHYKAjQlf9ObkDTga1tEZnEl4=";
+    })
     (fetchpatch2 {
       url = "https://github.com/NixOS/nixpkgs/pull/498877.patch";
       hash = "sha256-Cg1E4+5F4YEbr4W9BB+slQU9stlhl/GRmEXbou+At9g=";
@@ -48,6 +53,10 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks) cantata;
+
+    python3Packages = prev.python3Packages // {
+      beets-filetote = nixpkgs-quirks.python3Packages.beets-filetote;
+    };
 
     inherit (nixpkgs-quirks) cinny-desktop;
   };
