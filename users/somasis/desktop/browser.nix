@@ -4,16 +4,12 @@
   lib,
   ...
 }:
-let
-  inherit (config.lib.somasis)
-    xdgCacheDir
-    ;
-in
 {
-  persist = {
+  persist = with config.lib.somasis; {
     directories = [
       ".mozilla"
       (xdgCacheDir "mozilla/firefox")
+      (xdgDataDir "firefoxpwa")
     ];
   };
 
@@ -40,6 +36,7 @@ in
       (firefox-esr.override {
         nativeMessagingHosts = [
           plasma-browser-integration
+          firefoxpwa
         ];
       })
     ];
