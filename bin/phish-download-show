@@ -258,7 +258,8 @@ jq_script='
             comments: [
                 (.tags | map(select(.notes != null) | "\(.name): \(.notes)") | join("\n")),
                 $phishNetSetlistNotes
-            ] | join("\n")
+            ] | map(select(. != ""))
+            | join("\n")
         }
         | to_entries
         | map("\(.key)=\(.value|@sh)")[]
