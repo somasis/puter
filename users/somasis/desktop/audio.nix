@@ -5,28 +5,32 @@
 }:
 {
   home.packages = with pkgs; [
+    easyeffects
     jamesdsp
     ponymix
   ];
 
-  cache.directories = [
-    (config.lib.somasis.xdgConfigDir "pulse")
-    (config.lib.somasis.xdgCacheDir "jamesdsp")
+  cache.directories = with config.lib.somasis; [
+    (xdgConfigDir "pulse")
+    (xdgCacheDir "jamesdsp")
+    (xdgCacheDir "easyeffects")
   ];
 
-  persist.directories = [
-    (config.lib.somasis.xdgConfigDir "jamesdsp")
+  persist.directories = with config.lib.somasis; [
+    (xdgConfigDir "jamesdsp")
+    (xdgConfigDir "easyeffects")
+    (xdgDataDir "easyeffects")
   ];
 
-  xdg.autostart.entries = [
-    (
-      (pkgs.makeDesktopItem {
-        name = "jdsp-gui";
-        icon = "jamesdsp";
-        desktopName = "JamesDSP (tray)";
-        exec = "${pkgs.jamesdsp}/bin/jamesdsp --tray";
-      })
-      + "/share/applications/jdsp-gui.desktop"
-    )
-  ];
+  # xdg.autostart.entries = [
+  #   (
+  #     (pkgs.makeDesktopItem {
+  #       name = "jdsp-gui";
+  #       icon = "jamesdsp";
+  #       desktopName = "JamesDSP (tray)";
+  #       exec = "${pkgs.jamesdsp}/bin/jamesdsp --tray";
+  #     })
+  #     + "/share/applications/jdsp-gui.desktop"
+  #   )
+  # ];
 }
