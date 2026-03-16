@@ -33,6 +33,7 @@
     with pkgs;
     with kdePackages;
     [
+      firefoxpwa
       (firefox-esr.override {
         nativeMessagingHosts = [
           plasma-browser-integration
