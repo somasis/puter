@@ -33,6 +33,11 @@
     with pkgs;
     with kdePackages;
     [
+      # I think firefoxpwa can't find the default browser if it's not at `firefox`?
+      (pkgs.writeShellScriptBin "firefox" ''
+        exec firefox-esr "$@"
+      '')
+
       firefoxpwa
       (firefox-esr.override {
         nativeMessagingHosts = [
