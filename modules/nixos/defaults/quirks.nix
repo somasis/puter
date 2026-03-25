@@ -56,6 +56,14 @@ let
   };
 in
 {
+  # Fix issues with poorly rendered fonts that can occur
+  # when running Qt 6 applications on Wayland.
+  # Issue first showed up in qutebrowser <https://github.com/qutebrowser/qutebrowser/discussions/7938>
+  # but it happens in other applications too; I've noticed it affecting the
+  # sharpness of my Plasma widgets on my panel, when on a 1080p display.
+  # Necessary as of 2026-03-25 NixOS 26.05 (unstable).
+  environment.sessionVariables.QT_SCALE_FACTOR_ROUNDING_POLICY = "RoundPreferFloor";
+
   nixpkgs = {
     overlays = [ overlay ];
     config.permittedInsecurePackages = [
