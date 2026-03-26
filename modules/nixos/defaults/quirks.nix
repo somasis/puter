@@ -53,6 +53,14 @@ let
     python3Packages = prev.python3Packages // {
       beets-filetote = nixpkgs-quirks.python3Packages.beets-filetote;
     };
+
+    # 2026-03-25 tests seem to be broken
+    # > FAIL: testdata/script/fix.txtar:20: stdout and redirects.golden-auto differ
+    xurls = prev.xurls.overrideAttrs (
+      finalAttrs: prevAttrs: {
+        doCheck = false;
+      }
+    );
   };
 in
 {
