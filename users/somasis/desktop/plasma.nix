@@ -127,6 +127,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
   cache = {
     directories = [
       # keep-sorted start
+      (xdgCacheDir "bookmarksrunner") # Provided by krunner.
       (xdgCacheDir "dolphin")
       (xdgCacheDir "drkonqi")
       (xdgCacheDir "fontconfig")
