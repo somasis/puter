@@ -209,7 +209,11 @@
       };
     };
 
-    mergiraf.enable = true;
+    mergiraf = {
+      enable = true;
+      enableGitIntegration = true;
+    };
+
     difftastic = {
       enable = true;
       git.enable = true;
