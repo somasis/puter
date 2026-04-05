@@ -8,7 +8,7 @@ let
   formatPrettier =
     prettierArgs:
     pkgs.writeShellScript "format-prettier" ''
-      PATH=${lib.makeBinPath [ pkgs.nodePackages.prettier ]}
+      PATH=${lib.makeBinPath [ pkgs.prettier ]}
 
       stdin=$(</dev/stdin)
 
@@ -104,7 +104,7 @@ let
 in
 {
   home.packages = [
-    pkgs.nodePackages.prettier
+    pkgs.prettier
     pkgs.quick-lint-js
     pkgs.yamllint
     pkgs.jqfmt
