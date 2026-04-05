@@ -82,6 +82,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "gwenviewrc")
       (xdgConfigDir "kactivitymanagerd-statsrc")
       (xdgConfigDir "kactivitymanagerdrc")
+      (xdgConfigDir "kamosorc")
       (xdgConfigDir "kclockdrc")
       (xdgConfigDir "kclockrc")
       (xdgConfigDir "kcminputrc")
@@ -132,6 +133,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgCacheDir "drkonqi")
       (xdgCacheDir "fontconfig")
       (xdgCacheDir "kalk")
+      (xdgCacheDir "kamoso")
       (xdgCacheDir "kcrash-metadata")
       (xdgCacheDir "kio_http")
       (xdgCacheDir "krunner")
@@ -175,6 +177,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       hackneyed
       isoimagewriter
       kalk
+      kamoso
       kclock
       kconfig # used by plasma-panel-spacer-extended
       kde-gtk-config
