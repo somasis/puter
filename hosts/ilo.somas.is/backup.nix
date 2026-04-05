@@ -22,6 +22,13 @@
     exclude = [
       "*cache*"
       "*/Steam/steamapps/*"
+
+      "/persist/home/somasis/audio/library"
+      "/persist/home/somasis/audio/source"
+      "/persist/home/somasis/doc/vault"
+      "/persist/home/somasis/video/anime"
+      "/persist/home/somasis/video/film"
+      "/persist/home/somasis/video/tv"
     ];
 
     extraBackupArgs = [
