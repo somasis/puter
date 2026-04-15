@@ -82,10 +82,6 @@
           type = "Service";
         }
         {
-          name = "music-discord-rpc";
-          type = "Service";
-        }
-        {
           name = "systemd-lock-handler";
           type = "BG_CPUIO";
         }
