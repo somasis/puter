@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash -p bash zbar moreutils jq yq-go
+
+: "${1:?no file provided}"
+
+barcode=$(zbarimg -1q --xml -- "${1}" | ifne yq -p xml -o json)
+if [[ -z "${barcode}" ]]; then
+    exec notify-send \
+        -a barcode-interactive \
+        -i view-barcode-qr \
+        'No barcode could be found.' \
+        "${1}"
+fi
+
+eval "$(
+        jq -r '
+            "barcode_type=\(.barcodes.source.index.symbol."+@type" | @sh)",
+            "barcode_data=\(.barcodes.source.index.symbol.data | @sh)"
+        ' <<<"${barcode}"
+)"
+
+# shellcheck disable=SC2154
+wl-copy --trim-newline <<<"${barcode_data}"
+
+# shellcheck disable=SC2154
+notify-send \
+    -a barcode-interactive \
+    -i view-barcode-qr \
+    "Scanned barcode (${barcode_type})" \
+    "\"${barcode_data}"

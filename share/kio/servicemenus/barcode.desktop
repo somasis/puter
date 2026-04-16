@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+MimeType=image/*;
+Actions=scan
+
+[Desktop Action scan]
+Name=Scan barcode
+Name[en]=Scan barcode
+Name[tok]=o lukin e sitelen nanpa
+Icon=view-barcode-qr-symbolic
+Exec=barcode-interactive %f
