@@ -48,10 +48,7 @@ in
     "mess"
   ];
 
-  xdg.userDirs = {
-    desktop = "${messDir}/current";
-    download = "${messDir}/current/incoming";
-  };
+  xdg.userDirs.desktop = "${messDir}/current";
 
   systemd.user = {
     services.mess = {
@@ -60,12 +57,6 @@ in
       Service = {
         Type = "oneshot";
         ExecStart = "${mess}/bin/mess";
-        ExecStartPost = map (x: "${pkgs.coreutils}/bin/mkdir -p \"${messDir}/current/${x}\"") [
-          "incoming"
-          "projects"
-          "src"
-          "screenshots"
-        ];
 
         StandardOutput = "null";
       };
@@ -105,8 +96,5 @@ in
       historyFileSize = -1;
       shellOptions = [ "histappend" ];
     };
-
-    mpv.config.screenshot-directory = "${messDir}/current/screenshots";
-    zotero.profiles.default.settings."extensions.zotfile.source_dir" = "${messDir}/current/incoming"; # ZotFile > General Settings > "Source Folder for Attaching New Files"
   };
 }

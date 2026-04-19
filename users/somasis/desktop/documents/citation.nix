@@ -69,6 +69,7 @@
           # Attachment settings
           "extensions.zotero.useDataDir" = true;
           "extensions.zotero.dataDir" = "${config.xdg.dataHome}/zotero";
+          "extensions.zotfile.source_dir" = config.xdg.userDirs.download; # ZotFile > General Settings > "Source Folder for Attaching New Files"
 
           # Reading settings
           "extensions.zotero.tabs.title.reader" = "filename"; # Show filename in tab title

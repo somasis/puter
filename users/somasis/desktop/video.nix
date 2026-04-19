@@ -95,6 +95,7 @@ with config.lib.somasis;
 
         image-display-duration = "inf";
 
+        screenshot-directory = "${config.xdg.userDirs.pictures}/screenshots";
         screenshot-format = "png";
         screenshot-template = "%tY-%tm-%tdT%tH:%tM:%tSZ %F %P";
         screenshot-tag-colorspace = true;
