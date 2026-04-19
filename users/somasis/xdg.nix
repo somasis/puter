@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
@@ -72,6 +71,7 @@ in
       directory = relativeToHome config.xdg.stateHome;
     }
 
+    (relativeToHome config.xdg.userDirs.documents)
     (relativeToHome config.xdg.userDirs.pictures)
     (relativeToHome config.xdg.userDirs.videos)
   ];

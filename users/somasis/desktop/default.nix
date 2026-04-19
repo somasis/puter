@@ -85,7 +85,6 @@
       (xdgDataDir "OMaps")
       (xdgConfigDir "JOSM")
       (xdgDataDir "JOSM")
-      (relativeToHome config.xdg.userDirs.documents)
       {
         method = "bindfs";
         directory = xdgDataDir "applications";
