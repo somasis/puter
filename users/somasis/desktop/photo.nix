@@ -33,7 +33,7 @@ in
       inkscape
     ];
 
-  sync = {
+  persist = {
     directories = [
       (xdgConfigDir "GIMP")
 
@@ -47,6 +47,9 @@ in
       (xdgConfigDir "inkscape")
 
       (xdgDataDir "krita")
+
+      (xdgDataDir "koko")
+      (xdgConfigDir "GREYC") # Used by gmic.
     ];
 
     files = [
@@ -55,11 +58,6 @@ in
       (xdgConfigDir "kritashortcutsrc")
     ];
   };
-
-  persist.directories = [
-    (xdgDataDir "koko")
-    (xdgConfigDir "GREYC") # Used by gmic.
-  ];
 
   cache = {
     directories = [

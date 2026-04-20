@@ -9,6 +9,9 @@
     directories = [
       (xdgConfigDir "act")
       (xdgConfigDir "cachix")
+
+      # ~/share/direnv contains the allowlist of repositories.
+      (xdgDataDir "direnv")
     ];
 
     files = [
@@ -32,11 +35,6 @@
     (xdgCacheDir "treefmt")
     (xdgDataDir "mergiraf")
     # keep-sorted end
-  ];
-
-  # ~/share/direnv contains the allowlist of repositories.
-  sync.directories = with config.lib.somasis; [
-    (xdgDataDir "direnv")
   ];
 
   home.packages = with pkgs; [

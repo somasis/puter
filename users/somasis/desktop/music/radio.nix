@@ -46,14 +46,11 @@ in
 
   persist.directories = [
     (config.lib.somasis.xdgConfigDir "radiotray-ng")
+    (config.lib.somasis.xdgDataDir "radiotray-ng")
   ];
 
   cache.directories = [
     (config.lib.somasis.xdgCacheDir "radiotray-ng")
-  ];
-
-  sync.directories = [
-    (config.lib.somasis.xdgDataDir "radiotray-ng")
   ];
 
   xdg.autostart.entries = [

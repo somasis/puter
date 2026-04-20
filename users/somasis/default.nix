@@ -49,11 +49,6 @@
     ];
   };
 
-  sync = {
-    # defaultDirectoryMethod = "symlink";
-    allowOther = true;
-  };
-
   nixpkgs = {
     overlays = [
       self.overlays.default

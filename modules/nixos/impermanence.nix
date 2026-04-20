@@ -31,10 +31,6 @@ in
       This directory is used for less permanent data, such as what would go in
       /var/cache.
     '';
-    sync = mkPath "/persist/sync" ''
-      The system's default synchronized persist directory. It is able to be shared
-      between synchronized machines with, say, Syncthing (services.syncthing).
-    '';
   };
 
   imports = [
@@ -43,7 +39,6 @@ in
     # Actually create the aliases options.
     (mkAliasOptionModule [ "persist" ] [ "environment" "persistence" config.persistence.persist ])
     (mkAliasOptionModule [ "cache" ] [ "environment" "persistence" config.persistence.cache ])
-    (mkAliasOptionModule [ "sync" ] [ "environment" "persistence" config.persistence.sync ])
   ];
 
   config = {
@@ -51,7 +46,6 @@ in
       persist.persistentStoragePath = config.persistence.persist;
       cache.persistentStoragePath = config.persistence.cache;
       log.persistentStoragePath = config.persistence.log;
-      sync.persistentStoragePath = config.persistence.sync;
 
       # Add entries for every user's home directory (and make them owner of it)
       # persist.directories = homes;
