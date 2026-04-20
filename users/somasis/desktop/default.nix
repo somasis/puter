@@ -13,7 +13,6 @@
     ./audio.nix
     ./browser.nix
     ./diary.nix
-    ./email.nix
     ./feeds.nix
     ./file-manager.nix
     ./konsole.nix
