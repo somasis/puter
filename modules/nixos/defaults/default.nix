@@ -29,6 +29,8 @@
     self.overlays.nixpkgsVersions
   ];
 
+  environment.variables.DO_NOT_TRACK = "true";
+
   console.earlySetup = true;
 
   # Use a deterministic host ID, generated from the FQDN of the machine.

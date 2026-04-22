@@ -49,6 +49,8 @@
     ];
   };
 
+  home.sessionVariables.DO_NOT_TRACK = "true";
+
   nixpkgs = {
     overlays = [
       self.overlays.default
