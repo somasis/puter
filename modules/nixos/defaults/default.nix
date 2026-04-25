@@ -75,6 +75,8 @@
 
     homeBinInPath = true;
     systemPackages = with pkgs; [
+      cryptsetup
+
       # Ensure busybox tools are always available
       (busybox.override {
         enableStatic = true;
