@@ -23,6 +23,7 @@ in
 
   environment.systemPackages = with pkgs; [
     sbctl
+    tpm2-tss
   ];
 
   boot = {
@@ -39,6 +40,8 @@ in
         autoReboot = true;
       };
     };
+
+    initrd.systemd.emergencyAccess = "8c765078bc2aed7230a68992a00a41013d219d479265473f9cf28651154cfb97";
   };
 
   security = {
