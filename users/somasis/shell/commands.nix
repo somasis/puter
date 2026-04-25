@@ -33,7 +33,7 @@
       zstd = "zstd -T0 -19";
       gzip = "pigz -p $(( $(nproc) / 2 )) -9";
 
-      sys = "systemctl --show-transaction --legend=no";
+      sys = "systemctl -v --show-transaction --legend=no";
       user = "sys --user";
 
       journal = "journalctl -e";
