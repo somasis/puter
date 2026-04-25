@@ -24,7 +24,7 @@ let
     #
     (fetchpatch2 {
       url = "https://github.com/NixOS/nixpkgs/pull/481370.patch";
-      hash = "sha256-m/zQs3iSsJ2rfwTCu5jHYKAjQlf9ObkDTga1tEZnEl4=";
+      hash = "sha256-TReKtB8bSDFeK4JlxvMCra4Ysq/GfcBxYPmOuL4Ir6Q=";
     })
   ];
 
