@@ -23,58 +23,6 @@
     sessionVariables.LANGUAGE = "en_US";
   };
 
-  i18n.inputMethod = {
-    enabled = lib.mkIf config.xsession.enable "fcitx5";
-    fcitx5.addons =
-      with pkgs;
-      with kdePackages;
-      [
-        # ja
-        fcitx5-mozc
-        fcitx5-anthy
-
-        # tok
-        fcitx5-ilo-sitelen
-
-        fcitx5-table-extra
-        fcitx5-table-other
-
-        fcitx5-gtk
-        kdePackages.fcitx5-qt
-      ];
-  };
-
-  # xdg.configFile = {
-  #   # "fcitx5/config" = fcitxConfig };
-
-  #   "fcitx5/conf/spell" = fcitxConfig {
-  #     ProviderOrder = [
-  #       "Presage"
-  #       "Enchant"
-  #       "Custom"
-  #     ];
-  #   };
-  # };
-
-  systemd.user.sessionVariables = lib.mkIf (config.i18n.inputMethod.enabled != null) {
-    inherit (config.home.sessionVariables)
-      GTK_IM_MODULE
-      QT_IM_MODULE
-      XMODIFIERS
-      ;
-  };
-
-  persist.directories = [
-    (config.lib.somasis.xdgConfigDir "fcitx5")
-  ];
-
-  cache.directories = [
-    (config.lib.somasis.xdgConfigDir "fcitx")
-    ".anthy"
-  ];
-
-  programs.kakoune.plugins = [ pkgs.kakounePlugins.kakoune-fcitx ];
-
   home.packages = with pkgs; [
     location
 
