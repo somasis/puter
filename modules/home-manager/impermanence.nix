@@ -25,12 +25,12 @@ let
 
   module = {
     options.persistence = {
-      persist = mkPath "/persist/${config.home.homeDirectory}" ''
+      persist = mkPath "/persist" ''
         The system's default persist directory.
         This directory is used for more permanent data, such as what would go in
         $XDG_DATA_HOME, $XDG_STATE_HOME, or $XDG_CONFIG_HOME.
       '';
-      cache = mkPath "/cache/${config.home.homeDirectory}" ''
+      cache = mkPath "/cache" ''
         The system's default cache directory.
         This directory is used for less permanent data, such as what would go in
         $XDG_CACHE_HOME.
