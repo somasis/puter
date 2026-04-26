@@ -19,6 +19,4 @@
     config.hardware.bluetooth.package
     pkgs.networkmanager
   ];
-
-  persist.directories = [ "/var/lib/bluetooth" ];
 }

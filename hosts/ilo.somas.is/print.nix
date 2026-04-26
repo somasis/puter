@@ -13,34 +13,6 @@
     nssmdns4 = true;
   };
 
-  persist.directories = [
-    {
-      mode = "0755";
-      directory = "/var/lib/cups";
-    }
-    {
-      mode = "0755";
-      user = "root";
-      group = "lp";
-      directory = "/var/log/cups";
-    }
-  ];
-
-  cache.directories = [
-    {
-      mode = "0770";
-      user = "root";
-      group = "lp";
-      directory = "/var/cache/cups";
-    }
-    {
-      mode = "0710";
-      user = "root";
-      group = "lp";
-      directory = "/var/spool/cups";
-    }
-  ];
-
   networking.networkmanager.dispatcherScripts = [
     {
       type = "basic";

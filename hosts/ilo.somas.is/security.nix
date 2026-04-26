@@ -17,10 +17,6 @@ in
     lanzaboote.nixosModules.lanzaboote
   ];
 
-  persist.directories = [
-    "/var/lib/sbctl"
-  ];
-
   environment.systemPackages = with pkgs; [
     sbctl
     tpm2-tss

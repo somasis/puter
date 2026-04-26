@@ -60,9 +60,6 @@
     };
   };
 
-  persist.directories = [ "/etc/NetworkManager/system-connections" ];
-  cache.directories = [ "/var/lib/NetworkManager" ];
-
   # TODO: Track net usage by services
   #       Currently cannot by used for user services...
   systemd.settings.Manager.DefaultIPAccounting = true;

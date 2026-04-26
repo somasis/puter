@@ -85,15 +85,6 @@
     partition-manager.enable = true;
   };
 
-  cache.directories = [
-    {
-      directory = "/var/lib/usbguard";
-      mode = "0775";
-      user = "root";
-      group = "wheel";
-    }
-  ];
-
   systemd = {
     packages = with pkgs; [ usbguard-notifier ];
     user.services.usbguard-notifier = {

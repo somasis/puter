@@ -102,9 +102,6 @@
     powertop.enable = true;
   };
 
-  cache.directories = [ "/var/cache/powertop" ];
-  persist.directories = [ "/var/lib/upower" ];
-
   systemd.shutdown."wine-kill" = pkgs.writeShellScript "wine-kill" ''
     ${pkgs.procps}/bin/pkill '^winedevice\.exe$' || :
     if [[ -n "$(${pkgs.procps}/bin/pgrep '^winedevice\.exe$')" ]]; then
