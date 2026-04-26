@@ -19,6 +19,8 @@ usage: ${0##*/} <directory ...>
 
 Import directories into the Beets library, allowing the user to break
 out into more manual usage of \`beet import <album>...\` when desired.
+The importsource Beets plugin is enabled during import so that the
+imported album can be tracked during the runtime of this script.
 
 environment variables:
     \$WITH_NTFY${WITH_NTFY:+ (current: ${WITH_NTFY@Q})}
@@ -157,7 +159,7 @@ finish_import() {
                 rm -r "${latest_after_import}"
                 ;;
             redo)
-                exec-to-terminal beet import "${beet_import_args}" \
+                exec-to-terminal beet -p importsource import "${beet_import_args}" \
                     --timid --noincremental \
                     -L source_path:="${import}"
                 ;;
@@ -204,8 +206,6 @@ for import; do
         beet_import_args+=(
             --flat # Each argument should count as an album, for the purposes of this script
             --noincremental
-            # Used for ensuring we can track this specific album, post-import
-            --set=source_path="${import}"
         )
 
         case "${import}" in
@@ -247,7 +247,7 @@ for import; do
         case "${action}" in
             timid-exit)
                 exec-to-terminal \
-                    beet import \
+                    beet -p importsource import \
                     "${beet_import_args[@]}" \
                     --timid --noincremental \
                     "${import}"
@@ -260,7 +260,7 @@ for import; do
 
         beets_skipped_log=$(mktemp)
 
-        edo beet import --quiet \
+        edo beet -p importsource import --quiet \
             --log "$beets_skipped_log" \
             "${beet_import_args[@]}" \
             "${import}"
@@ -297,7 +297,7 @@ for import; do
 
                 case "${action}" in
                     timid-exit)
-                        exec-to-terminal beet import "${beet_import_args[@]}" \
+                        exec-to-terminal beet -p importsource import "${beet_import_args[@]}" \
                             --timid --noincremental \
                             "${import}"
                         ;;
