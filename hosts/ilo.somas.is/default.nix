@@ -22,7 +22,6 @@
     ./desktop.nix
     ./documentation.nix
     ./filesystems.nix
-    ./fingerprint.nix
     ./keyboard.nix
     ./fonts.nix
     ./games.nix
