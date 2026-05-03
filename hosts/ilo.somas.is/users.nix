@@ -37,10 +37,6 @@
         ];
 
         # $ mkpasswd -m sha-512 -s
-        # and don't forget...
-        # $ pass edit ilo.somas.is/users/somasis
-        # $ sudo zfs change-key ilo.somas.is/nixos
-        # $ pass edit ilo.somas.is/zfs/nixos
         hashedPassword = "$6$1vjLB9lSU6Xw8J.L$8zmUO3J9dXUQfAIqIkCBroOpQ3KXUjBJsmu5NZrnO3IB1GyIqXpkUUgZP3XXCJ1./x9TK./06M4bnvYX/PYzs/";
       };
     };
