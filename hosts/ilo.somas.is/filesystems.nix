@@ -123,8 +123,13 @@
 
       autoSnapshot = {
         enable = true;
-        monthly = 3;
-        weekly = 4;
+        frequent = 8;
+        hourly = 24;
+        daily = 7;
+
+        # Anything further than a week out should be fetched from Restic.
+        weekly = 0;
+        monthly = 0;
 
         # -k: Keep empty snapshots.
         # -p: Create snapshots in parallel.
