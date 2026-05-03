@@ -2,15 +2,9 @@
   config,
   lib,
   pkgs,
-  # disko,
   ...
 }:
 {
-  # imports = [
-  #   disko.nixosModules.disko
-  #   ./disko-config.nix
-  # ];
-
   boot = {
     supportedFilesystems = [
       "vfat"
