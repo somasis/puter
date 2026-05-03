@@ -25,7 +25,7 @@
         ++ lib.optional config.programs.tcpdump.enable "pcap"
         ++ lib.optional config.programs.wireshark.enable "wireshark"
         ++ lib.optional config.security.sudo.enable "wheel"
-        ++ lib.optional config.security.tpm2.enable "tss"
+        ++ lib.optional config.security.tpm2.enable config.security.tpm2.tssGroup
         ++ lib.optional config.services.printing.enable "lp"
         ++ lib.optional config.services.timesyncd.enable "systemd-timesync"
         ++ lib.optional config.virtualisation.podman.enable "podman"
