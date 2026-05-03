@@ -44,13 +44,13 @@
 
       serviceConfig.Type = "oneshot";
       script = ''
-        zfs rollback -r ${config.networking.fqdnOrHostName}/nixos/root/runtime@blank
+        zfs rollback -r ${config.fileSystems."/".device}@blank
       '';
     };
 
     initrd.postResumeCommands = lib.optionalString (
       !config.boot.initrd.systemd.enable
-    ) "zfs rollback -r ${config.networking.fqdnOrHostName}/nixos/root/runtime@blank";
+    ) "zfs rollback -r ${config.fileSystems."/".device}@blank";
   };
 
   fileSystems = {
