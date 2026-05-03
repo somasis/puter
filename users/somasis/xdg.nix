@@ -25,7 +25,7 @@ in
 
       desktop = lib.mkDefault "${config.home.homeDirectory}/desktop";
       documents = lib.mkDefault "${config.home.homeDirectory}/doc";
-      download = lib.mkDefault "${config.home.homeDirectory}/downloads";
+      download = lib.mkDefault "${config.home.homeDirectory}/incoming";
       music = lib.mkDefault "${config.home.homeDirectory}/audio/library";
       pictures = lib.mkDefault "${config.home.homeDirectory}/pictures";
       projects = lib.mkDefault "${config.home.homeDirectory}/prj";
@@ -70,6 +70,7 @@ in
     (relativeToHome config.xdg.stateHome)
 
     (relativeToHome config.xdg.userDirs.documents)
+    (relativeToHome config.xdg.userDirs.download)
     (relativeToHome config.xdg.userDirs.pictures)
     (relativeToHome config.xdg.userDirs.projects)
     (relativeToHome config.xdg.userDirs.videos)
