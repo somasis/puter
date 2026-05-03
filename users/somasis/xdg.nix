@@ -28,6 +28,7 @@ in
       download = lib.mkDefault "${config.home.homeDirectory}/downloads";
       music = lib.mkDefault "${config.home.homeDirectory}/audio/library";
       pictures = lib.mkDefault "${config.home.homeDirectory}/pictures";
+      projects = lib.mkDefault "${config.home.homeDirectory}/prj";
       publicShare = lib.mkDefault "/var/empty";
       videos = lib.mkDefault "${config.home.homeDirectory}/video";
     };
@@ -70,6 +71,7 @@ in
 
     (relativeToHome config.xdg.userDirs.documents)
     (relativeToHome config.xdg.userDirs.pictures)
+    (relativeToHome config.xdg.userDirs.projects)
     (relativeToHome config.xdg.userDirs.videos)
   ];
 }
