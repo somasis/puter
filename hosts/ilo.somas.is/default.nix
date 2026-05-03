@@ -109,7 +109,7 @@
   home-manager = {
     verbose = true;
 
-    users.somasis =
+    users.kylie =
       { pkgs, ... }:
       {
         imports = [

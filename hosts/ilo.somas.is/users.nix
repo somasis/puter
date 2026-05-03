@@ -10,7 +10,7 @@
     users = {
       root.hashedPassword = "$y$j9T$RI9UZXWVwReRSKDI9qhyw/$atD3ojK0Wp4fSMkzZD7jxM.HR/Sp9uj9UsnA5mYRso7";
 
-      somasis = {
+      kylie = {
         isNormalUser = true;
         description = "Kylie McClain";
         uid = 1000;
@@ -46,5 +46,5 @@
     };
   };
 
-  services.displayManager.autoLogin.user = "somasis";
+  services.displayManager.autoLogin.user = "kylie";
 }

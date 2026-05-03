@@ -17,18 +17,18 @@
 
     paths = [
       "/persist"
-      "/persist/home/somasis"
+      "/persist/home/kylie"
     ];
     exclude = [
       "*cache*"
       "*/Steam/steamapps/*"
 
-      "/persist/home/somasis/audio/library"
-      "/persist/home/somasis/audio/source"
-      "/persist/home/somasis/doc/vault"
-      "/persist/home/somasis/video/anime"
-      "/persist/home/somasis/video/film"
-      "/persist/home/somasis/video/tv"
+      "/persist/home/kylie/audio/library"
+      "/persist/home/kylie/audio/source"
+      "/persist/home/kylie/doc/vault"
+      "/persist/home/kylie/video/anime"
+      "/persist/home/kylie/video/film"
+      "/persist/home/kylie/video/tv"
     ];
 
     extraBackupArgs = [

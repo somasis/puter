@@ -101,8 +101,8 @@
       neededForBoot = true;
     };
 
-    "/persist/home/somasis" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/data/persist/home/somasis";
+    "/persist/home/kylie" = {
+      device = "${config.networking.fqdnOrHostName}/nixos/data/persist/home/kylie";
       fsType = "zfs";
     };
   };
