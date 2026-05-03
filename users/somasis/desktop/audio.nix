@@ -6,18 +6,15 @@
 {
   home.packages = with pkgs; [
     easyeffects
-    jamesdsp
     ponymix
   ];
 
   cache.directories = with config.lib.somasis; [
     (xdgConfigDir "pulse")
-    (xdgCacheDir "jamesdsp")
     (xdgCacheDir "easyeffects")
   ];
 
   persist.directories = with config.lib.somasis; [
-    (xdgConfigDir "jamesdsp")
     (xdgConfigDir "easyeffects")
     (xdgDataDir "easyeffects")
   ];
