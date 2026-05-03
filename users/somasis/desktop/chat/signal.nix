@@ -17,7 +17,7 @@
 {
   home.packages = [ pkgs.signal-desktop ];
 
-  persist.directories = [ (config.lib.somasis.xdgConfigDir "Signal") ];
+  data.directories = [ (config.lib.somasis.xdgConfigDir "Signal") ];
 
   xdg.autostart.entries = [
     (

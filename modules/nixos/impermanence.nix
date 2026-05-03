@@ -21,35 +21,23 @@ let
 in
 {
   options.persistence = {
-    persist = mkPath "/persist" ''
-      The system's default persist directory.
-      This directory is used for more permanent data, such as what would go in
-      /etc, /var/db, or /var/lib.
-    '';
-    cache = mkPath "/cache" ''
-      The system's default cache directory.
-      This directory is used for less permanent data, such as what would go in
-      /var/cache.
+    data = mkPath "/data" ''
+      The system's default data directory.
     '';
   };
 
   imports = [
     "${sources.impermanence}/nixos.nix"
 
-    # Actually create the aliases options.
-    (mkAliasOptionModule [ "persist" ] [ "environment" "persistence" config.persistence.persist ])
-    (mkAliasOptionModule [ "cache" ] [ "environment" "persistence" config.persistence.cache ])
+    # Actually create the aliases option.
+    (mkAliasOptionModule [ "data" ] [ "environment" "persistence" config.persistence.data ])
   ];
 
   config = {
-    environment.persistence = {
-      persist.persistentStoragePath = config.persistence.persist;
-      cache.persistentStoragePath = config.persistence.cache;
-    };
+    environment.persistence.data.persistentStoragePath = config.persistence.data;
 
-    persist = {
+    data = {
       users.root = {
-        home = "/root";
         directories = [
           ".cache"
           ".config"
@@ -81,18 +69,26 @@ in
         user = "uptimed";
         group = "uptimed";
       })
-      ++ (lib.optional config.services.fwupd.enable {
-        directory = "/var/lib/fwupd";
-        user = "fwupd-refresh";
-        group = "fwupd-refresh";
-      })
+      ++ (lib.optionals config.services.fwupd.enable [
+        "/var/cache/fwupd"
+        {
+          directory = "/var/lib/fwupd";
+          user = "fwupd-refresh";
+          group = "fwupd-refresh";
+        }
+        {
+          directory = "/var/cache/fwupdmgr";
+          user = "fwupd-refresh";
+          group = "fwupd-refresh";
+        }
+      ])
       ++ (lib.optional config.services.accounts-daemon.enable {
         directory = "/var/lib/AccountsService";
         mode = "0775";
       })
       ++ (lib.optional config.services.fprintd.enable "/var/lib/fprint")
       ++ (lib.optional config.services.upower.enable "/var/lib/upower")
-      ++ (lib.optional config.services.bluetooth.enable {
+      ++ (lib.optional config.hardware.bluetooth.enable {
         mode = "0700";
         directory = "/var/lib/bluetooth";
       })
@@ -111,24 +107,17 @@ in
           group = "lp";
           directory = "/var/log/cups";
         }
-      ]);
-
-      # Persist all host keys (NixOS has default host key locations!)
-      files = lib.flatten (
-        map (key: [
-          key.path
-          "${key.path}.pub"
-        ]) config.services.openssh.hostKeys
-      );
-    };
-
-    cache.directories =
-      (lib.optionals config.services.fwupd.enable [
-        "/var/cache/fwupd"
         {
-          directory = "/var/cache/fwupdmgr";
-          user = "fwupd-refresh";
-          group = "fwupd-refresh";
+          mode = "0770";
+          user = "root";
+          group = "lp";
+          directory = "/var/cache/cups";
+        }
+        {
+          mode = "0710";
+          user = "root";
+          group = "lp";
+          directory = "/var/spool/cups";
         }
       ])
       ++ (lib.optional config.services.geoclue2.enable {
@@ -165,20 +154,15 @@ in
           }) jobNames
         )
       )
-      ++ (lib.optionals config.services.printing.enable [
-        {
-          mode = "0770";
-          user = "root";
-          group = "lp";
-          directory = "/var/cache/cups";
-        }
-        {
-          mode = "0710";
-          user = "root";
-          group = "lp";
-          directory = "/var/spool/cups";
-        }
-      ])
       ++ (lib.optional config.powerManagement.powertop.enable "/var/cache/powertop");
+
+      # Persist all host keys (NixOS has default host key locations!)
+      files = lib.flatten (
+        map (key: [
+          key.path
+          "${key.path}.pub"
+        ]) config.services.openssh.hostKeys
+      );
+    };
   };
 }

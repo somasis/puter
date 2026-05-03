@@ -9,20 +9,40 @@ let
 in
 assert osConfig.services.desktopManager.plasma6.enable;
 {
-  persist = {
+  data = {
     directories = [
       # NOTE this is just where I've chosen to store my monitor
       # color profiles, nothing official about this
       (xdgDataDir "color-profiles")
 
-      # Need bindfs because we write into ~/share/plasma when
-      # installing our theme files in `./users/somasis/theme`.
-      {
-        method = "bindfs";
-        directory = xdgDataDir "plasma";
-      }
+      (xdgDataDir "plasma")
 
       # keep-sorted start
+      (xdgCacheDir "bookmarksrunner") # Provided by krunner.
+      (xdgCacheDir "dolphin")
+      (xdgCacheDir "drkonqi")
+      (xdgCacheDir "fontconfig")
+      (xdgCacheDir "kalk")
+      (xdgCacheDir "kamoso")
+      (xdgCacheDir "kcrash-metadata")
+      (xdgCacheDir "kio_http")
+      (xdgCacheDir "krunner")
+      (xdgCacheDir "kscreenlocker_greet")
+      (xdgCacheDir "ksplash")
+      (xdgCacheDir "kweather")
+      (xdgCacheDir "kwin")
+      (xdgCacheDir "obexd")
+      (xdgCacheDir "org.kde.ki18n")
+      (xdgCacheDir "org.kde.kunifiedpush")
+      (xdgCacheDir "org.kde.unitconversion")
+      (xdgCacheDir "plasma-systemmonitor")
+      (xdgCacheDir "plasma_engine_potd")
+      (xdgCacheDir "plasmashell")
+      (xdgCacheDir "spectacle")
+      (xdgCacheDir "systemsettings")
+      (xdgCacheDir "thumbnails")
+      (xdgCacheDir "xdg-desktop-portal-kde")
+      (xdgCacheDir "xwaylandvideobridge")
       (xdgConfigDir "gtk-3.0") # kde-gtk-config
       (xdgConfigDir "gtk-4.0") # kde-gtk-config
       (xdgConfigDir "kde.org")
@@ -61,6 +81,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       # keep-sorted start
       ".directory" # Dolphin
       ".gtkrc-2.0" # kde-gtk-config
+      (xdgCacheDir "xdg-desktop-portal-kderc")
       (xdgConfigDir "KDE/Sonnet.conf")
       (xdgConfigDir "KDE/UserFeedback.conf")
       (xdgConfigDir "KDE/kjournald.conf")
@@ -120,46 +141,8 @@ assert osConfig.services.desktopManager.plasma6.enable;
       (xdgConfigDir "systemsettingsrc")
       (xdgConfigDir "trashrc")
       (xdgConfigDir "xdg-desktop-portal-kderc")
-      (xdgDataDir "user-places.xbel")
-      # keep-sorted end
-    ];
-  };
-
-  cache = {
-    directories = [
-      # keep-sorted start
-      (xdgCacheDir "bookmarksrunner") # Provided by krunner.
-      (xdgCacheDir "dolphin")
-      (xdgCacheDir "drkonqi")
-      (xdgCacheDir "fontconfig")
-      (xdgCacheDir "kalk")
-      (xdgCacheDir "kamoso")
-      (xdgCacheDir "kcrash-metadata")
-      (xdgCacheDir "kio_http")
-      (xdgCacheDir "krunner")
-      (xdgCacheDir "kscreenlocker_greet")
-      (xdgCacheDir "ksplash")
-      (xdgCacheDir "kweather")
-      (xdgCacheDir "kwin")
-      (xdgCacheDir "obexd")
-      (xdgCacheDir "org.kde.ki18n")
-      (xdgCacheDir "org.kde.kunifiedpush")
-      (xdgCacheDir "org.kde.unitconversion")
-      (xdgCacheDir "plasma-systemmonitor")
-      (xdgCacheDir "plasma_engine_potd")
-      (xdgCacheDir "plasmashell")
-      (xdgCacheDir "spectacle")
-      (xdgCacheDir "systemsettings")
-      (xdgCacheDir "thumbnails")
-      (xdgCacheDir "xdg-desktop-portal-kde")
-      (xdgCacheDir "xwaylandvideobridge")
-      # keep-sorted end
-    ];
-
-    files = [
-      # keep-sorted start
-      (xdgCacheDir "xdg-desktop-portal-kderc")
       (xdgDataDir "krunnerstaterc")
+      (xdgDataDir "user-places.xbel")
       # keep-sorted end
     ];
   };

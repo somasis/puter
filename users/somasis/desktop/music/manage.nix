@@ -19,11 +19,8 @@
     whipper
   ];
 
-  persist.directories = [
+  data.directories = [
     (config.lib.somasis.xdgConfigDir "beets")
-  ];
-
-  cache.directories = [
     (config.lib.somasis.xdgCacheDir "beets")
   ];
 

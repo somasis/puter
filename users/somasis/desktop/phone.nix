@@ -10,20 +10,17 @@ assert osConfig.programs.kdeconnect.enable;
     inherit (osConfig.programs.kdeconnect) package;
   };
 
-  persist = {
+  data = {
     directories = [
       (config.lib.somasis.xdgConfigDir "kdeconnect")
+      (config.lib.somasis.xdgDataDir "kpeoplevcard")
+      (config.lib.somasis.xdgCacheDir "kdeconnect.app")
+      (config.lib.somasis.xdgCacheDir "kdeconnect.daemon")
+      (config.lib.somasis.xdgCacheDir "kdeconnect.sms")
     ];
 
     files = [
       (config.lib.somasis.xdgConfigDir "kdeconnect.notifyrc")
     ];
   };
-
-  cache.directories = [
-    (config.lib.somasis.xdgDataDir "kpeoplevcard")
-    (config.lib.somasis.xdgCacheDir "kdeconnect.app")
-    (config.lib.somasis.xdgCacheDir "kdeconnect.daemon")
-    (config.lib.somasis.xdgCacheDir "kdeconnect.sms")
-  ];
 }

@@ -33,15 +33,12 @@ in
       inkscape
     ];
 
-  persist = {
+  data = {
     directories = [
       (xdgConfigDir "GIMP")
 
       # NOTE G'MIC seems to recreate the directory if it is a symlink?
-      {
-        method = "bindfs";
-        directory = xdgConfigDir "gmic";
-      }
+      (xdgConfigDir "gmic")
 
       (xdgConfigDir "darktable")
       (xdgConfigDir "inkscape")
@@ -50,17 +47,6 @@ in
 
       (xdgDataDir "koko")
       (xdgConfigDir "GREYC") # Used by gmic.
-    ];
-
-    files = [
-      (xdgConfigDir "kritarc")
-      (xdgConfigDir "kritadisplayrc")
-      (xdgConfigDir "kritashortcutsrc")
-    ];
-  };
-
-  cache = {
-    directories = [
       (xdgCacheDir "optimize")
 
       (xdgCacheDir "gimp")
@@ -69,7 +55,11 @@ in
       (xdgCacheDir "darktable")
       (xdgCacheDir "koko")
     ];
+
     files = [
+      (xdgConfigDir "kritarc")
+      (xdgConfigDir "kritadisplayrc")
+      (xdgConfigDir "kritashortcutsrc")
       (xdgDataDir "krita.log")
       (xdgDataDir "krita-sysinfo.log")
     ];

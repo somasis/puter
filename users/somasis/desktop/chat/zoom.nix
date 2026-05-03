@@ -20,9 +20,11 @@
     # })
   ];
 
-  persist = {
+  data = {
     directories = [ ".zoom" ];
-    files = [ (config.lib.somasis.xdgConfigDir "zoomus.conf") ];
+    files = [
+      (config.lib.somasis.xdgConfigDir "zoomus.conf")
+      (config.lib.somasis.xdgConfigDir "zoom.conf")
+    ];
   };
-  cache.files = [ (config.lib.somasis.xdgConfigDir "zoom.conf") ];
 }

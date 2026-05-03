@@ -29,7 +29,7 @@ let
   # };
 in
 {
-  cache.directories = [
+  data.directories = [
     (config.lib.somasis.xdgCacheDir "rclone")
     (config.lib.somasis.xdgCacheDir "restic")
   ];

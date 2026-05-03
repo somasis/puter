@@ -4,7 +4,7 @@
     pkgs.urbanterror
   ];
 
-  persist.directories = [
+  data.directories = [
     (config.lib.somasis.xdgConfigDir "urbanterror")
   ];
 

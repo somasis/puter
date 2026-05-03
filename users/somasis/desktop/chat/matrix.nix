@@ -12,7 +12,7 @@
     "${pkgs.cinny-desktop}/share/applications/Cinny.desktop"
   ];
 
-  persist = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     directories = [
       (xdgCacheDir "cinny")
       (xdgDataDir "cinny")

@@ -9,12 +9,9 @@
     ponymix
   ];
 
-  cache.directories = with config.lib.somasis; [
+  data.directories = with config.lib.somasis; [
     (xdgConfigDir "pulse")
     (xdgCacheDir "easyeffects")
-  ];
-
-  persist.directories = with config.lib.somasis; [
     (xdgConfigDir "easyeffects")
     (xdgDataDir "easyeffects")
   ];

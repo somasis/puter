@@ -69,29 +69,19 @@
 
   services.tunnels.enable = true;
 
-  cache.directories = with config.lib.somasis; [
-    (xdgCacheDir "borg")
-    (xdgCacheDir "mesa_shader_cache")
-    (xdgCacheDir "mesa_shader_cache_db")
-    (xdgCacheDir "containers")
-    (xdgCacheDir "JOSM")
-  ];
-
-  persist = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     directories = [
+      (xdgCacheDir "mesa_shader_cache")
+      (xdgCacheDir "mesa_shader_cache_db")
+      (xdgCacheDir "containers")
+      (xdgCacheDir "JOSM")
       (xdgDataDir "containers")
       (xdgConfigDir "OMaps")
       (xdgDataDir "OMaps")
       (xdgConfigDir "JOSM")
       (xdgDataDir "JOSM")
-      {
-        method = "bindfs";
-        directory = xdgDataDir "applications";
-      }
-      {
-        method = "bindfs";
-        directory = xdgDataDir "icons";
-      }
+      (xdgDataDir "applications")
+      (xdgDataDir "icons")
     ];
 
     files = [

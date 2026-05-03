@@ -50,7 +50,7 @@
     autoUpgrade.enable = false;
   };
 
-  persist = {
+  data = {
     hideMounts = true;
     directories = [
       "/var/lib/systemd"
@@ -69,8 +69,6 @@
       "/etc/machine-id"
     ];
   };
-
-  cache.hideMounts = true;
 
   programs.nano.enable = false;
 

@@ -32,6 +32,7 @@ in
       ageBin = lib.getExe ageWithPlugins;
       identityPaths = [
         "/etc/age/identity"
+        "/data/etc/age/identity"
       ];
     };
 

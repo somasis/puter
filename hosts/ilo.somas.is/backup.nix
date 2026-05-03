@@ -16,19 +16,19 @@
     initialize = true;
 
     paths = [
-      "/persist"
-      "/persist/home/kylie"
+      "/data"
+      "/data/home/kylie"
     ];
     exclude = [
       "*cache*"
       "*/Steam/steamapps/*"
 
-      "/persist/home/kylie/audio/library"
-      "/persist/home/kylie/audio/source"
-      "/persist/home/kylie/doc/vault"
-      "/persist/home/kylie/video/anime"
-      "/persist/home/kylie/video/film"
-      "/persist/home/kylie/video/tv"
+      "/data/home/kylie/audio/library"
+      "/data/home/kylie/audio/source"
+      "/data/home/kylie/doc/vault"
+      "/data/home/kylie/video/anime"
+      "/data/home/kylie/video/film"
+      "/data/home/kylie/video/tv"
     ];
 
     extraBackupArgs = [

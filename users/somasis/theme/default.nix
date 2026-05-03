@@ -59,11 +59,8 @@ in
     };
   };
 
-  persist.directories = with config.lib.somasis; [
+  data.directories = with config.lib.somasis; [
     (xdgConfigDir "klassy")
-  ];
-
-  cache.directories = with config.lib.somasis; [
     (xdgCacheDir "darkman")
   ];
 }

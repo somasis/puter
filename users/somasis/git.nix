@@ -5,10 +5,20 @@
   ...
 }:
 {
-  persist = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     directories = [
+      # keep-sorted start
+      (xdgCacheDir "act")
+      (xdgCacheDir "actcache")
+      (xdgCacheDir "direnv")
+      (xdgCacheDir "gh")
+      (xdgCacheDir "hugo_cache")
+      (xdgCacheDir "pre-commit")
+      (xdgCacheDir "treefmt")
       (xdgConfigDir "act")
       (xdgConfigDir "cachix")
+      (xdgDataDir "mergiraf")
+      # keep-sorted end
 
       # ~/share/direnv contains the allowlist of repositories.
       (xdgDataDir "direnv")
@@ -23,19 +33,6 @@
     extra-substituters = [ "https://somasis.cachix.org" ];
     extra-trusted-public-keys = [ "somasis.cachix.org-1:vJQjpTJdiBUHlxLP+iyj8cPJ0Y/mHh04yRO4kiDbM90=" ];
   };
-
-  cache.directories = with config.lib.somasis; [
-    # keep-sorted start
-    (xdgCacheDir "act")
-    (xdgCacheDir "actcache")
-    (xdgCacheDir "direnv")
-    (xdgCacheDir "gh")
-    (xdgCacheDir "hugo_cache")
-    (xdgCacheDir "pre-commit")
-    (xdgCacheDir "treefmt")
-    (xdgDataDir "mergiraf")
-    # keep-sorted end
-  ];
 
   home.packages = with pkgs; [
     act

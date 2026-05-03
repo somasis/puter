@@ -43,7 +43,7 @@ in
 
   home.sessionPath = [ "$HOME/bin" ];
 
-  persist.directories = [
+  data.directories = [
     "bin"
   ];
 

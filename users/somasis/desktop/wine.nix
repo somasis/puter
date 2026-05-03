@@ -156,7 +156,7 @@ in
     # '';
   };
 
-  persist.directories = [
+  data.directories = [
     (xdgConfigDir "wineprefixes")
     (xdgDataDir "wineprefixes")
   ];

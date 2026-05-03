@@ -36,14 +36,9 @@ in
     )
   ];
 
-  cache = {
+  data = {
     directories = [
       (config.lib.somasis.xdgConfigDir "equibop/sessionData")
-    ];
-  };
-
-  persist = {
-    directories = [
       (config.lib.somasis.xdgConfigDir "equibop/settings")
     ];
 

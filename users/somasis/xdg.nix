@@ -61,15 +61,12 @@ in
     shellAliases.open = "xe -N1 -a xdg-open --";
   };
 
-  persist.directories = [
+  data.directories = [
     # > $XDG_STATE_HOME contains state data that should persist between (application) restarts,
     # > but that is not important or portable enough to the user that it should be stored in
     # > $XDG_DATA_HOME.
     # <https://specifications.freedesktop.org/basedir-spec/latest/#variables>
-    {
-      method = "bindfs";
-      directory = relativeToHome config.xdg.stateHome;
-    }
+    (relativeToHome config.xdg.stateHome)
 
     (relativeToHome config.xdg.userDirs.documents)
     (relativeToHome config.xdg.userDirs.pictures)

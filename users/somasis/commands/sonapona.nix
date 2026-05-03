@@ -9,7 +9,7 @@
     pkgs.sonapona
   ];
 
-  persist.directories = [
+  data.directories = [
     (config.lib.somasis.xdgDataDir "sonapona")
   ];
 

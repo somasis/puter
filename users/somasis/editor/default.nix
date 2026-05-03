@@ -728,12 +728,9 @@ in
     ];
   };
 
-  cache.directories = [
+  data.directories = [
     (config.lib.somasis.xdgDataDir "meld")
     (config.lib.somasis.xdgDataDir "kak/state-save")
-  ];
-
-  persist.directories = [
     (config.lib.somasis.xdgDataDir "org.kde.syntax-highlighting/themes")
   ];
 

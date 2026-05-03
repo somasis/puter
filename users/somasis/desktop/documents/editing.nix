@@ -63,18 +63,15 @@
     ocrmypdf = ''ocrmypdf --user-words "$XDG_DATA_HOME"/tesseract/eng.user-words --sidecar "$XDG_CACHE_HOME"/ocrmypdf/sidecar.txt'';
   };
 
-  persist = {
+  data = {
     directories = [
       (config.lib.somasis.xdgDataDir "tesseract")
+      (config.lib.somasis.xdgCacheDir "pdfgrep")
+      (config.lib.somasis.xdgCacheDir "ocrmypdf")
+      (config.lib.somasis.xdgCacheDir "skanpage")
     ];
     files = [
       (config.lib.somasis.xdgConfigDir "skanpagerc")
     ];
   };
-
-  cache.directories = [
-    (config.lib.somasis.xdgCacheDir "pdfgrep")
-    (config.lib.somasis.xdgCacheDir "ocrmypdf")
-    (config.lib.somasis.xdgCacheDir "skanpage")
-  ];
 }

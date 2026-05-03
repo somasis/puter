@@ -19,15 +19,12 @@ let
 in
 with config.lib.somasis;
 {
-  cache.directories = [
+  data.directories = [
+    (xdgConfigDir "jellyfin-mpv-shim")
+    (xdgDataDir "jellyfin-desktop")
     (xdgCacheDir "jellyfin-desktop")
     (xdgCacheDir "mpv")
     (xdgCacheDir "yt-dlp")
-  ];
-
-  persist.directories = [
-    (xdgConfigDir "jellyfin-mpv-shim")
-    (xdgDataDir "jellyfin-desktop")
   ];
 
   programs = {

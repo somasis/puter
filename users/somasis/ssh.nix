@@ -8,14 +8,9 @@
   # Exception to the rule: ~/.ssh is used instead of ~/etc/ssh.
   # Remember, ssh(1) suggests ~/.ssh should only be readable by
   # the user, not by the group or anyone else:
-  # $ mkdir -m go-rwx /persist/home/somasis/.ssh
-  persist.directories = [
-    {
-      # We must use bindfs because home-manager manages ~/.ssh/config for us,
-      # and it will error during build when trying to follow the ~/.ssh symlink.
-      method = "bindfs";
-      directory = ".ssh";
-    }
+  # $ mkdir -m go-rwx /data/home/somasis/.ssh
+  data.directories = [
+    ".ssh"
   ];
 
   systemd.user.services = {

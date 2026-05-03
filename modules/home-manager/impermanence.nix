@@ -25,21 +25,13 @@ let
 
   module = {
     options.persistence = {
-      persist = mkPath "/persist" ''
-        The system's default persist directory.
-        This directory is used for more permanent data, such as what would go in
-        $XDG_DATA_HOME, $XDG_STATE_HOME, or $XDG_CONFIG_HOME.
-      '';
-      cache = mkPath "/cache" ''
-        The system's default cache directory.
-        This directory is used for less permanent data, such as what would go in
-        $XDG_CACHE_HOME.
+      data = mkPath "/data" ''
+        The system's default data directory.
       '';
     };
 
     imports = [
-      (mkAliasOptionModule [ "persist" ] [ "home" "persistence" config.persistence.persist ])
-      (mkAliasOptionModule [ "cache" ] [ "home" "persistence" config.persistence.cache ])
+      (mkAliasOptionModule [ "data" ] [ "home" "persistence" config.persistence.data ])
     ];
   };
 in

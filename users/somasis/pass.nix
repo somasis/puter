@@ -37,19 +37,14 @@ let
     );
 in
 {
-  persist = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     directories = [
       (xdgConfigDir "keepassxc")
+      (xdgCacheDir "keepassxc")
     ];
 
     files = [
       (xdgConfigDir "KeePassXCrc")
-    ];
-  };
-
-  cache = with config.lib.somasis; {
-    directories = [
-      (xdgCacheDir "keepassxc")
     ];
   };
 

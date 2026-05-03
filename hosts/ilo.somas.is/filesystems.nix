@@ -55,53 +55,30 @@
 
   fileSystems = {
     "/" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/root/runtime";
+      device = "${config.networking.fqdnOrHostName}/runtime";
       fsType = "zfs";
     };
 
     "/boot" = {
-      device = "/dev/disk/by-id/nvme-WDS100T1X0E-00AFY0_2045A0800564-part1";
+      device = "/dev/disk/by-id/nvme-eui.e8238fa6bf530001001b448b49267e67-part1";
       fsType = "vfat";
     };
 
-    "/home" = {
-      device = "none";
-      fsType = "tmpfs";
-      neededForBoot = true;
-      options = [
-        "mode=755"
-        # NOTE: Limit /home to 512mb of memory. I don't want to accidentally lock up
-        #       the machine by extracting stuff to /home.
-        # "size=512m"
-      ];
-    };
-
     "/nix" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/root/nix";
+      device = "${config.networking.fqdnOrHostName}/nix";
       fsType = "zfs";
       neededForBoot = true;
       options = [ "x-gvfs-hide" ];
     };
 
-    "/cache" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/root/cache";
+    "/data" = {
+      device = "${config.networking.fqdnOrHostName}/data";
       fsType = "zfs";
       neededForBoot = true;
-    };
-
-    "/persist" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/data/persist";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
-
-    "/persist/home/kylie" = {
-      device = "${config.networking.fqdnOrHostName}/nixos/data/persist/home/kylie";
-      fsType = "zfs";
     };
   };
 
-  cache = {
+  data = {
     # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
     files = [ "/etc/zfs/zpool.cache" ];
     directories = [ "/var/lib/udisks2" ];
@@ -143,6 +120,13 @@
 
   # Only scrub when on AC power.
   systemd.timers.zfs-scrub.unitConfig.ConditionACPower = true;
+
+  swapDevices = [
+    {
+      device = "/dev/disk/by-id/nvme-eui.e8238fa6bf530001001b448b49267e67-part2";
+      randomEncryption = true;
+    }
+  ];
 
   zramSwap = {
     enable = true;

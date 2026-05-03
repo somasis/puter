@@ -2,7 +2,7 @@
 {
   services.syncthing.enable = true;
 
-  persist.directories = [
+  data.directories = [
     "shared"
     "sync"
     # (config.lib.somasis.xdgStateDir "syncthing")

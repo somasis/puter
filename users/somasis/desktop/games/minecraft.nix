@@ -9,7 +9,7 @@
     pkgs.prismlauncher
   ];
 
-  persist.directories = [
+  data.directories = [
     (config.lib.somasis.xdgDataDir "PrismLauncher")
   ];
 

@@ -29,7 +29,7 @@ in
   # The service conflicts with the Plasma applet.
   systemd.user.services.syncthingtray.Install.WantedBy = lib.mkForce [ ];
 
-  persist.files = [
+  data.files = [
     (config.lib.somasis.xdgConfigDir "syncthingtray.ini")
     (config.lib.somasis.xdgConfigDir "syncthingfileitemaction.ini")
   ];

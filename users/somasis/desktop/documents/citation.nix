@@ -165,11 +165,8 @@
     };
   };
 
-  persist.directories = [
-    {
-      method = "bindfs";
-      directory = ".zotero";
-    }
+  data.directories = [
+    ".zotero"
 
     (config.lib.somasis.xdgDataDir "zotero")
   ];

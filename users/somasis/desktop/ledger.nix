@@ -26,7 +26,7 @@ in
 {
   home.sessionVariables.LEDGER_FILE = "${config.home.homeDirectory}/ledger/journal.ledger";
 
-  persist.directories = [
+  data.directories = [
     (config.lib.somasis.relativeToHome "${config.home.homeDirectory}/ledger")
   ];
 

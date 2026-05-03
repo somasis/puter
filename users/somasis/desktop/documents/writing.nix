@@ -119,9 +119,11 @@ rec {
 
   # See for more details:
   # <https://wiki.documentfoundation.org/UserProfile#User_profile_content>
-  persist = {
+  data = {
     directories = [
       (xdgConfigDir "libreoffice/4")
+      (xdgConfigDir "LanguageTool/LibreOffice/cache")
+      (xdgCacheDir "libreoffice/backups")
     ];
 
     files = [
@@ -129,11 +131,6 @@ rec {
       (xdgConfigDir "LanguageTool/LibreOffice/LanguageTool.log")
     ];
   };
-
-  cache.directories = [
-    (xdgConfigDir "LanguageTool/LibreOffice/cache")
-    (xdgCacheDir "libreoffice/backups")
-  ];
 
   xdg = {
     configFile = {

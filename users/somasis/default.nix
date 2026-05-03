@@ -29,22 +29,11 @@
     # keep-sorted end
   ];
 
-  cache = {
-    defaultDirectoryMethod = "symlink";
-    allowOther = true;
-
+  data = {
     directories = with config.lib.somasis; [
       (xdgCacheDir "nix")
       (xdgDataDir "nix")
       (xdgDataDir "systemd")
-    ];
-  };
-
-  persist = {
-    defaultDirectoryMethod = "symlink";
-    allowOther = true;
-
-    directories = [
       "src"
     ];
   };

@@ -6,7 +6,7 @@
 {
   home.packages = [ pkgs.tremotesf ];
 
-  persist.directories = [
+  data.directories = [
     (config.lib.somasis.xdgConfigDir "tremotesf")
   ];
 }

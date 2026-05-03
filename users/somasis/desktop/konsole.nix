@@ -60,7 +60,7 @@ let
   };
 in
 {
-  cache = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     files = [
       (xdgDataDir "konsole/konsolestaterc")
     ];

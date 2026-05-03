@@ -8,7 +8,7 @@
     pkgs.syncplay
   ];
 
-  persist = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     directories = [ (xdgConfigDir "Syncplay") ];
     files = [ (xdgConfigDir "syncplay.ini") ];
   };

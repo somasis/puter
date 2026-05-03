@@ -6,7 +6,7 @@
   ...
 }:
 lib.mkIf osConfig.programs.steam.enable {
-  persist.directories = with config.lib.somasis; [
+  data.directories = with config.lib.somasis; [
     ".steam"
     (xdgDataDir "Steam")
     (xdgDataDir "vulkan")

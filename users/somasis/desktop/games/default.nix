@@ -70,7 +70,7 @@
       )
     ];
 
-  persist = {
+  data = {
     directories = with config.lib.somasis; [
       # keep-sorted start
       ".lbreakouthd"

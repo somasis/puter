@@ -13,22 +13,19 @@ in
     ./radio.nix
   ];
 
-  persist = {
+  data = {
     directories = [
       "audio"
 
       (xdgConfigDir "audacity")
+      (xdgCacheDir "audacity")
+      (xdgDataDir "audacity")
     ];
 
     files = [
       (xdgConfigDir "tageditor.ini")
     ];
   };
-
-  cache.directories = [
-    (xdgCacheDir "audacity")
-    (xdgDataDir "audacity")
-  ];
 
   xdg.userDirs.music = "${config.home.homeDirectory}/audio/library";
 

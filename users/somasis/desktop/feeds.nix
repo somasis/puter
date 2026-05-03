@@ -12,7 +12,7 @@
     pkgs.kdePackages.kasts
   ];
 
-  persist = {
+  data = {
     files = [
       (config.lib.somasis.xdgConfigDir "kastsrc")
 

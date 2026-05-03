@@ -13,11 +13,8 @@
 
   services.systembus-notify.enable = true;
 
-  persist.directories = [
+  data.directories = [
     (config.lib.somasis.xdgConfigDir "ntfy")
-  ];
-
-  cache.directories = [
     (config.lib.somasis.xdgCacheDir "ntfy")
   ];
 

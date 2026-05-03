@@ -3,7 +3,7 @@
   ...
 }:
 {
-  persist.directories = [
+  data.directories = [
     "diary"
   ];
   home.packages = [

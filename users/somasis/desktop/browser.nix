@@ -5,17 +5,14 @@
   ...
 }:
 {
-  persist = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     directories = [
       ".mozilla"
       (xdgCacheDir "mozilla/firefox")
       (xdgDataDir "firefoxpwa")
+      ".pki" # Created by Firefox.
     ];
   };
-
-  cache.directories = [
-    ".pki" # Created by Firefox.
-  ];
 
   home.sessionVariables.BROWSER = "firefox-esr";
 

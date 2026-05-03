@@ -18,7 +18,7 @@
     "${pkgs.kdePackages.konversation}/share/applications/org.kde.konversation.desktop"
   ];
 
-  persist = {
+  data = {
     directories = [
       (config.lib.somasis.xdgDataDir "konversation")
     ];

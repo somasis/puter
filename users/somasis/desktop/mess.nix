@@ -44,7 +44,7 @@ in
     sessionVariables.MESSDIR = messDir;
   };
 
-  persist.directories = [
+  data.directories = [
     "mess"
   ];
 

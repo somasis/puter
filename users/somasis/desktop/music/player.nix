@@ -19,7 +19,7 @@
     mpris-proxy.enable = true;
   };
 
-  persist = with config.lib.somasis; {
+  data = with config.lib.somasis; {
     directories = [
       (xdgConfigDir "feishin")
     ];

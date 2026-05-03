@@ -20,7 +20,7 @@
     LESSHISTSIZE = "10000";
   };
 
-  cache.directories = [
+  data.directories = [
     (config.lib.somasis.xdgCacheDir "less")
   ];
 
