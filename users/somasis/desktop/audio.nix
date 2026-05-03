@@ -16,15 +16,15 @@
     (xdgDataDir "easyeffects")
   ];
 
-  # xdg.autostart.entries = [
-  #   (
-  #     (pkgs.makeDesktopItem {
-  #       name = "jdsp-gui";
-  #       icon = "jamesdsp";
-  #       desktopName = "JamesDSP (tray)";
-  #       exec = "${pkgs.jamesdsp}/bin/jamesdsp --tray";
-  #     })
-  #     + "/share/applications/jdsp-gui.desktop"
-  #   )
-  # ];
+  xdg.autostart.entries = [
+    (
+      (pkgs.makeDesktopItem {
+        name = "easyeffects";
+        icon = "com.github.wwmm.easyeffects";
+        desktopName = "Easy Effects";
+        exec = "${pkgs.easyeffects}/bin/easyeffects --hide-window --service-mode";
+      })
+      + "/share/applications/easyeffects.desktop"
+    )
+  ];
 }
