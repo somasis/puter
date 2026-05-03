@@ -159,7 +159,7 @@ finish_import() {
                 rm -r "${latest_after_import}"
                 ;;
             redo)
-                exec-to-terminal beet -p importsource import "${beet_import_args}" \
+                exec-to-terminal beet -P importsource import "${beet_import_args}" \
                     --timid --noincremental \
                     -L source_path:="${import}"
                 ;;
@@ -247,7 +247,7 @@ for import; do
         case "${action}" in
             timid-exit)
                 exec-to-terminal \
-                    beet -p importsource import \
+                    beet -P importsource import \
                     "${beet_import_args[@]}" \
                     --timid --noincremental \
                     "${import}"
@@ -260,7 +260,7 @@ for import; do
 
         beets_skipped_log=$(mktemp)
 
-        edo beet -p importsource import --quiet \
+        edo beet -P importsource import --quiet \
             --log "$beets_skipped_log" \
             "${beet_import_args[@]}" \
             "${import}"
@@ -297,7 +297,7 @@ for import; do
 
                 case "${action}" in
                     timid-exit)
-                        exec-to-terminal beet -p importsource import "${beet_import_args[@]}" \
+                        exec-to-terminal beet -P importsource import "${beet_import_args[@]}" \
                             --timid --noincremental \
                             "${import}"
                         ;;
