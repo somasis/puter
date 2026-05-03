@@ -21,11 +21,9 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
-    #
-    (fetchpatch2 {
-      url = "https://github.com/NixOS/nixpkgs/pull/481370.patch";
-      hash = "sha256-TReKtB8bSDFeK4JlxvMCra4Ysq/GfcBxYPmOuL4Ir6Q=";
-    })
+
+    # Remove once <https://github.com/NixOS/nixpkgs/pull/481370> is merged
+    ./0001-beets-filetote-1.1.1-1.3.4-unbreak-use-finalAttrs.patch
   ];
 
   # deadnix: skip
