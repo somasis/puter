@@ -17,6 +17,7 @@ in
   programs = {
     nix-index.enable = true;
     nix-index-database.comma.enable = true;
+    command-not-found.enable = false;
 
     # Install git by default to ease development from a clean system.
     git.enable = true;
