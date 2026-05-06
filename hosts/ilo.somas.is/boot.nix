@@ -18,8 +18,6 @@
         memtest86.enable = true;
         netbootxyz.enable = true;
       };
-
-      timeout = 0;
     };
 
     initrd = {
