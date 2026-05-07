@@ -53,6 +53,7 @@ rec {
       enable = true;
       excludes = [
         ".*.user.js" # greasemonkey scripts; too many false positives
+        "npins/.*"
       ];
 
       settings.configPath = builtins.toString (
