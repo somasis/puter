@@ -1,5 +1,7 @@
 {
   pkgs,
+  lib,
+  config,
   ...
 }:
 {
@@ -99,8 +101,24 @@
     cpuFreqGovernor = "powersave";
 
     # Auto-tune with powertop on boot.
-    powertop.enable = true;
+    powertop = {
+      enable = true;
+
+      # Trigger rules for the devices we disable USB auto-suspend for in services.udev.extraRules
+      postStart = ''
+        ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=3434 -a idProduct=0a38
+        ${lib.getExe' config.systemd.package "udevadm"} trigger -c bind -s usb -a idVendor=046d -a idProduct=c08a
+      '';
+    };
   };
+
+  services.udev.extraRules = ''
+    # Disable USB auto-suspend for Keychron K3 Max keyboard
+    ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="3434", ATTR{idProduct}=="0a38", TEST=="power/control", ATTR{power/control}="on"
+
+    # Disable USB auto-suspend for Logitech MX Vertical Advanced Ergonomic Mouse
+    ACTION=="bind", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c08a", TEST=="power/control", ATTR{power/control}="on"
+  '';
 
   systemd.shutdown."wine-kill" = pkgs.writeShellScript "wine-kill" ''
     ${pkgs.procps}/bin/pkill '^winedevice\.exe$' || :
