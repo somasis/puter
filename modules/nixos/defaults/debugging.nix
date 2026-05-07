@@ -37,4 +37,9 @@
     enable = true;
     substituters = [ "local:" ] ++ config.nix.settings.substituters;
   };
+
+  environment.systemPackages = with pkgs; [
+    usbutils
+    pciutils
+  ];
 }
