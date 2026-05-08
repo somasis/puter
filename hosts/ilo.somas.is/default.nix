@@ -111,8 +111,8 @@
       { pkgs, ... }:
       {
         imports = [
-          ../../users/somasis
-          ../../users/somasis/desktop
+          ../../users/kylie
+          ../../users/kylie/desktop
         ];
       };
   };
