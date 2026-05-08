@@ -95,13 +95,10 @@
         };
       };
 
-      "majuna" = {
-        hostname = "majuna.local";
-      };
-
       "box.somas.is" = {
         host = "whatbox box";
         hostname = "box.somas.is";
+        user = "somasis";
       };
 
       # Random hosts
