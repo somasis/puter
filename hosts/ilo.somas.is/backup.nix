@@ -15,12 +15,29 @@
     rcloneConfigFile = config.age.secrets.restic-rclone-whatbox.path;
     initialize = true;
 
+    pruneOpts = [
+      "--keep-within 1h"
+      "--keep-within-hourly 12h"
+      "--keep-daily 7"
+      "--keep-weekly 4"
+      "--keep-monthly 6"
+      "--keep-yearly 1"
+      "--repack-cacheable-only"
+    ];
+
+    timerConfig.OnCalendar = [
+      "*:0/15:00" # every 15 minutes
+      "hourly"
+      "daily"
+      "weekly"
+      "monthly"
+    ];
+
     paths = [
       "/data"
       "/data/home/kylie"
     ];
     exclude = [
-      "*cache*"
       "*/Steam/steamapps/*"
 
       "/data/home/kylie/audio/library"
@@ -33,8 +50,6 @@
 
     extraBackupArgs = [
       "--one-file-system"
-      "--iexclude=*cache*"
-      "--exclude-if-present=.stfolder"
       "--exclude-caches"
     ];
   };
