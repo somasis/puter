@@ -20,7 +20,6 @@ in
 with config.lib.somasis;
 {
   data.directories = [
-    (xdgConfigDir "jellyfin-mpv-shim")
     (xdgDataDir "jellyfin-desktop")
     (xdgCacheDir "jellyfin-desktop")
     (xdgCacheDir "mpv")
@@ -198,14 +197,9 @@ with config.lib.somasis;
 
   home = {
     packages = [
-      pkgs.jellyfin-mpv-shim
       pkgs.jellyfin-media-player
     ];
 
     shellAliases.ytaudio = "yt-dlp --format bestaudio --extract-audio --audio-format wav";
   };
-
-  xdg.autostart.entries = [
-    "${pkgs.jellyfin-mpv-shim}/share/applications/jellyfin-mpv-shim.desktop"
-  ];
 }
