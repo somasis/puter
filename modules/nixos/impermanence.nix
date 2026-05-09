@@ -156,12 +156,18 @@ in
       ++ (optional config.powerManagement.powertop.enable "/var/cache/powertop");
 
       # Persist all host keys (NixOS has default host key locations!)
-      files = flatten (
-        map (key: [
-          key.path
-          "${key.path}.pub"
-        ]) config.services.openssh.hostKeys
-      );
+      files =
+        # If there's a filesystem using ZFS, persist the zpool cache
+        # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
+        (optional (
+          (filterAttrs (_: v: v.fsType == "zfs") config.fileSystems) != { }
+        ) "/etc/zfs/zpool.cache")
+        ++ (lib.flatten (
+          map (key: [
+            key.path
+            "${key.path}.pub"
+          ]) config.services.openssh.hostKeys
+        ));
     };
   };
 }

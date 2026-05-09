@@ -90,11 +90,6 @@
     };
   };
 
-  data = {
-    # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
-    files = [ "/etc/zfs/zpool.cache" ];
-  };
-
   programs.fuse.userAllowOther = true;
 
   services = {
