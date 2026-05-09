@@ -131,6 +131,7 @@ in
       })
       # Enable ALSA and preserve the mixer state across boots.
       ++ (optional config.hardware.alsa.enablePersistence "/var/lib/alsa")
+      ++ (optional config.services.udisks2.enable "/var/lib/udisks2")
       ++ (optional config.services.self-deploy.enable "/var/lib/nixos-self-deploy")
       ++ (optional config.networking.networkmanager.enable "/var/lib/NetworkManager")
       ++ (

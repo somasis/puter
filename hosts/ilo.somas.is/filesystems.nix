@@ -93,7 +93,6 @@
   data = {
     # <https://nixos.org/manual/nixos/unstable/#sec-zfs-state>
     files = [ "/etc/zfs/zpool.cache" ];
-    directories = [ "/var/lib/udisks2" ];
   };
 
   programs.fuse.userAllowOther = true;
