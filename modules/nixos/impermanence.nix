@@ -36,7 +36,7 @@ in
   config = {
     environment.persistence.data.persistentStoragePath = config.persistence.data;
 
-    data = {
+    data = with lib; {
       users.root = {
         directories = [
           ".cache"
@@ -58,16 +58,16 @@ in
           mode = "0755";
         }
       ]
-      ++ (lib.optional (config.boot ? "lanzaboote" && config.boot.lanzaboote.enable) {
+      ++ (optional (config.boot ? "lanzaboote" && config.boot.lanzaboote.enable) {
         directory = config.boot.lanzaboote.pkiBundle;
       })
-      ++ (lib.optional config.services.age-keygen.enable "/etc/age")
-      ++ (lib.optional config.services.uptimed.enable {
+      ++ (optional config.services.age-keygen.enable "/etc/age")
+      ++ (optional config.services.uptimed.enable {
         directory = "/var/lib/uptimed";
         user = "uptimed";
         group = "uptimed";
       })
-      ++ (lib.optionals config.services.fwupd.enable [
+      ++ (optionals config.services.fwupd.enable [
         "/var/cache/fwupd"
         {
           directory = "/var/lib/fwupd";
@@ -80,21 +80,21 @@ in
           group = "fwupd-refresh";
         }
       ])
-      ++ (lib.optional config.services.accounts-daemon.enable {
+      ++ (optional config.services.accounts-daemon.enable {
         directory = "/var/lib/AccountsService";
         mode = "0775";
       })
-      ++ (lib.optional config.services.fprintd.enable "/var/lib/fprint")
-      ++ (lib.optional config.services.upower.enable "/var/lib/upower")
-      ++ (lib.optional config.hardware.bluetooth.enable {
+      ++ (optional config.services.fprintd.enable "/var/lib/fprint")
+      ++ (optional config.services.upower.enable "/var/lib/upower")
+      ++ (optional config.hardware.bluetooth.enable {
         mode = "0700";
         directory = "/var/lib/bluetooth";
       })
-      ++ (lib.optional config.networking.networkmanager.enable {
+      ++ (optional config.networking.networkmanager.enable {
         directory = "/etc/NetworkManager/system-connections";
         mode = "0700";
       })
-      ++ (lib.optionals config.services.printing.enable [
+      ++ (optionals config.services.printing.enable [
         {
           mode = "0755";
           directory = "/var/lib/cups";
@@ -118,28 +118,28 @@ in
           directory = "/var/spool/cups";
         }
       ])
-      ++ (lib.optional config.services.geoclue2.enable {
+      ++ (optional config.services.geoclue2.enable {
         directory = "/var/lib/geoclue";
         user = "geoclue";
         group = "geoclue";
       })
-      ++ (lib.optional config.services.usbguard.enable {
+      ++ (optional config.services.usbguard.enable {
         directory = "/var/lib/usbguard";
         mode = "0775";
         user = "root";
         group = "wheel";
       })
       # Enable ALSA and preserve the mixer state across boots.
-      ++ (lib.optional config.hardware.alsa.enablePersistence "/var/lib/alsa")
-      ++ (lib.optional config.services.self-deploy.enable "/var/lib/nixos-self-deploy")
-      ++ (lib.optional config.networking.networkmanager.enable "/var/lib/NetworkManager")
+      ++ (optional config.hardware.alsa.enablePersistence "/var/lib/alsa")
+      ++ (optional config.services.self-deploy.enable "/var/lib/nixos-self-deploy")
+      ++ (optional config.networking.networkmanager.enable "/var/lib/NetworkManager")
       ++ (
         # For every Restic backup job that exists, persist its cache directory.
         let
           jobs = config.services.restic.backups;
           jobNames = builtins.attrNames jobs;
         in
-        lib.optionals (jobs != [ ]) (
+        optionals (jobs != [ ]) (
           map (jobName: {
             directory = "/var/cache/restic-backups-${jobName}";
 
@@ -152,10 +152,10 @@ in
           }) jobNames
         )
       )
-      ++ (lib.optional config.powerManagement.powertop.enable "/var/cache/powertop");
+      ++ (optional config.powerManagement.powertop.enable "/var/cache/powertop");
 
       # Persist all host keys (NixOS has default host key locations!)
-      files = lib.flatten (
+      files = flatten (
         map (key: [
           key.path
           "${key.path}.pub"
