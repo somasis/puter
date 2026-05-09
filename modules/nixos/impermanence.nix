@@ -50,8 +50,6 @@ in
       };
 
       directories = [
-        "/var/log/lastlog"
-
         # Used for keeping declared users' UIDs and GIDs consistent across boots.
         {
           directory = "/var/lib/nixos";
