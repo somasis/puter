@@ -76,6 +76,18 @@
       fsType = "zfs";
       neededForBoot = true;
     };
+
+    "/mnt/windows" = {
+      device = "/dev/disk/by-id/nvme-eui.e8238fa6bf530001001b448b49267e67-part5";
+      fsType = "ntfs3";
+      options = [
+        "windows_names"
+        "hide_dot_files"
+        "discard"
+        "uid=${toString config.users.users.kylie.uid}"
+        "gid=${toString config.users.groups.${config.users.users.kylie.group}.gid}"
+      ];
+    };
   };
 
   data = {
@@ -133,7 +145,8 @@
     algorithm = "lz4";
   };
 
-  environment.systemPackages = [
-    pkgs.httm
+  environment.systemPackages = with pkgs; [
+    httm
+    ntfsprogs
   ];
 }
