@@ -83,9 +83,7 @@
       })
 
       dix
-      lix-diff
       nix-output-monitor
-      nvd
     ];
   };
 
