@@ -14,10 +14,6 @@
       konversation
     ];
 
-  xdg.autostart.entries = [
-    "${pkgs.kdePackages.konversation}/share/applications/org.kde.konversation.desktop"
-  ];
-
   data = {
     directories = [
       (config.lib.somasis.xdgDataDir "konversation")
