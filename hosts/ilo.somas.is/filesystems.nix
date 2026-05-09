@@ -64,6 +64,15 @@
       fsType = "vfat";
     };
 
+    # Necessary so that files created by Nix under /home are created with
+    # the correct permissions by default? TODO
+    "/home" = {
+      device = "none";
+      fsType = "tmpfs";
+      neededForBoot = true;
+      options = [ "mode=755" ];
+    };
+
     "/nix" = {
       device = "${config.networking.fqdnOrHostName}/nix";
       fsType = "zfs";
