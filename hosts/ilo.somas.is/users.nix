@@ -37,7 +37,7 @@
         ];
 
         # $ mkpasswd -m sha-512 -s
-        hashedPassword = "$6$1vjLB9lSU6Xw8J.L$8zmUO3J9dXUQfAIqIkCBroOpQ3KXUjBJsmu5NZrnO3IB1GyIqXpkUUgZP3XXCJ1./x9TK./06M4bnvYX/PYzs/";
+        hashedPassword = "$6$VyXUgBu/7jFpjURy$O2T1ApHWDRETETbC4wjkfJYomXPlU6QXb0Xg6fMdcQh2eH.hzc8HKoCbYaT4ctVvQGbz1Q2/PcT8P9H.Kr5We1";
       };
     };
   };
