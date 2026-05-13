@@ -90,6 +90,7 @@
       device = "/dev/disk/by-id/nvme-eui.e8238fa6bf530001001b448b49267e67-part5";
       fsType = "ntfs3";
       options = [
+        "nofail"
         "windows_names"
         "hide_dot_files"
         "discard"
