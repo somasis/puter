@@ -37,7 +37,8 @@ in
       };
     };
 
-    initrd.systemd.emergencyAccess = "8c765078bc2aed7230a68992a00a41013d219d479265473f9cf28651154cfb97";
+    # $ mkpasswd -m sha-512 -s
+    initrd.systemd.emergencyAccess = "$6$wdbNitvg5GyxAnQQ$bjXTIGMdmPIE0MciSAzQcLZfX0nhH72Q5PkPabB74eJkMM6mzJsR1eiG2kXjKx38dSh2swkIyeQyGdXFhqrHZ1";
   };
 
   security = {

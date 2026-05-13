@@ -8,7 +8,7 @@
     mutableUsers = false;
 
     users = {
-      root.hashedPassword = "$y$j9T$RI9UZXWVwReRSKDI9qhyw/$atD3ojK0Wp4fSMkzZD7jxM.HR/Sp9uj9UsnA5mYRso7";
+      root.hashedPassword = "$6$cegYz9RIY2DrLPv8$YhEWNBe.byz/NdZ8nH8NkbUM4DFFpdBQp1XV4MtAkIlmwUbq2vb65Ba/BdRLIOX7GaSfJChZqE8R7pkdRLKKt0";
 
       kylie = {
         isNormalUser = true;
