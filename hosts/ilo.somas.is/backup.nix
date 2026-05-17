@@ -40,6 +40,7 @@
     exclude = [
       "*/Steam/steamapps/*"
 
+      "/data/home/kylie/var/cache/rclone/*"
       "/data/home/kylie/audio/library"
       "/data/home/kylie/audio/source"
       "/data/home/kylie/doc/vault"
