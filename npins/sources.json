@@ -41,9 +41,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "26aaab785b0bab4af60a2c42b22760fa906ef22a",
-      "url": "https://github.com/nix-community/home-manager/archive/26aaab785b0bab4af60a2c42b22760fa906ef22a.tar.gz",
-      "hash": "sha256-oaNyOr05lblaQdtbkbN1wO0b2KLIL2O1LkmwDgdQp4I="
+      "revision": "bcb774cfc3268120cd61808629f9aa7dad3750a2",
+      "url": "https://github.com/nix-community/home-manager/archive/bcb774cfc3268120cd61808629f9aa7dad3750a2.tar.gz",
+      "hash": "sha256-ZbgWWFQmSyM3HQ31nAZk2hJ7OSeNr9uRFHL8jCifY9M="
     },
     "home-manager-stable": {
       "type": "Git",
@@ -96,9 +96,9 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "01466c414c7357ae2ce32be4a272a7c69e94ab5f",
-      "url": "https://github.com/nix-community/nix-index-database/archive/01466c414c7357ae2ce32be4a272a7c69e94ab5f.tar.gz",
-      "hash": "sha256-mOtQxUjtKaPHLeoLOY/YEDctmud1X9KwJr4kE1MJ3Wc="
+      "revision": "f680e0d3c1dbefe298c423691662e238496890f2",
+      "url": "https://github.com/nix-community/nix-index-database/archive/f680e0d3c1dbefe298c423691662e238496890f2.tar.gz",
+      "hash": "sha256-V5GquqJvAqwFTcpN6hxKSQAtwuJFRUEHmyNKbeaTQDg="
     },
     "nixos-hardware": {
       "type": "Git",
