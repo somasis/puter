@@ -41,9 +41,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "bcb774cfc3268120cd61808629f9aa7dad3750a2",
-      "url": "https://github.com/nix-community/home-manager/archive/bcb774cfc3268120cd61808629f9aa7dad3750a2.tar.gz",
-      "hash": "sha256-ZbgWWFQmSyM3HQ31nAZk2hJ7OSeNr9uRFHL8jCifY9M="
+      "revision": "928d72376949e222ea4f07b44828a55b0136422e",
+      "url": "https://github.com/nix-community/home-manager/archive/928d72376949e222ea4f07b44828a55b0136422e.tar.gz",
+      "hash": "sha256-n1+l78hJRABp4cQHKeD0BVByT0vZLPqd09Tvoq8Q+d8="
     },
     "home-manager-stable": {
       "type": "Git",
@@ -109,27 +109,27 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "379c1f274f0fa354d012f0600806de54e79f29b5",
-      "url": "https://github.com/nixos/nixos-hardware/archive/379c1f274f0fa354d012f0600806de54e79f29b5.tar.gz",
-      "hash": "sha256-Aipz0UiBhE2a1FYJrNc2y+5vKWo5QVkhmaIJk3/ls+g="
+      "revision": "c97bc4d15bd3473dd095e8e8ba57330ab1943a77",
+      "url": "https://github.com/nixos/nixos-hardware/archive/c97bc4d15bd3473dd095e8e8ba57330ab1943a77.tar.gz",
+      "hash": "sha256-j1iZsLy6oFApqR1oiDmHhvkwxXqcNi0aoSJj643LuwU="
     },
     "nixos-stable": {
       "type": "Channel",
       "name": "nixos-25.11",
-      "url": "https://releases.nixos.org/nixos/25.11/nixos-25.11.10830.d7a713c0b7e4/nixexprs.tar.xz",
-      "hash": "sha256-yaygeUhegLBNHADHR27S4fSJao9FcSa9ms6RcA382hA="
+      "url": "https://releases.nixos.org/nixos/25.11/nixos-25.11.11112.687f05a9184c/nixexprs.tar.xz",
+      "hash": "sha256-uTBbAAmkcLK3Fd3RjXG/VX1jkiY0gdh+oqWyB+BjyhI="
     },
     "nixos-unstable": {
       "type": "Channel",
       "name": "nixos-unstable-small",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre998996.5a51fe22e18a/nixexprs.tar.xz",
-      "hash": "sha256-/dM6gIpwN+FEAi9Ewu/HxUMuEqpnVeyrfWOsQGSJGlk="
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre1003073.f63936d79dd6/nixexprs.tar.xz",
+      "hash": "sha256-EEeQYTzXdoV9oZq7p5ekvb+lP3yeWhIwowaghCqPY74="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre998534.d233902339c0/nixexprs.tar.xz",
-      "hash": "sha256-vZOcDniDPc1cS8A4Xi5YE6AGyPIvEpy4GMyayA3SWIM="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre1001117.d99b013d5d19/nixexprs.tar.xz",
+      "hash": "sha256-AyKVLJihBA4molWFBpbk2+ruMFlkL1ONA8eNShZithw="
     },
     "plasma-manager": {
       "type": "Git",
