@@ -82,8 +82,6 @@ in
               enable = true;
               mountPoint = "${config.home.homeDirectory}/audio/library";
 
-              logLevel = "DEBUG";
-
               options = bigCacheOptions // {
                 dir-cache-time = "2m0s";
               };
@@ -92,8 +90,6 @@ in
             "audio/source" = {
               enable = true;
               mountPoint = "${config.home.homeDirectory}/audio/source";
-
-              logLevel = "DEBUG";
 
               options = bigCacheOptions // {
                 dir-cache-time = "2m0s";
