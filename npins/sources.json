@@ -122,14 +122,14 @@
     "nixos-unstable": {
       "type": "Channel",
       "name": "nixos-unstable-small",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre1003073.f63936d79dd6/nixexprs.tar.xz",
-      "hash": "sha256-EEeQYTzXdoV9oZq7p5ekvb+lP3yeWhIwowaghCqPY74="
+      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre1003483.df10b3c6075b/nixexprs.tar.xz",
+      "hash": "sha256-WaHVUop6lpokeUxnYAykGwzwG9+AwuF5jFUMKIOK/o8="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre1001117.d99b013d5d19/nixexprs.tar.xz",
-      "hash": "sha256-AyKVLJihBA4molWFBpbk2+ruMFlkL1ONA8eNShZithw="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.05pre1003183.6dedf69f94d0/nixexprs.tar.xz",
+      "hash": "sha256-N5FzTQ6c0ZFX4b7LeOMqYHccvQZTVMx5RBxrDeLgWYo="
     },
     "plasma-manager": {
       "type": "Git",
