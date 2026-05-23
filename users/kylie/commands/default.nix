@@ -104,7 +104,7 @@ in
     table
     teip
     tree
-    trurl
+    # trurl
     xe
     xmlstarlet
     xurls

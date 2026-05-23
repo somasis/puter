@@ -63,48 +63,48 @@
       pkgs.spacer
       pkgs.nocolor
 
-      (pkgs.writeShellScriptBin "execurl" ''
-        fetch_directory=$(${pkgs.coreutils}/bin/mktemp -d)
+      # (pkgs.writeShellScriptBin "execurl" ''
+      #   fetch_directory=$(${pkgs.coreutils}/bin/mktemp -d)
 
-        fetch() {
-            local file
+      #   fetch() {
+      #       local file
 
-            printf '%s -> ' "$1" >&2
-            file=$(
-                ${pkgs.curl}/bin/curl \
-                    -g \
-                    -Lfs# \
-                    --output-dir "$fetch_directory" \
-                    -o "file" \
-                    --remote-name \
-                    --remote-time \
-                    --no-clobber \
-                    --remote-header-name \
-                    --remote-name-all \
-                    --remove-on-error \
-                    -w '%{filename_effective}\n' \
-                    "$1"
-            )
-            printf '%s\n' "$file" >&2
+      #       printf '%s -> ' "$1" >&2
+      #       file=$(
+      #           ${pkgs.curl}/bin/curl \
+      #               -g \
+      #               -Lfs# \
+      #               --output-dir "$fetch_directory" \
+      #               -o "file" \
+      #               --remote-name \
+      #               --remote-time \
+      #               --no-clobber \
+      #               --remote-header-name \
+      #               --remote-name-all \
+      #               --remove-on-error \
+      #               -w '%{filename_effective}\n' \
+      #               "$1"
+      #       )
+      #       printf '%s\n' "$file" >&2
 
-            printf '%s' "$file"
-        }
+      #       printf '%s' "$file"
+      #   }
 
-        error_code=0
-        arguments=()
+      #   error_code=0
+      #   arguments=()
 
-        for argument; do
-            if ${pkgs.trurl}/bin/trurl --no-guess-scheme --verify --url "$argument" >/dev/null 2>&1; then
-                arguments+=( "$(fetch "$argument")" )
-            else
-                arguments+=( "$argument" )
-            fi
-        done
+      #   for argument; do
+      #       if ${pkgs.trurl}/bin/trurl --no-guess-scheme --verify --url "$argument" >/dev/null 2>&1; then
+      #           arguments+=( "$(fetch "$argument")" )
+      #       else
+      #           arguments+=( "$argument" )
+      #       fi
+      #   done
 
-        "''${arguments[@]}" || error_code=$?
-        ${pkgs.coreutils}/bin/rm -rf "$fetch_directory"
-        exit "$error_code"
-      '')
+      #   "''${arguments[@]}" || error_code=$?
+      #   ${pkgs.coreutils}/bin/rm -rf "$fetch_directory"
+      #   exit "$error_code"
+      # '')
     ];
   };
 
