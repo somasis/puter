@@ -129,9 +129,9 @@
     },
     "nixos-unstable": {
       "type": "Channel",
-      "name": "nixos-unstable-small",
-      "url": "https://releases.nixos.org/nixos/unstable-small/nixos-26.05pre1003860.19942a940b16/nixexprs.tar.xz",
-      "hash": "sha256-V2a1dda8sfldsqlBUtbvAdVfEy1HG1P3OPGqmvV2lw4="
+      "name": "nixos-unstable",
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre1003640.299164534138/nixexprs.tar.xz",
+      "hash": "sha256-OtXX32ZNu00Co+iVgV3ffkJVgVVcc0Sy56DdfJm+UQM="
     },
     "nixpkgs": {
       "type": "Channel",
