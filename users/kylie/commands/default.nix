@@ -113,10 +113,13 @@ in
     zstd
     # keep-sorted end
 
-    (ugrep.override {
-      wrapWithFilterUtils = true;
-      createGrepReplacementLinks = true;
-    })
+    # Prefer ugrep for default grep implementation
+    (lib.meta.hiPrio (
+      ugrep.override {
+        wrapWithFilterUtils = true;
+        createGrepReplacementLinks = true;
+      }
+    ))
 
     # moreutils's /bin/ts conflicts with outils.
     (symlinkJoin {
