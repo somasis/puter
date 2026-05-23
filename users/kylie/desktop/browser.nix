@@ -4,6 +4,12 @@
   lib,
   ...
 }:
+let
+  myfirefox = pkgs.firefox-esr;
+  myfirefoxpwa = pkgs.firefoxpwa.overrideAttrs (_: {
+    firefoxRuntime = myfirefox.unwrapped;
+  });
+in
 {
   data = with config.lib.somasis; {
     directories = [
@@ -35,12 +41,12 @@
         exec firefox-esr "$@"
       '')
 
-      firefoxpwa
-      (firefox-esr.override {
+      (myfirefox.override {
         nativeMessagingHosts = [
           plasma-browser-integration
-          firefoxpwa
+          myfirefoxpwa
         ];
       })
+      myfirefoxpwa
     ];
 }
