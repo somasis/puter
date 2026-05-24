@@ -75,7 +75,7 @@
     };
 
     kdeconnect.enable = true;
-    kde-pim.enable = true; # TODO testing
+    kde-pim.enable = false;
     partition-manager.enable = true;
   };
 
