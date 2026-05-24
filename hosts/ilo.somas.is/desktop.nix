@@ -44,9 +44,6 @@
   };
 
   services = {
-    # Use dbus-broker since it's faster.
-    dbus.implementation = "broker";
-
     journald.extraConfig = lib.generators.toKeyValue { } {
       MaxRetentionSec = "3month";
     };
@@ -88,31 +85,6 @@
       partOf = [ "graphical-session.target" ];
       wantedBy = [ "graphical-session.target" ];
     };
-    # // lib.mkIf config.services.systemd-lock-handler.enable {
-    #   targets.lock.conflicts = [ "usbguard-notifier.service" ];
-    #   targets.unlock.conflicts = [ "usbguard-block.service" ];
-
-    #   services.usbguard-block = {
-    #     description = "Arm USBGuard to block any newly-connected devices";
-    #     conflicts = [ "unlock.target" ];
-    #     wantedBy = [ "lock.target" "sleep.target" ];
-
-    #     serviceConfig = {
-    #       Type = "oneshot";
-    #       ExecStart = [
-    #         "${config.services.usbguard.package}/bin/usbguard set-parameter InsertedDevicePolicy block"
-    #         "${config.services.usbguard.package}/bin/usbguard set-parameter ImplicitPolicyTarget block"
-    #       ];
-
-    #       RemainAfterExit = true;
-
-    #       ExecStop = [
-    #         "${config.services.usbguard.package}/bin/usbguard set-parameter InsertedDevicePolicy ${config.services.usbguard.insertedDevicePolicy}"
-    #         "${config.services.usbguard.package}/bin/usbguard set-parameter ImplicitPolicyTarget ${config.services.usbguard.implicitPolicyTarget}"
-    #       ];
-    #     };
-    #   };
-    # };
   };
 
   services.hardware.bolt.enable = true;
