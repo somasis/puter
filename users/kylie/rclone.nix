@@ -10,7 +10,6 @@ let
   inherit (osConfig.networking) hostName;
 
   bigCacheOptions = {
-    vfs-refresh = true;
     vfs-cache-mode = "full";
     vfs-cache-max-size = "4G";
     vfs-cache-max-age = "7d";
@@ -92,7 +91,6 @@ in
               mountPoint = "${config.home.homeDirectory}/audio/source";
 
               options = bigCacheOptions // {
-                dir-cache-time = "2m0s";
                 vfs-cache-max-size = "20G";
               };
             };
