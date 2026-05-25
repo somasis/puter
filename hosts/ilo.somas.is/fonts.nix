@@ -84,10 +84,15 @@
     font = "${pkgs.spleen}/share/consolefonts/spleen-12x24.psfu";
   };
 
-  services.kmscon.fonts = [
-    {
-      name = "Iosevka";
-      package = pkgs.iosevka-bin;
-    }
-  ];
+  services.kmscon = {
+    fonts = [
+      {
+        name = "Iosevka";
+        package = pkgs.iosevka-bin;
+      }
+    ];
+    extraConfig = ''
+      font-size=13
+    '';
+  };
 }
