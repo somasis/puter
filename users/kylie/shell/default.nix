@@ -12,6 +12,14 @@
     ./prompt.nix
   ];
 
+  home.packages = [ pkgs.powershell ];
+
+  data.directories = with config.lib.somasis; [
+    (xdgConfigDir "powershell")
+    (xdgCacheDir "powershell")
+    (xdgDataDir "powershell")
+  ];
+
   programs = {
     bash = {
       enable = true;
