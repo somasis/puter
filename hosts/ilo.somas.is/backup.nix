@@ -1,6 +1,7 @@
 {
   config,
   self,
+  lib,
   ...
 }:
 {
@@ -67,4 +68,10 @@
       timerConfig.OnCalendar = [ "weekly" ];
     };
   };
+
+  # Ensure that backups-ilo-maintenance uses the same cache as backups-ilo,
+  # as it will mean the check/prune operations have more to work with,
+  # since they are configured to only operate on cached objects.
+  systemd.services.restic-backups-ilo-maintenance.environment.RESTIC_CACHE_DIR =
+    lib.mkForce config.systemd.services.restic-backups-ilo.environment.RESTIC_CACHE_DIR;
 }
