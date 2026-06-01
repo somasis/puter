@@ -64,7 +64,6 @@ in
 
   home.packages = with pkgs; [
     # keep-sorted start
-    (lib.meta.hiPrio num-utils) # conflicts with sgt-puzzles
     as-tree
     dateutils
     ellipsis
@@ -90,7 +89,6 @@ in
     pup
     pv
     rlwrap
-    rsync
     rwc
     s6
     s6-dns
@@ -112,6 +110,23 @@ in
     yq-go
     zstd
     # keep-sorted end
+
+    (lib.meta.hiPrio num-utils) # conflicts with sgt-puzzles
+
+    # Use openrsync and symlink `rsync` to it
+    (withLinks {
+      package = pkgs.openrsync;
+      links = [
+        {
+          target = "bin/openrsync";
+          link = "bin/rsync";
+        }
+        {
+          target = "share/man/man1/openrsync.1.gz";
+          link = "share/man/man1/rsync.1.gz";
+        }
+      ];
+    })
 
     # Prefer ugrep for default grep implementation
     (lib.meta.hiPrio (
