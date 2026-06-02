@@ -25,14 +25,10 @@
 
       # NOTE: Necessary for ZFS password prompting via plymouth
       #       <https://github.com/NixOS/nixpkgs/issues/44965>
-      systemd = {
-        enable = true;
-
-        storePaths = [
-          pkgs.busybox
-        ]
-        ++ lib.optional config.hardware.bluetooth.enable config.hardware.bluetooth.package;
-      };
+      systemd.storePaths = [
+        pkgs.busybox
+      ]
+      ++ lib.optional config.hardware.bluetooth.enable config.hardware.bluetooth.package;
     };
   };
 

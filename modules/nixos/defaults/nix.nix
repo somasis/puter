@@ -1,4 +1,5 @@
 {
+  self,
   sources,
   config,
   lib,
@@ -123,5 +124,10 @@ in
     # have priority over `nix` builds, when allocating resources.
     daemonCPUSchedPolicy = lib.mkIf config.meta.desktop "idle";
     daemonIOSchedClass = lib.mkIf config.meta.desktop "idle";
+
+    nixPath = [
+      # Set the default system.nix location checked by `nixos-rebuild`.
+      "nixos-system=${self}/hosts/${config.networking.fqdnOrHostName}/system.nix"
+    ];
   };
 }
