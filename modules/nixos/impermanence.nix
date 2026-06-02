@@ -61,7 +61,20 @@ in
       ++ (optional (config.boot ? "lanzaboote" && config.boot.lanzaboote.enable) {
         directory = config.boot.lanzaboote.pkiBundle;
       })
+      ++ (optional config.boot.plymouth.enable "/var/lib/plymouth")
+      ++ (optional config.services.tuned.enable "/var/log/tuned")
+      ++ (optionals config.security.tpm2.enable [
+        "/var/lib/tpm2-tss"
+        "/var/log/tpm2-tss"
+      ])
+      ++ (optional config.services.displayManager.plasma-login-manager.enable {
+        directory = "/var/lib/plasmalogin";
+        user = "plasmalogin";
+        group = "plasmalogin";
+        mode = "0750";
+      })
       ++ (optional config.services.age-keygen.enable "/etc/age")
+      ++ (optional config.services.hardware.bolt.enable "/var/lib/boltd")
       ++ (optional config.services.uptimed.enable {
         directory = "/var/lib/uptimed";
         user = "uptimed";
@@ -129,6 +142,7 @@ in
         user = "root";
         group = "wheel";
       })
+      ++ (optional config.services.nixseparatedebuginfod2.enable "/var/cache/nixseparatedebuginfod2")
       # Enable ALSA and preserve the mixer state across boots.
       ++ (optional config.hardware.alsa.enablePersistence "/var/lib/alsa")
       ++ (optional config.services.udisks2.enable "/var/lib/udisks2")
