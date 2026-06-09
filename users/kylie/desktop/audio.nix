@@ -14,6 +14,7 @@
     (xdgCacheDir "easyeffects")
     (xdgConfigDir "easyeffects")
     (xdgDataDir "easyeffects")
+    (xdgConfigDir "sdrpp")
   ];
 
   xdg.autostart.entries = [
