@@ -5,10 +5,10 @@
 
     kmscon = {
       enable = true;
-      hwRender = true;
-      extraConfig = ''
-        font-engine=pango
-      '';
+      config = {
+        hwaccel = true;
+        font-engine = "pango";
+      };
     };
   };
 }
