@@ -30,7 +30,10 @@ in
   systemd.user.services.syncthingtray.Install.WantedBy = lib.mkForce [ ];
 
   data.files = [
-    (config.lib.somasis.xdgConfigDir "syncthingtray.ini")
+    {
+      method = "symlink";
+      file = config.lib.somasis.xdgConfigDir "syncthingtray.ini";
+    }
     (config.lib.somasis.xdgConfigDir "syncthingfileitemaction.ini")
   ];
 }
