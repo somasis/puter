@@ -57,6 +57,7 @@
     "/" = {
       device = "${config.networking.fqdnOrHostName}/runtime";
       fsType = "zfs";
+      options = [ "zfsutil" ];
     };
 
     "/boot" = {
@@ -77,13 +78,17 @@
       device = "${config.networking.fqdnOrHostName}/nix";
       fsType = "zfs";
       neededForBoot = true;
-      options = [ "x-gvfs-hide" ];
+      options = [
+        "x-gvfs-hide"
+        "zfsutil"
+      ];
     };
 
     "/data" = {
       device = "${config.networking.fqdnOrHostName}/data";
       fsType = "zfs";
       neededForBoot = true;
+      options = [ "zfsutil" ];
     };
 
     "/mnt/windows" = {
