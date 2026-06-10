@@ -14,6 +14,7 @@
 
     "${nixos-hardware}/framework/13-inch/12th-gen-intel"
 
+    # keep-sorted start
     ./audio.nix
     ./backup.nix
     ./bluetooth.nix
@@ -22,10 +23,10 @@
     ./desktop.nix
     ./documentation.nix
     ./filesystems.nix
-    ./keyboard.nix
     ./fonts.nix
     ./games.nix
     ./hardware-configuration.nix
+    ./keyboard.nix
     ./locale.nix
     ./networking.nix
     ./phone.nix
@@ -37,6 +38,7 @@
     ./touchpad.nix
     ./users.nix
     ./wine.nix
+    # keep-sorted end
   ];
 
   meta.type = "laptop";
