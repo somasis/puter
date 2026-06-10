@@ -25,6 +25,7 @@
     ./filesystems.nix
     ./fonts.nix
     ./games.nix
+    ./ham.nix
     ./hardware-configuration.nix
     ./keyboard.nix
     ./locale.nix
