@@ -21,9 +21,6 @@ let
     #   url = "https://github.com/NixOS/nixpkgs/pull/387720.patch";
     #   hash = "sha256-dPu/9KNaB1mAcYIiVMAZ8tFdCX9YjuutuL0qKAJ1uj0=";
     # })
-
-    # Remove once <https://github.com/NixOS/nixpkgs/pull/481370> is merged
-    ./0001-beets-filetote-1.1.1-1.3.4-unbreak-use-finalAttrs.patch
   ];
 
   # deadnix: skip
@@ -47,27 +44,6 @@ let
     # Continuing the earlier example, make sure to do an override
     # for the patched package too.
     # inherit (nixpkgs-quirks) cantata;
-
-    python3Packages = prev.python3Packages // {
-      beets-filetote = nixpkgs-quirks.python3Packages.beets-filetote.overrideAttrs (
-        finalAttrs: prevAttrs: {
-          patches = (prevAttrs.patches or [ ]) ++ [
-            (prev.fetchpatch2 {
-              url = "https://github.com/gtronset/beets-filetote/pull/287.patch";
-              hash = "sha256-DHr6buno1iwO2MwIXFSU3IIOBvqj0+Iy5jKuySxNIy8=";
-            })
-          ];
-        }
-      );
-    };
-
-    # 2026-03-25 tests seem to be broken
-    # > FAIL: testdata/script/fix.txtar:20: stdout and redirects.golden-auto differ
-    xurls = prev.xurls.overrideAttrs (
-      finalAttrs: prevAttrs: {
-        doCheck = false;
-      }
-    );
   };
 in
 {
