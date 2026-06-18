@@ -36,9 +36,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "61ab0e80d9c7ab14c256b5b453d8b3fb0189ba0a",
-      "url": "https://github.com/cachix/git-hooks.nix/archive/61ab0e80d9c7ab14c256b5b453d8b3fb0189ba0a.tar.gz",
-      "hash": "sha256-kTwur1wV+01SdqskVMSo6JMEpg71ps3HpbFY2GsflKs="
+      "revision": "3bbec39bc90eadfa031e6f3b77272f3f60803e39",
+      "url": "https://github.com/cachix/git-hooks.nix/archive/3bbec39bc90eadfa031e6f3b77272f3f60803e39.tar.gz",
+      "hash": "sha256-U3yTuGBnmXvXoQI3qkpfEDsn9RovQPAjN7ndRco+3u0="
     },
     "home-manager": {
       "type": "Git",
@@ -49,9 +49,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "df4e0465717a2d34f05b8ccd967275aaf3ceaa01",
-      "url": "https://github.com/nix-community/home-manager/archive/df4e0465717a2d34f05b8ccd967275aaf3ceaa01.tar.gz",
-      "hash": "sha256-mAR7KTS9rjreTcXCNqfCbN96mnhJO8lDQq1vl7GviBQ="
+      "revision": "c8f0b8ed441c95bfeaf33555e7631044bb09f384",
+      "url": "https://github.com/nix-community/home-manager/archive/c8f0b8ed441c95bfeaf33555e7631044bb09f384.tar.gz",
+      "hash": "sha256-dk8lIk0UnO8GD3e7e3HM1vSYXpbEDmhy67w7KztfdCg="
     },
     "home-manager-stable": {
       "type": "Git",
@@ -80,20 +80,17 @@
       "hash": "sha256-03+JxvzmfwRu+5JafM0DLbxgHttOQZkUtDWBmeUkN8Y="
     },
     "lanzaboote": {
-      "type": "GitRelease",
+      "type": "Git",
       "repository": {
         "type": "GitHub",
         "owner": "nix-community",
         "repo": "lanzaboote"
       },
-      "pre_releases": false,
-      "version_upper_bound": null,
-      "release_prefix": null,
+      "branch": "master",
       "submodules": false,
-      "version": "v1.0.0",
-      "revision": "2fe211d9c0e2320ce23dc995a3f93666ca149d9a",
-      "url": "https://api.github.com/repos/nix-community/lanzaboote/tarball/v1.0.0",
-      "hash": "sha256-RJmgVDzjRI18BWVogG6wpsl1UCuV6ui8qr4DJ1LfWZ8="
+      "revision": "001e560fffc8f0235e9db20ebeb4ccde0ade1caf",
+      "url": "https://github.com/nix-community/lanzaboote/archive/001e560fffc8f0235e9db20ebeb4ccde0ade1caf.tar.gz",
+      "hash": "sha256-ycG9a7svaV/zF9G03waY7BqUcNQn2HODMN/lXy3C7Zc="
     },
     "nix-index-database": {
       "type": "Git",
