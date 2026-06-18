@@ -19,7 +19,7 @@
 
     polkit = {
       # Required so that authorization logging takes effect.
-      debug = true;
+      extraArgs = [ "--debug" ];
 
       extraConfig = ''
         /* Log authorization checks */
