@@ -179,6 +179,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       lokalize
       p7zip # used by Ark
       papirus-icon-theme
+      plasma-applet-appgrid
       plasma-applet-commandoutput
       plasma-panel-colorizer
       plasma-panel-spacer-extended
