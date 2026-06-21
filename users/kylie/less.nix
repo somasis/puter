@@ -31,6 +31,7 @@
       /   forw-search
       ^F  forw-search
 
+      # -e - Exit (or advance to next file) after reaching EOF a second time
       # -i - Ignore case in searches if there's no uppercase characters in the pattern
       # -s - Combine multiple blank lines
       # -F - Quit if the whole thing can be viewed on one screen
@@ -46,7 +47,7 @@
       #        v581, but it seems like Arch does not have that version yet...
       #        <https://github.com/gwsw/less/issues/24>
       #env
-      LESS = -isMFR --mouse --wheel-lines=2
+      LESS = -eisMFR --mouse --wheel-lines=2
     '';
   };
 }
