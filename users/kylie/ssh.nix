@@ -65,59 +65,56 @@
   programs.ssh = {
     enable = true;
 
-    matchBlocks = {
+    settings = {
       "*" = {
-        addKeysToAgent = "yes";
+        AddKeysToAgent = "yes";
 
         # ssh_config(5): ControlPath supports environemnt variable expansion.
-        controlPersist = "5m";
-        compression = true;
+        ControlPersist = "5m";
+        Compression = true;
 
         # Send an in-band keep-alive every 30 seconds.
-        serverAliveInterval = 30;
+        ServerAliveInterval = 30;
 
         # Too often, IPv6 is broken on the wifi I'm on.
-        # addressFamily = "inet";
+        # AddressFamily = "inet";
 
         # Use my local language and timezone whenever possible.
-        sendEnv = [
+        SendEnv = [
           "LANG"
           "LANGUAGE"
           "TZ"
         ];
 
-        extraOptions = {
-          # Can be spoofed, and dies over short connection route failures
-          TCPKeepAlive = "no";
+        # Can be spoofed, and dies over short connection route failures
+        TCPKeepAlive = "no";
 
-          # Accept unknown keys for unfamiliar hosts, yell when known hosts change their key.
-          StrictHostKeyChecking = "accept-new";
-        };
+        # Accept unknown keys for unfamiliar hosts, yell when known hosts change their key.
+        StrictHostKeyChecking = "accept-new";
       };
 
-      "box.somas.is" = {
-        host = "whatbox box";
-        hostname = "box.somas.is";
-        user = "somasis";
+      "box.somas.is whatbox box" = {
+        HostName = "box.somas.is";
+        User = "somasis";
       };
 
       # Random hosts
-      "git.causal.agency".port = 2222;
+      "git.causal.agency".Port = 2222;
 
       # Use GitHub SSH over the HTTPS port, to trick firewalls.
       # <https://help.github.com/articles/using-ssh-over-the-https-port/>
       "github.com" = {
-        hostname = "ssh.github.com";
-        user = "git";
-        port = 443;
+        HostName = "ssh.github.com";
+        User = "git";
+        Port = 443;
       };
 
       # Use GitLab.com SSH over the HTTPS port, to trick firewalls.
       # <https://docs.gitlab.com/ee/user/gitlab_com/#alternative-ssh-port>
       "gitlab.com" = {
-        hostname = "altssh.gitlab.com";
-        user = "git";
-        port = 443;
+        HostName = "altssh.gitlab.com";
+        User = "git";
+        Port = 443;
       };
     };
   };
