@@ -96,6 +96,7 @@ in
     s6-networking
     s6-portable-utils
     s6-rc
+    scrub
     snooze
     sqlite-interactive.bin
     strace
