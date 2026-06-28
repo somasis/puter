@@ -93,6 +93,7 @@
     kdePackages.plasma-thunderbolt
     waypipe
     usbguard-notifier
+    podman-compose
   ];
 
   virtualisation = {
