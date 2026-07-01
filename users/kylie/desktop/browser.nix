@@ -5,7 +5,7 @@
   ...
 }:
 let
-  myfirefox = pkgs.firefox-esr;
+  myfirefox = pkgs.firefox;
   myfirefoxpwa = pkgs.firefoxpwa.overrideAttrs (_: {
     firefoxRuntime = myfirefox.unwrapped;
   });
