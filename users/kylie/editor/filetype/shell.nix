@@ -153,7 +153,7 @@ in
     {
       group = "bash-fc";
       name = "WinCreate";
-      option = ".*/bash-fc\.[^\/]+";
+      option = ".*/bash-fc\\.[^/]+";
       commands = ''
         set-option window filetype sh
         set-option window formatcmd "sol"

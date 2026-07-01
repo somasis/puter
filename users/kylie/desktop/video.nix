@@ -65,7 +65,7 @@ with config.lib.somasis;
         ];
         sub-auto = "fuzzy";
         sub-font = "monospace";
-        sub-filter-regex-append = "opensubtitles\.org";
+        sub-filter-regex-append = "opensubtitles\\.org";
 
         cover-art-auto = "fuzzy";
         audio-display = false;

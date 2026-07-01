@@ -24,7 +24,7 @@
       diff = "diff --color";
       grep = "grep --color";
 
-      g = "find -L ./ -type f \! -path '*/.*/*' -print0 | xe -0 -N0 grep --color -n";
+      g = "find -L ./ -type f ! -path '*/.*/*' -print0 | xe -0 -N0 grep --color -n";
       f = "bfs -regextype posix-egrep -status";
 
       xq = "yq -p xml -o xml";

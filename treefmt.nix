@@ -20,7 +20,7 @@
     # Format shell scripts
     shellcheck = {
       enable = true;
-      excludes = [ "\.envrc" ];
+      excludes = [ "\\.envrc" ];
     };
     shfmt = {
       enable = true;

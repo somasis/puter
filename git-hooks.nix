@@ -30,7 +30,7 @@ rec {
 
       # KIO servicemenus have to be marked executable,
       # but .desktop files don't need a shebang.
-      excludes = [ ".+\.desktop$" ];
+      excludes = [ ".+\\.desktop$" ];
     };
 
     check-shebang-scripts-are-executable.enable = true;
@@ -66,7 +66,7 @@ rec {
 
     shellcheck = {
       enable = true;
-      excludes = [ "\.envrc" ];
+      excludes = [ "\\.envrc" ];
     };
 
     # quick-lint-js = {
