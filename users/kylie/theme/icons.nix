@@ -9,6 +9,7 @@
   ];
 
   home.pointerCursor = {
+    enable = true;
     name = "Hackneyed";
     package = pkgs.hackneyed;
     size = 24;
