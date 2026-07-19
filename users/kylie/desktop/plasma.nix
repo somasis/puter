@@ -86,7 +86,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
         [
           # keep-sorted start
           ".directory" # Dolphin
-          ".gtkrc-2.0" # kde-gtk-config
           (xdgCacheDir "xdg-desktop-portal-kderc")
           (xdgConfigDir "KDE/Sonnet.conf")
           (xdgConfigDir "KDE/UserFeedback.conf")
