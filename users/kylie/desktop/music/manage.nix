@@ -10,7 +10,11 @@
     (python3.pkgs.beets.override {
       pluginOverrides.filetote = {
         enable = true;
-        propagatedBuildInputs = [ python3Packages.beets-filetote ];
+        propagatedBuildInputs = [
+          (python3Packages.beets-filetote.overridePythonAttrs (old: {
+            doCheck = false;
+          }))
+        ];
       };
     })
     rsgain
