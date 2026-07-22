@@ -49,9 +49,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "39411a8e12a5526d992e65bc7e3dc9a4414d6713",
-      "url": "https://github.com/nix-community/home-manager/archive/39411a8e12a5526d992e65bc7e3dc9a4414d6713.tar.gz",
-      "hash": "sha256-iZrxHToDJWnvt+5LGAtvuQMTy1NZYlNEKbKaVtBJNcc="
+      "revision": "deeb6b7eb7e0c44ae1819c051ce175bd92a85100",
+      "url": "https://github.com/nix-community/home-manager/archive/deeb6b7eb7e0c44ae1819c051ce175bd92a85100.tar.gz",
+      "hash": "sha256-ouZe80aWEhMLVMkqICFDN+JUw+0FJtCr/bh+hHtRtMg="
     },
     "home-manager-stable": {
       "type": "Git",
@@ -88,9 +88,9 @@
       },
       "branch": "master",
       "submodules": false,
-      "revision": "6183ac79eadb079a1e72fa2c60915601be669100",
-      "url": "https://github.com/nix-community/lanzaboote/archive/6183ac79eadb079a1e72fa2c60915601be669100.tar.gz",
-      "hash": "sha256-6B6CQUk1dPc8l/+otaGiYbuX8qeX/0VmSUQ+qSn0/uA="
+      "revision": "f4b0aef3dba28677a5ca4b3416827aade60b5a0b",
+      "url": "https://github.com/nix-community/lanzaboote/archive/f4b0aef3dba28677a5ca4b3416827aade60b5a0b.tar.gz",
+      "hash": "sha256-t17AqLEhPG6m27ipkp8mJd8Ug0XkdANFDVsgyIFBZcQ="
     },
     "nix-index-database": {
       "type": "Git",
@@ -129,15 +129,15 @@
       "type": "Channel",
       "name": "nixos-unstable",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1036777.61b7c44c4073/nixexprs.tar.xz",
-      "hash": "sha256-zupdTm41be2fY8cexroEOGjopl3F2Gqs3gk7ieqaM3s="
+      "url": "https://releases.nixos.org/nixos/unstable/nixos-26.11pre1037713.241313f4e8e5/nixexprs.tar.xz",
+      "hash": "sha256-WhdsTtaih3DgTPP/PX023b36UNQyMzEoi6GkPyGx0y4="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixpkgs-unstable",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1037466.b471514bed69/nixexprs.tar.xz",
-      "hash": "sha256-pMp70Dx62xa8XFOLvrcCLSyw22HCEoYyYd5W+bUfqsc="
+      "url": "https://releases.nixos.org/nixpkgs/nixpkgs-26.11pre1038038.421eebfd0ec7/nixexprs.tar.xz",
+      "hash": "sha256-x8Suc10wDlysPVmLWoyifgL7p2wDoQbqRXU5r+qiTgo="
     },
     "plasma-manager": {
       "type": "Git",
