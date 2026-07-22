@@ -90,7 +90,7 @@ fqdn=$({
 : "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
 
 NTFY_TAGS=()
-mapfile -t NTFY_TAGS < <(jq -r '.tags[] // ""' <<<"${NTFY_RAW}")
+mapfile -t NTFY_TAGS < <(jq -r '.tags[]? // ""' <<<"${NTFY_RAW}")
 
 for tag in "${NTFY_TAGS[@]}"; do
     case "${tag}" in
