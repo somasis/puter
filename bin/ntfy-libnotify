@@ -12,7 +12,7 @@ usage() {
     [[ "$#" -eq 0 ]] || printf "$@" >&2
 
     cat >&2 <<EOF
-usage: ntfy subscribe <topic> ${0##*/} [-v]
+usage: ntfy subscribe <topic> ${0##*/} [-v] [-- notify-send arguments]
 
 Show a desktop notification sent to ntfy.sh, using \`notify-send\`. How this
 differs from just using \`notify-send "\$NTFY_TITLE" "\$NTFY_MESSAGE"\`,
@@ -70,6 +70,7 @@ while [[ "$#" -gt 0 ]]; do
     case "${1}" in
         --help) usage ;;
         -v) verbosity=$((verbosity + 1)) ;;
+        --) break ;;
     esac
     shift
 done
@@ -258,12 +259,14 @@ if [[ -n "${icon_file}" ]]; then
 fi
 
 if [[ -n "${NTFY_CLICK:-}" ]]; then
-    args+=(--action=click=Open)
+    args+=(--action=ntfy-click=Open)
     # feels like the wrong way to make the actions persist for longer
     # args+=(--expire-time=$((60 * 1000)))
 fi
 
 [[ "${title:-$NTFY_MESSAGE}" != "$message" ]] || title=
+
+args+=( "$@" )
 
 (
     action=$(
@@ -273,9 +276,13 @@ fi
     )
 
     case "${action}" in
-        click)
+        ntfy-click)
             edo xdg-open "${NTFY_CLICK}" &
             disown
+            ;;
+        *)
+            # handle actions passed like `ntfy-libnotify ... -- --action=custom-action=Open`
+            echo "${action}"
             ;;
     esac
 
