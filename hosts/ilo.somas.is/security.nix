@@ -63,4 +63,7 @@ in
 
   # Remove when Chrome stops crashing
   environment.memoryAllocator.provider = "libc";
+
+  programs.yubikey-manager.enable = true;
+  services.pcscd.enable = true;
 }
