@@ -20,7 +20,7 @@
       initialize = true;
 
       timerConfig.OnCalendar = [
-        "*:0/15:00" # every 15 minutes
+        "*:0/30:00" # every 30 minutes
         "hourly"
         "daily"
         "weekly"

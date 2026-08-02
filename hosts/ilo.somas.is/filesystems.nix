@@ -123,7 +123,7 @@
         enable = true;
         frequent = 8;
         hourly = 24;
-        daily = 7;
+        daily = 3;
 
         # Anything further than a week out should be fetched from Restic.
         weekly = 0;
