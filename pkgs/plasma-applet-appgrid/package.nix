@@ -5,13 +5,13 @@
 }:
 kdePackages.mkKdeDerivation rec {
   pname = "plasma-applet-appgrid";
-  version = "1.9.1";
+  version = "1.9.3";
 
   src = fetchFromGitHub {
     owner = "xarbit";
     repo = "plasma6-applet-appgrid";
     rev = "v${version}";
-    hash = "sha256-3JZqyTcpX6/DUKai2qOlToBnt8rXHN/avPdFYPDWjek=";
+    hash = "sha256-N5o1fFcnQ074P4MoGWA3rmJOFmFjE+cU2op0EGsOxIg=";
   };
 
   extraBuildInputs = with kdePackages; [
