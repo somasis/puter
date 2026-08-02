@@ -230,6 +230,7 @@
       "--height=~50%"
       "--info=inline"
       "--prompt=/"
+      "--scrollbar=█"
     ];
   };
 }
