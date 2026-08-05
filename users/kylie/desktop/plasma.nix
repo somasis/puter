@@ -162,7 +162,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       emojirunner
       glib.bin # used by plasma-panel-colorizer
       gwenview
-      hackneyed
       isoimagewriter
       kalk
       kamoso
@@ -177,7 +176,6 @@ assert osConfig.services.desktopManager.plasma6.enable;
       kweather
       lokalize
       p7zip # used by Ark
-      papirus-icon-theme
       plasma-applet-appgrid
       plasma-applet-commandoutput
       plasma-panel-colorizer
