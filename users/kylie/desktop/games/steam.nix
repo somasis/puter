@@ -15,6 +15,8 @@ lib.mkIf osConfig.programs.steam.enable {
     ".paradoxlauncher"
     (xdgDataDir "Celeste")
     (xdgDataDir "SHENZHEN IO")
+    (xdgDataDir "Tabletop Simulator")
+    (xdgConfigDir "unity3d")
 
     (xdgConfigDir "r2modman")
     (xdgConfigDir "r2modmanPlus-local")
