@@ -7,7 +7,7 @@ let
   baseProfile = {
     colorScheme = "somasis";
     font = {
-      name = config.programs.plasma.fonts.fixedWidth.family;
+      name = "${config.programs.plasma.fonts.fixedWidth.family} Term";
       size = config.programs.plasma.fonts.fixedWidth.pointSize;
     };
 
