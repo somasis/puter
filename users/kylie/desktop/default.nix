@@ -82,6 +82,7 @@
       (xdgDataDir "JOSM")
       (xdgDataDir "applications")
       (xdgDataDir "icons")
+      (xdgCacheDir "appimage-run")
     ];
 
     files = [

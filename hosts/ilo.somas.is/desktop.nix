@@ -89,6 +89,11 @@
 
   services.hardware.bolt.enable = true;
 
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
   environment.systemPackages = with pkgs; [
     kdePackages.plasma-thunderbolt
     waypipe
