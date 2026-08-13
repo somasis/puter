@@ -159,7 +159,7 @@ assert osConfig.services.desktopManager.plasma6.enable;
       # keep-sorted start
       breeze-gtk
       cameractrls-gtk3
-      emojirunner
+      emoji-runner
       glib.bin # used by plasma-panel-colorizer
       gwenview
       isoimagewriter
