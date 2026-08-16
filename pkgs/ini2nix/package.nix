@@ -66,7 +66,7 @@ writeShellApplication {
     }:$PATH
 
     NIX_REMOTE=daemon $out/bin/ini2nix ${checkINI} \
-        | nixfmt \
+        | nixfmt - \
         > ./check.nix
 
     diff -u \

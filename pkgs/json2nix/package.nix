@@ -60,7 +60,7 @@ writeShellApplication {
     }:$PATH
 
     NIX_REMOTE=daemon $out/bin/json2nix ${checkInput} \
-        | nixfmt \
+        | nixfmt - \
         > ./check.nix
 
     diff -u \
